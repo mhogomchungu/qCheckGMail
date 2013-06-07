@@ -90,7 +90,9 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 	if( content.isEmpty() ){
-		this->setToolTip( QString( "qCheckGMail" ),tr( "failed to connect" ),tr( "check mail skipped,user is not connected to the internet" ) ) ;
+		this->setToolTip( QString( "qCheckGMail" ),
+				  tr( "failed to connect" ),
+				  tr( "check mail skipped,user is not connected to the internet" ) ) ;
 		this->changeIcon( QString( "qCheckGMailError" ) );
 	}else{
 		this->processMailStatus( content ) ;
@@ -104,7 +106,9 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 		this->changeIcon( QString( "qCheckGMailError" ) ) ;
-		this->setToolTip( QString( "qCheckGMailError" ),tr( "failed to log in" ),tr( "wrong username/password combination" ) ) ;
+		this->setToolTip( QString( "qCheckGMailError" ),
+				  tr( "failed to log in" ),
+				  tr( "wrong username/password combination" ) ) ;
 		return	;
 	}
 
@@ -288,7 +292,9 @@ void qCheckGMail::setUpAccounts()
 		 * wallet is empty,ask a user to configure it
 		 */
 		this->changeIcon( QString( "qCheckGMailError" ) ) ;
-		this->setToolTip( QString( "qCheckGMailError" ),tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
+		this->setToolTip( QString( "qCheckGMailError" ),
+				  tr( "error" ),
+				  tr( "no account appear to be configured in the wallet" ) ) ;
 
 		m_gotCredentials = false ;
 	}else{
