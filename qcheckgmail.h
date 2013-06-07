@@ -59,7 +59,7 @@ private slots:
 	void configurationWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
-	void accountsInfo( KWallet::Wallet * ) ;
+	void accountsInfo( KWallet::Wallet ** ) ;
 private:
 	void setUpAccounts( void ) ;
 	void walletNotOPenedError( void ) ;

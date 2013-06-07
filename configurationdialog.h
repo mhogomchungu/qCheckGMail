@@ -5,6 +5,12 @@
 #include <QString>
 #include <QCloseEvent>
 #include <QVector>
+#include <QTableWidgetItem>
+#include <QDebug>
+#include <QMessageBox>
+#include <QMenu>
+#include <QAction>
+#include <QCursor>
 
 #include "accounts.h"
 #include "kwallet.h"
@@ -17,11 +23,20 @@ class configurationDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationDialog( KWallet::Wallet * wallet = 0,QWidget * parent = 0 ) ;
+	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
 	~configurationDialog();
 signals:
-	void accountsInfo( KWallet::Wallet * ) ;
+	void accountsInfo( KWallet::Wallet ** ) ;
+private slots:
+	void pushButtonAdd( void ) ;
+	void pushButtonClose( void ) ;
+	void pushButtonDeleteEntry( void ) ;
+	void checkBoxUnMaskPassphrase( bool ) ;
+	void tableItemClicked( QTableWidgetItem * ) ;
+	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
+	void walletOpened( bool ) ;
+	void deleteRow( void ) ;
 private:
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
@@ -29,6 +44,10 @@ private:
 
 	QVector<accounts> m_accounts ;
 	KWallet::Wallet * m_wallet ;
+	KWallet::Wallet ** m_wallet_p ;
+
+	int m_deleteRow ;
+	QTableWidget * m_table ;
 };
 
 #endif // CONFIGURATIONDIALOG_H
