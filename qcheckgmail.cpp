@@ -28,8 +28,8 @@ qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 {
 	this->setStatus( KStatusNotifierItem::Passive ) ;
 	this->setCategory( KStatusNotifierItem::ApplicationStatus ) ;
-	this->changeIcon( QString( "qCheckGMail" ) ) ;
-	this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
+	this->changeIcon( QString( "qCheckGMailError" ) ) ;
+	this->setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -82,7 +82,7 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 	if( content.isEmpty() ){
-		this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "check mail skipped,user is not connected to the internet" ) ) ;
+		this->setToolTip( QString( "qCheckGMail" ),tr( "failed to connect" ),tr( "check mail skipped,user is not connected to the internet" ) ) ;
 		this->changeIcon( QString( "qCheckGMailError" ) );
 	}else{
 		this->processMailStatus( content ) ;
@@ -92,7 +92,14 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 
 void qCheckGMail::processMailStatus( QByteArray msg )
 {
-	//qDebug() << msg;
+	qDebug() << msg;
+
+	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
+		this->changeIcon( QString( "qCheckGMailError" ) ) ;
+		this->setToolTip( QString( "qCheckGMailError" ),tr( "failed to log in" ),tr( "wrong username/password combination" ) ) ;
+		return	;
+	}
+
 	QStringList accNames = this->getAccountNames() ;
 
 	int r = accNames.size() ;
@@ -186,7 +193,17 @@ void qCheckGMail::pauseCheckingMail( bool b )
 
 void qCheckGMail::configurationWindow()
 {
+	configurationDialog * cfg = new configurationDialog( m_wallet ) ;
+	connect( cfg,SIGNAL( accountsInfo( KWallet::Wallet * ) ),this,SLOT( accountsInfo( KWallet::Wallet * ) ) ) ;
+	cfg->ShowUI() ;
+}
 
+void qCheckGMail::accountsInfo( KWallet::Wallet * wallet )
+{
+	this->setUpAccounts();
+	this->checkMail();
+	wallet->deleteLater();
+	this->startTimer();
 }
 
 void qCheckGMail::checkMail()
@@ -201,7 +218,7 @@ void qCheckGMail::checkMail()
 			;
 		}
 	}else{
-		qDebug() << tr( "dont have credentials,retying to open wallet" ) ;
+		qDebug() << tr( "dont have credentials,retrying to open wallet" ) ;
 		this->getAccountsInformation() ;
 	}
 }
@@ -233,40 +250,47 @@ void qCheckGMail::walletOpened( bool opened )
 
 		if( !m_wallet->hasFolder( m_wallet->PasswordFolder() ) ){
 			m_wallet->createFolder( m_wallet->PasswordFolder() ) ;
+			this->configurationWindow();
+		}else{
+			this->setUpAccounts();
+			this->checkMail();
+			m_wallet->deleteLater();
 		}
-
-		m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
-
-		QStringList userNames = m_wallet->entryList() ;
-
-		accounts acc ;
-		int j = userNames.size() ;
-		QString passWord ;
-		QString name ;
-
-		for( int i = 0 ; i < j ; i++ ){
-			name = userNames.at( i ) ;
-			m_wallet->readPassword( name,passWord ) ;
-			acc = accounts( name,passWord ) ;
-			m_accounts_backUp.append( acc ) ;
-		}
-
-		m_gotCredentials = true ;
-		m_wallet->closeWallet( m_walletName,false ) ;
-		/*
-		 * initialize accounts
-		 */
-		m_accounts = m_accounts_backUp ;
-		this->checkMail();
 	}else{
 		this->walletNotOPenedError();
+		m_wallet->deleteLater();
 	}
 
 	this->setTimerEvents();
 	this->setTimer() ;
 	this->startTimer();
 
-	m_wallet->deleteLater();
+}
+
+void qCheckGMail::setUpAccounts()
+{
+	m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
+
+	QStringList userNames = m_wallet->entryList() ;
+
+	accounts acc ;
+	int j = userNames.size() ;
+	QString passWord ;
+	QString name ;
+
+	for( int i = 0 ; i < j ; i++ ){
+		name = userNames.at( i ) ;
+		m_wallet->readPassword( name,passWord ) ;
+		acc = accounts( name,passWord ) ;
+		m_accounts_backUp.append( acc ) ;
+	}
+
+	m_gotCredentials = true ;
+	m_wallet->closeWallet( m_walletName,false ) ;
+	/*
+	 * initialize accounts
+	 */
+	m_accounts = m_accounts_backUp ;
 }
 
 void qCheckGMail::walletNotOPenedError()

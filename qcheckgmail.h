@@ -41,6 +41,7 @@
 #include <QtNetwork/QNetworkReply>
 
 #include "accounts.h"
+#include "configurationdialog.h"
 
 class qCheckGMail : public KStatusNotifierItem
 {
@@ -58,7 +59,9 @@ private slots:
 	void configurationWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
+	void accountsInfo( KWallet::Wallet * ) ;
 private:
+	void setUpAccounts( void ) ;
 	void walletNotOPenedError( void ) ;
 	void checkMail( const accounts& );
 	void changeIcon( QString icon ) ;

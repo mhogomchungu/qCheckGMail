@@ -16,8 +16,13 @@ LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib
 
 SOURCES += main.cpp \
     qcheckgmail.cpp \
-    accounts.cpp
+    accounts.cpp \
+    configurationdialog.cpp
 
 HEADERS += \
     qcheckgmail.h \
-    accounts.h
+    accounts.h \
+    configurationdialog.h
+
+FORMS += \
+    configurationdialog.ui

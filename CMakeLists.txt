@@ -13,9 +13,11 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-QT4_WRAP_CPP( MOC qcheckgmail.h )
+QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h )
 
-add_executable( qCheckGmail main.cpp qcheckgmail.cpp accounts.cpp ${MOC} ${UI} ${ICONS} )
+QT4_WRAP_UI( UI configurationdialog.ui )
+
+add_executable( qCheckGmail main.cpp qcheckgmail.cpp accounts.cpp configurationdialog.cpp ${MOC} ${UI} ${ICONS} )
 
 TARGET_LINK_LIBRARIES( qCheckGmail -L${KDE4_LIB_DIR} -lkdeui -lkwalletbackend ) 
 
