@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>572</width>
-    <height>336</height>
+    <width>707</width>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>configuration window</string>
   </property>
  </widget>
  <resources/>

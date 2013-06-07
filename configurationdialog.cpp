@@ -5,6 +5,11 @@ configurationDialog::configurationDialog( KWallet::Wallet * wallet,QWidget * par
 	m_ui( new Ui::configurationDialog ),m_wallet( wallet )
 {
 	m_ui->setupUi( this );
+	this->setFixedSize( this->size() );
+	this->setWindowFlags( Qt::Window | Qt::Dialog );
+	if( parent ){
+		this->setFont( parent->font() );
+	}
 }
 
 void configurationDialog::ShowUI()

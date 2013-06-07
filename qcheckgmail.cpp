@@ -73,6 +73,14 @@ void qCheckGMail::run()
 
 	m_menu->addAction( ac ) ;
 
+	ac = new QAction( m_menu ) ;
+
+	ac->setText( tr( "configuration window" ) ) ;
+
+	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationWindow() ) ) ;
+
+	m_menu->addAction( ac ) ;
+
 	this->setContextMenu( m_menu ) ;
 
 	this->getAccountsInformation();
@@ -92,20 +100,13 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 
 void qCheckGMail::processMailStatus( QByteArray msg )
 {
-	qDebug() << msg;
+	//qDebug() << msg;
 
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 		this->changeIcon( QString( "qCheckGMailError" ) ) ;
 		this->setToolTip( QString( "qCheckGMailError" ),tr( "failed to log in" ),tr( "wrong username/password combination" ) ) ;
 		return	;
 	}
-
-	QStringList accNames = this->getAccountNames() ;
-
-	int r = accNames.size() ;
-	QString info ;
-
-	QString mails ;
 
 	int index_1 = msg.indexOf( "<fullcount>" ) ;
 
@@ -114,7 +115,7 @@ void qCheckGMail::processMailStatus( QByteArray msg )
 	int c = strlen( "<fullcount>" ) ;
 
 	QByteArray md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
-	mails = QString( md ) ;
+	QString mails = QString( md ) ;
 
 	index_1 = msg.indexOf( "<title>" ) + strlen( "<title>" );
 
@@ -126,6 +127,12 @@ void qCheckGMail::processMailStatus( QByteArray msg )
 
 	QString accountName ;
 	int count = mails.toInt() ;
+
+	QStringList accNames = this->getAccountNames() ;
+	int r = accNames.size() ;
+
+	QString info ;
+
 	for( int i = 0 ; i < r ; i++ ){
 		accountName = accNames.at( i ) ;
 		if( account.contains( accountName ) ){
@@ -200,6 +207,7 @@ void qCheckGMail::configurationWindow()
 
 void qCheckGMail::accountsInfo( KWallet::Wallet * wallet )
 {
+	return ;
 	this->setUpAccounts();
 	this->checkMail();
 	wallet->deleteLater();
@@ -237,8 +245,6 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 void qCheckGMail::getAccountsInformation()
 {
-	m_accounts.clear();
-
 	m_wallet = KWallet::Wallet::openWallet( "qCheckGmail",0,KWallet::Wallet::Asynchronous ) ;
 
 	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
@@ -278,6 +284,7 @@ void qCheckGMail::setUpAccounts()
 	QString passWord ;
 	QString name ;
 
+	m_accounts_backUp.clear();
 	for( int i = 0 ; i < j ; i++ ){
 		name = userNames.at( i ) ;
 		m_wallet->readPassword( name,passWord ) ;
