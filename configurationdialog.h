@@ -27,7 +27,7 @@ public:
 	void ShowUI( void ) ;
 	~configurationDialog();
 signals:
-	void accountsInfo( KWallet::Wallet ** ) ;
+	void configurationDialogClosed( void ) ;
 private slots:
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;

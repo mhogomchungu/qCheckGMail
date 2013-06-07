@@ -24,18 +24,15 @@ configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QWidget * pa
 
 	m_table = m_ui->tableWidget ;
 
-	m_ui->lineEditAccountName->setFocus();
-
-	if( m_wallet_p ){
-		m_wallet = *m_wallet_p ;
-	}
+	m_ui->lineEditAccountName->setFocus() ;
 }
 
 void configurationDialog::ShowUI()
 {
-	if( !m_wallet ){
-		m_wallet = KWallet::Wallet::openWallet( "qCheckGmail",0,KWallet::Wallet::Asynchronous ) ;
-		m_wallet_p = &m_wallet ;
+	if( *m_wallet_p ){
+		m_wallet = *m_wallet_p ;
+	}else{
+		*m_wallet_p = m_wallet = KWallet::Wallet::openWallet( "qCheckGmail",0,KWallet::Wallet::Asynchronous ) ;
 		connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
 	}
 }
@@ -86,7 +83,7 @@ void configurationDialog::walletOpened( bool b )
 
 configurationDialog::~configurationDialog()
 {
-	emit accountsInfo( m_wallet_p ) ;
+	emit configurationDialogClosed() ;
 	delete m_ui ;
 }
 

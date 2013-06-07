@@ -59,8 +59,9 @@ private slots:
 	void configurationWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
-	void accountsInfo( KWallet::Wallet ** ) ;
+	void configurationDialogClosed( void ) ;
 private:
+	void deleteKWallet( void ) ;
 	void setUpAccounts( void ) ;
 	void walletNotOPenedError( void ) ;
 	void checkMail( const accounts& );
