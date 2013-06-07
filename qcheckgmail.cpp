@@ -208,11 +208,9 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	QString l = acc.LastLabel() ;
-	QUrl url( l ) ;
+	QUrl url( acc.LastLabel() ) ;
 
-	QString e = acc.userName() ;
-	url.setUserName( e ) ;
+	url.setUserName( acc.userName() ) ;
 	url.setPassword( acc.passWord() ) ;
 
 	QNetworkRequest rqt( url ) ;
