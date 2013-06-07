@@ -71,7 +71,7 @@ private:
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
-	void processMailStatus( QByteArray ) ;
+	void processMailStatus( const QByteArray& ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
 	bool m_gotCredentials ;

@@ -98,7 +98,7 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 	r->deleteLater();
 }
 
-void qCheckGMail::processMailStatus( QByteArray msg )
+void qCheckGMail::processMailStatus( const QByteArray& msg )
 {
 	//qDebug() << msg;
 
