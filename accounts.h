@@ -32,8 +32,8 @@ public:
 
 	const QString& userName( void )  const ;
 	const QString& passWord( void )  const ;
-	const QString& LastLabel( void ) const;
-	bool  hasMoreLabels( void )      const ;
+	const QString& defaultLabel( void )  const ;
+	const QStringList& LabelUrls( void ) const;
 private:
 	QString m_userName ;
 	QString m_passWord ;

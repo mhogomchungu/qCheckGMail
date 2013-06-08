@@ -21,9 +21,17 @@
 #include "accounts.h"
 
 accounts::accounts( QString userName,QString password,QStringList labels ) :
-	m_userName( userName ),m_passWord( password ),m_labels( labels )
+	m_userName( userName ),m_passWord( password )
 {
-	m_labels.prepend( QString( "https://mail.google.com/mail/feed/atom" ) ) ;
+	const char * baseLabel = "https://mail.google.com/mail/feed/atom/" ;
+
+	m_labels.append( QString( baseLabel ) ) ;
+
+	int j = labels.size() ;
+
+	for( int i = 0 ; i < j ; i++ ){
+		m_labels.append( QString( baseLabel ) + QString( "/" ) + labels.at( i ) ) ;
+	}
 }
 
 accounts::accounts( const accounts& acc )
@@ -51,12 +59,13 @@ const QString& accounts::passWord() const
 	return m_passWord ;
 }
 
-const QString& accounts::LastLabel() const
+const QString& accounts::defaultLabel() const
 {
-	return m_labels.last() ;
+	return m_labels.at( 0 ) ;
 }
 
-bool accounts::hasMoreLabels() const
+const QStringList& accounts::LabelUrls() const
 {
-	return m_labels.size() > 0 ;
+	return m_labels ;
 }
+

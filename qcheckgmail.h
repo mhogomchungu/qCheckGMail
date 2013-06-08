@@ -64,7 +64,9 @@ private:
 	void deleteKWallet( void ) ;
 	void setUpAccounts( void ) ;
 	void walletNotOPenedError( void ) ;
-	void checkMail( const accounts& );
+	void checkMail( const QString& userName,const QString& password,const QString& label );
+	void checkMail( const accounts& acc ) ;
+
 	void changeIcon( QString icon ) ;
 	void getAccountsInformation( void ) ;
 	QStringList getAccountNames( void ) ;
@@ -82,6 +84,9 @@ private:
 	QVector<accounts> m_accounts_backUp ;
 	KWallet::Wallet * m_wallet ;
 	QString m_walletName ;
+	QString m_accountName ;
+	QString m_labelUrl ;
+	QStringList m_labelUrls ;
 };
 
 #endif // QCHECKGMAIL_H

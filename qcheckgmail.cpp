@@ -84,9 +84,9 @@ void qCheckGMail::run()
 	this->setContextMenu( m_menu ) ;
 
 	this->getAccountsInformation();
-	
+
 	this->setTimer() ;
-	this->setTimerEvents();	
+	this->setTimerEvents();
 	this->startTimer();
 }
 
@@ -125,66 +125,70 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 	QByteArray md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
 	QString mails = QString( md ) ;
 
-	index_1 = msg.indexOf( "<title>" ) + strlen( "<title>" );
-
-	index_2 = msg.indexOf( "</title>" ) ;
-
-	c = strlen( "<title>" ) ;
-
-	QString account = msg.mid( index_1 + c,index_2 - ( index_1 + c ) ) ;
-
-	QString accountName ;
 	int count = mails.toInt() ;
-
-	QStringList accNames = this->getAccountNames() ;
-	int r = accNames.size() ;
 
 	QString info ;
 
-	for( int i = 0 ; i < r ; i++ ){
-		accountName = accNames.at( i ) ;
-		if( account.contains( accountName ) ){
-			if( count == 1 ){
-				info = tr( "1 email is waiting for you" ) ;
-			}else if( count > 1 ){
-				info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
-			}
-			break ;
-		}
+	if( count == 1 ){
+		info = tr( "1 email is waiting for you" ) ;
+	}else if( count > 1 ){
+		info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
 	}
 
 	if( count > 0 ){
 		this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 		QString icon = QString( "qCheckGMail-GotMail" ) ;
 		this->changeIcon( icon ) ;
+
+		QString accountName ;
+		QString x = m_labelUrl.split( "/" ).last() ;
+
+		if( x.isEmpty() ){
+			accountName = m_accountName ;
+		}else{
+			accountName = m_accountName + QString( "/" ) + x ;
+		}
+
 		this->setToolTip( icon,accountName,info ) ;
 
 		/*
 		 * done checking,restoring accounts from back up
 		 */
 		 m_accounts = m_accounts_backUp ;
+		 m_labelUrls.clear() ;
 	}else{
-		/*
-		 * No mail was found on the previous account,if there are more accounts,check them
-		 */
-		if( m_accounts.size() > 1 ){
+		if( m_labelUrls.size() > 0 ){
 			/*
-			 * there are more accounts,remove the entry previously checked and check the next account
+			 * account has more labels to go through,go through them
 			 */
-			m_accounts.remove( 0 ) ;
-			this->checkMail( m_accounts.at( 0 ) ) ;
+			QString label = m_labelUrls.at( 0 ) ;
+			m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
+			this->checkMail( m_accounts.at( 0 ).userName(),m_accounts.at( 0 ).passWord(),label ) ;
 		}else{
 			/*
-			 * there are no more accounts and new mail not found in any of them
+			 * No mail was found on the previous account,if there are more accounts,check them
 			 */
-			
-			this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
-			this->changeIcon( QString( "qCheckGMail" ) ) ;
+			if( m_accounts.size() > 1 ){
+				/*
+				 * there are more accounts,remove the entry previously checked and check the next account
+				 */
+				m_accounts.remove( 0 ) ;
+				m_labelUrls.clear() ;
+				this->checkMail( m_accounts.at( 0 ) ) ;
+			}else{
+				/*
+				 * there are no more accounts and new mail not found in any of them
+				 */
 
-			/*
-			 * done checking,restoring accounts from back up
-			 */
-			 m_accounts = m_accounts_backUp ;
+				this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
+				this->changeIcon( QString( "qCheckGMail" ) ) ;
+
+				/*
+				 * done checking,restoring accounts from back up
+				 */
+				 m_accounts = m_accounts_backUp ;
+				 m_labelUrls.clear() ;
+			}
 		}
 	}
 }
@@ -242,10 +246,20 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	QUrl url( acc.LastLabel() ) ;
+	m_labelUrls = acc.LabelUrls() ;
+	m_labelUrls.removeAt( 0 ) ; // remove the first default label
+	this->checkMail( acc.userName(),acc.passWord(),acc.defaultLabel() ) ;
+}
 
-	url.setUserName( acc.userName() ) ;
-	url.setPassword( acc.passWord() ) ;
+void qCheckGMail::checkMail( const QString& userName,const QString& password,const QString& label )
+{
+	m_accountName = userName ;
+	m_labelUrl    = label    ;
+
+	QUrl url( m_labelUrl ) ;
+
+	url.setUserName( m_accountName ) ;
+	url.setPassword( password ) ;
 
 	QNetworkRequest rqt( url ) ;
 
@@ -259,7 +273,7 @@ void qCheckGMail::getAccountsInformation()
 }
 
 void qCheckGMail::walletOpened( bool opened )
-{	
+{
 	if( m_wallet ){
 		if( opened ){
 			this->setUpAccounts();
