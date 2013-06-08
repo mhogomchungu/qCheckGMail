@@ -84,6 +84,10 @@ void qCheckGMail::run()
 	this->setContextMenu( m_menu ) ;
 
 	this->getAccountsInformation();
+	
+	this->setTimer() ;
+	this->setTimerEvents();	
+	this->startTimer();
 }
 
 void qCheckGMail::gotReply( QNetworkReply * r )
@@ -262,9 +266,6 @@ void qCheckGMail::walletOpened( bool opened )
 		}else{
 			this->walletNotOPenedError();
 		}
-		this->setTimerEvents();
-		this->setTimer() ;
-		this->startTimer();
 	}else{
 		qDebug() << "BUGG!!,walletOpened(): m_wallet is void" ;
 	}
