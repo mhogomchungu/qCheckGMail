@@ -141,10 +141,11 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 		accountName = accNames.at( i ) ;
 		if( account.contains( accountName ) ){
 			if( count == 1 ){
-				info = QString( "1 email is waiting for you" ) ;
+				info = tr( "1 email is waiting for you" ) ;
 			}else if( count > 1 ){
-				info = QString( "%2 emails are waiting for you" ).arg( mails ) ;
+				info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
 			}
+			break ;
 		}
 	}
 
@@ -152,7 +153,6 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 		this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 		QString icon = QString( "qCheckGMail-GotMail" ) ;
 		this->changeIcon( icon ) ;
-		QString status = tr( "new email found" ) ;
 		this->setToolTip( icon,accountName,info ) ;
 
 		/*
@@ -173,11 +173,7 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 			/*
 			 * there are no more accounts and new mail not found in any of them
 			 */
-			/*
-			 * just make sure there is something to delete
-			 */
-			m_accounts.clear();
-
+			
 			this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
 			this->changeIcon( QString( "qCheckGMail" ) ) ;
 
@@ -232,7 +228,7 @@ void qCheckGMail::checkMail()
 		if( m_accounts.size() > 0 ){
 			this->checkMail( m_accounts.at( 0 ) );
 		}else{
-			qDebug() << "BUGG!!,tried to check when when there are no accounts configured" ;
+			qDebug() << "BUGG!!,tried to check for mails when when there are no accounts configured" ;
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
@@ -259,21 +255,19 @@ void qCheckGMail::getAccountsInformation()
 }
 
 void qCheckGMail::walletOpened( bool opened )
-{
-	if( !m_wallet ){
-		qDebug() << "BUGG!!,walletOpened(): m_wallet is void" ;
-		return ;
-	}
-
-	if( opened ){
-		this->setUpAccounts();
+{	
+	if( m_wallet ){
+		if( opened ){
+			this->setUpAccounts();
+		}else{
+			this->walletNotOPenedError();
+		}
+		this->setTimerEvents();
+		this->setTimer() ;
+		this->startTimer();
 	}else{
-		this->walletNotOPenedError();
+		qDebug() << "BUGG!!,walletOpened(): m_wallet is void" ;
 	}
-
-	this->setTimerEvents();
-	this->setTimer() ;
-	this->startTimer();
 }
 
 void qCheckGMail::setUpAccounts()
