@@ -46,8 +46,6 @@ configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QWidget * pa
 	m_table = m_ui->tableWidget ;
 
 	m_ui->pushButtonAccountAdd->setFocus() ;
-
-	m_ui->lineEditInterval->setEnabled( false ) ;
 }
 
 void configurationDialog::ShowUI()
@@ -156,14 +154,14 @@ void configurationDialog::HideUI()
 	QStringList list ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		
+
 		user = m_accounts.at( i ).userName() ;
 		m_wallet->writePassword( user,m_accounts.at( i ).passWord() ) ;
 
 		list = m_accounts.at( i ).LabelUrls() ;
 		list.removeAt( 0 ) ;
 		int j = list.size() ;
-		
+
 		if( j == 0 ){
 			m_wallet->writePassword( user + labels_id,labels ) ;
 		}else{
@@ -201,7 +199,7 @@ void configurationDialog::pushButtonDeleteEntry()
 void configurationDialog::checkBoxUnMaskPassphrase( bool b )
 {
 	int j = m_accounts.size() ;
-	
+
 	if( j == m_table->rowCount() ){
 		if( b ){
 			for( int i = 0 ; i < j ; i++ ){

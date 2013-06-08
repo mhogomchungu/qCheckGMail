@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>581</width>
-    <height>355</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,13 +17,16 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>320</y>
+     <y>260</y>
      <width>101</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>&amp;close</string>
+   </property>
+   <property name="default">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox">
@@ -32,7 +35,7 @@
      <x>50</x>
      <y>20</y>
      <width>481</width>
-     <height>251</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="title">
@@ -103,52 +106,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>270</y>
-     <width>481</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QLineEdit" name="lineEditInterval">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>10</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>check interval( minutes )</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-  </widget>
  </widget>
  <tabstops>
   <tabstop>tableWidget</tabstop>
   <tabstop>pushButtonAccountAdd</tabstop>
-  <tabstop>lineEditInterval</tabstop>
-  <tabstop>pushButtonClose</tabstop>
   <tabstop>pushButtonAccountDelete</tabstop>
+  <tabstop>pushButtonClose</tabstop>
  </tabstops>
  <resources/>
  <connections/>
