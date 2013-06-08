@@ -4,10 +4,15 @@ qCheckGmail
 qCheckGmail is a Qt/C++ multiple gmail account checker
 
 Supported features:
+
 -Multiple accounts
+
 -Multiple lables(different lables are entered separated by a comma)
+
 -Operations not blocking the UI and plasma-desktop
+
 -Keys are stored in kwallet
+
 
 How it works.
 The first configured account is bechecked for new mail.
