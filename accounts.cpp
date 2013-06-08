@@ -30,7 +30,7 @@ accounts::accounts( QString userName,QString password,QStringList labels ) :
 	int j = labels.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		m_labels.append( QString( baseLabel ) + QString( "/" ) + labels.at( i ) ) ;
+		m_labels.append( QString( baseLabel ) + labels.at( i ) ) ;
 	}
 }
 

@@ -23,6 +23,8 @@
 // 5 minutes update interval
 #define CHECK_UPDATE_INTERVAL 1000 * 5 * 60
 
+#define DEBUG 0
+
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	m_gotCredentials( false ),m_walletName( "qCheckGmail" )
 {
@@ -106,8 +108,9 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 
 void qCheckGMail::processMailStatus( const QByteArray& msg )
 {
-	//qDebug() << msg;
-
+#if DEBUG
+	qDebug() << "\n" << msg;
+#endif
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 		this->changeIcon( QString( "qCheckGMailError" ) ) ;
 		this->setToolTip( QString( "qCheckGMailError" ),
@@ -129,19 +132,20 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 
 	QString info ;
 
-	if( count == 1 ){
-		info = tr( "1 email is waiting for you" ) ;
-	}else if( count > 1 ){
-		info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
-	}
-
 	if( count > 0 ){
+
+		if( count == 1 ){
+			info = tr( "1 email is waiting for you" ) ;
+		}else{
+			info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
+		}
+
 		this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 		QString icon = QString( "qCheckGMail-GotMail" ) ;
 		this->changeIcon( icon ) ;
 
-		QString accountName ;
 		QString x = m_labelUrl.split( "/" ).last() ;
+		QString accountName ;
 
 		if( x.isEmpty() ){
 			accountName = m_accountName ;
@@ -162,6 +166,7 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 			 * account has more labels to go through,go through them
 			 */
 			QString label = m_labelUrls.at( 0 ) ;
+
 			m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
 			this->checkMail( m_accounts.at( 0 ).userName(),m_accounts.at( 0 ).passWord(),label ) ;
 		}else{
@@ -310,13 +315,23 @@ void qCheckGMail::setUpAccounts()
 		int j = userNames.size() ;
 		QString passWord ;
 		QString name ;
-
+		QString labels ;
+		QString labels_id = QString( "-labels" ) ;
 		m_accounts_backUp.clear() ;
 
 		for( int i = 0 ; i < j ; i++ ){
 			name = userNames.at( i ) ;
-			m_wallet->readPassword( name,passWord ) ;
-			m_accounts_backUp.append( accounts( name,passWord ) ) ;
+			if( name.endsWith( labels_id ) ){
+				;
+			}else{
+				m_wallet->readPassword( name,passWord ) ;
+				m_wallet->readPassword( name + labels_id,labels ) ;
+				if( labels.isEmpty() ){
+					m_accounts_backUp.append( accounts( name,passWord ) ) ;
+				}else{
+					m_accounts_backUp.append( accounts( name,passWord,labels.split( "," ) ) ) ;
+				}
+			}
 		}
 
 		m_gotCredentials = true ;

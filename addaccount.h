@@ -17,59 +17,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef CONFIGURATIONDIALOG_H
-#define CONFIGURATIONDIALOG_H
+#ifndef ADDACCOUNT_H
+#define ADDACCOUNT_H
 
 #include <QDialog>
 #include <QString>
+#include <QStringList>
 #include <QCloseEvent>
-#include <QVector>
-#include <QTableWidgetItem>
-#include <QDebug>
 #include <QMessageBox>
-#include <QMenu>
-#include <QAction>
-#include <QCursor>
 
 #include "accounts.h"
-#include "kwallet.h"
-#include "addaccount.h"
 
 namespace Ui {
-class configurationDialog;
+class addaccount;
 }
 
-class configurationDialog : public QDialog
+class addaccount : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QWidget * parent = 0 ) ;
+	explicit addaccount( QWidget * parent = 0 );
 	void ShowUI( void ) ;
-	~configurationDialog();
-signals:
-	void configurationDialogClosed( void ) ;
-private slots:
-	void pushButtonAdd( void ) ;
-	void pushButtonClose( void ) ;
-	void pushButtonDeleteEntry( void ) ;
-	void checkBoxUnMaskPassphrase( bool ) ;
-	void tableItemClicked( QTableWidgetItem * ) ;
-	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void walletOpened( bool ) ;
-	void deleteRow( void ) ;
-	void addAccount( QString,QString,QString ) ;
-private:
 	void HideUI( void ) ;
+	~addaccount();
+signals:
+	void addAccount( QString,QString,QString ) ;
+private slots:
+	void add( void ) ;
+	void cancel( void ) ;
+private:
 	void closeEvent( QCloseEvent * ) ;
-	Ui::configurationDialog * m_ui ;
-
-	QVector<accounts> m_accounts ;
-	KWallet::Wallet * m_wallet ;
-	KWallet::Wallet ** m_wallet_p ;
-
-	int m_deleteRow ;
-	QTableWidget * m_table ;
+	Ui::addaccount * m_ui;
 };
 
-#endif // CONFIGURATIONDIALOG_H
+#endif // ADDACCOUNT_H
