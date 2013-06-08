@@ -130,10 +130,10 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 
 	int count = mails.toInt() ;
 
-	QString info ;
-
 	if( count > 0 ){
-
+		
+		QString info ;
+		
 		if( count == 1 ){
 			info = tr( "1 email is waiting for you" ) ;
 		}else{
