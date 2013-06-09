@@ -7,11 +7,18 @@ Supported features:
 
 -Multiple accounts
 
--Multiple lables
+-Multiple labels
 
 -Operations not blocking the UI and plasma-desktop
 
 -Keys are stored in kwallet
+
+-Automatic new email checks with configurable time interval
+
+-Manual email check
+
+-Ability to pause and unpause automatic email checks
+
 
 -The tray icon is the primary way the application informs the user of the state of the application
 and of the email accounts.

@@ -24,7 +24,7 @@
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	m_gotCredentials( false ),m_walletName( "qCheckGmail" )
 {
-	this->setStatus( KStatusNotifierItem::Passive ) ;
+	this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 	this->setCategory( KStatusNotifierItem::ApplicationStatus ) ;
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
 }
@@ -202,6 +202,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 				 this->changeIcon( icon ) ;
 				 this->setToolTip( icon,tr( "new mail found" ),m_buildResults ) ;
 			}else{
+				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
 				this->setToolTip( icon,tr( "no new mail" ),m_buildResults ) ;
 			}
@@ -295,6 +296,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
+				this->setStatus( KStatusNotifierItem::Passive ) ;
 				/*
 				 * done checking,restoring accounts from back up
 				 */
