@@ -345,12 +345,13 @@ void qCheckGMail::deleteKWallet()
 	m_wallet = 0 ;
 }
 
+/*
+ * This should be the only function that initiate email checking
+ */
 void qCheckGMail::checkMail()
 {
 	if( m_gotCredentials ){
-		/*
-		 * This should be the only function that initiate email checking
-		 */
+		
 		m_buildResults = QString( "<table>" ) ;
 		m_newMailFound = false ;
 
