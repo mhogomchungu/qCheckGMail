@@ -32,3 +32,5 @@ FORMS += \
     configurationdialog.ui \
     addaccount.ui \
     configurationoptionsdialog.ui
+
+TRANSLATIONS += translations.ts/translations.ts

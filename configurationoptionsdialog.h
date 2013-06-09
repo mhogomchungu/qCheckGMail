@@ -57,6 +57,7 @@ private slots:
 private:
 	void saveTimeToConfigFile( void ) ;
 	void setSupportedLanguages( void ) ;
+	void saveLocalLanguage( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 	Ui::configurationoptionsdialog * m_ui;
 };

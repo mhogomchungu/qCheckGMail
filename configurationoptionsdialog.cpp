@@ -79,6 +79,15 @@ QString configurationoptionsdialog::localLanguagePath()
 	return QString( LANGUAGE_FILE_PATH ) ;
 }
 
+void configurationoptionsdialog::saveLocalLanguage()
+{
+	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailLocalLanguage.option" ) ) ;
+
+	f.open( QIODevice::WriteOnly ) ;
+	f.write( m_ui->comboBoxLocalLanguage->currentText().toAscii() ) ;
+	f.close() ;
+}
+
 void configurationoptionsdialog::saveTimeToConfigFile()
 {
 	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailTimeInterval.option" ) ) ;
@@ -146,6 +155,8 @@ void configurationoptionsdialog::HideUI()
 		return ;
 	}
 
+	this->saveLocalLanguage() ;
+
 	this->saveTimeToConfigFile() ;
 	emit setTimer( z * 60 * 1000 ) ;
 	this->hide() ;
@@ -171,5 +182,33 @@ void configurationoptionsdialog::pushButtonClose()
 
 void configurationoptionsdialog::setSupportedLanguages()
 {
-	//m_ui->comboBoxLocalLanguage->addItem( QString( "english_US" ) );
+	QDir d( configurationoptionsdialog::localLanguagePath() ) ;
+
+	QStringList l = d.entryList() ;
+	l.removeOne( QString( "." ) ) ;
+	l.removeOne( QString( ".." ) ) ;
+
+	int j = l.size() ;
+
+	QComboBox * cbox = m_ui->comboBoxLocalLanguage ;
+	QString x ;
+	for( int i = 0 ; i < j ; i++ ){
+		x = l.at( i ) ;
+		x.truncate( x.size() - 3 ) ; //remove the .qm extension
+		cbox->addItem( x ) ;
+	}
+
+	x = configurationoptionsdialog::localLanguage() ;
+
+	j = cbox->count() ;
+	/*
+	 * have the user's preferred language highlighted
+	 */
+	for( int i = 0 ; i < j ; i++ ){
+		cbox->setCurrentIndex( i ) ;
+		if( cbox->currentText() == x ){
+			break ;
+		}
+	}
 }
+

@@ -27,7 +27,6 @@ qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	this->setStatus( KStatusNotifierItem::Passive ) ;
 	this->setCategory( KStatusNotifierItem::ApplicationStatus ) ;
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
-	this->setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -50,6 +49,8 @@ void qCheckGMail::changeIcon( QString icon )
 void qCheckGMail::run()
 {
 	this->setLocalLanguage();
+
+	this->setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 
 	m_manager = new QNetworkAccessManager( this ) ;
 
@@ -335,11 +336,9 @@ void qCheckGMail::getAccountsInfo()
 
 void qCheckGMail::noAccountConfigured()
 {
-	const char * x = "qCheckGMailError" ;
-	const char * y = "error" ;
-	const char * z = "no account appear to be configured in the wallet" ;
-	this->changeIcon( QString( x ) ) ;
-	this->setToolTip( QString( x ),tr( y ),tr( z ) ) ;
+	QString x( "qCheckGMailError" );
+	this->changeIcon( x ) ;
+	this->setToolTip( x,tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
 }
 
 void qCheckGMail::walletNotOPenedError()

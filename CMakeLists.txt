@@ -42,6 +42,9 @@ install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION 
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
 
+install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts )
+
+
 install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
 # uninstall target
