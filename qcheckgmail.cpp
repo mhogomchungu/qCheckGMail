@@ -449,7 +449,7 @@ void qCheckGMail::noAccountConfigured()
 
 void qCheckGMail::walletNotOPenedError()
 {
-	qDebug() << "wallet not opened";
+	qDebug() << tr( "wallet not opened" ) ;
 	this->setToolTip( QString( "qCheckGMailError"),tr( "status" ),tr( "error,failed to open wallet" ) ) ;
 	if( m_wallet ){
 		this->deleteKWallet();
