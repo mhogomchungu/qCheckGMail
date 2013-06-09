@@ -36,6 +36,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#include <ktoolinvocation.h>
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 #include <kwallet.h>
@@ -65,6 +66,7 @@ private slots:
 	void walletOpened( bool ) ;
 	void configurationDialogClosed( void ) ;
 	void setTimer( int ) ;
+	void trayIconClicked( bool,const QPoint & ) ;
 private:
 	void setLocalLanguage( void ) ;
 	void deleteKWallet( void ) ;

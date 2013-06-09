@@ -48,6 +48,8 @@ void qCheckGMail::changeIcon( QString icon )
 
 void qCheckGMail::run()
 {
+	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
+
 	this->setLocalLanguage();
 
 	this->setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
@@ -351,7 +353,7 @@ void qCheckGMail::deleteKWallet()
 void qCheckGMail::checkMail()
 {
 	if( m_gotCredentials ){
-		
+
 		m_buildResults = QString( "<table>" ) ;
 		m_newMailFound = false ;
 
@@ -495,6 +497,13 @@ void qCheckGMail::setTimer( int time )
 {
 	m_interval = time ;
 	this->startTimer() ;
+}
+
+void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
+{
+	Q_UNUSED( x ) ;
+	Q_UNUSED( y ) ;
+	KToolInvocation::invokeBrowser( "https://mail.google.com/mail" ) ;
 }
 
 void qCheckGMail::startTimer()
