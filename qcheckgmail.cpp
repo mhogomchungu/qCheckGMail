@@ -82,7 +82,6 @@ void qCheckGMail::run()
 
 	m_menu->addAction( ac ) ;
 
-
 	ac = new QAction( m_menu ) ;
 
 	ac->setText( tr( "configure options" ) ) ;
