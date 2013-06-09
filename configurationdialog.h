@@ -23,6 +23,7 @@
 
 #include <QDialog>
 #include <QString>
+#include <QStringList>
 #include <QCloseEvent>
 #include <QVector>
 #include <QTableWidgetItem>
@@ -46,6 +47,7 @@ class configurationDialog : public QDialog
 public:
 	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
+	static QVector<accounts> getAccounts( KWallet::Wallet * ) ;
 	~configurationDialog();
 signals:
 	void configurationDialogClosed( void ) ;

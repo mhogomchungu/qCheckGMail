@@ -131,9 +131,9 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 	int count = mails.toInt() ;
 
 	if( count > 0 ){
-		
+
 		QString info ;
-		
+
 		if( count == 1 ){
 			info = tr( "1 email is waiting for you" ) ;
 		}else{
@@ -211,6 +211,7 @@ void qCheckGMail::pauseCheckingMail( bool b )
 
 void qCheckGMail::configurationWindow()
 {
+	this->stopTimer();
 	configurationDialog * cfg = new configurationDialog( &m_wallet ) ;
 	connect( cfg,SIGNAL( configurationDialogClosed() ),this,SLOT( configurationDialogClosed() ) ) ;
 	cfg->ShowUI() ;
@@ -219,11 +220,11 @@ void qCheckGMail::configurationWindow()
 void qCheckGMail::configurationDialogClosed( void )
 {
 	if( m_wallet->isOpen() ){
-		this->setUpAccounts();
-		this->startTimer();
+		this->getAccountsInfo();
 	}else{
 		this->deleteKWallet();
 	}
+	this->startTimer();
 }
 
 void qCheckGMail::deleteKWallet()
@@ -281,7 +282,7 @@ void qCheckGMail::walletOpened( bool opened )
 {
 	if( m_wallet ){
 		if( opened ){
-			this->setUpAccounts();
+			this->getAccountsInfo();
 		}else{
 			this->walletNotOPenedError();
 		}
@@ -290,61 +291,41 @@ void qCheckGMail::walletOpened( bool opened )
 	}
 }
 
-void qCheckGMail::setUpAccounts()
+void qCheckGMail::getAccountsInfo()
 {
-	if( !m_wallet ){
-		qDebug() << "BUGG!!,setUpAccounts(): m_wallet is void" ;
-		return ;
-	}
-
-	m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
-
-	QStringList userNames = m_wallet->entryList() ;
-
-	if( userNames.size() == 0 ){
+	if( m_wallet ){
 		/*
-		 * wallet is empty,ask a user to configure it
+		 * get accounts information from kwallet
 		 */
-		this->changeIcon( QString( "qCheckGMailError" ) ) ;
-		this->setToolTip( QString( "qCheckGMailError" ),
-				  tr( "error" ),
-				  tr( "no account appear to be configured in the wallet" ) ) ;
+		m_accounts_backUp = configurationDialog::getAccounts( m_wallet ) ;
 
-		m_gotCredentials = false ;
-	}else{
-		int j = userNames.size() ;
-		QString passWord ;
-		QString name ;
-		QString labels ;
-		QString labels_id = QString( "-labels" ) ;
-		m_accounts_backUp.clear() ;
+		m_gotCredentials = m_accounts_backUp.size() > 0 ;
 
-		for( int i = 0 ; i < j ; i++ ){
-			name = userNames.at( i ) ;
-			if( name.endsWith( labels_id ) ){
-				;
-			}else{
-				m_wallet->readPassword( name,passWord ) ;
-				m_wallet->readPassword( name + labels_id,labels ) ;
-				if( labels.isEmpty() ){
-					m_accounts_backUp.append( accounts( name,passWord ) ) ;
-				}else{
-					m_accounts_backUp.append( accounts( name,passWord,labels.split( "," ) ) ) ;
-				}
-			}
+		if( m_gotCredentials ){
+			m_accounts = m_accounts_backUp ;
+			this->checkMail( m_accounts.at( 0 ) ) ;
+		}else{
+			/*
+			 * wallet is empty,warn the user about it
+			 */
+			this->noAccountConfigured() ;
 		}
 
-		m_gotCredentials = true ;
-		/*
-		* initialize accounts
-		*/
-		m_accounts = m_accounts_backUp ;
-
-		this->checkMail() ;
+		m_wallet->closeWallet( m_walletName,false ) ;
+		this->deleteKWallet();
+	}else{
+		qDebug() << "BUGG!!,getAccountsInfo(): m_wallet is void" ;
+		return ;
 	}
+}
 
-	m_wallet->closeWallet( m_walletName,false ) ;
-	this->deleteKWallet();
+void qCheckGMail::noAccountConfigured()
+{
+	const char * x = "qCheckGMailError" ;
+	const char * y = "error" ;
+	const char * z = "no account appear to be configured in the wallet" ;
+	this->changeIcon( QString( x ) ) ;
+	this->setToolTip( QString( x ),tr( y ),tr( z ) ) ;
 }
 
 void qCheckGMail::walletNotOPenedError()

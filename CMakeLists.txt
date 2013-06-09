@@ -17,19 +17,19 @@ QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h addaccount.h )
 
 QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui )
 
-add_executable( qCheckGmail main.cpp qcheckgmail.cpp accounts.cpp configurationdialog.cpp addaccount.cpp ${MOC} ${UI} ${ICONS} )
+add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp configurationdialog.cpp addaccount.cpp ${MOC} ${UI} ${ICONS} )
 
-TARGET_LINK_LIBRARIES( qCheckGmail -L${KDE4_LIB_DIR} -lkdeui -lkwalletbackend ) 
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -lkdeui -lkwalletbackend -lQtNetwork ) 
 
-set_target_properties( qCheckGmail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-set_target_properties( qCheckGmail PROPERTIES LINK_FLAGS "-pie" )
+set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 
 install ( FILES qCheckGMail-GotMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMailError.svg DESTINATION share/icons )
 
-install( TARGETS qCheckGmail RUNTIME DESTINATION bin )
+install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
 install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
@@ -58,7 +58,7 @@ file( WRITE "${PROJECT_BINARY_DIR}/qCheckGmail.desktop"
 [Desktop Entry]
 Comment[en_US]=
 Comment=
-Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGmail
+Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
 Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg

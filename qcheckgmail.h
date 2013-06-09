@@ -62,7 +62,7 @@ private slots:
 	void configurationDialogClosed( void ) ;
 private:
 	void deleteKWallet( void ) ;
-	void setUpAccounts( void ) ;
+	void getAccountsInfo( void ) ;
 	void walletNotOPenedError( void ) ;
 	void checkMail( const QString& userName,const QString& password,const QString& label );
 	void checkMail( const accounts& acc ) ;
@@ -75,6 +75,7 @@ private:
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
 	void processMailStatus( const QByteArray& ) ;
+	void noAccountConfigured( void ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
 	bool m_gotCredentials ;
