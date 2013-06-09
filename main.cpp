@@ -27,6 +27,18 @@
 #include <QDebug>
 #include "qcheckgmail.h"
 
+int startApp( void )
+{
+	if( KUniqueApplication::start() ){
+		KUniqueApplication a ;
+		qCheckGMail w;
+		w.start();
+		return a.exec();
+	}else{
+		return qCheckGMail::instanceAlreadyRunning() ;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	KAboutData aboutData( 	"qCheckGMail",
@@ -37,21 +49,23 @@ int main(int argc, char *argv[])
 				KAboutData::License_GPL_V2,
 				ki18n( "(c)2013,ink Francis\nemail:mhogomchungu@gmail.com" ),
 				ki18n( "mhogomchungu@gmail.com" ),
-				"",
-				"" );
+				"(c)2013,ink Francis\nemail:mhogomchungu@gmail.com",
+				"https://github.com/mhogomchungu/qCheckGMail/issues" );
 
 	KCmdLineArgs::init( argc,argv,&aboutData );
 
 	KCmdLineOptions options;
+	options.add( "a",ki18n( "auto start application" ) ) ;
 	KCmdLineArgs::addCmdLineOptions( options ) ;
 	KUniqueApplication::addCmdLineOptions();
 
-	if( KUniqueApplication::start() ){
-		KUniqueApplication a ;
-		qCheckGMail w;
-		w.start();
-		return a.exec();
+	if( KCmdLineArgs::allArguments().contains( "-a" ) ){
+		if( configurationoptionsdialog::autoStartEnabled() ){
+			return startApp() ;
+		}else{
+			return qCheckGMail::autoStartDisabled() ;
+		}
 	}else{
-		return qCheckGMail::instanceAlreadyRunning() ;
+		return startApp() ;
 	}
 }

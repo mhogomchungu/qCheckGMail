@@ -13,11 +13,12 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h addaccount.h )
+QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h addaccount.h configurationoptionsdialog.h )
 
-QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui )
+QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.ui )
 
-add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp configurationdialog.cpp addaccount.cpp ${MOC} ${UI} ${ICONS} )
+add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp
+		configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
 TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -lkdeui -lkwalletbackend -lQtNetwork ) 
 
@@ -33,11 +34,11 @@ install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
 install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
-install ( FILES ${PROJECT_BINARY_DIR}/qCheckGmail.desktop DESTINATION share/applications 
+install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications 
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
 
-install ( FILES ${PROJECT_BINARY_DIR}/qCheckGmail.desktop DESTINATION /etc/xdg/autostart/
+install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
 
@@ -52,8 +53,12 @@ configure_file(
 add_custom_target( uninstall
 COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
+file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
+"\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
+)
+
 # desktop file section
-file( WRITE "${PROJECT_BINARY_DIR}/qCheckGmail.desktop"
+file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "#!/usr/bin/env xdg-open
 [Desktop Entry]
 Comment[en_US]=
@@ -77,4 +82,28 @@ X-KDE-SubstituteUID=false
 X-KDE-Username=
 Categories=Utility;\n")
 
+# desktop file section
+file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop"
+"#!/usr/bin/env xdg-open
+[Desktop Entry]
+Comment[en_US]=
+Comment=
+Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail -a
+GenericName[en_US]=a gmail new mail checker
+GenericName=a gmail new mail checker
+Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg
+MimeType=
+Name[en_US]=qCheckGMail
+Name=qCheckGMail
+NoDisplay=false
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=Unique
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+Categories=Utility;\n")
 

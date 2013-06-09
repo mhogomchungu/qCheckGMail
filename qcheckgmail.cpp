@@ -17,11 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "qcheckgmail.h"
-
-// 5 minutes update interval
-#define CHECK_UPDATE_INTERVAL 1000 * 5 * 60
 
 #define DEBUG 0
 
@@ -53,6 +49,8 @@ void qCheckGMail::changeIcon( QString icon )
 
 void qCheckGMail::run()
 {
+	this->setLocalLanguage();
+
 	m_manager = new QNetworkAccessManager( this ) ;
 
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( gotReply( QNetworkReply * ) ) ) ;
@@ -80,6 +78,15 @@ void qCheckGMail::run()
 	ac->setText( tr( "configure accounts" ) ) ;
 
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationWindow() ) ) ;
+
+	m_menu->addAction( ac ) ;
+
+
+	ac = new QAction( m_menu ) ;
+
+	ac->setText( tr( "configure options" ) ) ;
+
+	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationoptionWindow() ) ) ;
 
 	m_menu->addAction( ac ) ;
 
@@ -217,6 +224,13 @@ void qCheckGMail::configurationWindow()
 	cfg->ShowUI() ;
 }
 
+void qCheckGMail::configurationoptionWindow()
+{
+	configurationoptionsdialog * cg = new configurationoptionsdialog() ;
+	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( setTimer( int ) ) ) ;
+	cg->ShowUI() ;
+}
+
 void qCheckGMail::configurationDialogClosed( void )
 {
 	if( m_wallet->isOpen() ){
@@ -349,9 +363,35 @@ QStringList qCheckGMail::getAccountNames()
 	return l ;
 }
 
+void qCheckGMail::setLocalLanguage()
+{
+	QTranslator * translator = new QTranslator( this ) ;
+
+	QString lang     = configurationoptionsdialog::localLanguage() ;
+	QString langPath = configurationoptionsdialog::localLanguagePath() ;
+
+	QByteArray r = lang.toAscii() ;
+
+	QByteArray e( "english_US" ) ;
+	if( e == r ){
+		/*
+		 *english_US language,its the default and hence dont load anything
+		 */
+	}else{
+		translator->load( r.constData(),langPath ) ;
+		QCoreApplication::installTranslator( translator ) ;
+	}
+}
+
 void qCheckGMail::setTimer()
 {
-	m_interval = CHECK_UPDATE_INTERVAL ;
+	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
+}
+
+void qCheckGMail::setTimer( int time )
+{
+	m_interval = time ;
+	this->startTimer() ;
 }
 
 void qCheckGMail::startTimer()
@@ -372,11 +412,17 @@ void qCheckGMail::setTimerEvents()
 
 int qCheckGMail::instanceAlreadyRunning()
 {
-	tr( "another instance is already running,exiting this one" ) ;
+	qDebug() << tr( "another instance is already running,exiting this one" ) ;
+	return 1 ;
+}
+
+int qCheckGMail::autoStartDisabled()
+{
+	qDebug() << tr( "autostart disabled,exiting this one" ) ;
 	return 1 ;
 }
 
 bool qCheckGMail::autoStartEnabled()
 {
-	return true ;
+	return configurationoptionsdialog::autoStartEnabled() ;
 }

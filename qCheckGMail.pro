@@ -10,7 +10,7 @@ TARGET = qCheckGMail
 
 TEMPLATE = app
 
-INCLUDEPATH += /home/local/KDE4/include /usr/include
+INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/src/qCheckGMail-build/
 
 LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib
 
@@ -18,14 +18,17 @@ SOURCES += main.cpp \
     qcheckgmail.cpp \
     accounts.cpp \
     configurationdialog.cpp \
-    addaccount.cpp
+    addaccount.cpp \
+    configurationoptionsdialog.cpp
 
 HEADERS += \
     qcheckgmail.h \
     accounts.h \
     configurationdialog.h \
-    addaccount.h
+    addaccount.h \
+    configurationoptionsdialog.h
 
 FORMS += \
     configurationdialog.ui \
-    addaccount.ui
+    addaccount.ui \
+    configurationoptionsdialog.ui

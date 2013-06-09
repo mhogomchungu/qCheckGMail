@@ -27,21 +27,22 @@
 #include <QString>
 #include <QTimer>
 #include <QStringList>
-#include <QMap>
+#include <QTranslator>
+#include <QVector>
+#include <QUrl>
+#include <QCoreApplication>
+
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 #include <kwallet.h>
 
-#include <QVector>
-
-#include <QUrl>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-
 #include "accounts.h"
 #include "configurationdialog.h"
+#include "configurationoptionsdialog.h"
 
 class qCheckGMail : public KStatusNotifierItem
 {
@@ -50,17 +51,22 @@ public:
 	qCheckGMail();
 	~qCheckGMail();
 	void start( void ) ;
+	void earlyExit( void ) ;
 	static int instanceAlreadyRunning( void ) ;
+	static int autoStartDisabled( void ) ;
 	static bool autoStartEnabled( void ) ;
 private slots:
 	void run( void ) ;
 	void gotReply( QNetworkReply * ) ;
 	void pauseCheckingMail( bool ) ;
 	void configurationWindow( void ) ;
+	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
 	void configurationDialogClosed( void ) ;
+	void setTimer( int ) ;
 private:
+	void setLocalLanguage( void ) ;
 	void deleteKWallet( void ) ;
 	void getAccountsInfo( void ) ;
 	void walletNotOPenedError( void ) ;
