@@ -54,6 +54,32 @@ void configurationoptionsdialog::disableAutoStart()
 	f.close();
 }
 
+bool configurationoptionsdialog::reportOnAllAccounts()
+{
+	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
+	if( !f.exists() ){
+		f.open( QIODevice::WriteOnly ) ;
+		f.write( "1" ) ;
+		f.close();
+	}
+
+	f.open( QIODevice::ReadOnly ) ;
+	QByteArray x = f.readAll() ;
+	QByteArray y( "1" ) ;
+	return x == y ;
+}
+
+void configurationoptionsdialog::reportOnAllAccounts( bool b )
+{
+	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
+	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
+	if( b ){
+		f.write( "1" ) ;
+	}else{
+		f.write( "0" ) ;
+	}
+}
+
 QString configurationoptionsdialog::localLanguage()
 {
 	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailLocalLanguage.option" ) ) ;
@@ -125,6 +151,7 @@ void configurationoptionsdialog::ShowUI()
 	int time = configurationoptionsdialog::getTimeFromConfigFile() / ( 60 * 1000 ) ;
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
+	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
 	this->setSupportedLanguages();
 	this->show();
 }
@@ -157,7 +184,10 @@ void configurationoptionsdialog::HideUI()
 
 	this->saveLocalLanguage() ;
 
+	this->reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+
 	this->saveTimeToConfigFile() ;
+
 	emit setTimer( z * 60 * 1000 ) ;
 	this->hide() ;
 	this->deleteLater() ;

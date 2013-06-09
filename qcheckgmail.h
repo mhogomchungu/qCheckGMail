@@ -72,7 +72,6 @@ private:
 	void walletNotOPenedError( void ) ;
 	void checkMail( const QString& userName,const QString& password,const QString& label );
 	void checkMail( const accounts& acc ) ;
-
 	void changeIcon( QString icon ) ;
 	void getAccountsInformation( void ) ;
 	QStringList getAccountNames( void ) ;
@@ -80,7 +79,8 @@ private:
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
-	void processMailStatus( const QByteArray& ) ;
+	void reportOnAllAccounts( const QByteArray& ) ;
+	void reportOnlyFirstAccountWithMail( const QByteArray& ) ;
 	void noAccountConfigured( void ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
@@ -94,6 +94,8 @@ private:
 	QString m_accountName ;
 	QString m_labelUrl ;
 	QStringList m_labelUrls ;
+	QString m_buildResults ;
+	bool m_newMailFound ;
 };
 
 #endif // QCHECKGMAIL_H

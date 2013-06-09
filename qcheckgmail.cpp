@@ -108,12 +108,110 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 				  tr( "check mail skipped,user is not connected to the internet" ) ) ;
 		this->changeIcon( QString( "qCheckGMailError" ) );
 	}else{
-		this->processMailStatus( content ) ;
+		if( configurationoptionsdialog::reportOnAllAccounts() ){
+			this->reportOnAllAccounts( content ) ;
+		}else{
+			this->reportOnlyFirstAccountWithMail( content ) ;
+		}
 	}
 	r->deleteLater();
 }
 
-void qCheckGMail::processMailStatus( const QByteArray& msg )
+
+/*
+ * This function goes through all accounts and give reports of all of their states
+ */
+void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
+{
+#if DEBUG
+	qDebug() << "\n" << msg;
+#endif
+	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
+		this->changeIcon( QString( "qCheckGMailError" ) ) ;
+		this->setToolTip( QString( "qCheckGMailError" ),
+				  tr( "failed to log in" ),
+				  tr( "wrong username/password combination" ) ) ;
+		return	;
+	}
+
+	int index_1 = msg.indexOf( "<fullcount>" ) ;
+
+	int index_2 = msg.indexOf( "</fullcount>" ) ;
+
+	int c = strlen( "<fullcount>" ) ;
+
+	QByteArray md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
+	QString mails = QString( md ) ;
+
+	int count = mails.toInt() ;
+
+	QString x = m_labelUrl.split( "/" ).last() ;
+	QString accountName ;
+
+	if( x.isEmpty() ){
+		accountName = m_accountName ;
+	}else{
+		accountName = m_accountName + QString( "/" ) + x ;
+	}
+
+	x = QString::number( count ) ;
+	if( count == 0 ){
+		m_buildResults += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( accountName ).arg( x ) ;
+	}else{
+		m_newMailFound = true ;
+		m_buildResults += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( accountName ).arg( x ) ;
+	}
+
+	if( m_labelUrls.size() > 0 ){
+		/*
+		 * account has more labels to go through,go through them
+		 */
+		QString label = m_labelUrls.at( 0 ) ;
+		m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
+		this->checkMail( m_accounts.at( 0 ).userName(),m_accounts.at( 0 ).passWord(),label ) ;
+	}else{
+		/*
+		 * No mail was found on the previous account,if there are more accounts,check them
+		 */
+		if( m_accounts.size() > 1 ){
+			/*
+			 * there are more accounts,remove the entry previously checked and check the next account
+			 */
+			m_accounts.remove( 0 ) ;
+			m_labelUrls.clear() ;
+			this->checkMail( m_accounts.at( 0 ) ) ;
+		}else{
+			/*
+			 * there are no more accounts and new mail not found in any of them
+			 */
+			this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
+			this->changeIcon( QString( "qCheckGMail" ) ) ;
+			/*
+			 * done checking,restoring accounts from back up
+			*/
+			m_accounts = m_accounts_backUp ;
+			m_labelUrls.clear() ;
+
+			m_buildResults += QString( "</table>" ) ;
+
+			if( m_newMailFound ){
+				 this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
+				 QString icon = QString( "qCheckGMail-GotMail" ) ;
+				 this->changeIcon( icon ) ;
+				 this->setToolTip( icon,tr( "new mail found" ),m_buildResults ) ;
+			}else{
+				QString icon = QString( "qCheckGMail" ) ;
+				this->setToolTip( icon,tr( "no new mail" ),m_buildResults ) ;
+			}
+		}
+	}
+}
+
+/*
+ * This function stops on the first account it finds with a new email.
+ * This function will hence report only the first account it finds with new email
+ */
+void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 {
 #if DEBUG
 	qDebug() << "\n" << msg;
@@ -192,7 +290,7 @@ void qCheckGMail::processMailStatus( const QByteArray& msg )
 				 * there are no more accounts and new mail not found in any of them
 				 */
 
-				this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
+				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
 				/*
@@ -250,6 +348,12 @@ void qCheckGMail::deleteKWallet()
 void qCheckGMail::checkMail()
 {
 	if( m_gotCredentials ){
+		/*
+		 * This should be the only function that initiate email checking
+		 */
+		m_buildResults = QString( "<table>" ) ;
+		m_newMailFound = false ;
+
 		/*
 		* check for updates on the first account
 		*/
@@ -317,7 +421,7 @@ void qCheckGMail::getAccountsInfo()
 
 		if( m_gotCredentials ){
 			m_accounts = m_accounts_backUp ;
-			this->checkMail( m_accounts.at( 0 ) ) ;
+			this->checkMail() ;
 		}else{
 			/*
 			 * wallet is empty,warn the user about it
