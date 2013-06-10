@@ -25,7 +25,7 @@ accounts::accounts( QString userName,QString password,QString displayName,QStrin
 {
 	const char * baseLabel = "https://mail.google.com/mail/feed/atom/" ;
 
-	m_labels.append( QString( baseLabel ) ) ;
+	m_labelUrls.append( QString( baseLabel ) ) ;
 
 	if( m_labels.endsWith( "," ) ){
 		m_labels.truncate( m_labels.size() - 1 );
