@@ -69,6 +69,23 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 	return x == y ;
 }
 
+bool configurationoptionsdialog::audioNotify()
+{
+	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailAudioNotify.option" ) ) ;
+	return f.exists() ;
+}
+
+void configurationoptionsdialog::audioNotify( bool b )
+{
+	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailAudioNotify.option" ) ) ;
+	if( b ){
+		f.open( QIODevice::WriteOnly ) ;
+		f.close();
+	}else{
+		f.remove() ;
+	}
+}
+
 void configurationoptionsdialog::reportOnAllAccounts( bool b )
 {
 	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
@@ -152,6 +169,7 @@ void configurationoptionsdialog::ShowUI()
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
 	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
+	m_ui->checkBoxAudioNotifyOnNewEmail->setChecked( configurationoptionsdialog::audioNotify() ) ;
 	this->setSupportedLanguages();
 	this->show();
 }
@@ -185,6 +203,8 @@ void configurationoptionsdialog::HideUI()
 	this->saveLocalLanguage() ;
 
 	this->reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+
+	this->audioNotify( m_ui->checkBoxAudioNotifyOnNewEmail->isChecked() ) ;
 
 	this->saveTimeToConfigFile() ;
 

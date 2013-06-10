@@ -11,6 +11,7 @@ find_package( KDE4 REQUIRED )
 add_definitions( -I${KDE4_INCLUDE_DIR} )
 add_definitions( -I${Qt4_INCLUDE_DIR} )
 add_definitions( -I${QT_HEADERS_DIR} )
+add_definitions( -I${PHONON_INCLUDE_DIR} )
 
 INCLUDE( ${QT_USE_FILE} )
 
@@ -20,10 +21,10 @@ QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h addaccount.h configuration
 
 QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.ui )
 
-add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp
-		configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
+add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp 
+	configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
-TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend -lQtNetwork ) 
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend -lQtNetwork -lphonon ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
@@ -32,6 +33,7 @@ install ( FILES qCheckGMail-GotMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMailError.svg DESTINATION share/icons )
+install ( FILES qCheckGMailNewMail.ogg DESTINATION share/qCheckGMail )
 
 install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
@@ -47,6 +49,7 @@ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_
 
 install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts )
 
+#install ( FILES qCheckGMail.notifyrc DESTINATION share/apps/qCheckGMail/ )
 
 install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
@@ -61,6 +64,10 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
+)
+
+file( WRITE "${PROJECT_BINARY_DIR}/new_mail_audio_path.h"
+"\n#define AUDIO_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/qCheckGMailNewMail.ogg\""
 )
 
 # desktop file section

@@ -36,14 +36,19 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#include <phonon/mediaobject.h>
+#include <phonon/audiooutput.h>
+
 #include <ktoolinvocation.h>
 #include <kstatusnotifieritem.h>
+#include <knotification.h>
 #include <kmenu.h>
 #include <kwallet.h>
 
 #include "accounts.h"
 #include "configurationdialog.h"
 #include "configurationoptionsdialog.h"
+#include "new_mail_audio_path.h"
 
 class qCheckGMail : public KStatusNotifierItem
 {
@@ -68,6 +73,8 @@ private slots:
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
 private:
+	void newEmailNotify( void ) ;
+	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
 	void deleteKWallet( void ) ;
 	void getAccountsInfo( void ) ;

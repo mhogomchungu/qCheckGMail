@@ -1,0 +1,10 @@
+[Global]
+IconName=qCheckGMail
+Comment=qCheckGMail,a gmail account checker
+Name=qCheckGMail
+
+[Event/qCheckGMail-NewMail]
+Name=New Mail Arrived
+Sound=KDE-Im-New-Mail.ogg
+Action=Sound
+

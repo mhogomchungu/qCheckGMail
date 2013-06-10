@@ -45,6 +45,7 @@ public:
 	static void enableAutoStart( void ) ;
 	static void disableAutoStart( void ) ;
 	static bool reportOnAllAccounts( void ) ;
+	static bool audioNotify( void ) ;
 	static QString localLanguage( void ) ;
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
@@ -56,6 +57,7 @@ signals:
 private slots:
 	void pushButtonClose( void ) ;
 private:
+	void audioNotify( bool ) ;
 	void reportOnAllAccounts( bool ) ;
 	void saveTimeToConfigFile( void ) ;
 	void setSupportedLanguages( void ) ;

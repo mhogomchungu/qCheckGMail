@@ -210,6 +210,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 				 QString icon = QString( "qCheckGMail-GotMail" ) ;
 				 this->changeIcon( icon ) ;
 				 this->setToolTip( icon,tr( "new mail found" ),m_buildResults ) ;
+				 this->newEmailNotify();
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
@@ -285,6 +286,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		 */
 		 m_accounts = m_accounts_backUp ;
 		 m_labelUrls.clear() ;
+		 this->newEmailNotify();
 	}else{
 		if( m_labelUrls.size() > 0 ){
 			/*
@@ -525,6 +527,19 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 	Q_UNUSED( y ) ;
 	KToolInvocation::invokeBrowser( "https://mail.google.com/mail" ) ;
 }
+
+void qCheckGMail::newEmailNotify()
+{
+	if( configurationoptionsdialog::audioNotify() ){
+		Phonon::MediaObject * media = new Phonon::MediaObject();
+		Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
+		Phonon::createPath( media,output ) ;
+		media->setCurrentSource( QString( AUDIO_FILE_PATH ) );
+		media->play() ;
+		connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
+	}
+}
+
 
 void qCheckGMail::startTimer()
 {
