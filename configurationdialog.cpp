@@ -206,6 +206,7 @@ void configurationDialog::HideUI()
 	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 	QStringList list ;
 
+	int r ;
 	for( int i = 0 ; i < j ; i++ ){
 
 		user = m_accounts.at( i ).userName() ;
@@ -213,14 +214,14 @@ void configurationDialog::HideUI()
 
 		list = m_accounts.at( i ).LabelUrls() ;
 		list.removeAt( 0 ) ;
-		int j = list.size() ;
+		r = list.size() ;
 
-		if( j == 0 ){
-			m_wallet->writePassword( user + labels_id,labels ) ;
+		if( r == 0 ){
+			m_wallet->writePassword( user + labels_id,QString( "" ) ) ;
 		}else{
 			labels = list.at( 0 ).split( "/" ).last() ;
-			for( int i = 1 ; i < j ; i++ ){
-				labels = labels + QString( "," ) + list.at( i ).split( "/" ).last() ;
+			for( int k = 1 ; k < r ; k++ ){
+				labels = labels + QString( "," ) + list.at( k ).split( "/" ).last() ;
 			}
 			m_wallet->writePassword( user + labels_id,labels ) ;
 		}

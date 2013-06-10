@@ -105,7 +105,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 	r->deleteLater();
-	
+
 	if( content.isEmpty() ){
 		this->setToolTip( QString( "qCheckGMail" ),
 				  tr( "failed to connect" ),
@@ -133,7 +133,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		this->changeIcon( QString( "qCheckGMailError" ) ) ;
 		this->setToolTip( QString( "qCheckGMailError" ),
 				  tr( "failed to log in" ),
-				  tr( "wrong username/password combination" ) ) ;
+				  tr( "%1 account has wrong username/password combination" ).arg( m_accountName ) ) ;
 		return	;
 	}
 
