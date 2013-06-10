@@ -8,6 +8,9 @@ find_package( Qt4 COMPONENTS REQUIRED )
 
 find_package( KDE4 REQUIRED )
 
+include (KDE4Defaults)
+include_directories(${KDE4_INCLUDES})
+
 add_definitions( -I${KDE4_INCLUDE_DIR} )
 add_definitions( -I${Qt4_INCLUDE_DIR} )
 add_definitions( -I${QT_HEADERS_DIR} )
