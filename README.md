@@ -35,7 +35,7 @@ plasma desktop will unhide it by default.
 After an update check,if all accounts have no new email,the icon will turn greyish and will change its
 state to "normal" and plasma desktop will hide it by default.
 
-This project seeks to replicate some of the functionality of this project: http://code.google.com/p/gmail-plasmoid/
+This project seeks to replicate some of the functionality of gmail-plasmoid hosted at: http://code.google.com/p/gmail-plasmoid/
 
 The project appear to be dead and with annoying issues like:
 
@@ -43,3 +43,8 @@ http://code.google.com/p/gmail-plasmoid/issues/detail?id=79
 
 http://code.google.com/p/gmail-plasmoid/issues/detail?id=81
 
+screenshots:
+-----------
+<a href="http://tinypic.com?ref=demgpu" target="_blank"><img src="http://i42.tinypic.com/demgpu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+----------
+[IMG]http://i42.tinypic.com/demgpu.jpg[/IMG]

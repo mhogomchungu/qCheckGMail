@@ -264,9 +264,17 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		QString accountName ;
 
 		if( x.isEmpty() ){
-			accountName = m_accountName ;
+			if( m_displayName.isEmpty() ){
+				accountName = m_accountName ;
+			}else{
+				accountName = m_displayName ;
+			}
 		}else{
-			accountName = m_accountName + QString( "/" ) + x ;
+			if( m_displayName.isEmpty() ){
+				accountName = m_accountName + QString( "/" ) + x ;
+			}else{
+				accountName = m_displayName + QString( "/" ) + x ;
+			}
 		}
 
 		this->setToolTip( icon,accountName,info ) ;
