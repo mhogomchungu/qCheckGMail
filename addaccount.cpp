@@ -56,13 +56,14 @@ void addaccount::add()
 	QString name     = m_ui->lineEditName->text() ;
 	QString password = m_ui->lineEditPassword->text() ;
 	QString labels   = m_ui->lineEditLabel->text() ;
+	QString displayN = m_ui->lineEditOptionalName->text() ;
 
 	if( name.isEmpty() || password.isEmpty() ){
 		QMessageBox msg( this ) ;
 		msg.setText( tr( "ERROR: one or more reguired field is missing" ) ) ;
 		msg.exec() ;
 	}else{
-		emit addAccount( name,password,labels ) ;
+		emit addAccount( name,password,labels,displayN ) ;
 	}
 
 	this->HideUI();

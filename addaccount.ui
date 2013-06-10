@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>503</width>
-    <height>171</height>
+    <height>205</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>50</y>
+      <y>80</y>
       <width>171</width>
       <height>31</height>
      </rect>
@@ -71,7 +71,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>50</y>
+      <y>80</y>
       <width>261</width>
       <height>31</height>
      </rect>
@@ -84,7 +84,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>80</y>
+      <y>110</y>
       <width>261</width>
       <height>31</height>
      </rect>
@@ -97,48 +97,75 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>80</y>
+      <y>110</y>
       <width>171</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>label(optional)</string>
+     <string>label(s)(optional)</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonAdd">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>120</y>
-      <width>91</width>
+      <x>10</x>
+      <y>50</y>
+      <width>161</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>add</string>
+     <string>display name(optional)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonCancel">
+   <widget class="QLineEdit" name="lineEditOptionalName">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>120</y>
-      <width>91</width>
+      <x>180</x>
+      <y>50</y>
+      <width>261</width>
       <height>31</height>
      </rect>
     </property>
-    <property name="text">
-     <string>cancel</string>
-    </property>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButtonAdd">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>170</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonCancel">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>170</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>cancel</string>
+   </property>
   </widget>
  </widget>
  <tabstops>
   <tabstop>lineEditName</tabstop>
+  <tabstop>lineEditOptionalName</tabstop>
   <tabstop>lineEditPassword</tabstop>
   <tabstop>lineEditLabel</tabstop>
   <tabstop>pushButtonAdd</tabstop>

@@ -55,12 +55,11 @@ private slots:
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void pushButtonDeleteEntry( void ) ;
-	void checkBoxUnMaskPassphrase( bool ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void walletOpened( bool ) ;
 	void deleteRow( void ) ;
-	void addAccount( QString,QString,QString ) ;
+	void addAccount( QString,QString,QString,QString ) ;
 private:
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;

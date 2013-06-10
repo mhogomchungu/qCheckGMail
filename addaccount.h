@@ -41,7 +41,7 @@ public:
 	void HideUI( void ) ;
 	~addaccount();
 signals:
-	void addAccount( QString,QString,QString ) ;
+	void addAccount( QString,QString,QString,QString ) ;
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;

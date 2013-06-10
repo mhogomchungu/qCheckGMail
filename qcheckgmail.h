@@ -72,7 +72,7 @@ private:
 	void deleteKWallet( void ) ;
 	void getAccountsInfo( void ) ;
 	void walletNotOPenedError( void ) ;
-	void checkMail( const QString& userName,const QString& password,const QString& label );
+	void checkMail( const accounts& acc,const QString& label );
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( QString icon ) ;
 	void getAccountsInformation( void ) ;
@@ -94,6 +94,7 @@ private:
 	KWallet::Wallet * m_wallet ;
 	QString m_walletName ;
 	QString m_accountName ;
+	QString m_displayName ;
 	QString m_labelUrl ;
 	QStringList m_labelUrls ;
 	QString m_buildResults ;

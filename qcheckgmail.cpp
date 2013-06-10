@@ -151,9 +151,17 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	QString accountName ;
 
 	if( x.isEmpty() ){
-		accountName = m_accountName ;
+		if( m_displayName.isEmpty() ){
+			accountName = m_accountName ;
+		}else{
+			accountName = m_displayName ;
+		}
 	}else{
-		accountName = m_accountName + QString( "/" ) + x ;
+		if( m_displayName.isEmpty() ){
+			accountName = m_accountName + QString( "/" ) + x ;
+		}else{
+			accountName = m_displayName + QString( "/" ) + x ;
+		}
 	}
 
 	x = QString::number( count ) ;
@@ -170,7 +178,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		 */
 		QString label = m_labelUrls.at( 0 ) ;
 		m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
-		this->checkMail( m_accounts.at( 0 ).userName(),m_accounts.at( 0 ).passWord(),label ) ;
+		this->checkMail( m_accounts.at( 0 ),label ) ;
 	}else{
 		/*
 		 * No mail was found on the previous account,if there are more accounts,check them
@@ -276,7 +284,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			QString label = m_labelUrls.at( 0 ) ;
 
 			m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
-			this->checkMail( m_accounts.at( 0 ).userName(),m_accounts.at( 0 ).passWord(),label ) ;
+			this->checkMail( m_accounts.at( 0 ),label ) ;
 		}else{
 			/*
 			 * No mail was found on the previous account,if there are more accounts,check them
@@ -377,18 +385,19 @@ void qCheckGMail::checkMail( const accounts& acc )
 {
 	m_labelUrls = acc.LabelUrls() ;
 	m_labelUrls.removeAt( 0 ) ; // remove the first default label
-	this->checkMail( acc.userName(),acc.passWord(),acc.defaultLabel() ) ;
+	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
-void qCheckGMail::checkMail( const QString& userName,const QString& password,const QString& label )
+void qCheckGMail::checkMail( const accounts& acc,const QString& label )
 {
-	m_accountName = userName ;
+	m_accountName = acc.userName() ;
+	m_displayName = acc.displayName() ;
 	m_labelUrl    = label    ;
 
 	QUrl url( m_labelUrl ) ;
 
 	url.setUserName( m_accountName ) ;
-	url.setPassword( password ) ;
+	url.setPassword( acc.passWord() ) ;
 
 	QNetworkRequest rqt( url ) ;
 

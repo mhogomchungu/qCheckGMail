@@ -22,6 +22,7 @@
 #include "ui_configurationdialog.h"
 
 #define LABEL_IDENTIFIER "-qCheckGMail-LABEL_ID"
+#define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
 configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QWidget * parent ) : QDialog( parent ),
 	m_ui( new Ui::configurationDialog ),m_wallet( 0 ),m_wallet_p( wallet )
@@ -42,8 +43,9 @@ configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QWidget * pa
 	connect( m_ui->tableWidget,SIGNAL( currentItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ),this,
 		 SLOT( tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ) ) ;
 
-	m_ui->tableWidget->setColumnWidth( 0,177 ) ;
-	m_ui->tableWidget->setColumnWidth( 1,251 ) ;
+	m_ui->tableWidget->setColumnWidth( 0,171 ) ;
+	m_ui->tableWidget->setColumnWidth( 1,171 ) ;
+	m_ui->tableWidget->setColumnWidth( 2,171 ) ;
 
 	m_table = m_ui->tableWidget ;
 
@@ -65,7 +67,9 @@ QVector<accounts> configurationDialog::getAccounts( KWallet::Wallet * wallet )
 	QString passWord ;
 	QString name ;
 	QString labels ;
-	QString labels_id = QString( LABEL_IDENTIFIER ) ;
+	QString displayName ;
+	QString labels_id   = QString( LABEL_IDENTIFIER ) ;
+	QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
 	QVector<accounts> acc ;
 
@@ -77,15 +81,17 @@ QVector<accounts> configurationDialog::getAccounts( KWallet::Wallet * wallet )
 
 	for( int i = 0 ; i < j ; i++ ){
 		name = userNames.at( i ) ;
-		if( name.endsWith( labels_id ) ){
+		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
 			;
 		}else{
 			wallet->readPassword( name,passWord ) ;
 			wallet->readPassword( name + labels_id,labels ) ;
+			wallet->readPassword( name + displayName_id,displayName ) ;
+
 			if( labels.isEmpty() ){
-				acc.append( accounts( name,passWord ) ) ;
+				acc.append( accounts( name,passWord,displayName ) ) ;
 			}else{
-				acc.append( accounts( name,passWord,labels.split( "," ) ) ) ;
+				acc.append( accounts( name,passWord,displayName,labels.split( "," ) ) ) ;
 			}
 		}
 	}
@@ -114,14 +120,18 @@ void configurationDialog::walletOpened( bool b )
 	QString labels ;
 	QString labels_id = QString( LABEL_IDENTIFIER ) ;
 
+	QString displayName ;
+	QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
+
 	int row ;
 
 	for( int i = 0 ; i < j ; i++ ){
 		name = userNames.at( i ) ;
-		if( !name.endsWith( labels_id ) ){
+		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
+			;
+		}else{
 			row = m_table->rowCount() ;
 
-			m_wallet->readPassword( name,passWord ) ;
 			m_table->insertRow( row ) ;
 
 			item = new QTableWidgetItem() ;
@@ -129,20 +139,28 @@ void configurationDialog::walletOpened( bool b )
 			item->setTextAlignment( Qt::AlignCenter ) ;
 			m_table->setItem( row,0,item ) ;
 
+			m_wallet->readPassword( name + displayName_id,displayName ) ;
+
+			item = new QTableWidgetItem() ;
+			item->setText( displayName ) ;
+			item->setTextAlignment( Qt::AlignCenter ) ;
+			m_table->setItem( row,1,item ) ;
+
 			m_wallet->readPassword( name + labels_id,labels ) ;
 
 			item = new QTableWidgetItem() ;
+			item->setText( labels ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
 
+			m_wallet->readPassword( name,passWord ) ;
+
 			if( labels.isEmpty() ){
-				item->setText( "" ) ;
-				m_accounts.append( accounts( name,passWord ) ) ;
+				m_accounts.append( accounts( name,passWord,displayName ) ) ;
 			}else{
-				item->setText( labels ) ;
-				m_accounts.append( accounts( name,passWord,labels.split( "," ) ) ) ;
+				m_accounts.append( accounts( name,passWord,displayName,labels.split( "," ) ) ) ;
 			}
 
-			m_table->setItem( row,1,item ) ;
+			m_table->setItem( row,2,item ) ;
 		}
 	}
 
@@ -150,7 +168,9 @@ void configurationDialog::walletOpened( bool b )
 		int row = m_table->rowCount() - 1 ;
 		m_table->item( row,0 )->setSelected( true ) ;
 		m_table->item( row,1 )->setSelected( true ) ;
-		m_table->setCurrentCell( row,1 ) ;
+		m_table->item( row,2 )->setSelected( true ) ;
+
+		m_table->setCurrentCell( row,2 ) ;
 	}
 
 	this->show();
@@ -182,7 +202,8 @@ void configurationDialog::HideUI()
 
 	QString user ;
 	QString labels ;
-	QString labels_id = QString( LABEL_IDENTIFIER ) ;
+	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
+	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 	QStringList list ;
 
 	for( int i = 0 ; i < j ; i++ ){
@@ -203,6 +224,8 @@ void configurationDialog::HideUI()
 			}
 			m_wallet->writePassword( user + labels_id,labels ) ;
 		}
+
+		m_wallet->writePassword( user + display_id,m_accounts.at( i ).displayName() ) ;
 	}
 
 	this->hide();
@@ -212,7 +235,7 @@ void configurationDialog::HideUI()
 void configurationDialog::pushButtonAdd()
 {
 	addaccount * ac = new addaccount( this ) ;
-	connect( ac,SIGNAL( addAccount( QString, QString, QString ) ),this,SLOT( addAccount( QString,QString,QString ) ) ) ;
+	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
 	ac->ShowUI() ;
 }
 
@@ -225,26 +248,6 @@ void configurationDialog::pushButtonDeleteEntry()
 {
 	m_deleteRow = m_table->currentRow() ;
 	this->deleteRow();
-}
-
-void configurationDialog::checkBoxUnMaskPassphrase( bool b )
-{
-	int j = m_accounts.size() ;
-
-	if( j == m_table->rowCount() ){
-		if( b ){
-			for( int i = 0 ; i < j ; i++ ){
-				m_table->item( i,1 )->setText( m_accounts.at( i ).passWord() ) ;
-			}
-		}else{
-			for( int i = 0 ; i < j ; i++ ){
-				m_table->item( i,1 )->setText( "<redacted>" ) ;
-			}
-		}
-	}else{
-		qDebug() << "error table size is different from number of accounts";
-		return ;
-	}
 }
 
 void configurationDialog::tableItemClicked( QTableWidgetItem * item )
@@ -264,21 +267,30 @@ void configurationDialog::tableItemClicked( QTableWidgetItem * item )
 
 void configurationDialog::deleteRow()
 {
-	m_table->removeRow( m_deleteRow ) ;
-
-	m_accounts.remove( m_deleteRow ) ;
+	if( m_table->rowCount() == -1 ){
+		return ;
+	}
+	if( m_table->rowCount() >=  m_deleteRow ){
+		m_table->removeRow( m_deleteRow ) ;
+	}
+	if( m_accounts.size() > 0 ){
+		if( m_accounts.size() >= m_deleteRow ){
+			m_accounts.remove( m_deleteRow ) ;
+		}
+	}
 }
 
-void configurationDialog::addAccount( QString accountName,QString accountPassword,QString accountLabels )
+void configurationDialog::addAccount( QString accountName,QString accountPassword,QString accountLabels,QString displayName )
 {
 	if( accountLabels.isEmpty() ){
-		m_accounts.append( accounts( accountName,accountPassword ) ) ;
+		m_accounts.append( accounts( accountName,accountPassword,displayName ) ) ;
 	}else{
-		m_accounts.append( accounts( accountName,accountPassword,accountLabels.split( "," ) ) ) ;
+		m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels.split( "," ) ) ) ;
 	}
 
 	int row = m_table->rowCount() ;
 	m_table->insertRow( row ) ;
+
 	QTableWidgetItem * item ;
 
 	item = new QTableWidgetItem() ;
@@ -287,11 +299,16 @@ void configurationDialog::addAccount( QString accountName,QString accountPasswor
 	m_table->setItem( row,0,item ) ;
 
 	item = new QTableWidgetItem() ;
-	item->setText( accountLabels ) ;
+	item->setText( displayName ) ;
 	item->setTextAlignment( Qt::AlignCenter ) ;
 	m_table->setItem( row,1,item ) ;
 
-	m_table->setCurrentCell( m_table->rowCount() - 1,1 ) ;
+	item = new QTableWidgetItem() ;
+	item->setText( accountLabels ) ;
+	item->setTextAlignment( Qt::AlignCenter ) ;
+	m_table->setItem( row,2,item ) ;
+
+	m_table->setCurrentCell( m_table->rowCount() - 1,2 ) ;
 }
 
 void configurationDialog::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
@@ -306,11 +323,14 @@ void configurationDialog::tableItemChanged( QTableWidgetItem * current,QTableWid
 		k = current->row() ;
 		m_table->item( k,0 )->setSelected( true ) ;
 		m_table->item( k,1 )->setSelected( true ) ;
-		m_table->setCurrentCell( k,1 ) ;
+		m_table->item( k,2 )->setSelected( true ) ;
+
+		m_table->setCurrentCell( k,2 ) ;
 	}
 	if( previous ){
 		k = previous->row() ;
 		m_table->item( k,0 )->setSelected( false ) ;
 		m_table->item( k,1 )->setSelected( false ) ;
+		m_table->item( k,2 )->setSelected( false ) ;
 	}
 }

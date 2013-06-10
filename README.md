@@ -9,6 +9,8 @@ Supported features:
 
 -Multiple labels
 
+-tray pop up bubble can show accounts by their account names or by an alternative display name
+
 -Operations not blocking the UI and plasma-desktop
 
 -Keys are stored in kwallet
