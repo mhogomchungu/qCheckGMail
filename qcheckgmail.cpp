@@ -392,7 +392,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_labelUrls = acc.LabelUrls() ;
+	m_labelUrls = acc.labelUrls() ;
 	m_labelUrls.removeAt( 0 ) ; // remove the first default label
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }

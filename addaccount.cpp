@@ -63,7 +63,7 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: one or more reguired field is missing" ) ) ;
 		msg.exec() ;
 	}else{
-		emit addAccount( name,password,labels,displayN ) ;
+		emit addAccount( name,password,displayN,labels ) ;
 	}
 
 	this->HideUI();

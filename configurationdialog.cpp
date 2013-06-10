@@ -88,11 +88,7 @@ QVector<accounts> configurationDialog::getAccounts( KWallet::Wallet * wallet )
 			wallet->readPassword( name + labels_id,labels ) ;
 			wallet->readPassword( name + displayName_id,displayName ) ;
 
-			if( labels.isEmpty() ){
-				acc.append( accounts( name,passWord,displayName ) ) ;
-			}else{
-				acc.append( accounts( name,passWord,displayName,labels.split( "," ) ) ) ;
-			}
+			acc.append( accounts( name,passWord,displayName,labels ) ) ;
 		}
 	}
 
@@ -154,11 +150,7 @@ void configurationDialog::walletOpened( bool b )
 
 			m_wallet->readPassword( name,passWord ) ;
 
-			if( labels.isEmpty() ){
-				m_accounts.append( accounts( name,passWord,displayName ) ) ;
-			}else{
-				m_accounts.append( accounts( name,passWord,displayName,labels.split( "," ) ) ) ;
-			}
+			m_accounts.append( accounts( name,passWord,displayName,labels ) ) ;
 
 			m_table->setItem( row,2,item ) ;
 		}
@@ -194,39 +186,25 @@ void configurationDialog::HideUI()
 
 	m_wallet->setFolder( FolderName ) ;
 
-	int j = m_accounts.size() ;
-
 	m_wallet->removeFolder( FolderName ) ;
 	m_wallet->createFolder( FolderName ) ;
 	m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
 
 	QString user ;
-	QString labels ;
 	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
 	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
-	QStringList list ;
 
-	int r ;
+	int j = m_accounts.size() ;
+
 	for( int i = 0 ; i < j ; i++ ){
 
 		user = m_accounts.at( i ).userName() ;
+
 		m_wallet->writePassword( user,m_accounts.at( i ).passWord() ) ;
 
-		list = m_accounts.at( i ).LabelUrls() ;
-		list.removeAt( 0 ) ;
-		r = list.size() ;
-
-		if( r == 0 ){
-			m_wallet->writePassword( user + labels_id,QString( "" ) ) ;
-		}else{
-			labels = list.at( 0 ).split( "/" ).last() ;
-			for( int k = 1 ; k < r ; k++ ){
-				labels = labels + QString( "," ) + list.at( k ).split( "/" ).last() ;
-			}
-			m_wallet->writePassword( user + labels_id,labels ) ;
-		}
-
 		m_wallet->writePassword( user + display_id,m_accounts.at( i ).displayName() ) ;
+
+		m_wallet->writePassword( user + labels_id,m_accounts.at( i ).labels() ) ;
 	}
 
 	this->hide();
@@ -281,13 +259,9 @@ void configurationDialog::deleteRow()
 	}
 }
 
-void configurationDialog::addAccount( QString accountName,QString accountPassword,QString accountLabels,QString displayName )
+void configurationDialog::addAccount( QString accountName,QString accountPassword,QString displayName,QString accountLabels )
 {
-	if( accountLabels.isEmpty() ){
-		m_accounts.append( accounts( accountName,accountPassword,displayName ) ) ;
-	}else{
-		m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels.split( "," ) ) ) ;
-	}
+	m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels ) ) ;
 
 	int row = m_table->rowCount() ;
 	m_table->insertRow( row ) ;

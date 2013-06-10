@@ -26,7 +26,7 @@
 class accounts
 {
 public:
-	accounts( QString userName = QString(),QString password = QString(),QString displayName = QString(),QStringList list = QStringList() );
+	accounts( QString userName = QString(),QString password = QString(),QString displayName = QString(),QString labels = QString() );
 	accounts( const accounts& acc ) ;
 	accounts& operator= ( const accounts& acc ) ;
 
@@ -34,12 +34,14 @@ public:
 	const QString& passWord( void )  const ;
 	const QString& defaultLabelUrl( void )  const ;
 	const QString& displayName( void )  const ;
-	const QStringList& LabelUrls( void ) const;
+	const QString& labels( void )  const ;
+	const QStringList& labelUrls( void ) const;
 private:
 	QString m_userName ;
 	QString m_passWord ;
 	QString m_displayName ;
-	QStringList m_labels ;
+	QString m_labels ;
+	QStringList m_labelUrls ;
 };
 
 #endif // ACCOUNTS_H
