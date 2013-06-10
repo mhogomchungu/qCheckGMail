@@ -56,7 +56,7 @@ void qCheckGMail::run()
 
 	m_manager = new QNetworkAccessManager( this ) ;
 
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( gotReply( QNetworkReply * ) ) ) ;
+	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 
 	QAction * ac = new QAction( m_menu ) ;
 
@@ -101,9 +101,11 @@ void qCheckGMail::run()
 	this->startTimer();
 }
 
-void qCheckGMail::gotReply( QNetworkReply * r )
+void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
+	r->deleteLater();
+	
 	if( content.isEmpty() ){
 		this->setToolTip( QString( "qCheckGMail" ),
 				  tr( "failed to connect" ),
@@ -116,7 +118,6 @@ void qCheckGMail::gotReply( QNetworkReply * r )
 			this->reportOnlyFirstAccountWithMail( content ) ;
 		}
 	}
-	r->deleteLater();
 }
 
 

@@ -58,7 +58,7 @@ public:
 	static bool autoStartEnabled( void ) ;
 private slots:
 	void run( void ) ;
-	void gotReply( QNetworkReply * ) ;
+	void googleQueryResponce( QNetworkReply * ) ;
 	void pauseCheckingMail( bool ) ;
 	void configurationWindow( void ) ;
 	void configurationoptionWindow( void ) ;
