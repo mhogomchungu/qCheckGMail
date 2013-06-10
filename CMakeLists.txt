@@ -2,12 +2,15 @@
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0017 OLD)
 
+SET( QT_USE_QTNETWORK TRUE )
+
 find_package( Qt4 COMPONENTS REQUIRED )
 
 find_package( KDE4 REQUIRED )
 
 add_definitions( -I${KDE4_INCLUDE_DIR} )
 add_definitions( -I${Qt4_INCLUDE_DIR} )
+add_definitions( -I${QT_HEADERS_DIR} )
 
 INCLUDE( ${QT_USE_FILE} )
 
@@ -20,7 +23,7 @@ QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.
 add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp
 		configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
-TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -lkdeui -lkwalletbackend -lQtNetwork ) 
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend -lQtNetwork ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
