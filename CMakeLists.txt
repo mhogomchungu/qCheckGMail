@@ -50,7 +50,7 @@ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_
 
 install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts )
 
-install ( FILES qCheckGMail.notifyrc DESTINATION share/apps/qCheckGMail/ )
+install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
 
 install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
