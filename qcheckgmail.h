@@ -36,9 +36,6 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include <phonon/mediaobject.h>
-#include <phonon/audiooutput.h>
-
 #include <ktoolinvocation.h>
 #include <kstatusnotifieritem.h>
 #include <knotification.h>

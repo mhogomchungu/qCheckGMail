@@ -45,7 +45,7 @@ class configurationDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QWidget * parent = 0 ) ;
+	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QString walletName = QString(),QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
 	static QVector<accounts> getAccounts( KWallet::Wallet * ) ;
 	~configurationDialog();
@@ -71,6 +71,7 @@ private:
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
+	QString m_walletName ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

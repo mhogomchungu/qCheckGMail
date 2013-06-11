@@ -24,8 +24,8 @@
 #define LABEL_IDENTIFIER "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
-configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QWidget * parent ) : QDialog( parent ),
-	m_ui( new Ui::configurationDialog ),m_wallet( 0 ),m_wallet_p( wallet )
+configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QString walletName,QWidget * parent ) : QDialog( parent ),
+	m_ui( new Ui::configurationDialog ),m_wallet( 0 ),m_wallet_p( wallet ),m_walletName( walletName )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() );
@@ -57,7 +57,7 @@ void configurationDialog::ShowUI()
 	if( *m_wallet_p ){
 		m_wallet = *m_wallet_p ;
 	}else{
-		*m_wallet_p = m_wallet = KWallet::Wallet::openWallet( "qCheckGmail",0,KWallet::Wallet::Asynchronous ) ;
+		*m_wallet_p = m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
 		connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
 	}
 }

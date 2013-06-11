@@ -22,7 +22,7 @@
 #define DEBUG 0
 
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
-	m_gotCredentials( false ),m_walletName( "qCheckGmail" )
+	m_gotCredentials( false ),m_walletName( "qCheckGMail" )
 {
 	this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 	this->setCategory( KStatusNotifierItem::ApplicationStatus ) ;
@@ -326,6 +326,13 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 	}
 }
 
+void qCheckGMail::newEmailNotify()
+{
+	QByteArray r( "qCheckGMail" ) ;
+	KNotification::event( QString( "qCheckGMail-NewMail" ),QString( "" ),QPixmap(),0,0,
+	       KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
+}
+
 void qCheckGMail::pauseCheckingMail( bool b )
 {
 	if( b ){
@@ -340,7 +347,7 @@ void qCheckGMail::pauseCheckingMail( bool b )
 void qCheckGMail::configurationWindow()
 {
 	this->stopTimer();
-	configurationDialog * cfg = new configurationDialog( &m_wallet ) ;
+	configurationDialog * cfg = new configurationDialog( &m_wallet,m_walletName ) ;
 	connect( cfg,SIGNAL( configurationDialogClosed() ),this,SLOT( configurationDialogClosed() ) ) ;
 	cfg->ShowUI() ;
 }
@@ -417,7 +424,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& label )
 
 void qCheckGMail::getAccountsInformation()
 {
-	m_wallet = KWallet::Wallet::openWallet( "qCheckGmail",0,KWallet::Wallet::Asynchronous ) ;
+	m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
 	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
 }
 
@@ -527,19 +534,6 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 	Q_UNUSED( y ) ;
 	KToolInvocation::invokeBrowser( "https://mail.google.com/mail" ) ;
 }
-
-void qCheckGMail::newEmailNotify()
-{
-	if( configurationoptionsdialog::audioNotify() ){
-		Phonon::MediaObject * media = new Phonon::MediaObject();
-		Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
-		Phonon::createPath( media,output ) ;
-		media->setCurrentSource( QString( AUDIO_FILE_PATH ) );
-		media->play() ;
-		connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
-	}
-}
-
 
 void qCheckGMail::startTimer()
 {
