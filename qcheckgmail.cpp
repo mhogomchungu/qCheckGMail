@@ -195,8 +195,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			/*
 			 * there are no more accounts and new mail not found in any of them
 			 */
-			this->setToolTip( QString( "qCheckGMail"),tr( "status" ),tr( "no new email found" ) ) ;
-			this->changeIcon( QString( "qCheckGMail" ) ) ;
 			/*
 			 * done checking,restoring accounts from back up
 			*/
