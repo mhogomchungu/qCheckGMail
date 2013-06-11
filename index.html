@@ -28,37 +28,41 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+          <p>qCheckGmail is a Qt/C++ multiple gmail account checker</p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Supported features:</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<p>-Multiple accounts</p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>-Multiple labels</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p>-tray pop up bubble can show accounts by their account names or by an alternative display name</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>-Operations not blocking the UI and plasma-desktop</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<p>-Keys are stored in kwallet</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>-Automatic new email checks with configurable time interval</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>-Manual email check</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>-Ability to pause and unpause automatic email checks</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>-The tray icon is the primary way the application informs the user of the state of the application and of the email accounts.</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>On any error encountered,the tray icon will turn red and the pop up bubble with have an explanation of the error.</p>
+
+<p>After an update check,if new emails are found,the tray icon will turn bluish and the pop up bubble will have an explanation of what accounts have new email.The icon will change its state to "need attention" and plasma desktop will unhide it by default.</p>
+
+<p>After an update check,if all accounts have no new email,the icon will turn greyish and will change its state to "normal" and plasma desktop will hide it by default.</p>
+
+<p>This project seeks to replicate some of the functionality of gmail-plasmoid hosted at: <a href="http://code.google.com/p/gmail-plasmoid/">http://code.google.com/p/gmail-plasmoid/</a></p>
+
+<p>The project appear to be dead and with annoying issues like:</p>
+
+<p><a href="http://code.google.com/p/gmail-plasmoid/issues/detail?id=79">http://code.google.com/p/gmail-plasmoid/issues/detail?id=79</a></p>
+
+<p><a href="http://code.google.com/p/gmail-plasmoid/issues/detail?id=81">http://code.google.com/p/gmail-plasmoid/issues/detail?id=81</a></p>
         </section>
 
         <aside id="sidebar">
