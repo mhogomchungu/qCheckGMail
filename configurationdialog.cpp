@@ -147,12 +147,11 @@ void configurationDialog::walletOpened( bool b )
 			item = new QTableWidgetItem() ;
 			item->setText( labels ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
-
+			m_table->setItem( row,2,item ) ;
+			
 			m_wallet->readPassword( name,passWord ) ;
 
 			m_accounts.append( accounts( name,passWord,displayName,labels ) ) ;
-
-			m_table->setItem( row,2,item ) ;
 		}
 	}
 
