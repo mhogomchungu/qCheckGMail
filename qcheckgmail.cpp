@@ -212,6 +212,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
+				this->changeIcon( icon ) ;
 				this->setToolTip( icon,tr( "no new mail" ),m_buildResults ) ;
 			}
 		}
