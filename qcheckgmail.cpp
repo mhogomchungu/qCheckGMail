@@ -252,7 +252,11 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		QString info ;
 
 		if( count == 1 ){
-			info = tr( "1 email is waiting for you" ) ;
+			index_1 = msg.indexOf( "<name>" ) ;
+			index_2 = msg.indexOf( "</name>" ) ;
+			c = strlen( "<name>" ) ;
+			md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
+			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( QString( md ) ) ;
 		}else{
 			info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
 		}
