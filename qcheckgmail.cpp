@@ -193,11 +193,12 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			this->checkMail( m_accounts.at( 0 ) ) ;
 		}else{
 			/*
-			 * there are no more accounts and new mail not found in any of them
+			 * done checking all labels on all accounts
 			 */
+			
 			/*
-			 * done checking,restoring accounts from back up
-			*/
+			 * restore accounts from back up
+			 */
 			m_accounts = m_accounts_backUp ;
 			m_labelUrls.clear() ;
 
