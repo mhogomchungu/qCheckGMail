@@ -58,6 +58,7 @@ public:
 	static int instanceAlreadyRunning( void ) ;
 	static int autoStartDisabled( void ) ;
 	static bool autoStartEnabled( void ) ;
+	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 private slots:
 	void run( void ) ;
 	void googleQueryResponce( QNetworkReply * ) ;
@@ -69,6 +70,7 @@ private slots:
 	void configurationDialogClosed( void ) ;
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
+	void objectDestroyed( void ) ;
 private:
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;

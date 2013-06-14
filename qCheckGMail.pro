@@ -34,3 +34,4 @@ FORMS += \
     configurationoptionsdialog.ui
 
 TRANSLATIONS += translations.ts/translations.ts
+TRANSLATIONS += translations.ts/greek_GR.ts

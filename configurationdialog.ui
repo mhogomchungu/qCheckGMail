@@ -39,7 +39,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Account information(display name and account labels are optional)</string>
+    <string>Accounts information</string>
    </property>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">

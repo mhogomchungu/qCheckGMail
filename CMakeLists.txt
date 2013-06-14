@@ -48,7 +48,9 @@ install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION 
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
 
-install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts )
+install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
+install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
+install ( FILES translations.qm/greek_GR.qm DESTINATION share/qCheckGMail/translations.qm/ )
 
 install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
 

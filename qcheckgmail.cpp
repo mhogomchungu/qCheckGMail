@@ -516,6 +516,29 @@ void qCheckGMail::setLocalLanguage()
 	}
 }
 
+void qCheckGMail::objectDestroyed()
+{
+	qDebug() << "objectDestryoed" ;
+}
+
+void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * translator )
+{
+	QString lang     = configurationoptionsdialog::localLanguage() ;
+	QString langPath = configurationoptionsdialog::localLanguagePath() ;
+
+	QByteArray r = lang.toAscii() ;
+
+	QByteArray e( "english_US" ) ;
+	if( e == r ){
+		/*
+		 *english_US language,its the default and hence dont load anything
+		 */
+	}else{
+		translator->load( r.constData(),langPath ) ;
+		qapp.installTranslator( translator ) ;
+	}
+}
+
 void qCheckGMail::setTimer()
 {
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
@@ -552,13 +575,59 @@ void qCheckGMail::setTimerEvents()
 
 int qCheckGMail::instanceAlreadyRunning()
 {
-	qDebug() << tr( "another instance is already running,exiting this one" ) ;
+	QString lang = configurationoptionsdialog::localLanguage() ;
+	QByteArray r = lang.toAscii() ;
+
+	QByteArray e( "english_US" ) ;
+	if( e == r ){
+		/*
+		 *english_US language,its the default and hence dont load anything
+		 */
+		qDebug() << tr( "another instance is already running,exiting this one" ) ;
+	}else{
+		int argc = 1 ;
+		const char * x[ 2 ] ;
+		x[ 0 ] = "qCheckGMail" ;
+		x[ 1 ] =  0 ;
+		char ** z = ( char ** ) x ;
+		QCoreApplication qapp( argc,z ) ;
+
+		QString langPath = configurationoptionsdialog::localLanguagePath() ;
+		QTranslator translator ;
+		translator.load( r.constData(),langPath ) ;
+		qapp.installTranslator( &translator ) ;
+		qDebug() << tr( "another instance is already running,exiting this one" ) ;
+	}
+
 	return 1 ;
 }
 
 int qCheckGMail::autoStartDisabled()
 {
-	qDebug() << tr( "autostart disabled,exiting this one" ) ;
+	QString lang = configurationoptionsdialog::localLanguage() ;
+	QByteArray r = lang.toAscii() ;
+
+	QByteArray e( "english_US" ) ;
+	if( e == r ){
+		/*
+		 *english_US language,its the default and hence dont load anything
+		 */
+		qDebug() << tr( "autostart disabled,exiting this one" ) ;
+	}else{
+		int argc = 1 ;
+		const char * x[ 2 ] ;
+		x[ 0 ] = "qCheckGMail" ;
+		x[ 1 ] =  0 ;
+		char ** z = ( char ** ) x ;
+		QCoreApplication qapp( argc,z ) ;
+
+		QString langPath = configurationoptionsdialog::localLanguagePath() ;
+		QTranslator translator ;
+		translator.load( r.constData(),langPath ) ;
+		qapp.installTranslator( &translator ) ;
+		qDebug() << tr( "autostart disabled,exiting this one" ) ;
+	}
+
 	return 1 ;
 }
 

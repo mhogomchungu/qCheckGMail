@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="el_GR">
 <context>
     <name>addaccount</name>
     <message>
         <location filename="../addaccount.ui" line="14"/>
         <source>create a new account</source>
-        <translation type="unfinished"></translation>
+        <translation>Δημιουργία νέου λογαριασμού</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="48"/>
         <source>account password</source>
-        <translation type="unfinished"></translation>
+        <translation>Κωδικός πρόσβασης</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="64"/>
         <source>account name</source>
-        <translation type="unfinished"></translation>
+        <translation>Όνομα λογαριασμού</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="93"/>
         <source>multiple labels can be entered by separating them with a comma(,)</source>
-        <translation type="unfinished"></translation>
+        <translation>Μπορείτε να εισάγετε πολλαπλές ετικέτες χωρίζοντάς τες με κόμμα(,)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="106"/>
         <source>label(s)(optional)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ετικέτα(ες)(προαιρετικό)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="122"/>
         <source>display name(optional)</source>
-        <translation type="unfinished"></translation>
+        <translation>Εμφανιζόμενο όνομα (προαιρετικό)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="149"/>
         <source>add</source>
-        <translation type="unfinished"></translation>
+        <translation>Προσθήκη</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="162"/>
         <source>cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Ακύρωση</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="63"/>
         <source>ERROR: one or more reguired field is missing</source>
-        <translation type="unfinished"></translation>
+        <translation>ΣΦΑΛΜΑ: λείπει ένα ή περισσότερα απαιτούμενα πεδία</translation>
     </message>
 </context>
 <context>
@@ -54,12 +54,16 @@
     <message>
         <location filename="../configurationdialog.ui" line="14"/>
         <source>account configuration window</source>
-        <translation type="unfinished"></translation>
+        <translation>Παράθυρο επεξεργασίας λογαριασμού</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="26"/>
         <source>&amp;close</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Κλείσιμο</translation>
+    </message>
+    <message>
+        <source>Account information(display name and account labels are optional)</source>
+        <translation type="obsolete">Πληροφορίες λογαριασμού (το εμφανιζόμενο όνομα και οι ετικέτες λογαριασμού είναι προαιρετικά)</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="42"/>
@@ -69,32 +73,32 @@
     <message>
         <location filename="../configurationdialog.ui" line="73"/>
         <source>account name</source>
-        <translation type="unfinished"></translation>
+        <translation>Όνομα λογαριασμού</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="78"/>
         <source>display name</source>
-        <translation type="unfinished"></translation>
+        <translation>Εμφανιζόμενο όνομα</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="83"/>
         <source>account labels</source>
-        <translation type="unfinished"></translation>
+        <translation>Ετικέτες λογαριασμού</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="98"/>
         <source>delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Διαγραφή</translation>
     </message>
     <message>
         <location filename="../configurationdialog.ui" line="111"/>
         <source>add</source>
-        <translation type="unfinished"></translation>
+        <translation>Προσθήκη</translation>
     </message>
     <message>
         <location filename="../configurationdialog.cpp" line="238"/>
         <source>delete entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Διαγραφή καταχώρησης</translation>
     </message>
 </context>
 <context>
@@ -102,32 +106,36 @@
     <message>
         <location filename="../configurationoptionsdialog.ui" line="14"/>
         <source>option configuration window</source>
-        <translation type="unfinished"></translation>
+        <translation>Παράθυρο επεξεργασίας ρυθμίσεων</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="50"/>
         <source>update interval(minutes)</source>
-        <translation type="unfinished"></translation>
+        <translation>Διάστημα ενημέρωσης (λεπτά)</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="102"/>
         <source>auto start application at log in</source>
-        <translation type="unfinished"></translation>
+        <translation>Αυτόματη εκκίνηση κατά την είσοδο</translation>
+    </message>
+    <message>
+        <source>english_US</source>
+        <translation type="obsolete">Αγγλικά (ΗΠΑ)</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="146"/>
         <source>localization language</source>
-        <translation type="unfinished"></translation>
+        <translation>Γλώσσα</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="188"/>
         <source>report on all accounts</source>
-        <translation type="unfinished"></translation>
+        <translation>Αναφορά σε όλους τους λογαριασμούς</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="206"/>
         <source>close</source>
-        <translation type="unfinished"></translation>
+        <translation>Κλείσιμο</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.cpp" line="173"/>
@@ -136,7 +144,11 @@
 ERROR: illegal characters detected in the the update interval field
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>
+
+ΣΦΑΛΜΑ: μη επιτρεπόμενοι χαρακτήρες στο πεδίο Διάστημα Ενημέρωσης
+
+</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.cpp" line="180"/>
@@ -145,7 +157,11 @@ ERROR: illegal characters detected in the the update interval field
 ERROR: minimum time interval is 5 minutes
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>
+
+ΣΦΑΛΜΑ: το ελάχιστο διάστημα ενημέρωσης είναι 5 λεπτά
+
+</translation>
     </message>
 </context>
 <context>
@@ -155,120 +171,120 @@ ERROR: minimum time interval is 5 minutes
         <location filename="../qcheckgmail.cpp" line="314"/>
         <location filename="../qcheckgmail.cpp" line="481"/>
         <source>status</source>
-        <translation type="unfinished"></translation>
+        <translation>Κατάσταση</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="55"/>
         <source>opening wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Άνοιγμα πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="63"/>
         <source>check mail now</source>
-        <translation type="unfinished"></translation>
+        <translation>Έλεγχος για μηνύματα τώρα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="71"/>
         <source>pause checking mail</source>
-        <translation type="unfinished"></translation>
+        <translation>Παύση ελέγχου για νέα μηνύματα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="81"/>
         <source>configure accounts</source>
-        <translation type="unfinished"></translation>
+        <translation>Επεξεργασία λογαριασμών</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="89"/>
         <source>configure options</source>
-        <translation type="unfinished"></translation>
+        <translation>Επεξεργασία ρυθμίσεων</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="111"/>
         <source>failed to connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Αποτυχία σύνδεσης</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="112"/>
         <source>check mail skipped,user is not connected to the internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Ο έλεγχος για μηνύματα ματαιώθηκε, δεν υπάρχει σύνδεση στο διαδίκτυο</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="135"/>
         <location filename="../qcheckgmail.cpp" line="234"/>
         <source>failed to log in</source>
-        <translation type="unfinished"></translation>
+        <translation>Αποτυχία εισόδου</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="136"/>
         <source>%1 account has wrong username/password combination</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="210"/>
         <source>new mail found</source>
-        <translation type="unfinished"></translation>
+        <translation>Βρέθηκε νέο μήνυμα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="216"/>
         <source>no new mail</source>
-        <translation type="unfinished"></translation>
+        <translation>Κανένα νέο μήνυμα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="235"/>
         <source>wrong username/password combination</source>
-        <translation type="unfinished"></translation>
+        <translation>Λανθασμένος συνδυασμός χρήστη/κωδικού πρόσβασης</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="255"/>
         <source>1 email is waiting for you</source>
-        <translation type="unfinished"></translation>
+        <translation>1 μήνυμα σας περιμένει</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="257"/>
         <source>%2 emails are waiting for you</source>
-        <translation type="unfinished"></translation>
+        <translation>%2 μηνύματα σας περιμένουν</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="314"/>
         <source>no new email found</source>
-        <translation type="unfinished"></translation>
+        <translation>Δεν βρέθηκε νέο μήνυμα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="396"/>
         <source>dont have credentials,(re)trying to open wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Δεν έχετε προνόμια, νέα προσπάθεια για άνοιγμα του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="475"/>
         <source>error</source>
-        <translation type="unfinished"></translation>
+        <translation>Σφάλμα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="475"/>
         <source>no account appear to be configured in the wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Δεν έχει ρυθμιστεί κανένας λογαριασμός στο πορτοφόλι</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="480"/>
         <source>wallet not opened</source>
-        <translation type="unfinished"></translation>
+        <translation>Το πορτοφόλι δεν είναι ανοικτό</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="481"/>
         <source>error,failed to open wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>Σφάλμα, αδυναμία ανοίγματος του πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="586"/>
         <location filename="../qcheckgmail.cpp" line="599"/>
         <source>another instance is already running,exiting this one</source>
-        <translation type="unfinished"></translation>
+        <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="615"/>
         <location filename="../qcheckgmail.cpp" line="628"/>
         <source>autostart disabled,exiting this one</source>
-        <translation type="unfinished"></translation>
+        <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>
 </context>
 </TS>

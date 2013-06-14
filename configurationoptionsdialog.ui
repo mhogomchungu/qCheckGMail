@@ -129,7 +129,7 @@
      </property>
      <item>
       <property name="text">
-       <string>english_US</string>
+       <string notr="true">english_US</string>
       </property>
      </item>
     </widget>
