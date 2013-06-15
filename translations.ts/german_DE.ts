@@ -122,7 +122,7 @@
     <message>
         <location filename="../configurationoptionsdialog.ui" line="188"/>
         <source>report on all accounts</source>
-        <translation>Berichte von allen Konten</translation>
+        <translation>Benachrichtigungen zu allen Konten anzeigen</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="206"/>
