@@ -122,7 +122,7 @@
     <message>
         <location filename="../configurationoptionsdialog.ui" line="188"/>
         <source>report on all accounts</source>
-        <translation>Berichte von allen Konten</translation>
+        <translation>Benachrichtigungen zu allen Konten anzeigen</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="206"/>
@@ -220,8 +220,8 @@ ERROR: minimum time interval is 5 minutes
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="255"/>
-        <source>1 email is waiting for you</source>
-        <translation>1 EMail wartet auf Sie</translation>
+        <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
+        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 EMail von &lt;b&gt;%1&lt;/b&gt; wartet auf Sie&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="257"/>
