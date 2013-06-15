@@ -35,13 +35,7 @@ plasma desktop will unhide it by default.
 After an update check,if all accounts have no new email,the icon will turn greyish and will change its
 state to "normal" and plasma desktop will hide it by default.
 
-This project seeks to replicate some of the functionality of gmail-plasmoid hosted at: http://code.google.com/p/gmail-plasmoid/
-
-The project appear to be dead and with annoying issues like:
-
-http://code.google.com/p/gmail-plasmoid/issues/detail?id=79
-
-http://code.google.com/p/gmail-plasmoid/issues/detail?id=81
+The latest version can be downloaded from the following link: https://github.com/mhogomchungu/qCheckGMail/tarball/1.0.0
 
 screenshots:
 -----------
