@@ -395,7 +395,7 @@ void qCheckGMail::checkMail()
 		if( m_accounts.size() > 0 ){
 			this->checkMail( m_accounts.at( 0 ) );
 		}else{
-			qDebug() << "BUGG!!,tried to check for mails when when there are no accounts configured" ;
+			qDebug() << "BUGG!!,tried to check for mails when there are no accounts configured" ;
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;

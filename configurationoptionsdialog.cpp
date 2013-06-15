@@ -128,7 +128,7 @@ int configurationoptionsdialog::getTimeFromConfigFile()
 
 	if( !f.exists() ){
 		f.open( QIODevice::WriteOnly ) ;
-		f.write( "5" ) ; // 5 minutes
+		f.write( "30" ) ; // 30 minutes
 		f.close() ;
 	}
 
