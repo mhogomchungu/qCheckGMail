@@ -64,9 +64,8 @@ void addaccount::add()
 		msg.exec() ;
 	}else{
 		emit addAccount( name,password,displayN,labels ) ;
+		this->HideUI();
 	}
-
-	this->HideUI();
 }
 
 void addaccount::cancel()
