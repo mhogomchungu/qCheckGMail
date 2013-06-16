@@ -52,10 +52,12 @@ install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/tr
 install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
 install ( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
 install ( FILES translations.ts/german_DE.ts DESTINATION share/qCheckGMail/translations.ts/ )
+install ( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
 
 install ( FILES translations.qm/greek_GR.qm DESTINATION share/qCheckGMail/translations.qm/ )
 install ( FILES translations.qm/dutch_NL.qm DESTINATION share/qCheckGMail/translations.qm/ )
 install ( FILES translations.qm/german_DE.qm DESTINATION share/qCheckGMail/translations.qm/ )
+install ( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/translations.qm/ )
 
 install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
 

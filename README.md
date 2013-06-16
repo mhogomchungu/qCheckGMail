@@ -39,6 +39,8 @@ The latest version can be downloaded from the following link: https://github.com
 
 screenshots:
 -----------
+<a href="http://tinypic.com?ref=2ntwlz4" target="_blank"><img src="http://i41.tinypic.com/2ntwlz4.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+
 <a href="http://tinypic.com?ref=demgpu" target="_blank"><img src="http://i42.tinypic.com/demgpu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
 <a href="http://tinypic.com?ref=5oa64i" target="_blank"><img src="http://i39.tinypic.com/5oa64i.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
