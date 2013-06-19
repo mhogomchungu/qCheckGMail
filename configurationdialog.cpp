@@ -148,7 +148,7 @@ void configurationDialog::walletOpened( bool b )
 			item->setText( labels ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
 			m_table->setItem( row,2,item ) ;
-			
+
 			m_wallet->readPassword( name,passWord ) ;
 
 			m_accounts.append( accounts( name,passWord,displayName,labels ) ) ;
@@ -197,7 +197,7 @@ void configurationDialog::HideUI()
 
 	for( int i = 0 ; i < j ; i++ ){
 
-		user = m_accounts.at( i ).userName() ;
+		user = m_accounts.at( i ).accountName() ;
 
 		m_wallet->writePassword( user,m_accounts.at( i ).passWord() ) ;
 

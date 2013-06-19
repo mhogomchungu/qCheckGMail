@@ -30,14 +30,16 @@ public:
 	accounts( const accounts& acc ) ;
 	accounts& operator= ( const accounts& acc ) ;
 
-	const QString& userName( void )  const ;
+	const QString& accountName( void )  const ;
 	const QString& passWord( void )  const ;
 	const QString& defaultLabelUrl( void )  const ;
 	const QString& displayName( void )  const ;
 	const QString& labels( void )  const ;
 	const QStringList& labelUrls( void ) const;
+	int numberOfLabels( void ) const ;
+	const QString& labelAt( int ) const ;
 private:
-	QString m_userName ;
+	QString m_accountName ;
 	QString m_passWord ;
 	QString m_displayName ;
 	QString m_labels ;

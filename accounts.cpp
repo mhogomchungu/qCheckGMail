@@ -20,8 +20,8 @@
 #include <QDebug>
 #include "accounts.h"
 
-accounts::accounts( QString userName,QString password,QString displayName,QString labels ) :
-	m_userName( userName ),m_passWord( password ),m_displayName( displayName ),m_labels( labels )
+accounts::accounts( QString accountName,QString password,QString displayName,QString labels ) :
+	m_accountName( accountName ),m_passWord( password ),m_displayName( displayName ),m_labels( labels )
 {
 	const char * baseLabel = "https://mail.google.com/mail/feed/atom/" ;
 
@@ -44,7 +44,7 @@ accounts::accounts( QString userName,QString password,QString displayName,QStrin
 
 accounts::accounts( const accounts& acc )
 {
-	m_userName    = acc.m_userName    ;
+	m_accountName = acc.m_accountName ;
 	m_passWord    = acc.m_passWord    ;
 	m_labels      = acc.m_labels      ;
 	m_labelUrls   = acc.m_labelUrls   ;
@@ -53,7 +53,7 @@ accounts::accounts( const accounts& acc )
 
 accounts& accounts::operator=( const accounts& acc )
 {
-	m_userName    = acc.m_userName    ;
+	m_accountName = acc.m_accountName   ;
 	m_passWord    = acc.m_passWord    ;
 	m_labels      = acc.m_labels      ;
 	m_labelUrls   = acc.m_labelUrls   ;
@@ -61,9 +61,9 @@ accounts& accounts::operator=( const accounts& acc )
 	return *this ;
 }
 
-const QString& accounts::userName() const
+const QString& accounts::accountName() const
 {
-	return m_userName ;
+	return m_accountName ;
 }
 
 const QString& accounts::passWord() const
@@ -89,5 +89,15 @@ const QString& accounts::defaultLabelUrl() const
 const QStringList& accounts::labelUrls() const
 {
 	return m_labelUrls ;
+}
+
+int accounts::numberOfLabels() const
+{
+	return m_labelUrls.size() ;
+}
+
+const QString &accounts::labelAt( int i ) const
+{
+	return m_labelUrls.at( i ) ;
 }
 

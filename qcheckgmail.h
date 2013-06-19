@@ -72,6 +72,8 @@ private slots:
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 private:
+	QString nameToDisplay( void ) ;
+	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
@@ -96,15 +98,15 @@ private:
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;
 	QVector<accounts> m_accounts ;
-	QVector<accounts> m_accounts_backUp ;
 	KWallet::Wallet * m_wallet ;
 	QString m_walletName ;
-	QString m_accountName ;
-	QString m_displayName ;
-	QString m_labelUrl ;
-	QStringList m_labelUrls ;
 	QString m_buildResults ;
 	bool m_newMailFound ;
+	bool m_checkingMail ;
+	int m_numberOfLabels ;
+	int m_currentLabel ;
+	int m_numberOfAccounts ;
+	int m_currentAccount ;
 };
 
 #endif // QCHECKGMAIL_H

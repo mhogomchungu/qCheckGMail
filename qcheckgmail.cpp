@@ -120,6 +120,36 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 	}
 }
 
+QString qCheckGMail::nameToDisplay()
+{
+	QString label       = m_accounts.at( m_currentAccount ).labelAt( m_currentLabel ).split( "/" ).last() ;
+	QString displayName = m_accounts.at( m_currentAccount ).displayName() ;
+	QString accountName = m_accounts.at( m_currentAccount ).accountName() ;
+
+	if( label.isEmpty() ){
+		if( displayName.isEmpty() ){
+			return accountName ;
+		}else{
+			return displayName ;
+		}
+	}else{
+		if( displayName.isEmpty() ){
+			return QString( "%1/%2" ).arg( accountName ).arg( label ) ;
+		}else{
+			return QString( "%1/%2" ).arg( displayName ).arg( label ) ;
+		}
+	}
+}
+
+void qCheckGMail::wrongAccountNameOrPassword()
+{
+	const accounts& acc = m_accounts.at( m_currentAccount ) ;
+	this->changeIcon( QString( "qCheckGMailError" ) ) ;
+	this->setToolTip( QString( "qCheckGMailError" ),
+			  tr( "failed to log in" ),
+			  tr( "%1 account has wrong username/password combination" ).arg( acc.accountName() ) ) ;
+	m_checkingMail = false ;
+}
 
 /*
  * This function goes through all accounts and give reports of all of their states
@@ -130,11 +160,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	qDebug() << "\n" << msg;
 #endif
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
-		this->changeIcon( QString( "qCheckGMailError" ) ) ;
-		this->setToolTip( QString( "qCheckGMailError" ),
-				  tr( "failed to log in" ),
-				  tr( "%1 account has wrong username/password combination" ).arg( m_accountName ) ) ;
-		return	;
+		return this->wrongAccountNameOrPassword() ;
 	}
 
 	int index_1 = msg.indexOf( "<fullcount>" ) ;
@@ -148,59 +174,42 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 	int count = mails.toInt() ;
 
-	QString x = m_labelUrl.split( "/" ).last() ;
-	QString accountName ;
+	QString x = QString::number( count ) ;
 
-	if( x.isEmpty() ){
-		if( m_displayName.isEmpty() ){
-			accountName = m_accountName ;
-		}else{
-			accountName = m_displayName ;
-		}
-	}else{
-		if( m_displayName.isEmpty() ){
-			accountName = m_accountName + QString( "/" ) + x ;
-		}else{
-			accountName = m_displayName + QString( "/" ) + x ;
-		}
-	}
+	QString z = this->nameToDisplay() ;
 
-	x = QString::number( count ) ;
 	if( count == 0 ){
-		m_buildResults += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( accountName ).arg( x ) ;
+		m_buildResults += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( z ).arg( x ) ;
 	}else{
 		m_newMailFound = true ;
-		m_buildResults += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( accountName ).arg( x ) ;
+		m_buildResults += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( x ) ;
 	}
 
-	if( m_labelUrls.size() > 0 ){
+	m_currentLabel++ ; //we just processed a label,increment one to go to the next one
+
+	if( m_currentLabel < m_numberOfLabels ){
 		/*
-		 * account has more labels to go through,go through them
+		 * account has more labels to go through,go through the next one
 		 */
-		QString label = m_labelUrls.at( 0 ) ;
-		m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
-		this->checkMail( m_accounts.at( 0 ),label ) ;
+		const accounts& acc = m_accounts.at( m_currentAccount ) ;
+		this->checkMail( acc,acc.labelAt( m_currentLabel ) ) ;
 	}else{
+		m_currentAccount++ ; // we are done processing one account,go to the next one if present
+
 		/*
 		 * No mail was found on the previous account,if there are more accounts,check them
 		 */
-		if( m_accounts.size() > 1 ){
+		if( m_currentAccount < m_numberOfAccounts ){
 			/*
-			 * there are more accounts,remove the entry previously checked and check the next account
+			 * there are more accounts,process the next one
 			 */
-			m_accounts.remove( 0 ) ;
-			m_labelUrls.clear() ;
-			this->checkMail( m_accounts.at( 0 ) ) ;
+			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
 			/*
 			 * done checking all labels on all accounts
 			 */
-			
-			/*
-			 * restore accounts from back up
-			 */
-			m_accounts = m_accounts_backUp ;
-			m_labelUrls.clear() ;
+
+			m_checkingMail = false ;
 
 			m_buildResults += QString( "</table>" ) ;
 
@@ -230,11 +239,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 	qDebug() << "\n" << msg;
 #endif
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
-		this->changeIcon( QString( "qCheckGMailError" ) ) ;
-		this->setToolTip( QString( "qCheckGMailError" ),
-				  tr( "failed to log in" ),
-				  tr( "wrong username/password combination" ) ) ;
-		return	;
+		return this->wrongAccountNameOrPassword() ;
 	}
 
 	int index_1 = msg.indexOf( "<fullcount>" ) ;
@@ -266,65 +271,42 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		QString icon = QString( "qCheckGMail-GotMail" ) ;
 		this->changeIcon( icon ) ;
 
-		QString x = m_labelUrl.split( "/" ).last() ;
-		QString accountName ;
+		this->setToolTip( icon,this->nameToDisplay(),info ) ;
 
-		if( x.isEmpty() ){
-			if( m_displayName.isEmpty() ){
-				accountName = m_accountName ;
-			}else{
-				accountName = m_displayName ;
-			}
-		}else{
-			if( m_displayName.isEmpty() ){
-				accountName = m_accountName + QString( "/" ) + x ;
-			}else{
-				accountName = m_displayName + QString( "/" ) + x ;
-			}
-		}
+		this->newEmailNotify();
 
-		this->setToolTip( icon,accountName,info ) ;
-
-		/*
-		 * done checking,restoring accounts from back up
-		 */
-		 m_accounts = m_accounts_backUp ;
-		 m_labelUrls.clear() ;
-		 this->newEmailNotify();
+		m_checkingMail = false ;
 	}else{
-		if( m_labelUrls.size() > 0 ){
+		m_currentLabel++ ; //we just processed a label,increment one to go to the next one
+
+		if( m_currentLabel < m_numberOfLabels ){
 			/*
 			 * account has more labels to go through,go through them
 			 */
-			QString label = m_labelUrls.at( 0 ) ;
-
-			m_labelUrls.removeAt( 0 ) ; //remve the label we are going to process next
-			this->checkMail( m_accounts.at( 0 ),label ) ;
+			const accounts& acc = m_accounts.at( m_currentAccount ) ;
+			this->checkMail( acc,acc.labelAt( m_currentLabel ) ) ;
 		}else{
+			m_currentAccount++ ; // we are done processing one account,go to the next one if present
+
 			/*
 			 * No mail was found on the previous account,if there are more accounts,check them
 			 */
-			if( m_accounts.size() > 1 ){
+			if( m_currentAccount < m_numberOfAccounts ){
 				/*
-				 * there are more accounts,remove the entry previously checked and check the next account
+				 * there are more accounts,check the next account
 				 */
-				m_accounts.remove( 0 ) ;
-				m_labelUrls.clear() ;
-				this->checkMail( m_accounts.at( 0 ) ) ;
+				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 			}else{
 				/*
 				 * there are no more accounts and new mail not found in any of them
 				 */
 
+				m_checkingMail = false ;
+
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
 				this->setStatus( KStatusNotifierItem::Passive ) ;
-				/*
-				 * done checking,restoring accounts from back up
-				 */
-				 m_accounts = m_accounts_backUp ;
-				 m_labelUrls.clear() ;
 			}
 		}
 	}
@@ -345,6 +327,12 @@ void qCheckGMail::pauseCheckingMail( bool b )
 	}else{
 		this->setOverlayIconByName( QString( "" ) );
 		this->startTimer();
+
+		if( m_checkingMail ){
+			;
+		}else{
+			this->checkMail();
+		}
 	}
 }
 
@@ -385,15 +373,15 @@ void qCheckGMail::deleteKWallet()
 void qCheckGMail::checkMail()
 {
 	if( m_gotCredentials ){
-
-		m_buildResults = QString( "<table>" ) ;
-		m_newMailFound = false ;
-
 		/*
 		* check for updates on the first account
 		*/
-		if( m_accounts.size() > 0 ){
-			this->checkMail( m_accounts.at( 0 ) );
+		if( m_numberOfAccounts > 0 ){
+			m_buildResults    = QString( "<table>" ) ;
+			m_newMailFound    = false ;
+			m_currentAccount  = 0 ; // use to track the account we are checking
+			m_checkingMail    = true ;
+			this->checkMail( m_accounts.at( m_currentAccount ) );
 		}else{
 			qDebug() << "BUGG!!,tried to check for mails when there are no accounts configured" ;
 		}
@@ -405,20 +393,19 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_labelUrls = acc.labelUrls() ;
-	m_labelUrls.removeAt( 0 ) ; // remove the first default label
+	/*
+	 * start at 1 because the default label will always be included,the default label is the main account
+	 */
+	m_currentLabel = 0 ;
+	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
 void qCheckGMail::checkMail( const accounts& acc,const QString& label )
 {
-	m_accountName = acc.userName() ;
-	m_displayName = acc.displayName() ;
-	m_labelUrl    = label    ;
+	QUrl url( label ) ;
 
-	QUrl url( m_labelUrl ) ;
-
-	url.setUserName( m_accountName ) ;
+	url.setUserName( acc.accountName() ) ;
 	url.setPassword( acc.passWord() ) ;
 
 	QNetworkRequest rqt( url ) ;
@@ -451,12 +438,13 @@ void qCheckGMail::getAccountsInfo()
 		/*
 		 * get accounts information from kwallet
 		 */
-		m_accounts_backUp = configurationDialog::getAccounts( m_wallet ) ;
+		m_accounts = configurationDialog::getAccounts( m_wallet ) ;
 
-		m_gotCredentials = m_accounts_backUp.size() > 0 ;
+		m_numberOfAccounts = m_accounts.size() ;
+
+		m_gotCredentials = m_numberOfAccounts > 0 ;
 
 		if( m_gotCredentials ){
-			m_accounts = m_accounts_backUp ;
 			this->checkMail() ;
 		}else{
 			/*
@@ -496,7 +484,7 @@ QStringList qCheckGMail::getAccountNames()
 	QStringList l ;
 	int j = m_accounts.size();
 	for( int i = 0 ; i < j ; i++ ){
-		l.append( m_accounts.at( i ).userName() ) ;
+		l.append( m_accounts.at( i ).accountName() ) ;
 	}
 	return l ;
 }
