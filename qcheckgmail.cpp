@@ -141,6 +141,17 @@ QString qCheckGMail::nameToDisplay()
 	}
 }
 
+QString qCheckGMail::getAtomComponent( const QByteArray& msg,QString cmp )
+{
+	QString x = QString( "<%1>" ).arg( cmp ) ;
+	QString z = QString( "</%1>" ).arg( cmp ) ;
+
+	int index_1 = msg.indexOf( x ) + x.size() ;
+	int index_2 = msg.indexOf( z ) - index_1  ;
+
+	return QString( msg.mid( index_1,index_2 ) ) ;
+}
+
 void qCheckGMail::wrongAccountNameOrPassword()
 {
 	const accounts& acc = m_accounts.at( m_currentAccount ) ;
@@ -163,26 +174,15 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		return this->wrongAccountNameOrPassword() ;
 	}
 
-	int index_1 = msg.indexOf( "<fullcount>" ) ;
-
-	int index_2 = msg.indexOf( "</fullcount>" ) ;
-
-	int c = strlen( "<fullcount>" ) ;
-
-	QByteArray md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
-	QString mails = QString( md ) ;
-
-	int count = mails.toInt() ;
-
-	QString x = QString::number( count ) ;
+	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
 
 	QString z = this->nameToDisplay() ;
 
-	if( count == 0 ){
-		m_buildResults += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( z ).arg( x ) ;
+	if( mailCount == QString( "0" ) ){
+		m_accountStatus += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( z ).arg( mailCount ) ;
 	}else{
 		m_newMailFound = true ;
-		m_buildResults += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( x ) ;
+		m_accountStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
 	m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
@@ -207,19 +207,19 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			m_checkingMail = false ;
 
-			m_buildResults += QString( "</table>" ) ;
+			m_accountStatus += QString( "</table>" ) ;
 
 			if( m_newMailFound ){
 				 this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 				 QString icon = QString( "qCheckGMail-GotMail" ) ;
 				 this->changeIcon( icon ) ;
-				 this->setToolTip( icon,tr( "new mail found" ),m_buildResults ) ;
+				 this->setToolTip( icon,tr( "new mail found" ),m_accountStatus ) ;
 				 this->newEmailNotify();
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
-				this->setToolTip( icon,tr( "no new mail" ),m_buildResults ) ;
+				this->setToolTip( icon,tr( "no new mail" ),m_accountStatus ) ;
 			}
 		}
 	}
@@ -238,29 +238,19 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		return this->wrongAccountNameOrPassword() ;
 	}
 
-	int index_1 = msg.indexOf( "<fullcount>" ) ;
+	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
 
-	int index_2 = msg.indexOf( "</fullcount>" ) ;
-
-	int c = strlen( "<fullcount>" ) ;
-
-	QByteArray md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
-	QString mails = QString( md ) ;
-
-	int count = mails.toInt() ;
+	int count = mailCount.toInt() ;
 
 	if( count > 0 ){
 
 		QString info ;
 
 		if( count == 1 ){
-			index_1 = msg.indexOf( "<name>" ) ;
-			index_2 = msg.indexOf( "</name>" ) ;
-			c = strlen( "<name>" ) ;
-			md = msg.mid( index_1 + c ,index_2 - ( index_1 + c ) ) ;
-			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( QString( md ) ) ;
+			QString x = this->getAtomComponent( msg,QString( "name") ) ;
+			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( x ) ;
 		}else{
-			info = tr( "%2 emails are waiting for you" ).arg( mails ) ;
+			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
 		this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
@@ -294,7 +284,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				 * there are no more accounts and new mail not found in any of them
 				 */
 				m_checkingMail = false ;
-				
+
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
@@ -369,7 +359,7 @@ void qCheckGMail::checkMail()
 		* check for updates on the first account
 		*/
 		if( m_numberOfAccounts > 0 ){
-			m_buildResults    = QString( "<table>" ) ;
+			m_accountStatus   = QString( "<table>" ) ;
 			m_newMailFound    = false ;
 			m_currentAccount  = 0 ; // use to track the account we are checking
 			m_checkingMail    = true ;
@@ -384,15 +374,15 @@ void qCheckGMail::checkMail()
 }
 
 void qCheckGMail::checkMail( const accounts& acc )
-{	
+{
 	m_currentLabel = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
-void qCheckGMail::checkMail( const accounts& acc,const QString& label )
+void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 {
-	QUrl url( label ) ;
+	QUrl url( UrlLabel ) ;
 
 	url.setUserName( acc.accountName() ) ;
 	url.setPassword( acc.passWord() ) ;

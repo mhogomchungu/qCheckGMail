@@ -73,6 +73,7 @@ private slots:
 	void objectDestroyed( void ) ;
 private:
 	QString nameToDisplay( void ) ;
+	QString getAtomComponent( const QByteArray&,QString ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
@@ -100,7 +101,7 @@ private:
 	QVector<accounts> m_accounts ;
 	KWallet::Wallet * m_wallet ;
 	QString m_walletName ;
-	QString m_buildResults ;
+	QString m_accountStatus ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
 	int m_numberOfLabels ;
