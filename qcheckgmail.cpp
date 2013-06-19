@@ -122,9 +122,9 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 
 QString qCheckGMail::nameToDisplay()
 {
-	QString label       = m_accounts.at( m_currentAccount ).labelAt( m_currentLabel ).split( "/" ).last() ;
-	QString displayName = m_accounts.at( m_currentAccount ).displayName() ;
-	QString accountName = m_accounts.at( m_currentAccount ).accountName() ;
+	QString label              = m_accounts.at( m_currentAccount ).labelUrlAt( m_currentLabel ).split( "/" ).last() ;
+	const QString& displayName = m_accounts.at( m_currentAccount ).displayName() ;
+	const QString& accountName = m_accounts.at( m_currentAccount ).accountName() ;
 
 	if( label.isEmpty() ){
 		if( displayName.isEmpty() ){
@@ -185,20 +185,17 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		m_buildResults += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( x ) ;
 	}
 
-	m_currentLabel++ ; //we just processed a label,increment one to go to the next one
+	m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
 
 	if( m_currentLabel < m_numberOfLabels ){
 		/*
 		 * account has more labels to go through,go through the next one
 		 */
 		const accounts& acc = m_accounts.at( m_currentAccount ) ;
-		this->checkMail( acc,acc.labelAt( m_currentLabel ) ) ;
+		this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
 	}else{
 		m_currentAccount++ ; // we are done processing one account,go to the next one if present
 
-		/*
-		 * No mail was found on the previous account,if there are more accounts,check them
-		 */
 		if( m_currentAccount < m_numberOfAccounts ){
 			/*
 			 * there are more accounts,process the next one
@@ -208,7 +205,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			/*
 			 * done checking all labels on all accounts
 			 */
-
 			m_checkingMail = false ;
 
 			m_buildResults += QString( "</table>" ) ;
@@ -277,20 +273,17 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 		m_checkingMail = false ;
 	}else{
-		m_currentLabel++ ; //we just processed a label,increment one to go to the next one
+		m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
 
 		if( m_currentLabel < m_numberOfLabels ){
 			/*
-			 * account has more labels to go through,go through them
+			 * account has more labels to go through,go through the second one
 			 */
 			const accounts& acc = m_accounts.at( m_currentAccount ) ;
-			this->checkMail( acc,acc.labelAt( m_currentLabel ) ) ;
+			this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
 		}else{
 			m_currentAccount++ ; // we are done processing one account,go to the next one if present
 
-			/*
-			 * No mail was found on the previous account,if there are more accounts,check them
-			 */
 			if( m_currentAccount < m_numberOfAccounts ){
 				/*
 				 * there are more accounts,check the next account
@@ -300,9 +293,8 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				/*
 				 * there are no more accounts and new mail not found in any of them
 				 */
-
 				m_checkingMail = false ;
-
+				
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
@@ -392,10 +384,7 @@ void qCheckGMail::checkMail()
 }
 
 void qCheckGMail::checkMail( const accounts& acc )
-{
-	/*
-	 * start at 1 because the default label will always be included,the default label is the main account
-	 */
+{	
 	m_currentLabel = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;

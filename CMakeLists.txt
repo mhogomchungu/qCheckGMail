@@ -26,7 +26,7 @@ QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.
 add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp 
 	configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
-TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend ) 
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend -lkdecore ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )

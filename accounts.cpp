@@ -96,7 +96,7 @@ int accounts::numberOfLabels() const
 	return m_labelUrls.size() ;
 }
 
-const QString &accounts::labelAt( int i ) const
+const QString &accounts::labelUrlAt( int i ) const
 {
 	return m_labelUrls.at( i ) ;
 }

@@ -37,7 +37,7 @@ public:
 	const QString& labels( void )  const ;
 	const QStringList& labelUrls( void ) const;
 	int numberOfLabels( void ) const ;
-	const QString& labelAt( int ) const ;
+	const QString& labelUrlAt( int ) const ;
 private:
 	QString m_accountName ;
 	QString m_passWord ;
