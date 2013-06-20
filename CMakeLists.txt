@@ -26,7 +26,38 @@ QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.
 add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp 
 	configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
-TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} -lkdeui -lkwalletbackend -lkdecore ) 
+find_library( LIBKWALLETBACKEND libkwalletbackend.so )
+if( NOT LIBKWALLETBACKEND )
+	# some distributions do not have libkwalletbackend.so filr for reasons i currently do not know
+	# look for libkwalletbackend.sp.4 when the above happen
+	find_library( LIBKWALLETBACKEND libkwalletbackend.so.4 )	
+endif()
+
+if( NOT LIBKWALLETBACKEND )
+	message( FATAL_ERROR "could not find libkwalletbackend.so or libkwalletbackend.so.4,please make sure you have kwallet development libraries installed and try again" )
+endif()
+
+find_library( LIBKDEUI libkdeui.so )
+if( NOT LIBKDEUI )
+	# adding this one just in case the same case as above happen
+	find_library( LIBKDEUI libkdeui.so.5 )
+endif()
+	
+if( NOT LIBKDEUI )
+	message( FATAL_ERROR "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
+endif()
+
+find_library( LIBKDECORE libkdecore.so )
+if( NOT LIBKDECORE )
+	# adding this one just in case the same case as above happen	
+	find_library( LIBKDECORE libkdecore.so.5 )
+endif()
+
+if( NOT LIBKDECORE )
+	message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
+endif()
+		
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} ${LIBKDEUI} ${LIBKDECORE} ${LIBKWALLETBACKEND} ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )

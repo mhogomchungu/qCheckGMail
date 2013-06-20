@@ -1,0 +1,23 @@
+
+The build system in use is cmake
+
+To build make sure you have the following packages installed(packages may be named differently in your distribution):
+
+g++
+cmake
+kde-devel
+qt4-devel
+
+To build,run the following commands
+
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`  -DCMAKE_BUILD_TYPE=RELEASE ..
+make
+make install
+
+Note:
+The last command must be run from root's account and depending on your distribution,you may need to run one of below two:
+su -c "make install"
+sudo make install
+

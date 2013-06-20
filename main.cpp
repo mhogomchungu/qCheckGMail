@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	KAboutData aboutData( 	"qCheckGMail",
 				0,
 				ki18n( "qCheckGMail" ),
-				"1.0.0",
+				"1.1.0",
 				ki18n( "a qt based gmail checker" ),
 				KAboutData::License_GPL_V2,
 				ki18n( "(c)2013,ink Francis\nemail:mhogomchungu@gmail.com" ),
