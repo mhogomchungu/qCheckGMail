@@ -50,54 +50,6 @@
     </message>
 </context>
 <context>
-    <name>configurationDialog</name>
-    <message>
-        <location filename="../configurationdialog.ui" line="14"/>
-        <source>account configuration window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="26"/>
-        <source>&amp;close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="42"/>
-        <source>Accounts information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="73"/>
-        <source>account name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="78"/>
-        <source>display name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="83"/>
-        <source>account labels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="98"/>
-        <source>delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.ui" line="111"/>
-        <source>add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationdialog.cpp" line="238"/>
-        <source>delete entry</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>configurationoptionsdialog</name>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="14"/>
@@ -145,6 +97,54 @@ ERROR: illegal characters detected in the the update interval field
 ERROR: minimum time interval is 5 minutes
 
 </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>kwalletmanager</name>
+    <message>
+        <location filename="../kwalletmanager.ui" line="14"/>
+        <source>account configuration window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="26"/>
+        <source>&amp;close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="42"/>
+        <source>Accounts information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="73"/>
+        <source>account name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="78"/>
+        <source>display name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="83"/>
+        <source>account labels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="98"/>
+        <source>delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="111"/>
+        <source>add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.cpp" line="236"/>
+        <source>delete entry</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

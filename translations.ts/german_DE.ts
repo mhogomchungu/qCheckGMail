@@ -52,49 +52,40 @@
 <context>
     <name>configurationDialog</name>
     <message>
-        <location filename="../configurationdialog.ui" line="14"/>
         <source>account configuration window</source>
-        <translation>Kontokonfiguration</translation>
+        <translation type="obsolete">Kontokonfiguration</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="26"/>
         <source>&amp;close</source>
-        <translation>&amp;Schließen</translation>
+        <translation type="obsolete">&amp;Schließen</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="42"/>
         <source>Accounts information</source>
-        <translation>Kontoinformationen</translation>
+        <translation type="obsolete">Kontoinformationen</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="73"/>
         <source>account name</source>
-        <translation>Kontoname</translation>
+        <translation type="obsolete">Kontoname</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="78"/>
         <source>display name</source>
-        <translation>Anzeigename</translation>
+        <translation type="obsolete">Anzeigename</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="83"/>
         <source>account labels</source>
-        <translation>Kontolabel</translation>
+        <translation type="obsolete">Kontolabel</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="98"/>
         <source>delete</source>
-        <translation>Löschen</translation>
+        <translation type="obsolete">Löschen</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="111"/>
         <source>add</source>
-        <translation>Hinzufügen</translation>
+        <translation type="obsolete">Hinzufügen</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.cpp" line="238"/>
         <source>delete entry</source>
-        <translation>Eintrag löschen</translation>
+        <translation type="obsolete">Eintrag löschen</translation>
     </message>
 </context>
 <context>
@@ -146,6 +137,54 @@ ERROR: minimum time interval is 5 minutes
 
 </source>
         <translation>FEHELR: das minimale Aktualisierungsintervall muss 5 Mintuen betragen</translation>
+    </message>
+</context>
+<context>
+    <name>kwalletmanager</name>
+    <message>
+        <location filename="../kwalletmanager.ui" line="14"/>
+        <source>account configuration window</source>
+        <translation type="unfinished">Kontokonfiguration</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="26"/>
+        <source>&amp;close</source>
+        <translation type="unfinished">&amp;Schließen</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="42"/>
+        <source>Accounts information</source>
+        <translation type="unfinished">Kontoinformationen</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="73"/>
+        <source>account name</source>
+        <translation type="unfinished">Kontoname</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="78"/>
+        <source>display name</source>
+        <translation type="unfinished">Anzeigename</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="83"/>
+        <source>account labels</source>
+        <translation type="unfinished">Kontolabel</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="98"/>
+        <source>delete</source>
+        <translation type="unfinished">Löschen</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="111"/>
+        <source>add</source>
+        <translation type="unfinished">Hinzufügen</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.cpp" line="236"/>
+        <source>delete entry</source>
+        <translation type="unfinished">Eintrag löschen</translation>
     </message>
 </context>
 <context>

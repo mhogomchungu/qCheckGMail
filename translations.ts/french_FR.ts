@@ -1,91 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="nl_NL">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>addaccount</name>
     <message>
         <location filename="../addaccount.ui" line="14"/>
         <source>create a new account</source>
-        <translation>Nieuw account aanmaken</translation>
+        <translatorcomment>créer un nouveau compte</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="48"/>
         <source>account password</source>
-        <translation>Wachtwoord van account</translation>
+        <translatorcomment>mot de passe du compte</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="67"/>
         <source>account name</source>
-        <translation>Accountnaam</translation>
+        <translatorcomment>nom du compte</translatorcomment>
+        <translation>nom du compte</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="99"/>
         <source>multiple labels can be entered by separating them with a comma(,)</source>
-        <translation>meerder labels, door komma (,) gescheiden, kunnen ingevoerd worden</translation>
+        <translation>plusieurs label peuvent être aisis en les séparant par des virgules(,)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="112"/>
         <source>label(s)(optional)</source>
-        <translation>Label(s) (optioneel)</translation>
+        <translation>label(facultatif)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="131"/>
         <source>display name(optional)</source>
-        <translation>Weergegeven naam (optioneel)</translation>
+        <translation>afficher le nom(facultatif)</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="161"/>
         <source>add</source>
-        <translation>Toevoegen</translation>
+        <translation>ajouter</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="174"/>
         <source>cancel</source>
-        <translation>Annuleren</translation>
+        <translation>annuler</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="63"/>
         <source>ERROR: one or more reguired field is missing</source>
-        <translation>FOUT: één of meerdere vereiste velden ontbreken</translation>
+        <translation>ERREUR : un ou plusieurs champs obligatoires sont manquants</translation>
     </message>
 </context>
 <context>
     <name>configurationDialog</name>
     <message>
         <source>account configuration window</source>
-        <translation type="obsolete">Configuratiescherm account</translation>
+        <translation type="obsolete">fenêtre de configuration du compte</translation>
     </message>
     <message>
         <source>&amp;close</source>
-        <translation type="obsolete">&amp;Sluiten</translation>
+        <translation type="obsolete">&amp;_fermer</translation>
     </message>
     <message>
         <source>Accounts information</source>
-        <translation type="obsolete">Accountinformatie</translation>
+        <translation type="obsolete">Informations sur les comptes</translation>
     </message>
     <message>
         <source>account name</source>
-        <translation type="obsolete">Accountnaam</translation>
+        <translation type="obsolete">nom du compte</translation>
     </message>
     <message>
         <source>display name</source>
-        <translation type="obsolete">Weergegeven naam</translation>
+        <translation type="obsolete">afficher le nom</translation>
     </message>
     <message>
         <source>account labels</source>
-        <translation type="obsolete">Accountlabels</translation>
+        <translation type="obsolete">labels des comptes</translation>
     </message>
     <message>
         <source>delete</source>
-        <translation type="obsolete">Verwijderen</translation>
+        <translation type="obsolete">supprimer</translation>
     </message>
     <message>
         <source>add</source>
-        <translation type="obsolete">Toevoegen</translation>
+        <translation type="obsolete">ajouter</translation>
     </message>
     <message>
         <source>delete entry</source>
-        <translation type="obsolete">Invoer verwijderen</translation>
+        <translation type="obsolete">supprimer l&apos;entrée</translation>
     </message>
 </context>
 <context>
@@ -93,32 +96,32 @@
     <message>
         <location filename="../configurationoptionsdialog.ui" line="14"/>
         <source>option configuration window</source>
-        <translation>Configuratiescherm optoins</translation>
+        <translation>fenêtre de configuration des options</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="50"/>
         <source>update interval(minutes)</source>
-        <translation>Bijwerkeninterval (minuten)</translation>
+        <translation>delai de rafraichissemen (en minutes)</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="105"/>
         <source>auto start application at log in</source>
-        <translation>Automatisch starten na aanmelden</translation>
+        <translation>lancer l&apos;application au démarrage</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="152"/>
         <source>localization language</source>
-        <translation>Taal</translation>
+        <translation>langue de l&apos;application</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="197"/>
         <source>report on all accounts</source>
-        <translation>Rapporteren voor alle accounts</translation>
+        <translation>rapport sur tous les comptes</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="218"/>
         <source>close</source>
-        <translation>Sluiten</translation>
+        <translation>fermer</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.cpp" line="173"/>
@@ -129,7 +132,7 @@ ERROR: illegal characters detected in the the update interval field
 </source>
         <translation>
 
-FOUT: ongeldige karakters in veld van interval gedetecteerd
+ERREUR : des caractéres non permis ont été detectés dans le champ du delai de lise à jour
 
 </translation>
     </message>
@@ -142,7 +145,9 @@ ERROR: minimum time interval is 5 minutes
 </source>
         <translation>
 
-FOUT: minimum tijdinterval is 5 minuten</translation>
+ERREUR : l&apos;intervalle minimum est de 5 minutes
+
+</translation>
     </message>
 </context>
 <context>
@@ -150,47 +155,47 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../kwalletmanager.ui" line="14"/>
         <source>account configuration window</source>
-        <translation type="unfinished">Configuratiescherm account</translation>
+        <translation>fenêtre de configuration du compte</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="26"/>
         <source>&amp;close</source>
-        <translation type="unfinished">&amp;Sluiten</translation>
+        <translation>&amp;_fermer</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="42"/>
         <source>Accounts information</source>
-        <translation type="unfinished">Accountinformatie</translation>
+        <translation>Informations sur les comptes</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="73"/>
         <source>account name</source>
-        <translation type="unfinished">Accountnaam</translation>
+        <translation>nom du compte</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="78"/>
         <source>display name</source>
-        <translation type="unfinished">Weergegeven naam</translation>
+        <translation>afficher le nom</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="83"/>
         <source>account labels</source>
-        <translation type="unfinished">Accountlabels</translation>
+        <translation>labels des comptes</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="98"/>
         <source>delete</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>supprimer</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="111"/>
         <source>add</source>
-        <translation type="unfinished">Toevoegen</translation>
+        <translation>ajouter</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="236"/>
         <source>delete entry</source>
-        <translation type="unfinished">Invoer verwijderen</translation>
+        <translation>supprimer l&apos;entrée</translation>
     </message>
 </context>
 <context>
@@ -200,118 +205,118 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
         <location filename="../qcheckgmail.cpp" line="288"/>
         <location filename="../qcheckgmail.cpp" line="453"/>
         <source>status</source>
-        <translation>Status</translation>
+        <translation>statuts</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="55"/>
         <source>opening wallet</source>
-        <translation>Portefeuille openen</translation>
+        <translation>ouverture du portefeuille</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="63"/>
         <source>check mail now</source>
-        <translation>Mail nu controleren</translation>
+        <translation>vérifier les mails maintenant</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="71"/>
         <source>pause checking mail</source>
-        <translation>Mailcontrole onderbreken</translation>
+        <translation>arrêter la verification des mails</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="81"/>
         <source>configure accounts</source>
-        <translation>Accounts instellen</translation>
+        <translation>configuration des comptes</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="89"/>
         <source>configure options</source>
-        <translation>Opties instellen</translation>
+        <translation>configuration des options</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="111"/>
         <source>failed to connect</source>
-        <translation>verbinden is mislukt</translation>
+        <translation>echec de connexion</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="112"/>
         <source>check mail skipped,user is not connected to the internet</source>
-        <translation>mailcontrole overgeslagen, gebruiker is niet met het internet verbonden</translation>
+        <translation>pas de vérification des mails, l&apos;utilisateur n&apos;est pas connecté au réseau</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="160"/>
         <source>failed to log in</source>
-        <translation>aanmelden is mislukt</translation>
+        <translation>echec de la connexion</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="161"/>
         <source>%1 account has wrong username/password combination</source>
-        <translation>%1 account heeft ongeldige combinatie gebruikersnaam/wachtwoord</translation>
+        <translation>le compte %1 a une mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="216"/>
         <source>new mail found</source>
-        <translation>Nieuwe mail gevonden</translation>
+        <translation>nouvel email trouvé</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="222"/>
         <source>no new mail</source>
-        <translation>Geen mail gevonden</translation>
+        <translation>pas de nouvel email</translation>
     </message>
     <message>
         <source>wrong username/password combination</source>
-        <translation type="obsolete">Ongeldige combinatie gebruikersnaam/wachtwoord</translation>
+        <translation type="obsolete">mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="251"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
-        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email van &lt;b&gt;%1&lt;/b&gt; is aanwezig&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
+        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email depuis &lt;b&gt;%1&lt;/b&gt; est en attente&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="253"/>
         <source>%2 emails are waiting for you</source>
-        <translation>%2 emails zijn aanwezig</translation>
+        <translation>%2 emails sont en attente</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="288"/>
         <source>no new email found</source>
-        <translation>Geen nieuwe emails gevonden</translation>
+        <translation>pas de nouvel email</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="371"/>
         <source>dont have credentials,(re)trying to open wallet</source>
-        <translation>heeft geen toestemming, (opnieuw) proberen portefeuille te openen</translation>
+        <translation>pas d&apos;informations, retentative d&apos;ouverture du portefeuille</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="447"/>
         <source>error</source>
-        <translation>fout</translation>
+        <translation>erreur</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="447"/>
         <source>no account appear to be configured in the wallet</source>
-        <translation>er is blijkbaar geen account in de portefeuille ingesteld</translation>
+        <translation>aucun compte ne semble avoir été configuré dans le portefeuille</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="452"/>
         <source>wallet not opened</source>
-        <translation>portefeuille niet geopend</translation>
+        <translation>le portefeuiile n&apos;est pas ouvert</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="453"/>
         <source>error,failed to open wallet</source>
-        <translation>fout, openen portefeuille is mislukt</translation>
+        <translation>erreur, echec lors de l&apos;ouverture du portefeuille</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="558"/>
         <location filename="../qcheckgmail.cpp" line="571"/>
         <source>another instance is already running,exiting this one</source>
-        <translation>een ander exemplaar is reeds actief, deze wordt afgesloten</translation>
+        <translation>une autre instance de CheckGMail est déjà lancée, veuillez l&apos;arrêter</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="587"/>
         <location filename="../qcheckgmail.cpp" line="600"/>
         <source>autostart disabled,exiting this one</source>
-        <translation>automatisch starten is uitgeschakeld, deze wordt afgesloten</translation>
+        <translation>l&apos;autostart est désactivé, veuillez l&apos;arrêter</translation>
     </message>
 </context>
 </TS>

@@ -52,53 +52,44 @@
 <context>
     <name>configurationDialog</name>
     <message>
-        <location filename="../configurationdialog.ui" line="14"/>
         <source>account configuration window</source>
-        <translation>Παράθυρο επεξεργασίας λογαριασμού</translation>
+        <translation type="obsolete">Παράθυρο επεξεργασίας λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="26"/>
         <source>&amp;close</source>
-        <translation>&amp;Κλείσιμο</translation>
+        <translation type="obsolete">&amp;Κλείσιμο</translation>
     </message>
     <message>
         <source>Account information(display name and account labels are optional)</source>
         <translation type="obsolete">Πληροφορίες λογαριασμού (το εμφανιζόμενο όνομα και οι ετικέτες λογαριασμού είναι προαιρετικά)</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="42"/>
         <source>Accounts information</source>
-        <translation>Πληροφορίες λογαριασμών</translation>
+        <translation type="obsolete">Πληροφορίες λογαριασμών</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="73"/>
         <source>account name</source>
-        <translation>Όνομα λογαριασμού</translation>
+        <translation type="obsolete">Όνομα λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="78"/>
         <source>display name</source>
-        <translation>Εμφανιζόμενο όνομα</translation>
+        <translation type="obsolete">Εμφανιζόμενο όνομα</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="83"/>
         <source>account labels</source>
-        <translation>Ετικέτες λογαριασμού</translation>
+        <translation type="obsolete">Ετικέτες λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="98"/>
         <source>delete</source>
-        <translation>Διαγραφή</translation>
+        <translation type="obsolete">Διαγραφή</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="111"/>
         <source>add</source>
-        <translation>Προσθήκη</translation>
+        <translation type="obsolete">Προσθήκη</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.cpp" line="238"/>
         <source>delete entry</source>
-        <translation>Διαγραφή καταχώρησης</translation>
+        <translation type="obsolete">Διαγραφή καταχώρησης</translation>
     </message>
 </context>
 <context>
@@ -162,6 +153,54 @@ ERROR: minimum time interval is 5 minutes
 ΣΦΑΛΜΑ: το ελάχιστο διάστημα ενημέρωσης είναι 5 λεπτά
 
 </translation>
+    </message>
+</context>
+<context>
+    <name>kwalletmanager</name>
+    <message>
+        <location filename="../kwalletmanager.ui" line="14"/>
+        <source>account configuration window</source>
+        <translation type="unfinished">Παράθυρο επεξεργασίας λογαριασμού</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="26"/>
+        <source>&amp;close</source>
+        <translation type="unfinished">&amp;Κλείσιμο</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="42"/>
+        <source>Accounts information</source>
+        <translation type="unfinished">Πληροφορίες λογαριασμών</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="73"/>
+        <source>account name</source>
+        <translation type="unfinished">Όνομα λογαριασμού</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="78"/>
+        <source>display name</source>
+        <translation type="unfinished">Εμφανιζόμενο όνομα</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="83"/>
+        <source>account labels</source>
+        <translation type="unfinished">Ετικέτες λογαριασμού</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="98"/>
+        <source>delete</source>
+        <translation type="unfinished">Διαγραφή</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="111"/>
+        <source>add</source>
+        <translation type="unfinished">Προσθήκη</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.cpp" line="236"/>
+        <source>delete entry</source>
+        <translation type="unfinished">Διαγραφή καταχώρησης</translation>
     </message>
 </context>
 <context>

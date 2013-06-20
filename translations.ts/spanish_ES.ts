@@ -52,49 +52,40 @@
 <context>
     <name>configurationDialog</name>
     <message>
-        <location filename="../configurationdialog.ui" line="14"/>
         <source>account configuration window</source>
-        <translation type="unfinished">ventana configuración de cuenta</translation>
+        <translation type="obsolete">ventana configuración de cuenta</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="26"/>
         <source>&amp;close</source>
-        <translation type="unfinished">&amp;cerrar</translation>
+        <translation type="obsolete">&amp;cerrar</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="42"/>
         <source>Accounts information</source>
-        <translation type="unfinished">Información de cuentas</translation>
+        <translation type="obsolete">Información de cuentas</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="73"/>
         <source>account name</source>
-        <translation type="unfinished">mostrar nombre</translation>
+        <translation type="obsolete">mostrar nombre</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="78"/>
         <source>display name</source>
-        <translation type="unfinished">mostrar nombre</translation>
+        <translation type="obsolete">mostrar nombre</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="83"/>
         <source>account labels</source>
-        <translation type="unfinished">etiquetas de cuenta</translation>
+        <translation type="obsolete">etiquetas de cuenta</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="98"/>
         <source>delete</source>
-        <translation type="unfinished">borrar</translation>
+        <translation type="obsolete">borrar</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.ui" line="111"/>
         <source>add</source>
-        <translation type="unfinished">añadir</translation>
+        <translation type="obsolete">añadir</translation>
     </message>
     <message>
-        <location filename="../configurationdialog.cpp" line="238"/>
         <source>delete entry</source>
-        <translation type="unfinished">borrar entrada</translation>
+        <translation type="obsolete">borrar entrada</translation>
     </message>
 </context>
 <context>
@@ -154,6 +145,54 @@ ERROR: minimum time interval is 5 minutes
 ERROR: el intervalo de tiempo mínimo es 5 minutos
 
 </translation>
+    </message>
+</context>
+<context>
+    <name>kwalletmanager</name>
+    <message>
+        <location filename="../kwalletmanager.ui" line="14"/>
+        <source>account configuration window</source>
+        <translation type="unfinished">ventana configuración de cuenta</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="26"/>
+        <source>&amp;close</source>
+        <translation type="unfinished">&amp;cerrar</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="42"/>
+        <source>Accounts information</source>
+        <translation type="unfinished">Información de cuentas</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="73"/>
+        <source>account name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="78"/>
+        <source>display name</source>
+        <translation type="unfinished">mostrar nombre</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="83"/>
+        <source>account labels</source>
+        <translation type="unfinished">etiquetas de cuenta</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="98"/>
+        <source>delete</source>
+        <translation type="unfinished">borrar</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.ui" line="111"/>
+        <source>add</source>
+        <translation type="unfinished">añadir</translation>
+    </message>
+    <message>
+        <location filename="../kwalletmanager.cpp" line="236"/>
+        <source>delete entry</source>
+        <translation type="unfinished">borrar entrada</translation>
     </message>
 </context>
 <context>
