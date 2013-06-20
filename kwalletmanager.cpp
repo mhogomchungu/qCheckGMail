@@ -75,12 +75,12 @@ QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 
 	wallet->setFolder( wallet->PasswordFolder() ) ;
 
-	QStringList userNames = wallet->entryList() ;
+	QStringList accountNames = wallet->entryList() ;
 
-	int j = userNames.size() ;
+	int j = accountNames.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		name = userNames.at( i ) ;
+		name = accountNames.at( i ) ;
 		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
 			;
 		}else{
@@ -104,9 +104,9 @@ void kwalletmanager::walletOpened( bool b )
 
 	m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
 
-	QStringList userNames = m_wallet->entryList() ;
+	QStringList accountNames = m_wallet->entryList() ;
 
-	int j = userNames.size() ;
+	int j = accountNames.size() ;
 	QString passWord ;
 	QString name ;
 
@@ -122,7 +122,7 @@ void kwalletmanager::walletOpened( bool b )
 	int row ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		name = userNames.at( i ) ;
+		name = accountNames.at( i ) ;
 		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
 			;
 		}else{
@@ -181,13 +181,11 @@ void kwalletmanager::closeEvent( QCloseEvent * e )
 
 void kwalletmanager::HideUI()
 {
-	QString FolderName = m_wallet->PasswordFolder() ;
+	QString passwordFolder = m_wallet->PasswordFolder() ;
 
-	m_wallet->setFolder( FolderName ) ;
-
-	m_wallet->removeFolder( FolderName ) ;
-	m_wallet->createFolder( FolderName ) ;
-	m_wallet->setFolder( m_wallet->PasswordFolder() ) ;
+	m_wallet->removeFolder( passwordFolder ) ;
+	m_wallet->createFolder( passwordFolder ) ;
+	m_wallet->setFolder( passwordFolder ) ;
 
 	QString user ;
 	QString labels_id  = QString( LABEL_IDENTIFIER ) ;

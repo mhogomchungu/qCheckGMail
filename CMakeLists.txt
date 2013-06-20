@@ -109,10 +109,6 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
 )
 
-file( WRITE "${PROJECT_BINARY_DIR}/new_mail_audio_path.h"
-"\n#define AUDIO_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/qCheckGMailNewMail.ogg\""
-)
-
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "#!/usr/bin/env xdg-open

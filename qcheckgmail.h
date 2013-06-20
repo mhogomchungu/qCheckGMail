@@ -45,7 +45,6 @@
 #include "accounts.h"
 #include "kwalletmanager.h"
 #include "configurationoptionsdialog.h"
-#include "new_mail_audio_path.h"
 
 class qCheckGMail : public KStatusNotifierItem
 {
