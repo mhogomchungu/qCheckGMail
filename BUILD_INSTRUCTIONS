@@ -8,7 +8,7 @@ cmake
 kde-devel
 qt4-devel
 
-To build,run the following commands
+To build,run the following commands from the source folder
 
 mkdir build
 cd build
