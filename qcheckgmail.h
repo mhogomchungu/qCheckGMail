@@ -70,6 +70,7 @@ private slots:
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
+	void reportOnAllAccounts( bool ) ;
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
@@ -103,6 +104,7 @@ private:
 	QString m_accountStatus ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
+	bool m_reportOnAllAccounts ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;

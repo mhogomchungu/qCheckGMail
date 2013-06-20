@@ -69,7 +69,7 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 	return x == y ;
 }
 
-void configurationoptionsdialog::reportOnAllAccounts( bool b )
+void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
 {
 	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
 	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
@@ -78,6 +78,7 @@ void configurationoptionsdialog::reportOnAllAccounts( bool b )
 	}else{
 		f.write( "0" ) ;
 	}
+	emit reportOnAllAccounts( b ) ;
 }
 
 QString configurationoptionsdialog::localLanguage()
@@ -186,7 +187,7 @@ void configurationoptionsdialog::HideUI()
 
 	this->saveLocalLanguage() ;
 
-	this->reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+	this->reportOnAllAccounts_1( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
 
 	this->saveTimeToConfigFile() ;
 

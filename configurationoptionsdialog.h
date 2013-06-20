@@ -53,10 +53,11 @@ public:
 	~configurationoptionsdialog();
 signals:
 	void setTimer( int ) ;
+	void reportOnAllAccounts( bool ) ;
 private slots:
 	void pushButtonClose( void ) ;
 private:
-	void reportOnAllAccounts( bool ) ;
+	void reportOnAllAccounts_1( bool ) ;
 	void saveTimeToConfigFile( void ) ;
 	void setSupportedLanguages( void ) ;
 	void saveLocalLanguage( void ) ;

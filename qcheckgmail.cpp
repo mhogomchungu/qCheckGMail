@@ -48,6 +48,8 @@ void qCheckGMail::changeIcon( QString icon )
 
 void qCheckGMail::run()
 {
+	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
+
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
 
 	this->setLocalLanguage();
@@ -112,7 +114,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 				  tr( "check mail skipped,user is not connected to the internet" ) ) ;
 		this->changeIcon( QString( "qCheckGMailError" ) );
 	}else{
-		if( configurationoptionsdialog::reportOnAllAccounts() ){
+		if( m_reportOnAllAccounts ){
 			this->reportOnAllAccounts( content ) ;
 		}else{
 			this->reportOnlyFirstAccountWithMail( content ) ;
@@ -330,7 +332,13 @@ void qCheckGMail::configurationoptionWindow()
 {
 	configurationoptionsdialog * cg = new configurationoptionsdialog() ;
 	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( setTimer( int ) ) ) ;
+	connect( cg,SIGNAL( reportOnAllAccounts( bool ) ),this,SLOT( reportOnAllAccounts( bool ) ) ) ;
 	cg->ShowUI() ;
+}
+
+void qCheckGMail::reportOnAllAccounts( bool b )
+{
+	m_reportOnAllAccounts = b ;
 }
 
 void qCheckGMail::kwalletmanagerClosed( void )
