@@ -21,3 +21,15 @@ The last command must be run from root's account and depending on your distribut
 su -c "make install"
 sudo make install
 
+Possible build issues:
+Problem:
+linking failed because a library could not be found.
+
+Possible reason,expected library could not be found because either they are not installed or they are but they are placed in a non
+standard location.
+
+Solution0:
+File a bug report with your distribution and ask for developments files to be in standard directories where they can easily be found.
+
+Solution1:
+Find the location of the library that could not be found and add its full path to CMakeLists.txt file in the "TARGET_LINK_LIBRARIES" line

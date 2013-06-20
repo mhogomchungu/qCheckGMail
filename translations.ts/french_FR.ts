@@ -6,14 +6,12 @@
     <message>
         <location filename="../addaccount.ui" line="14"/>
         <source>create a new account</source>
-        <translatorcomment>créer un nouveau compte</translatorcomment>
-        <translation></translation>
+        <translation>créer un nouveau compte</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="48"/>
         <source>account password</source>
-        <translatorcomment>mot de passe du compte</translatorcomment>
-        <translation></translation>
+        <translation>mot de passe du compte</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="67"/>

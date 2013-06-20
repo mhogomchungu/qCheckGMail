@@ -181,6 +181,8 @@ void kwalletmanager::closeEvent( QCloseEvent * e )
 
 void kwalletmanager::HideUI()
 {
+	this->hide();
+
 	QString passwordFolder = m_wallet->PasswordFolder() ;
 
 	m_wallet->removeFolder( passwordFolder ) ;
@@ -204,7 +206,6 @@ void kwalletmanager::HideUI()
 		m_wallet->writePassword( user + labels_id,m_accounts.at( i ).labels() ) ;
 	}
 
-	this->hide();
 	this->deleteLater();
 }
 

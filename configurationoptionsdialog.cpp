@@ -158,6 +158,8 @@ void configurationoptionsdialog::ShowUI()
 
 void configurationoptionsdialog::HideUI()
 {
+	this->hide() ;
+
 	if( m_ui->checkBoxAutoStartEnabled->isChecked() ){
 		configurationoptionsdialog::enableAutoStart() ;
 	}else{
@@ -189,7 +191,6 @@ void configurationoptionsdialog::HideUI()
 	this->saveTimeToConfigFile() ;
 
 	emit setTimer( z * 60 * 1000 ) ;
-	this->hide() ;
 	this->deleteLater() ;
 }
 

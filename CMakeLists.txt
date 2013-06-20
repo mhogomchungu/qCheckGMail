@@ -30,7 +30,7 @@ add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp
 
 find_library( LIBKWALLETBACKEND libkwalletbackend.so )
 if( NOT LIBKWALLETBACKEND )
-	# some distributions do not have libkwalletbackend.so filr for reasons i currently do not know
+	# some distributions do not have libkwalletbackend.so for reasons i currently do not know
 	# look for libkwalletbackend.sp.4 when the above happen
 	find_library( LIBKWALLETBACKEND libkwalletbackend.so.4 )	
 endif()
@@ -58,7 +58,10 @@ endif()
 if( NOT LIBKDECORE )
 	message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
 endif()
-		
+
+#
+# If linking failed because of missing library,add the library at the end of below line inside the brackets
+#
 TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} ${LIBKDEUI} ${LIBKDECORE} ${LIBKWALLETBACKEND} ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
