@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0017 OLD)
 
 SET( QT_USE_QTNETWORK TRUE )
+SET( QT_USE_QTCORE TRUE )
+SET( QT_USE_QTGUI TRUE )
 
 find_package( Qt4 COMPONENTS REQUIRED )
 
