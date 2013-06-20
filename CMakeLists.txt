@@ -21,12 +21,12 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-QT4_WRAP_CPP( MOC qcheckgmail.h configurationdialog.h addaccount.h configurationoptionsdialog.h )
+QT4_WRAP_CPP( MOC qcheckgmail.h kwalletmanager.h addaccount.h configurationoptionsdialog.h )
 
-QT4_WRAP_UI( UI configurationdialog.ui addaccount.ui configurationoptionsdialog.ui )
+QT4_WRAP_UI( UI kwalletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
 add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp 
-	configurationdialog.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
+		kwalletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
 find_library( LIBKWALLETBACKEND libkwalletbackend.so )
 if( NOT LIBKWALLETBACKEND )

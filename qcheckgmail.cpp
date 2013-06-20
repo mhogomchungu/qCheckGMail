@@ -321,8 +321,8 @@ void qCheckGMail::pauseCheckingMail( bool b )
 void qCheckGMail::configurationWindow()
 {
 	this->stopTimer();
-	configurationDialog * cfg = new configurationDialog( &m_wallet,m_walletName ) ;
-	connect( cfg,SIGNAL( configurationDialogClosed() ),this,SLOT( configurationDialogClosed() ) ) ;
+	kwalletmanager * cfg = new kwalletmanager( &m_wallet,m_walletName ) ;
+	connect( cfg,SIGNAL( kwalletmanagerClosed() ),this,SLOT( kwalletmanagerClosed() ) ) ;
 	cfg->ShowUI() ;
 }
 
@@ -333,7 +333,7 @@ void qCheckGMail::configurationoptionWindow()
 	cg->ShowUI() ;
 }
 
-void qCheckGMail::configurationDialogClosed( void )
+void qCheckGMail::kwalletmanagerClosed( void )
 {
 	if( m_wallet->isOpen() ){
 		this->getAccountsInfo();
@@ -417,7 +417,7 @@ void qCheckGMail::getAccountsInfo()
 		/*
 		 * get accounts information from kwallet
 		 */
-		m_accounts = configurationDialog::getAccounts( m_wallet ) ;
+		m_accounts = kwalletmanager::getAccounts( m_wallet ) ;
 
 		m_numberOfAccounts = m_accounts.size() ;
 

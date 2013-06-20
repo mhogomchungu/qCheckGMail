@@ -38,19 +38,19 @@
 #include "addaccount.h"
 
 namespace Ui {
-class configurationDialog;
+class kwalletmanager;
 }
 
-class configurationDialog : public QDialog
+class kwalletmanager : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationDialog( KWallet::Wallet ** wallet = 0,QString walletName = QString(),QWidget * parent = 0 ) ;
+	explicit kwalletmanager( KWallet::Wallet ** wallet = 0,QString walletName = QString(),QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
 	static QVector<accounts> getAccounts( KWallet::Wallet * ) ;
-	~configurationDialog();
+	~kwalletmanager();
 signals:
-	void configurationDialogClosed( void ) ;
+	void kwalletmanagerClosed( void ) ;
 private slots:
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
@@ -63,7 +63,7 @@ private slots:
 private:
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
-	Ui::configurationDialog * m_ui ;
+	Ui::kwalletmanager * m_ui ;
 
 	QVector<accounts> m_accounts ;
 	KWallet::Wallet * m_wallet ;

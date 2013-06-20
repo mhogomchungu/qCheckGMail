@@ -17,19 +17,19 @@ LIBS += -lkdeui -lkwalletbackend -lphonon -L/home/local/KDE4/lib -L/usr/lib
 SOURCES += main.cpp \
     qcheckgmail.cpp \
     accounts.cpp \
-    configurationdialog.cpp \
+    kwalletmanager.cpp \
     addaccount.cpp \
     configurationoptionsdialog.cpp
 
 HEADERS += \
     qcheckgmail.h \
     accounts.h \
-    configurationdialog.h \
+    kwalletmanager.h \
     addaccount.h \
     configurationoptionsdialog.h
 
 FORMS += \
-    configurationdialog.ui \
+    kwalletmanager.ui \
     addaccount.ui \
     configurationoptionsdialog.ui
 

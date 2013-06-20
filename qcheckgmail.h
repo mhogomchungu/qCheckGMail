@@ -43,7 +43,7 @@
 #include <kwallet.h>
 
 #include "accounts.h"
-#include "configurationdialog.h"
+#include "kwalletmanager.h"
 #include "configurationoptionsdialog.h"
 #include "new_mail_audio_path.h"
 
@@ -67,7 +67,7 @@ private slots:
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
-	void configurationDialogClosed( void ) ;
+	void kwalletmanagerClosed( void ) ;
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;

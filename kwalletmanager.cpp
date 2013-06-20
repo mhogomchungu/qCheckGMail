@@ -18,14 +18,14 @@
  */
 
 
-#include "configurationdialog.h"
-#include "ui_configurationdialog.h"
+#include "kwalletmanager.h"
+#include "ui_kwalletmanager.h"
 
 #define LABEL_IDENTIFIER "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
-configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QString walletName,QWidget * parent ) : QDialog( parent ),
-	m_ui( new Ui::configurationDialog ),m_wallet( 0 ),m_wallet_p( wallet ),m_walletName( walletName )
+kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWidget * parent ) : QDialog( parent ),
+	m_ui( new Ui::kwalletmanager ),m_wallet( 0 ),m_wallet_p( wallet ),m_walletName( walletName )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() );
@@ -52,7 +52,7 @@ configurationDialog::configurationDialog( KWallet::Wallet ** wallet,QString wall
 	m_ui->pushButtonAccountAdd->setFocus() ;
 }
 
-void configurationDialog::ShowUI()
+void kwalletmanager::ShowUI()
 {
 	if( *m_wallet_p ){
 		m_wallet = *m_wallet_p ;
@@ -62,7 +62,7 @@ void configurationDialog::ShowUI()
 	}
 }
 
-QVector<accounts> configurationDialog::getAccounts( KWallet::Wallet * wallet )
+QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 {
 	QString passWord ;
 	QString name ;
@@ -95,7 +95,7 @@ QVector<accounts> configurationDialog::getAccounts( KWallet::Wallet * wallet )
 	return acc ;
 }
 
-void configurationDialog::walletOpened( bool b )
+void kwalletmanager::walletOpened( bool b )
 {
 	if( !b ){
 		this->HideUI();
@@ -167,19 +167,19 @@ void configurationDialog::walletOpened( bool b )
 	this->show();
 }
 
-configurationDialog::~configurationDialog()
+kwalletmanager::~kwalletmanager()
 {
-	emit configurationDialogClosed() ;
+	emit kwalletmanagerClosed() ;
 	delete m_ui ;
 }
 
-void configurationDialog::closeEvent( QCloseEvent * e )
+void kwalletmanager::closeEvent( QCloseEvent * e )
 {
 	e->ignore();
 	this->HideUI();
 }
 
-void configurationDialog::HideUI()
+void kwalletmanager::HideUI()
 {
 	QString FolderName = m_wallet->PasswordFolder() ;
 
@@ -210,25 +210,25 @@ void configurationDialog::HideUI()
 	this->deleteLater();
 }
 
-void configurationDialog::pushButtonAdd()
+void kwalletmanager::pushButtonAdd()
 {
 	addaccount * ac = new addaccount( this ) ;
 	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
 	ac->ShowUI() ;
 }
 
-void configurationDialog::pushButtonClose()
+void kwalletmanager::pushButtonClose()
 {
 	this->HideUI();
 }
 
-void configurationDialog::pushButtonDeleteEntry()
+void kwalletmanager::pushButtonDeleteEntry()
 {
 	m_deleteRow = m_table->currentRow() ;
 	this->deleteRow();
 }
 
-void configurationDialog::tableItemClicked( QTableWidgetItem * item )
+void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
 {
 	m_deleteRow = item->row() ;
 
@@ -243,7 +243,7 @@ void configurationDialog::tableItemClicked( QTableWidgetItem * item )
 	m.exec( QCursor::pos() ) ;
 }
 
-void configurationDialog::deleteRow()
+void kwalletmanager::deleteRow()
 {
 	if( m_table->rowCount() == -1 ){
 		return ;
@@ -258,7 +258,7 @@ void configurationDialog::deleteRow()
 	}
 }
 
-void configurationDialog::addAccount( QString accountName,QString accountPassword,QString displayName,QString accountLabels )
+void kwalletmanager::addAccount( QString accountName,QString accountPassword,QString displayName,QString accountLabels )
 {
 	m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels ) ) ;
 
@@ -285,7 +285,7 @@ void configurationDialog::addAccount( QString accountName,QString accountPasswor
 	m_table->setCurrentCell( m_table->rowCount() - 1,2 ) ;
 }
 
-void configurationDialog::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
+void kwalletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
 {
 	int k ;
 	if( current && previous ){

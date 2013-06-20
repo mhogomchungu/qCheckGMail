@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>configurationDialog</class>
- <widget class="QDialog" name="configurationDialog">
+<class>kwalletmanager</class>
+ <widget class="QDialog" name="kwalletmanager">
   <property name="geometry">
    <rect>
     <x>0</x>
