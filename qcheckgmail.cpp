@@ -124,10 +124,11 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 
 QString qCheckGMail::nameToDisplay()
 {
-	QString label              = m_accounts.at( m_currentAccount ).labelUrlAt( m_currentLabel ).split( "/" ).last() ;
-	const QString& displayName = m_accounts.at( m_currentAccount ).displayName() ;
-	const QString& accountName = m_accounts.at( m_currentAccount ).accountName() ;
-
+	const accounts& account    = m_accounts.at( m_currentAccount ) ;
+	const QString& displayName = account.displayName() ;
+	const QString& accountName = account.accountName() ;
+	QString label              = account.labelUrlAt( m_currentLabel ).split( "/" ).last() ;
+	
 	if( label.isEmpty() ){
 		if( displayName.isEmpty() ){
 			return accountName ;
@@ -249,7 +250,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		QString info ;
 
 		if( count == 1 ){
-			QString x = this->getAtomComponent( msg,QString( "name") ) ;
+			QString x = this->getAtomComponent( msg,QString( "name" ) ) ;
 			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( x ) ;
 		}else{
 			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
