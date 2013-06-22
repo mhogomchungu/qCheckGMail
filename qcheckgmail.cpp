@@ -216,7 +216,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 				 this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 				 QString icon = QString( "qCheckGMail-GotMail" ) ;
 				 this->changeIcon( icon ) ;
-				 qDebug() << m_mailCount ;
 				 if( m_mailCount == 1 ){
 					this->setToolTip( icon,tr( "found 1 new email" ),m_accountStatus ) ;
 				 }else{

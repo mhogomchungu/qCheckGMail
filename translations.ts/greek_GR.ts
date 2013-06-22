@@ -311,12 +311,12 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../qcheckgmail.cpp" line="221"/>
         <source>found 1 new email</source>
-        <translation type="unfinished"></translation>
+        <translation>Βρέθηκε 1 νέο μήνυμα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="223"/>
         <source>found %2 new emails</source>
-        <translation type="unfinished"></translation>
+        <translation>Βρέθηκαν %2 νέα μηνύματα</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="386"/>
