@@ -213,15 +213,16 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			m_accountStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
-				 this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
-				 QString icon = QString( "qCheckGMail-GotMail" ) ;
-				 this->changeIcon( icon ) ;
-				 if( m_mailCount == 1 ){
+				this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
+				QString icon = QString( "qCheckGMail-GotMail" ) ;
+				this->changeIcon( icon ) ;
+				if( m_mailCount == 1 ){
 					this->setToolTip( icon,tr( "found 1 new email" ),m_accountStatus ) ;
-				 }else{
-					this->setToolTip( icon,tr( "found %2 new emails" ).arg( QString::number( m_mailCount ) ),m_accountStatus ) ;
-				 }
-				 this->newEmailNotify();
+				}else{
+					QString x = QString::number( m_mailCount ) ;
+					this->setToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountStatus ) ;
+				}
+				this->newEmailNotify();
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;

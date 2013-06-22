@@ -295,12 +295,12 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../qcheckgmail.cpp" line="221"/>
         <source>found 1 new email</source>
-        <translation type="unfinished"></translation>
+        <translation>se ha encontrado 1 correo nuevo</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="223"/>
         <source>found %2 new emails</source>
-        <translation type="unfinished"></translation>
+        <translation>encontrados %2 correos nuevos</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="386"/>
