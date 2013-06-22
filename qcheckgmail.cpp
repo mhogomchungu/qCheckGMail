@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	m_gotCredentials( false ),m_walletName( "qCheckGMail" )
@@ -157,11 +157,12 @@ QString qCheckGMail::getAtomComponent( const QByteArray& msg,QString cmp )
 
 void qCheckGMail::wrongAccountNameOrPassword()
 {
-	const accounts& acc = m_accounts.at( m_currentAccount ) ;
-	this->changeIcon( QString( "qCheckGMailError" ) ) ;
-	this->setToolTip( QString( "qCheckGMailError" ),
-			  tr( "failed to log in" ),
-			  tr( "%1 account has wrong username/password combination" ).arg( acc.accountName() ) ) ;
+	QString x = m_accounts.at( m_currentAccount ).accountName() ;
+	QString z = QString( "qCheckGMailError" ) ;
+	QString e = tr( "%1 account has wrong username/password combination" ).arg( x ) ;
+
+	this->changeIcon( z ) ;
+	this->setToolTip( z,tr( "failed to log in" ),e ) ;
 	m_checkingMail = false ;
 }
 
@@ -376,7 +377,7 @@ void qCheckGMail::checkMail()
 			//m_accountStatus   = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
 			m_accountStatus   = QString( "<table>" );
 			m_mailCount       = 0 ;
-			m_currentAccount  = 0 ; // use to track the account we are checking
+			m_currentAccount  = 0 ;
 			m_checkingMail    = true ;
 			this->checkMail( m_accounts.at( m_currentAccount ) );
 		}else{

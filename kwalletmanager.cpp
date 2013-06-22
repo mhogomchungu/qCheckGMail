@@ -190,21 +190,18 @@ void kwalletmanager::HideUI()
 	m_wallet->createFolder( passwordFolder ) ;
 	m_wallet->setFolder( passwordFolder ) ;
 
-	QString user ;
+	QString accName ;
 	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
 	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
 	int j = m_accounts.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-
-		user = m_accounts.at( i ).accountName() ;
-
-		m_wallet->writePassword( user,m_accounts.at( i ).passWord() ) ;
-
-		m_wallet->writePassword( user + display_id,m_accounts.at( i ).displayName() ) ;
-
-		m_wallet->writePassword( user + labels_id,m_accounts.at( i ).labels() ) ;
+		const accounts& acc = m_accounts.at( i ) ;
+		accName = acc.accountName() ;
+		m_wallet->writePassword( accName,acc.passWord() ) ;
+		m_wallet->writePassword( accName + display_id,acc.displayName() ) ;
+		m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
 	}
 
 	this->deleteLater();
@@ -314,8 +311,7 @@ void kwalletmanager::editAccount( int row,QString accName,QString accPassword,QS
 	int j = m_accounts.size() ;
 	for( int i = 0 ; i < j ; i++ ){
 		if( m_accounts.at( i ).accountName() == accName ){
-			m_accounts.remove( i ) ;
-			m_accounts.append( accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
+			m_accounts.replace( i,accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
 			break ;
 		}
 	}
