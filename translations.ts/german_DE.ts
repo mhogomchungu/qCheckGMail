@@ -46,12 +46,12 @@
     <message>
         <location filename="../addaccount.cpp" line="50"/>
         <source>edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Bearbeiten</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="51"/>
         <source>edit account</source>
-        <translation type="unfinished"></translation>
+        <translation>Konto bearbeiten</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="83"/>
@@ -154,52 +154,52 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../kwalletmanager.ui" line="14"/>
         <source>account configuration window</source>
-        <translation type="unfinished">Kontokonfiguration</translation>
+        <translation>Kontokonfigurationsfenster</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="26"/>
         <source>&amp;close</source>
-        <translation type="unfinished">&amp;Schließen</translation>
+        <translation>&amp;Schließen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="42"/>
         <source>Accounts information</source>
-        <translation type="unfinished">Kontoinformationen</translation>
+        <translation>Kontoinformationen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="73"/>
         <source>account name</source>
-        <translation type="unfinished">Kontoname</translation>
+        <translation>Kontoname</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="78"/>
         <source>display name</source>
-        <translation type="unfinished">Anzeigename</translation>
+        <translation>Anzeigename</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="83"/>
         <source>account labels</source>
-        <translation type="unfinished">Kontolabel</translation>
+        <translation>Kontolabel</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="98"/>
         <source>delete</source>
-        <translation type="unfinished">Löschen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="111"/>
         <source>add</source>
-        <translation type="unfinished">Hinzufügen</translation>
+        <translation>Hinzufügen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="238"/>
         <source>delete entry</source>
-        <translation type="unfinished">Eintrag löschen</translation>
+        <translation>Eintrag löschen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="244"/>
         <source>edit entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Eintrag bearbeiten</translation>
     </message>
 </context>
 <context>
