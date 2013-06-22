@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<class>kwalletmanager</class>
+ <class>kwalletmanager</class>
  <widget class="QDialog" name="kwalletmanager">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
+    <width>661</width>
     <height>311</height>
    </rect>
   </property>
@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="pushButtonClose">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>330</x>
      <y>280</y>
-     <width>141</width>
+     <width>101</width>
      <height>31</height>
     </rect>
    </property>
@@ -35,7 +35,7 @@
      <x>50</x>
      <y>20</y>
      <width>561</width>
-     <height>231</height>
+     <height>261</height>
     </rect>
    </property>
    <property name="title">
@@ -47,7 +47,7 @@
       <x>10</x>
       <y>30</y>
       <width>541</width>
-      <height>191</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="editTriggers">
@@ -88,8 +88,8 @@
   <widget class="QPushButton" name="pushButtonAccountDelete">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>250</y>
+     <x>520</x>
+     <y>280</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -101,9 +101,9 @@
   <widget class="QPushButton" name="pushButtonAccountAdd">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>250</y>
-     <width>91</width>
+     <x>230</x>
+     <y>280</y>
+     <width>101</width>
      <height>31</height>
     </rect>
    </property>

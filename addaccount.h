@@ -38,17 +38,22 @@ class addaccount : public QDialog
 	Q_OBJECT
 public:
 	explicit addaccount( QWidget * parent = 0 );
+	addaccount( int row = -1,QString accName = QString(),QString accPassword = QString(),
+		    QString accDisplayName = QString(),QString accLabels = QString(),QWidget * parent = 0 ) ;
+
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 	~addaccount();
 signals:
 	void addAccount( QString,QString,QString,QString ) ;
+	void editAccount( int,QString,QString,QString,QString ) ;
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;
 private:
 	void closeEvent( QCloseEvent * ) ;
-	Ui::addaccount * m_ui;
+	Ui::addaccount * m_ui ;
+	int m_acc ;
 };
 
 #endif // ADDACCOUNT_H

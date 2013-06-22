@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	m_gotCredentials( false ),m_walletName( "qCheckGMail" )
@@ -82,7 +82,7 @@ void qCheckGMail::run()
 
 	ac->setText( tr( "configure accounts" ) ) ;
 
-	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationWindow() ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( configureAccounts() ) ) ;
 
 	m_menu->addAction( ac ) ;
 
@@ -128,7 +128,7 @@ QString qCheckGMail::nameToDisplay()
 	const QString& displayName = account.displayName() ;
 	const QString& accountName = account.accountName() ;
 	QString label              = account.labelUrlAt( m_currentLabel ).split( "/" ).last() ;
-	
+
 	if( label.isEmpty() ){
 		if( displayName.isEmpty() ){
 			return accountName ;
@@ -321,7 +321,7 @@ void qCheckGMail::pauseCheckingMail( bool b )
 	}
 }
 
-void qCheckGMail::configurationWindow()
+void qCheckGMail::configureAccounts()
 {
 	this->stopTimer();
 	kwalletmanager * cfg = new kwalletmanager( &m_wallet,m_walletName ) ;
@@ -368,7 +368,9 @@ void qCheckGMail::checkMail()
 		* check for updates on the first account
 		*/
 		if( m_numberOfAccounts > 0 ){
-			m_accountStatus   = QString( "<table>" ) ;
+			//m_accountStatus   = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
+			m_accountStatus   = QString( "<table>" );
+
 			m_newMailFound    = false ;
 			m_currentAccount  = 0 ; // use to track the account we are checking
 			m_checkingMail    = true ;
@@ -380,6 +382,59 @@ void qCheckGMail::checkMail()
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
 		this->getAccountsInformation() ;
 	}
+}
+
+/*
+ * try to force tray bubble to expand to the width of longest account+label to force it to
+ * not split the text to two lines
+ */
+void qCheckGMail::displaNameColumnWidth()
+{
+	int width = 0 ;
+	int j = m_accounts.size() ;
+	int k ;
+	int z ;
+	int n ;
+
+	for( int i = 0 ; i < j ; i++ ){
+		const accounts& acc = m_accounts.at( i ) ;
+		const QStringList& l = acc.labelUrls() ;
+		k = l.size() ;
+		if( acc.displayName().isEmpty() ){
+			z = acc.accountName().size() ;
+			if( k > 1 ){
+				for( int e = 1 ; e < k ; e++ ){
+					n = l.at( e ).split( "/" ).last().size() + z + 1 ;
+					if( width < n ){
+						width = n ;
+					}
+				}
+			}else{
+				if( width < z ){
+					width = z ;
+				}
+			}
+		}else{
+			z = acc.displayName().size() ;
+			if( k > 1 ){
+				for( int e = 1 ; e < k ; e++ ){
+					n = l.at( e ).split( "/" ).last().size() + z + 1 ;
+					if( width < n ){
+						width = n ;
+					}
+				}
+			}else{
+				if( width < z ){
+					width = z ;
+				}
+			}
+		}
+	}
+
+	/*
+	 * m_accountNameColumnWidth will contain the length of the longer accountName+label/accountDisplayName+label
+	 */
+	m_accountNameColumnWidth = QString::number( width  ) ;
 }
 
 void qCheckGMail::checkMail( const accounts& acc )
@@ -433,6 +488,7 @@ void qCheckGMail::getAccountsInfo()
 		m_gotCredentials = m_numberOfAccounts > 0 ;
 
 		if( m_gotCredentials ){
+			this->displaNameColumnWidth() ;
 			this->checkMail() ;
 		}else{
 			/*

@@ -62,7 +62,7 @@ private slots:
 	void run( void ) ;
 	void googleQueryResponce( QNetworkReply * ) ;
 	void pauseCheckingMail( bool ) ;
-	void configurationWindow( void ) ;
+	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
 	void walletOpened( bool ) ;
@@ -74,6 +74,7 @@ private slots:
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
+	void displaNameColumnWidth( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
@@ -109,6 +110,7 @@ private:
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
+	QString m_accountNameColumnWidth ;
 };
 
 #endif // QCHECKGMAIL_H

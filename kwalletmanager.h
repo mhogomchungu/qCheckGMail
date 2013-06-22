@@ -59,8 +59,11 @@ private slots:
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void walletOpened( bool ) ;
 	void deleteRow( void ) ;
+	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
+	void editAccount( int,QString,QString,QString,QString ) ;
 private:
+	QString getPassWordFromAccount( QString ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 	Ui::kwalletmanager * m_ui ;

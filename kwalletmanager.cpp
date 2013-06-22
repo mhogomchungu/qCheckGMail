@@ -49,6 +49,7 @@ kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWi
 
 	m_table = m_ui->tableWidget ;
 
+	m_ui->pushButtonAccountDelete->setVisible( false ) ;
 	m_ui->pushButtonAccountAdd->setFocus() ;
 }
 
@@ -239,6 +240,12 @@ void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
 
 	m.addAction( ac ) ;
 
+	ac = new QAction( &m ) ;
+	ac->setText( tr( "edit entry" ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( editEntry() ) ) ;
+
+	m.addAction( ac ) ;
+
 	m.exec( QCursor::pos() ) ;
 }
 
@@ -255,6 +262,20 @@ void kwalletmanager::deleteRow()
 			m_accounts.remove( m_deleteRow ) ;
 		}
 	}
+}
+
+void kwalletmanager::editEntry()
+{
+	int row = m_table->currentRow() ;
+
+	QString accName        = m_table->item( row,0 )->text() ;
+	QString accPassword    = this->getPassWordFromAccount( accName ) ;
+	QString accDisplayName = m_table->item( row,1 )->text() ;
+	QString accLabels      = m_table->item( row,2 )->text() ;
+
+	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels ) ;
+	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
+	ac->ShowUI() ;
 }
 
 void kwalletmanager::addAccount( QString accountName,QString accountPassword,QString displayName,QString accountLabels )
@@ -282,6 +303,35 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,QSt
 	m_table->setItem( row,2,item ) ;
 
 	m_table->setCurrentCell( m_table->rowCount() - 1,2 ) ;
+}
+
+void kwalletmanager::editAccount( int row,QString accName,QString accPassword,QString accDisplayName,QString accLabels )
+{
+	m_table->item( row,0 )->setText( accName ) ;
+	m_table->item( row,1 )->setText( accDisplayName ) ;
+	m_table->item( row,2 )->setText( accLabels ) ;
+
+	int j = m_accounts.size() ;
+	for( int i = 0 ; i < j ; i++ ){
+		if( m_accounts.at( i ).accountName() == accName ){
+			m_accounts.remove( i ) ;
+			m_accounts.append( accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
+			break ;
+		}
+	}
+}
+
+QString kwalletmanager::getPassWordFromAccount( QString accName )
+{
+	QString p ;
+	int j = m_accounts.size() ;
+	for( int i = 0 ; i < j ; i++ ){
+		if( m_accounts.at( i ).accountName() == accName ){
+			p = m_accounts.at( i ).passWord() ;
+			break ;
+		}
+	}
+	return p ;
 }
 
 void kwalletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
