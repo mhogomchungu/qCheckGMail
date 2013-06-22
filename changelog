@@ -6,3 +6,8 @@ version 1.1.0
 - Fix a build issue on some distributions
 - Add hispanic translations
 - Add french translations
+
+version 1.1.0
+- Fix a build issue
+- Add the ability to edit existing account properties
+- Update translation strings
