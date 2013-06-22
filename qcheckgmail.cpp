@@ -184,7 +184,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	if( mailCount == QString( "0" ) ){
 		m_accountStatus += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( z ).arg( mailCount ) ;
 	}else{
-		m_newMailFound = true ;
+		m_mailCount = m_mailCount + mailCount.toInt() ;
 		m_accountStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
@@ -212,17 +212,22 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 			m_accountStatus += QString( "</table>" ) ;
 
-			if( m_newMailFound ){
+			if( m_mailCount > 0 ){
 				 this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 				 QString icon = QString( "qCheckGMail-GotMail" ) ;
 				 this->changeIcon( icon ) ;
-				 this->setToolTip( icon,tr( "new mail found" ),m_accountStatus ) ;
+				 qDebug() << m_mailCount ;
+				 if( m_mailCount == 1 ){
+					this->setToolTip( icon,tr( "found 1 new email" ),m_accountStatus ) ;
+				 }else{
+					this->setToolTip( icon,tr( "found %2 new emails" ).arg( QString::number( m_mailCount ) ),m_accountStatus ) ;
+				 }
 				 this->newEmailNotify();
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
-				this->setToolTip( icon,tr( "no new mail" ),m_accountStatus ) ;
+				this->setToolTip( icon,tr( "no new email found" ),m_accountStatus ) ;
 			}
 		}
 	}
@@ -370,8 +375,7 @@ void qCheckGMail::checkMail()
 		if( m_numberOfAccounts > 0 ){
 			//m_accountStatus   = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
 			m_accountStatus   = QString( "<table>" );
-
-			m_newMailFound    = false ;
+			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ; // use to track the account we are checking
 			m_checkingMail    = true ;
 			this->checkMail( m_accounts.at( m_currentAccount ) );

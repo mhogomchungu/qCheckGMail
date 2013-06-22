@@ -206,8 +206,8 @@ ERROR: minimum time interval is 5 minutes
     <name>qCheckGMail</name>
     <message>
         <location filename="../qcheckgmail.cpp" line="57"/>
-        <location filename="../qcheckgmail.cpp" line="291"/>
-        <location filename="../qcheckgmail.cpp" line="518"/>
+        <location filename="../qcheckgmail.cpp" line="296"/>
+        <location filename="../qcheckgmail.cpp" line="522"/>
         <source>status</source>
         <translation>Status</translation>
     </message>
@@ -257,68 +257,77 @@ ERROR: minimum time interval is 5 minutes
         <translation>Das %1 Konto hat eine falsche Kombination von Benutzername und Passwort</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="219"/>
         <source>new mail found</source>
-        <translation>Neue Email(s) gefunden</translation>
+        <translation type="obsolete">Neue Email(s) gefunden</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="225"/>
         <source>no new mail</source>
-        <translation>Keine neuen EMails</translation>
+        <translation type="obsolete">Keine neuen EMails</translation>
     </message>
     <message>
         <source>wrong username/password combination</source>
         <translation type="obsolete">Falsche Kombination von Benutzername und Passwort</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="254"/>
+        <location filename="../qcheckgmail.cpp" line="259"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 EMail von &lt;b&gt;%1&lt;/b&gt; wartet auf Sie&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="256"/>
+        <location filename="../qcheckgmail.cpp" line="261"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 EMails warten auf Sie</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="291"/>
+        <location filename="../qcheckgmail.cpp" line="230"/>
+        <location filename="../qcheckgmail.cpp" line="296"/>
         <source>no new email found</source>
         <translation>Keine neuen EMails gefunden</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="382"/>
+        <location filename="../qcheckgmail.cpp" line="221"/>
+        <source>found 1 new email</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="223"/>
+        <source>found %2 new emails</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="386"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>Keine Anmeldedaten gefunden, es wird versucht die Brieftasche (erneut) zu öffnen</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="512"/>
+        <location filename="../qcheckgmail.cpp" line="516"/>
         <source>error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="512"/>
+        <location filename="../qcheckgmail.cpp" line="516"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>Es scheint kein Konto in der Brieftasche konfiguriert zu sein</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="517"/>
+        <location filename="../qcheckgmail.cpp" line="521"/>
         <source>wallet not opened</source>
         <translation>Brieftasche nicht geöffnet</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="518"/>
+        <location filename="../qcheckgmail.cpp" line="522"/>
         <source>error,failed to open wallet</source>
         <translation>Fehler: die Brieftasche konnte nicht geöffnet werden</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="623"/>
-        <location filename="../qcheckgmail.cpp" line="636"/>
+        <location filename="../qcheckgmail.cpp" line="627"/>
+        <location filename="../qcheckgmail.cpp" line="640"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Es läuft bereits eine Instanz, diese wird nun beendet</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="652"/>
-        <location filename="../qcheckgmail.cpp" line="665"/>
+        <location filename="../qcheckgmail.cpp" line="656"/>
+        <location filename="../qcheckgmail.cpp" line="669"/>
         <source>autostart disabled,exiting this one</source>
         <translation>Autostart deaktiviert, die Instanz wird beendet</translation>
     </message>

@@ -110,6 +110,7 @@ private:
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
+	int m_mailCount ;
 	QString m_accountNameColumnWidth ;
 };
 
