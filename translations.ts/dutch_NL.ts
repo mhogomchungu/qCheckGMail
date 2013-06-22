@@ -46,12 +46,12 @@
     <message>
         <location filename="../addaccount.cpp" line="50"/>
         <source>edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Bewerken</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="51"/>
         <source>edit account</source>
-        <translation type="unfinished"></translation>
+        <translation>Account bewerken</translation>
     </message>
     <message>
         <location filename="../addaccount.cpp" line="83"/>
@@ -160,52 +160,52 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../kwalletmanager.ui" line="14"/>
         <source>account configuration window</source>
-        <translation type="unfinished">Configuratiescherm account</translation>
+        <translation>Configuratiescherm account</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="26"/>
         <source>&amp;close</source>
-        <translation type="unfinished">&amp;Sluiten</translation>
+        <translation>&amp;Sluiten</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="42"/>
         <source>Accounts information</source>
-        <translation type="unfinished">Accountinformatie</translation>
+        <translation>Accountinformatie</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="73"/>
         <source>account name</source>
-        <translation type="unfinished">Accountnaam</translation>
+        <translation>Accountnaam</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="78"/>
         <source>display name</source>
-        <translation type="unfinished">Weergegeven naam</translation>
+        <translation>Naam weergeven</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="83"/>
         <source>account labels</source>
-        <translation type="unfinished">Accountlabels</translation>
+        <translation>Accountlabels</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="98"/>
         <source>delete</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.ui" line="111"/>
         <source>add</source>
-        <translation type="unfinished">Toevoegen</translation>
+        <translation>Toevoegen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="238"/>
         <source>delete entry</source>
-        <translation type="unfinished">Invoer verwijderen</translation>
+        <translation>Invoer verwijderen</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="244"/>
         <source>edit entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Invoer bewerken</translation>
     </message>
 </context>
 <context>

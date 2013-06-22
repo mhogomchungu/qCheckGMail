@@ -74,8 +74,6 @@ install ( FILES qCheckGMailError.svg DESTINATION share/icons )
 
 install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
-install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
-
 install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications 
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
@@ -98,8 +96,6 @@ install ( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/tran
 install ( FILES translations.qm/french_FR.qm DESTINATION share/qCheckGMail/translations.qm/ )
 
 install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
-
-install ( SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall.cmake" )
 
 # uninstall target
 configure_file(

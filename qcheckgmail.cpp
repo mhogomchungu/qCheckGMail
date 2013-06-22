@@ -488,7 +488,7 @@ void qCheckGMail::getAccountsInfo()
 		m_gotCredentials = m_numberOfAccounts > 0 ;
 
 		if( m_gotCredentials ){
-			this->displaNameColumnWidth() ;
+			//this->displaNameColumnWidth() ;
 			this->checkMail() ;
 		}else{
 			/*
