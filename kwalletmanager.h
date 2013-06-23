@@ -63,6 +63,7 @@ private slots:
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
 private:
+	void selectRow( int row,bool highlight ) ;
 	QString getPassWordFromAccount( QString ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;

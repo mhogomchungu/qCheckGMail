@@ -66,7 +66,7 @@ void kwalletmanager::ShowUI()
 QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 {
 	QString passWord ;
-	QString name ;
+	QString accName ;
 	QString labels ;
 	QString displayName ;
 	QString labels_id   = QString( LABEL_IDENTIFIER ) ;
@@ -81,15 +81,15 @@ QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 	int j = accountNames.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		name = accountNames.at( i ) ;
-		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
+		accName = accountNames.at( i ) ;
+		if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 			;
 		}else{
-			wallet->readPassword( name,passWord ) ;
-			wallet->readPassword( name + labels_id,labels ) ;
-			wallet->readPassword( name + displayName_id,displayName ) ;
+			wallet->readPassword( accName,passWord ) ;
+			wallet->readPassword( accName + labels_id,labels ) ;
+			wallet->readPassword( accName + displayName_id,displayName ) ;
 
-			acc.append( accounts( name,passWord,displayName,labels ) ) ;
+			acc.append( accounts( accName,passWord,displayName,labels ) ) ;
 		}
 	}
 
@@ -109,7 +109,7 @@ void kwalletmanager::walletOpened( bool b )
 
 	int j = accountNames.size() ;
 	QString passWord ;
-	QString name ;
+	QString accName ;
 
 	m_accounts.clear();
 
@@ -123,8 +123,8 @@ void kwalletmanager::walletOpened( bool b )
 	int row ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		name = accountNames.at( i ) ;
-		if( name.endsWith( labels_id ) || name.endsWith( displayName_id ) ){
+		accName = accountNames.at( i ) ;
+		if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 			;
 		}else{
 			row = m_table->rowCount() ;
@@ -132,37 +132,32 @@ void kwalletmanager::walletOpened( bool b )
 			m_table->insertRow( row ) ;
 
 			item = new QTableWidgetItem() ;
-			item->setText( name ) ;
+			item->setText( accName ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
 			m_table->setItem( row,0,item ) ;
 
-			m_wallet->readPassword( name + displayName_id,displayName ) ;
+			m_wallet->readPassword( accName + displayName_id,displayName ) ;
 
 			item = new QTableWidgetItem() ;
 			item->setText( displayName ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
 			m_table->setItem( row,1,item ) ;
 
-			m_wallet->readPassword( name + labels_id,labels ) ;
+			m_wallet->readPassword( accName + labels_id,labels ) ;
 
 			item = new QTableWidgetItem() ;
 			item->setText( labels ) ;
 			item->setTextAlignment( Qt::AlignCenter ) ;
 			m_table->setItem( row,2,item ) ;
 
-			m_wallet->readPassword( name,passWord ) ;
+			m_wallet->readPassword( accName,passWord ) ;
 
-			m_accounts.append( accounts( name,passWord,displayName,labels ) ) ;
+			m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 		}
 	}
 
 	if( m_table->rowCount() > 0 ){
-		int row = m_table->rowCount() - 1 ;
-		m_table->item( row,0 )->setSelected( true ) ;
-		m_table->item( row,1 )->setSelected( true ) ;
-		m_table->item( row,2 )->setSelected( true ) ;
-
-		m_table->setCurrentCell( row,2 ) ;
+		this->selectRow( m_table->rowCount() - 1,true ) ;
 	}
 
 	this->show();
@@ -317,6 +312,20 @@ void kwalletmanager::editAccount( int row,QString accName,QString accPassword,QS
 	}
 }
 
+void kwalletmanager::selectRow( int row,bool highlight )
+{
+	int j = m_table->columnCount() ;
+	for( int i = 0 ; i < j ; i++ ){
+		m_table->item( row,0 )->setSelected( highlight ) ;
+		m_table->item( row,1 )->setSelected( highlight ) ;
+		m_table->item( row,2 )->setSelected( highlight ) ;
+	}
+
+	if( highlight && j > 1 ){
+		m_table->setCurrentCell( row,j - 1 ) ;
+	}
+}
+
 QString kwalletmanager::getPassWordFromAccount( QString accName )
 {
 	QString p ;
@@ -332,24 +341,16 @@ QString kwalletmanager::getPassWordFromAccount( QString accName )
 
 void kwalletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
 {
-	int k ;
 	if( current && previous ){
 		if( current->row() == previous->row() ){
+			this->selectRow( current->row(),true ) ;
 			return ;
 		}
 	}
 	if( current ){
-		k = current->row() ;
-		m_table->item( k,0 )->setSelected( true ) ;
-		m_table->item( k,1 )->setSelected( true ) ;
-		m_table->item( k,2 )->setSelected( true ) ;
-
-		m_table->setCurrentCell( k,2 ) ;
+		this->selectRow( current->row(),true ) ;
 	}
 	if( previous ){
-		k = previous->row() ;
-		m_table->item( k,0 )->setSelected( false ) ;
-		m_table->item( k,1 )->setSelected( false ) ;
-		m_table->item( k,2 )->setSelected( false ) ;
+		this->selectRow( previous->row(),false ) ;
 	}
 }

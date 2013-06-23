@@ -73,20 +73,20 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
-	QString name     = m_ui->lineEditName->text() ;
+	QString accName  = m_ui->lineEditName->text() ;
 	QString password = m_ui->lineEditPassword->text() ;
 	QString labels   = m_ui->lineEditLabel->text() ;
 	QString displayN = m_ui->lineEditOptionalName->text() ;
 
-	if( name.isEmpty() || password.isEmpty() ){
+	if( accName.isEmpty() || password.isEmpty() ){
 		QMessageBox msg( this ) ;
 		msg.setText( tr( "ERROR: one or more reguired field is missing" ) ) ;
 		msg.exec() ;
 	}else{
 		if( m_acc == -1 ){
-			emit addAccount( name,password,displayN,labels ) ;
+			emit addAccount( accName,password,displayN,labels ) ;
 		}else{
-			emit editAccount( m_acc,name,password,displayN,labels ) ;
+			emit editAccount( m_acc,accName,password,displayN,labels ) ;
 		}
 		this->HideUI();
 	}
