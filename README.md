@@ -39,21 +39,19 @@ The latest version can be downloaded from the following link: https://github.com
 
 screenshots:
 -----------
-<a href="http://tinypic.com?ref=2ntwlz4" target="_blank"><img src="http://i41.tinypic.com/2ntwlz4.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=358w0op" target="_blank"><img src="http://i43.tinypic.com/358w0op.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=demgpu" target="_blank"><img src="http://i42.tinypic.com/demgpu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=15rcr3m" target="_blank"><img src="http://i44.tinypic.com/15rcr3m.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=5oa64i" target="_blank"><img src="http://i39.tinypic.com/5oa64i.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2w5j51v" target="_blank"><img src="http://i41.tinypic.com/2w5j51v.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=28c1zrc" target="_blank"><img src="http://i42.tinypic.com/28c1zrc.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2nuko47" target="_blank"><img src="http://i41.tinypic.com/2nuko47.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=9kcw74" target="_blank"><img src="http://i43.tinypic.com/9kcw74.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=aueaex" target="_blank"><img src="http://i43.tinypic.com/aueaex.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=b55kpi" target="_blank"><img src="http://i39.tinypic.com/b55kpi.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=1z6v0c1" target="_blank"><img src="http://i40.tinypic.com/1z6v0c1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=2s1uhps" target="_blank"><img src="http://i40.tinypic.com/2s1uhps.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=1z6v0c1" target="_blank"><img src="http://i40.tinypic.com/1z6v0c1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=2z5oyfs" target="_blank"><img src="http://i43.tinypic.com/2z5oyfs.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
-
-<a href="http://tinypic.com?ref=2uyhpw1" target="_blank"><img src="http://i44.tinypic.com/2uyhpw1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=oitydu" target="_blank"><img src="http://i42.tinypic.com/oitydu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 

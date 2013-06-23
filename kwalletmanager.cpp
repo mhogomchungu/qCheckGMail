@@ -66,10 +66,9 @@ void kwalletmanager::ShowUI()
 QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 {
 	QString passWord ;
-	QString accName ;
 	QString labels ;
 	QString displayName ;
-	QString labels_id   = QString( LABEL_IDENTIFIER ) ;
+	QString labels_id      = QString( LABEL_IDENTIFIER ) ;
 	QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
 	QVector<accounts> acc ;
@@ -81,7 +80,7 @@ QVector<accounts> kwalletmanager::getAccounts( KWallet::Wallet * wallet )
 	int j = accountNames.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		accName = accountNames.at( i ) ;
+		const QString& accName = accountNames.at( i ) ;
 		if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 			;
 		}else{
@@ -109,7 +108,6 @@ void kwalletmanager::walletOpened( bool b )
 
 	int j = accountNames.size() ;
 	QString passWord ;
-	QString accName ;
 
 	m_accounts.clear();
 
@@ -123,7 +121,7 @@ void kwalletmanager::walletOpened( bool b )
 	int row ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		accName = accountNames.at( i ) ;
+		const QString& accName = accountNames.at( i ) ;
 		if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 			;
 		}else{
@@ -185,7 +183,6 @@ void kwalletmanager::HideUI()
 	m_wallet->createFolder( passwordFolder ) ;
 	m_wallet->setFolder( passwordFolder ) ;
 
-	QString accName ;
 	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
 	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
@@ -193,7 +190,7 @@ void kwalletmanager::HideUI()
 
 	for( int i = 0 ; i < j ; i++ ){
 		const accounts& acc = m_accounts.at( i ) ;
-		accName = acc.accountName() ;
+		const QString& accName = acc.accountName() ;
 		m_wallet->writePassword( accName,acc.passWord() ) ;
 		m_wallet->writePassword( accName + display_id,acc.displayName() ) ;
 		m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
