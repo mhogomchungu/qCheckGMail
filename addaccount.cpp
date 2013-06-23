@@ -24,6 +24,9 @@
 addaccount::addaccount( QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
 {
 	m_ui->setupUi( this );
+	this->setFixedSize( this->size() ) ;
+	this->setWindowFlags( Qt::Window | Qt::Dialog );
+
 	m_acc = -1 ;
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
@@ -33,6 +36,9 @@ addaccount::addaccount( int acc,QString accName,QString accPassword,QString accD
 	QDialog( parent ),m_ui( new Ui::addaccount )
 {
 	m_ui->setupUi( this );
+	this->setFixedSize( this->size() ) ;
+	this->setWindowFlags( Qt::Window | Qt::Dialog );
+
 	m_acc = acc ;
 
 	m_ui->lineEditName->setText( accName ) ;

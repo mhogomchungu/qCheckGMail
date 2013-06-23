@@ -262,7 +262,7 @@ void kwalletmanager::editEntry()
 	QString accDisplayName = m_table->item( row,1 )->text() ;
 	QString accLabels      = m_table->item( row,2 )->text() ;
 
-	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels ) ;
+	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
 	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
 	ac->ShowUI() ;
 }

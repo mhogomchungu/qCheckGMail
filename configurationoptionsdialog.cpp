@@ -24,6 +24,9 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
 {
 	m_ui->setupUi( this );
+	this->setFixedSize( this->size() ) ;
+	this->setWindowFlags( Qt::Window | Qt::Dialog );
+
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 }
 
