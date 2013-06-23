@@ -180,12 +180,14 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
 
+	int mailCount_1 = mailCount.toInt() ;
+	
 	QString z = this->nameToDisplay() ;
 
-	if( mailCount == QString( "0" ) ){
-		m_accountStatus += QString( "<tr><td>%1</td><td>%2</td></tr>" ).arg( z ).arg( mailCount ) ;
+	if( mailCount_1 == 0 ){
+		m_accountStatus += QString( "<tr><td>%1</td><td>0</td></tr>" ).arg( z ) ;
 	}else{
-		m_mailCount = m_mailCount + mailCount.toInt() ;
+		m_mailCount = m_mailCount + mailCount_1 ;
 		m_accountStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
