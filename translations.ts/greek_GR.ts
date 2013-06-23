@@ -208,12 +208,12 @@ ERROR: minimum time interval is 5 minutes
         <translation>Προσθήκη</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="238"/>
+        <location filename="../kwalletmanager.cpp" line="230"/>
         <source>delete entry</source>
         <translation>Διαγραφή καταχώρησης</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="244"/>
+        <location filename="../kwalletmanager.cpp" line="236"/>
         <source>edit entry</source>
         <translation>Επεξεργασία καταχώρησης</translation>
     </message>
@@ -222,8 +222,8 @@ ERROR: minimum time interval is 5 minutes
     <name>qCheckGMail</name>
     <message>
         <location filename="../qcheckgmail.cpp" line="57"/>
-        <location filename="../qcheckgmail.cpp" line="296"/>
-        <location filename="../qcheckgmail.cpp" line="522"/>
+        <location filename="../qcheckgmail.cpp" line="299"/>
+        <location filename="../qcheckgmail.cpp" line="525"/>
         <source>status</source>
         <translation>Κατάσταση</translation>
     </message>
@@ -263,12 +263,12 @@ ERROR: minimum time interval is 5 minutes
         <translation>Ο έλεγχος για μηνύματα ματαιώθηκε, δεν υπάρχει σύνδεση στο διαδίκτυο</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="163"/>
+        <location filename="../qcheckgmail.cpp" line="165"/>
         <source>failed to log in</source>
         <translation>Αποτυχία εισόδου</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="164"/>
+        <location filename="../qcheckgmail.cpp" line="162"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
     </message>
@@ -285,7 +285,7 @@ ERROR: minimum time interval is 5 minutes
         <translation type="obsolete">Λανθασμένος συνδυασμός χρήστη/κωδικού πρόσβασης</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="259"/>
+        <location filename="../qcheckgmail.cpp" line="262"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 μήνυμα από &lt;b&gt;%1&lt;/b&gt; σας περιμένει&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
@@ -298,60 +298,60 @@ ERROR: minimum time interval is 5 minutes
         <translation type="obsolete">1 μήνυμα σας περιμένει</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="261"/>
+        <location filename="../qcheckgmail.cpp" line="264"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 μηνύματα σας περιμένουν</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="230"/>
-        <location filename="../qcheckgmail.cpp" line="296"/>
+        <location filename="../qcheckgmail.cpp" line="233"/>
+        <location filename="../qcheckgmail.cpp" line="299"/>
         <source>no new email found</source>
         <translation>Δεν βρέθηκε νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="221"/>
+        <location filename="../qcheckgmail.cpp" line="223"/>
         <source>found 1 new email</source>
         <translation>Βρέθηκε 1 νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="223"/>
+        <location filename="../qcheckgmail.cpp" line="226"/>
         <source>found %2 new emails</source>
         <translation>Βρέθηκαν %2 νέα μηνύματα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="386"/>
+        <location filename="../qcheckgmail.cpp" line="389"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>Δεν έχετε προνόμια, νέα προσπάθεια για άνοιγμα του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="516"/>
+        <location filename="../qcheckgmail.cpp" line="519"/>
         <source>error</source>
         <translation>Σφάλμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="516"/>
+        <location filename="../qcheckgmail.cpp" line="519"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>Δεν έχει ρυθμιστεί κανένας λογαριασμός στο πορτοφόλι</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="521"/>
+        <location filename="../qcheckgmail.cpp" line="524"/>
         <source>wallet not opened</source>
         <translation>Το πορτοφόλι δεν είναι ανοικτό</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="522"/>
+        <location filename="../qcheckgmail.cpp" line="525"/>
         <source>error,failed to open wallet</source>
         <translation>Σφάλμα, αδυναμία ανοίγματος του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="627"/>
-        <location filename="../qcheckgmail.cpp" line="640"/>
+        <location filename="../qcheckgmail.cpp" line="630"/>
+        <location filename="../qcheckgmail.cpp" line="643"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="656"/>
-        <location filename="../qcheckgmail.cpp" line="669"/>
+        <location filename="../qcheckgmail.cpp" line="659"/>
+        <location filename="../qcheckgmail.cpp" line="672"/>
         <source>autostart disabled,exiting this one</source>
         <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>

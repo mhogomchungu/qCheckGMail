@@ -201,12 +201,12 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
         <translation>ajouter</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="238"/>
+        <location filename="../kwalletmanager.cpp" line="230"/>
         <source>delete entry</source>
         <translation>supprimer l&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="244"/>
+        <location filename="../kwalletmanager.cpp" line="236"/>
         <source>edit entry</source>
         <translation>modifier l&apos;entrée</translation>
     </message>
@@ -215,8 +215,8 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <name>qCheckGMail</name>
     <message>
         <location filename="../qcheckgmail.cpp" line="57"/>
-        <location filename="../qcheckgmail.cpp" line="296"/>
-        <location filename="../qcheckgmail.cpp" line="522"/>
+        <location filename="../qcheckgmail.cpp" line="299"/>
+        <location filename="../qcheckgmail.cpp" line="525"/>
         <source>status</source>
         <translation>statuts</translation>
     </message>
@@ -256,12 +256,12 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
         <translation>pas de vérification des mails, l&apos;utilisateur n&apos;est pas connecté au réseau</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="163"/>
+        <location filename="../qcheckgmail.cpp" line="165"/>
         <source>failed to log in</source>
         <translation>échec de la connexion</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="164"/>
+        <location filename="../qcheckgmail.cpp" line="162"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>le compte %1 a une mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
@@ -278,65 +278,65 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
         <translation type="obsolete">mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="259"/>
+        <location filename="../qcheckgmail.cpp" line="262"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 émail depuis &lt;b&gt;%1&lt;/b&gt; est en attente&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="261"/>
+        <location filename="../qcheckgmail.cpp" line="264"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 émail sont en attente</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="230"/>
-        <location filename="../qcheckgmail.cpp" line="296"/>
+        <location filename="../qcheckgmail.cpp" line="233"/>
+        <location filename="../qcheckgmail.cpp" line="299"/>
         <source>no new email found</source>
         <translation>pas de nouvel émail</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="221"/>
+        <location filename="../qcheckgmail.cpp" line="223"/>
         <source>found 1 new email</source>
         <translation>1 nouvel émail reçu</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="223"/>
+        <location filename="../qcheckgmail.cpp" line="226"/>
         <source>found %2 new emails</source>
         <translation>%2 nouvels émail reçus</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="386"/>
+        <location filename="../qcheckgmail.cpp" line="389"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>pas d&apos;informations, retentative d&apos;ouverture du portefeuille</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="516"/>
+        <location filename="../qcheckgmail.cpp" line="519"/>
         <source>error</source>
         <translation>erreur</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="516"/>
+        <location filename="../qcheckgmail.cpp" line="519"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>aucun compte ne semble avoir été configuré dans le portefeuille</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="521"/>
+        <location filename="../qcheckgmail.cpp" line="524"/>
         <source>wallet not opened</source>
         <translation>le portefeuille n&apos;est pas ouvert</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="522"/>
+        <location filename="../qcheckgmail.cpp" line="525"/>
         <source>error,failed to open wallet</source>
         <translation>erreur, échec lors de l&apos;ouverture du portefeuille</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="627"/>
-        <location filename="../qcheckgmail.cpp" line="640"/>
+        <location filename="../qcheckgmail.cpp" line="630"/>
+        <location filename="../qcheckgmail.cpp" line="643"/>
         <source>another instance is already running,exiting this one</source>
         <translation>une autre instance de CheckGMail est déjà lancée, veuillez l&apos;arrêter</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="656"/>
-        <location filename="../qcheckgmail.cpp" line="669"/>
+        <location filename="../qcheckgmail.cpp" line="659"/>
+        <location filename="../qcheckgmail.cpp" line="672"/>
         <source>autostart disabled,exiting this one</source>
         <translation>l&apos;autostart est désactivé, veuillez l&apos;arrêter</translation>
     </message>
