@@ -133,7 +133,7 @@ X-DBUS-ServiceName=
 X-DBUS-StartupType=Unique
 X-KDE-SubstituteUID=false
 X-KDE-Username=
-Categories=Utility;\n")
+Categories=Network;X-MandrivaLinux-Internet;\n")
 
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop"
@@ -158,5 +158,5 @@ X-DBUS-ServiceName=
 X-DBUS-StartupType=Unique
 X-KDE-SubstituteUID=false
 X-KDE-Username=
-Categories=Utility;\n")
+Categories=Network;X-MandrivaLinux-Internet;\n")
 
