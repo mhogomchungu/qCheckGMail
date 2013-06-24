@@ -182,12 +182,11 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 	int mailCount_1 = mailCount.toInt() ;
 	
-	QString z = this->nameToDisplay() ;
-
 	if( mailCount_1 == 0 ){
-		m_accountStatus += QString( "<tr><td>%1</td><td>0</td></tr>" ).arg( z ) ;
+		m_accountStatus += QString( "<tr><td>%1</td><td>0</td></tr>" ).arg( this->nameToDisplay() ) ;
 	}else{
 		m_mailCount = m_mailCount + mailCount_1 ;
+		QString z = this->nameToDisplay() ;
 		m_accountStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
@@ -391,6 +390,25 @@ void qCheckGMail::checkMail()
 	}
 }
 
+void qCheckGMail::checkMail( const accounts& acc )
+{
+	m_currentLabel = 0 ;
+	m_numberOfLabels = acc.numberOfLabels() ;
+	this->checkMail( acc,acc.defaultLabelUrl() ) ;
+}
+
+void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
+{
+	QUrl url( UrlLabel ) ;
+
+	url.setUserName( acc.accountName() ) ;
+	url.setPassword( acc.passWord() ) ;
+
+	QNetworkRequest rqt( url ) ;
+
+	m_manager->get( rqt ) ;
+}
+
 /*
  * try to force tray bubble to expand to the width of longest account+label to force it to
  * not split the text to two lines
@@ -402,7 +420,7 @@ void qCheckGMail::displaNameColumnWidth()
 	int k ;
 	int z ;
 	int n ;
-
+	
 	for( int i = 0 ; i < j ; i++ ){
 		const accounts& acc = m_accounts.at( i ) ;
 		const QStringList& l = acc.labelUrls() ;
@@ -437,30 +455,11 @@ void qCheckGMail::displaNameColumnWidth()
 			}
 		}
 	}
-
+	
 	/*
 	 * m_accountNameColumnWidth will contain the length of the longer accountName+label/accountDisplayName+label
 	 */
 	m_accountNameColumnWidth = QString::number( width  ) ;
-}
-
-void qCheckGMail::checkMail( const accounts& acc )
-{
-	m_currentLabel = 0 ;
-	m_numberOfLabels = acc.numberOfLabels() ;
-	this->checkMail( acc,acc.defaultLabelUrl() ) ;
-}
-
-void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
-{
-	QUrl url( UrlLabel ) ;
-
-	url.setUserName( acc.accountName() ) ;
-	url.setPassword( acc.passWord() ) ;
-
-	QNetworkRequest rqt( url ) ;
-
-	m_manager->get( rqt ) ;
 }
 
 void qCheckGMail::getAccountsInformation()

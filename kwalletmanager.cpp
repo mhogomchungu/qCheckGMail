@@ -202,7 +202,8 @@ void kwalletmanager::HideUI()
 void kwalletmanager::pushButtonAdd()
 {
 	addaccount * ac = new addaccount( this ) ;
-	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
+	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),
+		 this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
 	ac->ShowUI() ;
 }
 
@@ -263,7 +264,8 @@ void kwalletmanager::editEntry()
 	QString accLabels      = m_table->item( row,2 )->text() ;
 
 	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
-	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
+	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),
+		 this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
 	ac->ShowUI() ;
 }
 
