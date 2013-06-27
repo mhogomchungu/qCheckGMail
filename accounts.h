@@ -26,23 +26,25 @@
 class accounts
 {
 public:
-	accounts( QString userName = QString(),QString password = QString(),QString displayName = QString(),QString labels = QString() );
+	accounts( QString userName = QString(),QString password = QString(),
+		  QString displayName = QString(),QString labels = QString() );
+	
 	accounts( const accounts& acc ) ;
-	accounts& operator= ( const accounts& acc ) ;
+	accounts& operator=( const accounts& acc ) ;
 
-	const QString& accountName( void )  const ;
-	const QString& passWord( void )  const ;
+	const QString& accountName( void )      const ;
+	const QString& passWord( void )         const ;
 	const QString& defaultLabelUrl( void )  const ;
-	const QString& displayName( void )  const ;
-	const QString& labels( void )  const ;
-	const QStringList& labelUrls( void ) const;
-	int numberOfLabels( void ) const ;
-	const QString& labelUrlAt( int ) const ;
+	const QString& displayName( void )      const ;
+	const QString& labels( void )           const ;
+	const QString& labelUrlAt( int )        const ;
+	const QStringList& labelUrls( void )    const ;
+	int   numberOfLabels( void )            const ;
 private:
-	QString m_accountName ;
-	QString m_passWord ;
-	QString m_displayName ;
-	QString m_labels ;
+	QString m_accountName   ;
+	QString m_passWord      ;
+	QString m_displayName   ;
+	QString m_labels        ;
 	QStringList m_labelUrls ;
 };
 

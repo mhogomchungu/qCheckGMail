@@ -53,7 +53,7 @@ accounts::accounts( const accounts& acc )
 
 accounts& accounts::operator=( const accounts& acc )
 {
-	m_accountName = acc.m_accountName   ;
+	m_accountName = acc.m_accountName ;
 	m_passWord    = acc.m_passWord    ;
 	m_labels      = acc.m_labels      ;
 	m_labelUrls   = acc.m_labelUrls   ;

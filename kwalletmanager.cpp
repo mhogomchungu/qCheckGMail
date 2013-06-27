@@ -24,8 +24,9 @@
 #define LABEL_IDENTIFIER "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
-kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWidget * parent ) : QDialog( parent ),
-	m_ui( new Ui::kwalletmanager ),m_wallet( 0 ),m_wallet_p( wallet ),m_walletName( walletName )
+kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWidget * parent ) :
+	QDialog( parent ),m_ui( new Ui::kwalletmanager ),m_wallet( 0 ),
+	m_wallet_p( wallet ),m_walletName( walletName )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() );
@@ -39,7 +40,8 @@ kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWi
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 	connect( m_ui->pushButtonAccountDelete,SIGNAL( clicked() ),this,SLOT( pushButtonDeleteEntry() ) ) ;
 
-	connect( m_ui->tableWidget,SIGNAL( itemClicked( QTableWidgetItem * ) ),this,SLOT( tableItemClicked( QTableWidgetItem * ) ) ) ;
+	connect( m_ui->tableWidget,SIGNAL( itemClicked( QTableWidgetItem * ) ),
+		 this,SLOT( tableItemClicked( QTableWidgetItem * ) ) ) ;
 	connect( m_ui->tableWidget,SIGNAL( currentItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ),this,
 		 SLOT( tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ) ) ;
 
@@ -58,7 +60,8 @@ void kwalletmanager::ShowUI()
 	if( *m_wallet_p ){
 		m_wallet = *m_wallet_p ;
 	}else{
-		*m_wallet_p = m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
+		*m_wallet_p = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
+		m_wallet = *m_wallet_p ;
 		connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
 	}
 }
@@ -269,7 +272,8 @@ void kwalletmanager::editEntry()
 	ac->ShowUI() ;
 }
 
-void kwalletmanager::addAccount( QString accountName,QString accountPassword,QString displayName,QString accountLabels )
+void kwalletmanager::addAccount( QString accountName,QString accountPassword,
+				 QString displayName,QString accountLabels )
 {
 	m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels ) ) ;
 
@@ -296,7 +300,8 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,QSt
 	m_table->setCurrentCell( m_table->rowCount() - 1,2 ) ;
 }
 
-void kwalletmanager::editAccount( int row,QString accName,QString accPassword,QString accDisplayName,QString accLabels )
+void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
+				  QString accDisplayName,QString accLabels )
 {
 	m_table->item( row,0 )->setText( accName ) ;
 	m_table->item( row,1 )->setText( accDisplayName ) ;

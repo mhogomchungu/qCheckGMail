@@ -41,25 +41,29 @@ QString configurationoptionsdialog::getConfigPath()
 
 bool configurationoptionsdialog::autoStartEnabled()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailNoAutoStart.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
 	return !f.exists() ;
 }
 
 void configurationoptionsdialog::enableAutoStart()
 {
-	QFile::remove( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailNoAutoStart.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile::remove( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
 }
 
 void configurationoptionsdialog::disableAutoStart()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailNoAutoStart.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
 	f.open( QIODevice::WriteOnly ) ;
 	f.close();
 }
 
 bool configurationoptionsdialog::reportOnAllAccounts()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
+	QString z = configurationoptionsdialog::getConfigPath() ;
+	QFile f( z + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
 	if( !f.exists() ){
 		f.open( QIODevice::WriteOnly ) ;
 		f.write( "1" ) ;
@@ -74,7 +78,8 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 
 void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
 	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
 	if( b ){
 		f.write( "1" ) ;
@@ -86,7 +91,8 @@ void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
 
 QString configurationoptionsdialog::localLanguage()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailLocalLanguage.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailLocalLanguage.option" ) ) ;
 
 	if( !f.exists() ){
 		f.open( QIODevice::WriteOnly ) ;
@@ -111,7 +117,8 @@ QString configurationoptionsdialog::localLanguagePath()
 
 void configurationoptionsdialog::saveLocalLanguage()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailLocalLanguage.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailLocalLanguage.option" ) ) ;
 
 	f.open( QIODevice::WriteOnly ) ;
 	f.write( m_ui->comboBoxLocalLanguage->currentText().toAscii() ) ;
@@ -120,7 +127,8 @@ void configurationoptionsdialog::saveLocalLanguage()
 
 void configurationoptionsdialog::saveTimeToConfigFile()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailTimeInterval.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailTimeInterval.option" ) ) ;
 	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
 	f.write( m_ui->lineEditUpdateCheckInterval->text().toAscii() ) ;
 	f.close() ;
@@ -128,7 +136,8 @@ void configurationoptionsdialog::saveTimeToConfigFile()
 
 int configurationoptionsdialog::getTimeFromConfigFile()
 {
-	QFile f( configurationoptionsdialog::getConfigPath() + QString( "qCheckGMailTimeInterval.option" ) ) ;
+	QString x = configurationoptionsdialog::getConfigPath() ;
+	QFile f( x + QString( "qCheckGMailTimeInterval.option" ) ) ;
 
 	if( !f.exists() ){
 		f.open( QIODevice::WriteOnly ) ;

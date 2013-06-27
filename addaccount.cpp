@@ -32,8 +32,8 @@ addaccount::addaccount( QWidget * parent ) :QDialog( parent ),m_ui( new Ui::adda
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
 }
 
-addaccount::addaccount( int acc,QString accName,QString accPassword,QString accDisplayName,QString accLabels,QWidget * parent ) :
-	QDialog( parent ),m_ui( new Ui::addaccount )
+addaccount::addaccount( int acc,QString accName,QString accPassword,QString accDisplayName,
+			QString accLabels,QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() ) ;
