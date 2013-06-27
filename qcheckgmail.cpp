@@ -181,13 +181,13 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
 
 	int mailCount_1 = mailCount.toInt() ;
-	
+
 	if( mailCount_1 == 0 ){
-		m_accountStatus += QString( "<tr><td>%1</td><td>0</td></tr>" ).arg( this->nameToDisplay() ) ;
+		m_accountsStatus += QString( "<tr><td>%1</td><td>0</td></tr>" ).arg( this->nameToDisplay() ) ;
 	}else{
 		m_mailCount = m_mailCount + mailCount_1 ;
 		QString z = this->nameToDisplay() ;
-		m_accountStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
+		m_accountsStatus += QString( "<tr><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
 	m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
@@ -212,24 +212,24 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			m_checkingMail = false ;
 
-			m_accountStatus += QString( "</table>" ) ;
+			m_accountsStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
 				this->setStatus( KStatusNotifierItem::NeedsAttention ) ;
 				QString icon = QString( "qCheckGMail-GotMail" ) ;
 				this->changeIcon( icon ) ;
 				if( m_mailCount == 1 ){
-					this->setToolTip( icon,tr( "found 1 new email" ),m_accountStatus ) ;
+					this->setToolTip( icon,tr( "found 1 new email" ),m_accountsStatus ) ;
 				}else{
 					QString x = QString::number( m_mailCount ) ;
-					this->setToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountStatus ) ;
+					this->setToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
 				this->newEmailNotify();
 			}else{
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
-				this->setToolTip( icon,tr( "no new email found" ),m_accountStatus ) ;
+				this->setToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
 			}
 		}
 	}
@@ -376,7 +376,7 @@ void qCheckGMail::checkMail()
 		*/
 		if( m_numberOfAccounts > 0 ){
 			//m_accountStatus   = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
-			m_accountStatus   = QString( "<table>" );
+			m_accountsStatus   = QString( "<table>" );
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
 			m_checkingMail    = true ;
@@ -420,7 +420,7 @@ void qCheckGMail::displaNameColumnWidth()
 	int k ;
 	int z ;
 	int n ;
-	
+
 	for( int i = 0 ; i < j ; i++ ){
 		const accounts& acc = m_accounts.at( i ) ;
 		const QStringList& l = acc.labelUrls() ;
@@ -455,7 +455,7 @@ void qCheckGMail::displaNameColumnWidth()
 			}
 		}
 	}
-	
+
 	/*
 	 * m_accountNameColumnWidth will contain the length of the longer accountName+label/accountDisplayName+label
 	 */

@@ -102,7 +102,7 @@ private:
 	QVector<accounts> m_accounts ;
 	KWallet::Wallet * m_wallet ;
 	QString m_walletName ;
-	QString m_accountStatus ;
+	QString m_accountsStatus ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
 	bool m_reportOnAllAccounts ;

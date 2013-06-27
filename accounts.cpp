@@ -23,9 +23,18 @@
 accounts::accounts( QString accountName,QString password,QString displayName,QString labels ) :
 	m_accountName( accountName ),m_passWord( password ),m_displayName( displayName ),m_labels( labels )
 {
-	const char * baseLabel = "https://mail.google.com/mail/feed/atom/" ;
+	QString baseLabel ;
 
-	m_labelUrls.append( QString( baseLabel ) ) ;
+	int index = accountName.indexOf( QString( "@" ) ) ;
+	if( index == -1 ){
+		baseLabel = QString( "https://mail.google.com/mail/feed/atom/" ) ;
+	}else{
+		index++ ;
+		QString domain = QString( accountName.mid( index ) ) ;
+		baseLabel = QString( "https://mail.google.com/a/%1/feed/atom/" ).arg( domain ) ;
+	}
+
+	m_labelUrls.append(baseLabel ) ;
 
 	if( m_labels.endsWith( "," ) ){
 		m_labels.truncate( m_labels.size() - 1 );
@@ -37,7 +46,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		QStringList l = m_labels.split( "," ) ;
 		int j = l.size() ;
 		for( int i = 0 ; i < j ; i++ ){
-			m_labelUrls.append( QString( baseLabel ) + l.at( i ) ) ;
+			m_labelUrls.append( baseLabel + l.at( i ) ) ;
 		}
 	}
 }
