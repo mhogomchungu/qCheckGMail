@@ -34,7 +34,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		baseLabel = QString( "https://mail.google.com/a/%1/feed/atom/" ).arg( domain ) ;
 	}
 
-	m_labelUrls.append(baseLabel ) ;
+	m_labelUrls.append( baseLabel ) ;
 
 	if( m_labels.endsWith( "," ) ){
 		m_labels.truncate( m_labels.size() - 1 );
