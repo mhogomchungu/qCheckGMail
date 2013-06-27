@@ -53,6 +53,8 @@ kwalletmanager::kwalletmanager( KWallet::Wallet ** wallet,QString walletName,QWi
 
 	m_ui->pushButtonAccountDelete->setVisible( false ) ;
 	m_ui->pushButtonAccountAdd->setFocus() ;
+
+	m_ui->groupBox->setTitle( QString( "" ) ) ;
 }
 
 void kwalletmanager::ShowUI()
