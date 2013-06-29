@@ -12,7 +12,8 @@
         <location filename="../addaccount.ui" line="41"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
-        <translation type="unfinished"></translation>
+        <translation>Normale gmail accounts kunnen zonder &quot;@gmail.com&quot; toegevoegd worden.
+Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="55"/>
@@ -299,12 +300,12 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../qcheckgmail.cpp" line="223"/>
         <source>found 1 new email</source>
-        <translation type="unfinished"></translation>
+        <translation>1 email gevonden</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="226"/>
         <source>found %2 new emails</source>
-        <translation type="unfinished"></translation>
+        <translation>%2 nieuwe emails gevonden</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="390"/>
