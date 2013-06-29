@@ -58,6 +58,7 @@ accounts::accounts( const accounts& acc )
 	m_labels      = acc.m_labels      ;
 	m_labelUrls   = acc.m_labelUrls   ;
 	m_displayName = acc.m_displayName ;
+	m_emptyLabelUrl  = acc.m_emptyLabelUrl  ;
 }
 
 accounts& accounts::operator=( const accounts& acc )
@@ -67,6 +68,7 @@ accounts& accounts::operator=( const accounts& acc )
 	m_labels      = acc.m_labels      ;
 	m_labelUrls   = acc.m_labelUrls   ;
 	m_displayName = acc.m_displayName ;
+	m_emptyLabelUrl  = acc.m_emptyLabelUrl  ;
 	return *this ;
 }
 
@@ -107,6 +109,10 @@ int accounts::numberOfLabels() const
 
 const QString &accounts::labelUrlAt( int i ) const
 {
-	return m_labelUrls.at( i ) ;
+	if( i < m_labelUrls.size() ){
+		return m_labelUrls.at( i ) ;
+	}else{
+		return m_emptyLabelUrl ;
+	}
 }
 

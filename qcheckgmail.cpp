@@ -64,7 +64,7 @@ void qCheckGMail::run()
 
 	ac->setText( tr( "check mail now" ) ) ;
 
-	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( manualCheckGmail() ) ) ;
 
 	m_menu->addAction( ac ) ;
 
@@ -349,6 +349,15 @@ void qCheckGMail::configurationoptionWindow()
 void qCheckGMail::reportOnAllAccounts( bool b )
 {
 	m_reportOnAllAccounts = b ;
+}
+
+void qCheckGMail::manualCheckGmail()
+{
+	if( m_checkingMail ){
+		;
+	}else{
+		this->checkMail() ;
+	}
 }
 
 void qCheckGMail::kwalletmanagerClosed( void )

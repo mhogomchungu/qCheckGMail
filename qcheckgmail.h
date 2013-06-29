@@ -72,6 +72,7 @@ private slots:
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
+	void manualCheckGmail( void ) ;
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
