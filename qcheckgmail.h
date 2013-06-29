@@ -75,7 +75,6 @@ private slots:
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
-	void displaNameColumnWidth( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
