@@ -11,3 +11,10 @@ version 1.1.0
 - Fix a build issue
 - Add the ability to edit existing account properties
 - Update translation strings
+
+version 1.2.0
+- Add supports for gmail hosted domains.
+	-Normal gmail accounts can be added without the "@gmail.com" part.
+	-Hosted domain addresses must be added with the "@ABC.XYZ" part.
+- Add command line switch(-d) to show debug output on the terminal
+

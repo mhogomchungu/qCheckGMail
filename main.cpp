@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	KAboutData aboutData( 	"qCheckGMail",
 				0,
 				ki18n( "qCheckGMail" ),
-				"1.1.1",
+				"1.2.0",
 				ki18n( "a qt based gmail checker" ),
 				KAboutData::License_GPL_V2,
 				ki18n( "(c)2013,ink Francis\nemail:mhogomchungu@gmail.com" ),
@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
 
 	KCmdLineOptions options;
 	options.add( "a",ki18n( "auto start application" ) ) ;
+	options.add( "d",ki18n( "show debug output on the terminal" ) ) ;
+
 	KCmdLineArgs::addCmdLineOptions( options ) ;
 	KUniqueApplication::addCmdLineOptions();
 

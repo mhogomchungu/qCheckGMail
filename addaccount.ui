@@ -37,6 +37,10 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
+Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</string>
+    </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">

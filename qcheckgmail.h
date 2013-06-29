@@ -36,6 +36,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#include <kcmdlineargs.h>
 #include <ktoolinvocation.h>
 #include <kstatusnotifieritem.h>
 #include <knotification.h>
@@ -106,6 +107,7 @@ private:
 	bool m_newMailFound ;
 	bool m_checkingMail ;
 	bool m_reportOnAllAccounts ;
+	bool m_enableDebug ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;

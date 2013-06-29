@@ -19,8 +19,6 @@
 
 #include "qcheckgmail.h"
 
-#define DEBUG 0
-
 qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 	m_gotCredentials( false ),m_walletName( "qCheckGMail" )
 {
@@ -48,6 +46,8 @@ void qCheckGMail::changeIcon( QString icon )
 
 void qCheckGMail::run()
 {
+	m_enableDebug = KCmdLineArgs::allArguments().contains( "-d" ) ;
+
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
@@ -171,9 +171,10 @@ void qCheckGMail::wrongAccountNameOrPassword()
  */
 void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 {
-#if DEBUG
-	qDebug() << "\n" << msg;
-#endif
+	if( m_enableDebug ){
+		qDebug() << "\n" << msg ;
+	}
+
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 		return this->wrongAccountNameOrPassword() ;
 	}
@@ -241,9 +242,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
  */
 void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 {
-#if DEBUG
-	qDebug() << "\n" << msg;
-#endif
+	if( m_enableDebug ){
+		qDebug() << "\n" << msg ;
+	}
+
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 		return this->wrongAccountNameOrPassword() ;
 	}
