@@ -31,6 +31,7 @@ qCheckGMail::~qCheckGMail()
 {
 	m_menu->deleteLater() ;
 	m_timer->deleteLater() ;
+	delete m_mutex ;
 }
 
 void qCheckGMail::start()
@@ -64,7 +65,7 @@ void qCheckGMail::run()
 
 	ac->setText( tr( "check mail now" ) ) ;
 
-	connect( ac,SIGNAL( triggered() ),this,SLOT( manualCheckGmail() ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
 
 	m_menu->addAction( ac ) ;
 
@@ -95,6 +96,10 @@ void qCheckGMail::run()
 	m_menu->addAction( ac ) ;
 
 	this->setContextMenu( m_menu ) ;
+
+	m_mutex = new QMutex() ;
+
+	m_checkingMail = false ;
 
 	this->getAccountsInformation();
 
@@ -208,11 +213,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
-			/*
-			 * done checking all labels on all accounts
-			 */
-			m_checkingMail = false ;
-
 			m_accountsStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
@@ -232,6 +232,11 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 				this->changeIcon( icon ) ;
 				this->setToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
 			}
+
+			/*
+			 * done checking all labels on all accounts
+			 */
+			this->doneCheckingMail() ;
 		}
 	}
 }
@@ -292,18 +297,25 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				 */
 				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 			}else{
-				/*
-				 * there are no more accounts and new mail not found in any of them
-				 */
-				m_checkingMail = false ;
-
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
 				this->setStatus( KStatusNotifierItem::Passive ) ;
+
+				/*
+				 * there are no more accounts and new mail not found in any of them
+				 */
+				this->doneCheckingMail() ;
 			}
 		}
 	}
+}
+
+void qCheckGMail::doneCheckingMail()
+{
+	m_mutex->lock();
+	m_checkingMail = false ;
+	m_mutex->unlock();
 }
 
 void qCheckGMail::newEmailNotify()
@@ -322,11 +334,7 @@ void qCheckGMail::pauseCheckingMail( bool b )
 		this->setOverlayIconByName( QString( "" ) );
 		this->startTimer();
 
-		if( m_checkingMail ){
-			;
-		}else{
-			this->checkMail();
-		}
+		this->checkMail();
 	}
 }
 
@@ -349,15 +357,6 @@ void qCheckGMail::configurationoptionWindow()
 void qCheckGMail::reportOnAllAccounts( bool b )
 {
 	m_reportOnAllAccounts = b ;
-}
-
-void qCheckGMail::manualCheckGmail()
-{
-	if( m_checkingMail ){
-		;
-	}else{
-		this->checkMail() ;
-	}
 }
 
 void qCheckGMail::kwalletmanagerClosed( void )
@@ -386,12 +385,36 @@ void qCheckGMail::checkMail()
 		* check for updates on the first account
 		*/
 		if( m_numberOfAccounts > 0 ){
-			//m_accountStatus   = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
-			m_accountsStatus   = QString( "<table>" );
-			m_mailCount       = 0 ;
-			m_currentAccount  = 0 ;
-			m_checkingMail    = true ;
-			this->checkMail( m_accounts.at( m_currentAccount ) );
+			/*
+			 * We could get here twice at the same time when a manual check is done just after or before an automatic one.
+			 * Guard againts it with a mutex.
+			 */
+			bool canCheckMail ;
+
+			m_mutex->lock() ;
+			if( m_checkingMail ){
+				/*
+				 * mail checking in progress,do not attempt to start another mail checking machinery
+				 */
+				canCheckMail = false ;
+			}else{
+				/*
+				 * mail checking NOT in progress,attempt to start another mail checking machinery
+				 */
+				canCheckMail = true ;
+			}
+			m_mutex->unlock();
+
+			if( canCheckMail ){
+				//m_accountStatus = QString( "<table><col width=\"%1\"><col width=\"3\">" ).arg( m_accountNameColumnWidth ) ;
+				m_accountsStatus  = QString( "<table>" );
+				m_mailCount       = 0 ;
+				m_currentAccount  = 0 ;
+				m_checkingMail = true ;
+				this->checkMail( m_accounts.at( m_currentAccount ) );
+			}else{
+				qDebug() << "WARNING,tried to check for mails when mail checking is already in progress" ;
+			}
 		}else{
 			qDebug() << "BUGG!!,tried to check for mails when there are no accounts configured" ;
 		}

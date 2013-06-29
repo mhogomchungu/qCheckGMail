@@ -31,7 +31,7 @@
 #include <QVector>
 #include <QUrl>
 #include <QCoreApplication>
-
+#include <QMutex>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -72,7 +72,6 @@ private slots:
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
-	void manualCheckGmail( void ) ;
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
@@ -96,6 +95,7 @@ private:
 	void reportOnAllAccounts( const QByteArray& ) ;
 	void reportOnlyFirstAccountWithMail( const QByteArray& ) ;
 	void noAccountConfigured( void ) ;
+	void doneCheckingMail( void ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
 	bool m_gotCredentials ;
@@ -114,6 +114,7 @@ private:
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
+	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };
 

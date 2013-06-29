@@ -17,4 +17,4 @@ version 1.2.0
 	-Normal gmail accounts can be added without the "@gmail.com" part.
 	-Hosted domain addresses must be added with the "@ABC.XYZ" part.
 - Add command line switch(-d) to show debug output on the terminal
-
+- Fix a rare crash when an automatic mail checking and manual mail checking happen at the same time
