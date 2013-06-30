@@ -55,4 +55,4 @@ screenshots:
 
 <a href="http://tinypic.com?ref=oitydu" target="_blank"><img src="http://i42.tinypic.com/oitydu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=16iekcn" target="_blank"><img src="http://i43.tinypic.com/16iekcn.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2lj3uyp" target="_blank"><img src="http://i44.tinypic.com/2lj3uyp.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
