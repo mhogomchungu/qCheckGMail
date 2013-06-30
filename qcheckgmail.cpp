@@ -193,7 +193,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	}else{
 		m_mailCount = m_mailCount + mailCount_1 ;
 		QString z = this->nameToDisplay() ;
-		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80\"><b>%2</b></td><td><b>%3</b></td></tr>" ).arg( z ).arg( mailCount ) ;
+		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\"><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
 	m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
