@@ -12,7 +12,8 @@
         <location filename="../addaccount.ui" line="41"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
-        <translation type="unfinished"></translation>
+        <translation>Μπορείτε να προσθέσετε λογαριασμούς gmail χωρίς την κατάληξη &quot;@gmail.com&quot;.
+Λογαριασμοί από hosted domain πρέπει να προστεθούν με κατάληξη &quot;ABC.XYZ&quot;.</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="55"/>
