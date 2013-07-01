@@ -12,7 +12,8 @@
         <location filename="../addaccount.ui" line="41"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pueden añadirse las cuentas usuales de gmail sin indicar la parte &quot;@gmail.com&quot;.
+Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot;.</translation>
     </message>
     <message>
         <location filename="../addaccount.ui" line="55"/>
