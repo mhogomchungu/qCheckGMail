@@ -220,54 +220,54 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../qcheckgmail.cpp" line="57"/>
+        <location filename="../qcheckgmail.cpp" line="58"/>
         <location filename="../qcheckgmail.cpp" line="300"/>
-        <location filename="../qcheckgmail.cpp" line="526"/>
+        <location filename="../qcheckgmail.cpp" line="503"/>
         <source>status</source>
         <translation>estado</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="57"/>
+        <location filename="../qcheckgmail.cpp" line="58"/>
         <source>opening wallet</source>
         <translation>abriendo cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="65"/>
+        <location filename="../qcheckgmail.cpp" line="66"/>
         <source>check mail now</source>
         <translation>comprobar correo ahora</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="73"/>
+        <location filename="../qcheckgmail.cpp" line="74"/>
         <source>pause checking mail</source>
         <translation>pausar comprobación de correo</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="83"/>
+        <location filename="../qcheckgmail.cpp" line="84"/>
         <source>configure accounts</source>
         <translation>configurar cuentas</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="91"/>
+        <location filename="../qcheckgmail.cpp" line="92"/>
         <source>configure options</source>
         <translation>configurar opciones</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="113"/>
+        <location filename="../qcheckgmail.cpp" line="118"/>
         <source>failed to connect</source>
         <translation>ha fallado al conectar</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="114"/>
+        <location filename="../qcheckgmail.cpp" line="119"/>
         <source>check mail skipped,user is not connected to the internet</source>
         <translation>comprobación de correo omitida, el usuario no está conectado a Internet</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="165"/>
+        <location filename="../qcheckgmail.cpp" line="170"/>
         <source>failed to log in</source>
         <translation>ha fallado al identificarse</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="162"/>
+        <location filename="../qcheckgmail.cpp" line="167"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>%1 cuenta tiene una combinación usuario/contraseña errónea</translation>
     </message>
@@ -284,12 +284,12 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
         <translation type="obsolete">combinación usaurio/contraseña errónea</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="263"/>
+        <location filename="../qcheckgmail.cpp" line="268"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 correo de &lt;b&gt;%1&lt;/b&gt; está esperando&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="265"/>
+        <location filename="../qcheckgmail.cpp" line="270"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 correos están esperando</translation>
     </message>
@@ -310,39 +310,39 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
         <translation>encontrados %2 correos nuevos</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="390"/>
+        <location filename="../qcheckgmail.cpp" line="421"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>no tiene credenciales,(re)intentar abrir cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="520"/>
+        <location filename="../qcheckgmail.cpp" line="497"/>
         <source>error</source>
         <translation>error</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="520"/>
+        <location filename="../qcheckgmail.cpp" line="497"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>parece no haber ninguna cuenta configurada en la cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="525"/>
+        <location filename="../qcheckgmail.cpp" line="502"/>
         <source>wallet not opened</source>
         <translation>cartera cerrada</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="526"/>
+        <location filename="../qcheckgmail.cpp" line="503"/>
         <source>error,failed to open wallet</source>
         <translation>error, ha fallado al abrir la cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="631"/>
-        <location filename="../qcheckgmail.cpp" line="644"/>
+        <location filename="../qcheckgmail.cpp" line="608"/>
+        <location filename="../qcheckgmail.cpp" line="621"/>
         <source>another instance is already running,exiting this one</source>
         <translation>ya está ejecutándose otra cartera, saliendo de ésta</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="660"/>
-        <location filename="../qcheckgmail.cpp" line="673"/>
+        <location filename="../qcheckgmail.cpp" line="637"/>
+        <location filename="../qcheckgmail.cpp" line="650"/>
         <source>autostart disabled,exiting this one</source>
         <translation>inicio automático desactivado, saliendo</translation>
     </message>
