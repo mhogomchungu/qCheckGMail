@@ -53,7 +53,7 @@ private slots:
 private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
-	int m_acc ;
+	int m_row ;
 };
 
 #endif // ADDACCOUNT_H

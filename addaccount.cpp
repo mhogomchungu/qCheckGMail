@@ -27,19 +27,19 @@ addaccount::addaccount( QWidget * parent ) :QDialog( parent ),m_ui( new Ui::adda
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog );
 
-	m_acc = -1 ;
+	m_row = -1 ;
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
 }
 
-addaccount::addaccount( int acc,QString accName,QString accPassword,QString accDisplayName,
+addaccount::addaccount( int row,QString accName,QString accPassword,QString accDisplayName,
 			QString accLabels,QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog );
 
-	m_acc = acc ;
+	m_row = row ;
 
 	m_ui->lineEditName->setText( accName ) ;
 	m_ui->lineEditPassword->setText( accPassword ) ;
@@ -52,7 +52,7 @@ addaccount::addaccount( int acc,QString accName,QString accPassword,QString accD
 
 void addaccount::ShowUI()
 {
-	if( m_acc != -1 ){
+	if( m_row != -1 ){
 		m_ui->pushButtonAdd->setText( tr( "edit" ) ) ;
 		this->setWindowTitle( tr( "edit account" ) ) ;
 	}
@@ -89,10 +89,10 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: one or more reguired field is missing" ) ) ;
 		msg.exec() ;
 	}else{
-		if( m_acc == -1 ){
+		if( m_row == -1 ){
 			emit addAccount( accName,password,displayN,labels ) ;
 		}else{
-			emit editAccount( m_acc,accName,password,displayN,labels ) ;
+			emit editAccount( m_row,accName,password,displayN,labels ) ;
 		}
 		this->HideUI();
 	}

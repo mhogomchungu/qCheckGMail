@@ -304,15 +304,14 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,
 
 void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
 				  QString accDisplayName,QString accLabels )
-{
-	m_table->item( row,0 )->setText( accName ) ;
-	m_table->item( row,1 )->setText( accDisplayName ) ;
-	m_table->item( row,2 )->setText( accLabels ) ;
-
+{	
 	int j = m_accounts.size() ;
 	for( int i = 0 ; i < j ; i++ ){
 		if( m_accounts.at( i ).accountName() == accName ){
 			m_accounts.replace( i,accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
+			m_table->item( row,0 )->setText( accName ) ;
+			m_table->item( row,1 )->setText( accDisplayName ) ;
+			m_table->item( row,2 )->setText( accLabels ) ;
 			break ;
 		}
 	}
