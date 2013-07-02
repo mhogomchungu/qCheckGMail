@@ -38,21 +38,21 @@ state to "normal" and plasma desktop will hide it by default.
 The latest version can be downloaded from the following link: https://github.com/mhogomchungu/qCheckGMail/tarball/1.0.0
 
 screenshots:
------------
-<a href="http://tinypic.com?ref=358w0op" target="_blank"><img src="http://i43.tinypic.com/358w0op.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+------------
+<a href="http://tinypic.com?ref=1caj8" target="_blank"><img src="http://i42.tinypic.com/1caj8.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=15rcr3m" target="_blank"><img src="http://i44.tinypic.com/15rcr3m.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2h6d15d" target="_blank"><img src="http://i42.tinypic.com/2h6d15d.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=2w5j51v" target="_blank"><img src="http://i41.tinypic.com/2w5j51v.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2u5z4vo" target="_blank"><img src="http://i44.tinypic.com/2u5z4vo.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=2nuko47" target="_blank"><img src="http://i41.tinypic.com/2nuko47.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=33vj9y8" target="_blank"><img src="http://i42.tinypic.com/33vj9y8.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=aueaex" target="_blank"><img src="http://i43.tinypic.com/aueaex.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2wr2otl" target="_blank"><img src="http://i44.tinypic.com/2wr2otl.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=1z6v0c1" target="_blank"><img src="http://i40.tinypic.com/1z6v0c1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=zwgtbk" target="_blank"><img src="http://i41.tinypic.com/zwgtbk.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=1z6v0c1" target="_blank"><img src="http://i40.tinypic.com/1z6v0c1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2yklugy" target="_blank"><img src="http://i40.tinypic.com/2yklugy.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
-<a href="http://tinypic.com?ref=oitydu" target="_blank"><img src="http://i42.tinypic.com/oitydu.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
+<a href="http://tinypic.com?ref=2i26gi1" target="_blank"><img src="http://i39.tinypic.com/2i26gi1.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
 <a href="http://tinypic.com?ref=2lj3uyp" target="_blank"><img src="http://i44.tinypic.com/2lj3uyp.jpg" border="0" alt="Image and video hosting by TinyPic"></a>

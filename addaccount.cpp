@@ -42,6 +42,8 @@ addaccount::addaccount( int row,QString accName,QString accPassword,QString accD
 	m_row = row ;
 
 	m_ui->lineEditName->setText( accName ) ;
+	m_ui->lineEditName->setEnabled( false ) ;
+	m_ui->lineEditName->setToolTip( QString( "" ) ) ;
 	m_ui->lineEditPassword->setText( accPassword ) ;
 	m_ui->lineEditLabel->setText( accLabels ) ;
 	m_ui->lineEditOptionalName->setText( accDisplayName ) ;
