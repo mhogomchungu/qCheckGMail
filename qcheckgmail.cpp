@@ -118,6 +118,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 				  tr( "failed to connect" ),
 				  tr( "check mail skipped,user is not connected to the internet" ) ) ;
 		this->changeIcon( QString( "qCheckGMailError" ) );
+		this->doneCheckingMail() ;
 	}else{
 		if( m_reportOnAllAccounts ){
 			this->reportOnAllAccounts( content ) ;
