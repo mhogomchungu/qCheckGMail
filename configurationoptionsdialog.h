@@ -26,6 +26,8 @@
 #include <QDialog>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QSettings>
+#include <QDebug>
 
 #include <kstandarddirs.h>
 
@@ -40,14 +42,13 @@ class configurationoptionsdialog : public QDialog
 	Q_OBJECT
 public:
 	explicit configurationoptionsdialog( QWidget * parent = 0 );
-	static QString getConfigPath( void ) ;
 	static bool autoStartEnabled( void ) ;
-	static void enableAutoStart( void ) ;
-	static void disableAutoStart( void ) ;
+	static void enableAutoStart( bool ) ;
 	static bool reportOnAllAccounts( void ) ;
 	static QString localLanguage( void ) ;
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
+	static void setDefaultQSettingOptions( QSettings& ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 	~configurationoptionsdialog();

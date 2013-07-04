@@ -304,7 +304,7 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,
 
 void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
 				  QString accDisplayName,QString accLabels )
-{	
+{
 	int j = m_accounts.size() ;
 	for( int i = 0 ; i < j ; i++ ){
 		if( m_accounts.at( i ).accountName() == accName ){

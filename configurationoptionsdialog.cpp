@@ -20,90 +20,89 @@
 #include "configurationoptionsdialog.h"
 #include "ui_configurationoptionsdialog.h"
 
+#define PROGRAM_NAME "qCheckGMail"
+#define ORGANIZATION_NAME "qCheckGMail"
+
 configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
 {
 	m_ui->setupUi( this );
+
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog );
 
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 }
 
-QString configurationoptionsdialog::getConfigPath()
+void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings )
 {
 	KStandardDirs k ;
-	QString path = k.localxdgconfdir() + QString( "/qCheckGMail/" ) ;
-	QDir d ;
-	d.mkpath( path ) ;
-	return path ;
+	settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
 }
 
 bool configurationoptionsdialog::autoStartEnabled()
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
-	return !f.exists() ;
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "autostart" ) ;
+
+	if( settings.contains( opt ) ){
+		;
+	}else{
+		settings.setValue( opt,true ) ;
+	}
+
+	return settings.value( opt ).toBool() ;
 }
 
-void configurationoptionsdialog::enableAutoStart()
+void configurationoptionsdialog::enableAutoStart( bool b )
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile::remove( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
-}
-
-void configurationoptionsdialog::disableAutoStart()
-{
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailNoAutoStart.option" ) ) ;
-	f.open( QIODevice::WriteOnly ) ;
-	f.close();
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "autostart" ) ;
+	settings.setValue( opt,b ) ;
 }
 
 bool configurationoptionsdialog::reportOnAllAccounts()
 {
-	QString z = configurationoptionsdialog::getConfigPath() ;
-	QFile f( z + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
-	if( !f.exists() ){
-		f.open( QIODevice::WriteOnly ) ;
-		f.write( "1" ) ;
-		f.close();
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "reportOnAllAccounts" ) ;
+
+	if( settings.contains( opt ) ){
+		;
+	}else{
+		settings.setValue( opt,true ) ;
 	}
 
-	f.open( QIODevice::ReadOnly ) ;
-	QByteArray x = f.readAll() ;
-	QByteArray y( "1" ) ;
-	return x == y ;
+	return settings.value( opt ).toBool() ;
 }
 
 void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailReportAllAccounts.option" ) ) ;
-	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
-	if( b ){
-		f.write( "1" ) ;
-	}else{
-		f.write( "0" ) ;
-	}
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "reportOnAllAccounts" ) ;
+	settings.setValue( opt,b ) ;
 	emit reportOnAllAccounts( b ) ;
 }
 
 QString configurationoptionsdialog::localLanguage()
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailLocalLanguage.option" ) ) ;
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
-	if( !f.exists() ){
-		f.open( QIODevice::WriteOnly ) ;
-		f.write( "english_US" ) ;
-		f.close();
+	QString opt = QString( "language" ) ;
+
+	if( settings.contains( opt ) ){
+		;
+	}else{
+		settings.setValue( opt,QString( "english_US" ) ) ;
 	}
 
-	f.open( QIODevice::ReadOnly ) ;
-	QString e = f.readAll() ;
-	f.close();
-	return e ;
+	return settings.value( opt ).toString() ;
 }
 
 QString configurationoptionsdialog::localLanguagePath()
@@ -117,43 +116,40 @@ QString configurationoptionsdialog::localLanguagePath()
 
 void configurationoptionsdialog::saveLocalLanguage()
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailLocalLanguage.option" ) ) ;
-
-	f.open( QIODevice::WriteOnly ) ;
-	f.write( m_ui->comboBoxLocalLanguage->currentText().toAscii() ) ;
-	f.close() ;
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "language" ) ;
+	QString language = m_ui->comboBoxLocalLanguage->currentText() ;
+	settings.setValue( opt,language ) ;
 }
 
 void configurationoptionsdialog::saveTimeToConfigFile()
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailTimeInterval.option" ) ) ;
-	f.open( QIODevice::WriteOnly | QIODevice::Truncate ) ;
-	f.write( m_ui->lineEditUpdateCheckInterval->text().toAscii() ) ;
-	f.close() ;
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "time" ) ;
+	QString time = m_ui->lineEditUpdateCheckInterval->text() ;
+	settings.setValue( opt,time ) ;
 }
 
 int configurationoptionsdialog::getTimeFromConfigFile()
 {
-	QString x = configurationoptionsdialog::getConfigPath() ;
-	QFile f( x + QString( "qCheckGMailTimeInterval.option" ) ) ;
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "time" ) ;
 
-	if( !f.exists() ){
-		f.open( QIODevice::WriteOnly ) ;
-		f.write( "30" ) ; // 30 minutes
-		f.close() ;
+	if( settings.contains( opt ) ){
+		;
+	}else{
+		settings.setValue( opt,QString( "30" ) ) ;
 	}
 
-	f.open( QIODevice::ReadOnly ) ;
-	QString time = f.readAll() ;
-	f.close() ;
-
 	bool ok ;
-	int t = time.toInt( &ok ) ;
+
+	int time = settings.value( opt ).toInt( &ok ) ;
 
 	if( ok ){
-		return t * 60 * 1000 ;
+		return time * 60 * 1000 ;
 	}else{
 		return 5 * 60 * 1000 ;
 	}
@@ -173,11 +169,7 @@ void configurationoptionsdialog::HideUI()
 {
 	this->hide() ;
 
-	if( m_ui->checkBoxAutoStartEnabled->isChecked() ){
-		configurationoptionsdialog::enableAutoStart() ;
-	}else{
-		configurationoptionsdialog::disableAutoStart() ;
-	}
+	configurationoptionsdialog::enableAutoStart( m_ui->checkBoxAutoStartEnabled->isChecked() ) ;
 
 	QString x = m_ui->lineEditUpdateCheckInterval->text() ;
 	bool y ;
