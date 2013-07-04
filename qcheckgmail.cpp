@@ -96,7 +96,7 @@ void qCheckGMail::run()
 
 	m_menu->addAction( ac ) ;
 
-	this->setContextMenu( m_menu ) ;
+	KStatusNotifierItem::setContextMenu( m_menu ) ;
 
 	m_mutex = new QMutex() ;
 
@@ -196,7 +196,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	if( mailCount_1 == 0 ){
 		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\">%1</td><td>0</td></tr>" ).arg( this->nameToDisplay() ) ;
 	}else{
-		m_mailCount = m_mailCount + mailCount_1 ;
+		m_mailCount += mailCount_1 ;
 		QString z = this->nameToDisplay() ;
 		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\"><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
