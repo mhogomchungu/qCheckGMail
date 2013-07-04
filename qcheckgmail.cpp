@@ -214,6 +214,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
+			/*
+			 * done checking all labels on all accounts
+			 */
+
 			m_accountsStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
@@ -234,9 +238,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 				this->setToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
 			}
 
-			/*
-			 * done checking all labels on all accounts
-			 */
 			this->doneCheckingMail() ;
 		}
 	}
@@ -279,7 +280,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 		this->newEmailNotify();
 
-		m_checkingMail = false ;
+		this->doneCheckingMail() ;
 	}else{
 		m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
 
@@ -298,14 +299,15 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				 */
 				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 			}else{
+				/*
+				 * there are no more accounts to go through
+				 */
+
 				this->setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 
 				this->setStatus( KStatusNotifierItem::Passive ) ;
 
-				/*
-				 * there are no more accounts and new mail not found in any of them
-				 */
 				this->doneCheckingMail() ;
 			}
 		}
