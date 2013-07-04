@@ -169,7 +169,7 @@ void qCheckGMail::wrongAccountNameOrPassword()
 
 	this->changeIcon( z ) ;
 	this->setToolTip( z,tr( "failed to log in" ),e ) ;
-	m_checkingMail = false ;
+	this->doneCheckingMail() ;
 }
 
 /*
