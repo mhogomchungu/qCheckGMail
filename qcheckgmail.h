@@ -86,7 +86,6 @@ private:
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( QString icon ) ;
 	void getAccountsInformation( void ) ;
-	QStringList getAccountNames( void ) ;
 	void setTimerEvents( void ) ;
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
