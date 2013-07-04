@@ -62,7 +62,7 @@ endif()
 #
 # If linking failed because of missing library,add the library at the end of below line inside the brackets
 #
-TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} ${LIBKDEUI} ${LIBKDECORE} ${LIBKWALLETBACKEND} ) 
+TARGET_LINK_LIBRARIES( qCheckGMail -L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} ${LIBKDEUI} ${LIBKDECORE} ${LIBKWALLETBACKEND} -lQtCore -lQtGui ) 
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )

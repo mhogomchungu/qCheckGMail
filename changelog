@@ -18,3 +18,7 @@ version 1.2.0
 	-Hosted domain addresses must be added with the "@ABC.XYZ" part.
 - Add command line switch(-d) to show debug output on the terminal
 - Fix a rare crash when an automatic mail checking and manual mail checking happen at the same time
+
+version 1.2.1
+- Store preferences in QSettings object
+- Fix a build issue on debian systems
