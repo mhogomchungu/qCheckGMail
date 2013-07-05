@@ -322,10 +322,10 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 void qCheckGMail::doneCheckingMail()
 {
+	m_manager->deleteLater();
 	m_mutex->lock();
 	m_checkingMail = false ;
 	m_mutex->unlock();
-	m_manager->deleteLater();
 }
 
 void qCheckGMail::newEmailNotify()
