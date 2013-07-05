@@ -48,12 +48,11 @@ bool configurationoptionsdialog::autoStartEnabled()
 	QString opt = QString( "autostart" ) ;
 
 	if( settings.contains( opt ) ){
-		;
+		return settings.value( opt ).toBool() ;
 	}else{
 		settings.setValue( opt,true ) ;
+		return true ;
 	}
-
-	return settings.value( opt ).toBool() ;
 }
 
 void configurationoptionsdialog::enableAutoStart( bool b )
@@ -72,12 +71,11 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 	QString opt = QString( "reportOnAllAccounts" ) ;
 
 	if( settings.contains( opt ) ){
-		;
+		return settings.value( opt ).toBool() ;
 	}else{
 		settings.setValue( opt,true ) ;
+		return true ;
 	}
-
-	return settings.value( opt ).toBool() ;
 }
 
 void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
@@ -97,12 +95,12 @@ QString configurationoptionsdialog::localLanguage()
 	QString opt = QString( "language" ) ;
 
 	if( settings.contains( opt ) ){
-		;
+		return settings.value( opt ).toString() ;
 	}else{
-		settings.setValue( opt,QString( "english_US" ) ) ;
+		QString lang = QString( "english_US" ) ;
+		settings.setValue( opt,lang ) ;
+		return lang ;
 	}
-
-	return settings.value( opt ).toString() ;
 }
 
 QString configurationoptionsdialog::localLanguagePath()
@@ -139,19 +137,16 @@ int configurationoptionsdialog::getTimeFromConfigFile()
 	QString opt = QString( "interval" ) ;
 
 	if( settings.contains( opt ) ){
-		;
+		bool ok ;
+		int time = settings.value( opt ).toInt( &ok ) ;
+		if( ok ){
+			return time * 60 * 1000 ;
+		}else{
+			return 30 * 60 * 1000 ;
+		}
 	}else{
 		settings.setValue( opt,QString( "30" ) ) ;
-	}
-
-	bool ok ;
-
-	int time = settings.value( opt ).toInt( &ok ) ;
-
-	if( ok ){
-		return time * 60 * 1000 ;
-	}else{
-		return 5 * 60 * 1000 ;
+		return 30 * 60 * 1000 ;
 	}
 }
 
