@@ -127,7 +127,7 @@ void configurationoptionsdialog::saveTimeToConfigFile()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
-	QString opt = QString( "time" ) ;
+	QString opt = QString( "interval" ) ;
 	QString time = m_ui->lineEditUpdateCheckInterval->text() ;
 	settings.setValue( opt,time ) ;
 }
@@ -136,7 +136,7 @@ int configurationoptionsdialog::getTimeFromConfigFile()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
-	QString opt = QString( "time" ) ;
+	QString opt = QString( "interval" ) ;
 
 	if( settings.contains( opt ) ){
 		;
