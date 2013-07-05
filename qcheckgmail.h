@@ -72,9 +72,11 @@ private slots:
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
+	void objectGone( QObject * ) ;
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
+	void noInternet( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;

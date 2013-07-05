@@ -58,10 +58,6 @@ void qCheckGMail::run()
 
 	KStatusNotifierItem::setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 
-	m_manager = new QNetworkAccessManager( this ) ;
-
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
-
 	QAction * ac = new QAction( m_menu ) ;
 
 	ac->setText( tr( "check mail now" ) ) ;
@@ -112,17 +108,25 @@ void qCheckGMail::run()
 	m_timer->start( m_interval ) ;
 }
 
+void qCheckGMail::noInternet( void )
+{
+	KStatusNotifierItem::setToolTip( QString( "qCheckGMailError" ),
+					 tr( "failed to connect" ),
+					 tr( "check mail skipped,user is not connected to the internet" ) ) ;
+	this->changeIcon( QString( "qCheckGMailError" ) );
+	this->doneCheckingMail() ;
+}
+
 void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
+
+	r->setObjectName( QString( "QNetworkReply" ) ) ;
+	connect( r,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	r->deleteLater();
 
 	if( content.isEmpty() ){
-		KStatusNotifierItem::setToolTip( QString( "qCheckGMail" ),
-						 tr( "failed to connect" ),
-						 tr( "check mail skipped,user is not connected to the internet" ) ) ;
-		this->changeIcon( QString( "qCheckGMailError" ) );
-		this->doneCheckingMail() ;
+		this->noInternet() ;
 	}else{
 		if( m_reportOnAllAccounts ){
 			this->reportOnAllAccounts( content ) ;
@@ -321,6 +325,7 @@ void qCheckGMail::doneCheckingMail()
 	m_mutex->lock();
 	m_checkingMail = false ;
 	m_mutex->unlock();
+	m_manager->deleteLater();
 }
 
 void qCheckGMail::newEmailNotify()
@@ -444,7 +449,26 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
 	QNetworkRequest rqt( url ) ;
 
+	/*
+	 * we create a new QNetworkAccessManager object everytime we check mail instead of creating one instance
+	 * and reuse it because one instance method produces odd behaviors i currently do not understand
+	 * when network goes down after its being used.It basically just stop working and have so far being
+	 * un able to make it start working again after it auto recognized the network is up again
+	 */
+	m_manager = new QNetworkAccessManager( this ) ;
+	m_manager->setObjectName( QString( "m_manager" ) ) ;
+
+	connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
+	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
+
 	m_manager->get( rqt ) ;
+}
+
+void qCheckGMail::objectGone( QObject * obj )
+{
+	if( m_enableDebug ){
+		qDebug() << "destroyed object:" << obj->objectName() ;
+	}
 }
 
 void qCheckGMail::getAccountsInformation()
