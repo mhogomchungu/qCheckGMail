@@ -595,7 +595,15 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
-	KToolInvocation::invokeBrowser( "https://mail.google.com/mail" ) ;
+
+	if( m_numberOfAccounts > 0 ){
+		QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+		int index = url.size() - QString( "/feed/atom/" ).size() ;
+		url.truncate( index ) ;
+		KToolInvocation::invokeBrowser( url ) ;
+	}else{
+		KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
+	}
 }
 
 void qCheckGMail::startTimer()
