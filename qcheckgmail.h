@@ -77,6 +77,7 @@ private slots:
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
+	void configurationWindowClosed( void ) ;
 	void initLogFile( void ) ;
 	void writeToLogFile( QString ) ;
 	void noInternet( void ) ;

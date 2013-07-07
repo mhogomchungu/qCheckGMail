@@ -71,6 +71,7 @@ void qCheckGMail::run()
 	ac = new QAction( m_menu ) ;
 
 	ac->setText( tr( "pause checking mail" ) ) ;
+	ac->setObjectName( QString( "pauseCheckingMail" ) ) ;
 	ac->setCheckable( true ) ;
 	ac->setChecked( false ) ;
 
@@ -366,6 +367,11 @@ void qCheckGMail::configurationoptionWindow()
 	cg->ShowUI() ;
 }
 
+void qCheckGMail::configurationWindowClosed()
+{
+
+}
+
 void qCheckGMail::reportOnAllAccounts( bool b )
 {
 	m_reportOnAllAccounts = b ;
@@ -623,8 +629,18 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 
 void qCheckGMail::startTimer()
 {
-	m_timer->stop() ;
-	m_timer->start( m_interval ) ;
+	QList<QAction*> ac = m_menu->actions() ;
+	int j = ac.size() ;
+	for( int i = 0 ; i < j ; i++ ){
+		if( ac.at( i )->objectName() == QString( "pauseCheckingMail" ) ){
+			if( ac.at( i )->isChecked() ){
+				;
+			}else{
+				m_timer->stop() ;
+				m_timer->start( m_interval ) ;
+			}
+		}
+	}
 }
 
 void qCheckGMail::stopTimer()
