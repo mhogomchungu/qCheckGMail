@@ -40,6 +40,12 @@ void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings 
 	settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
 }
 
+QString configurationoptionsdialog::logFile()
+{
+	KStandardDirs k ;
+	return k.localxdgconfdir() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
+}
+
 bool configurationoptionsdialog::autoStartEnabled()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;

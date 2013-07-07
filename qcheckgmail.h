@@ -35,6 +35,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
+#include <QFile>
 
 #include <kcmdlineargs.h>
 #include <ktoolinvocation.h>
@@ -76,6 +77,8 @@ private slots:
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
+	void initLogFile( void ) ;
+	void writeToLogFile( QString ) ;
 	void noInternet( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;

@@ -48,6 +48,8 @@ void qCheckGMail::changeIcon( QString icon )
 
 void qCheckGMail::run()
 {
+	this->initLogFile();
+
 	m_enableDebug = KCmdLineArgs::allArguments().contains( "-d" ) ;
 
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
@@ -422,10 +424,13 @@ void qCheckGMail::checkMail()
 				m_checkingMail = true ;
 				this->checkMail( m_accounts.at( m_currentAccount ) );
 			}else{
-				qDebug() << "WARNING,tried to check for mails when mail checking is already in progress" ;
+				QString log = QString( "WARNING,tried to check for mails when mail checking is already in progress" ) ;
+				qDebug() << log ;
+				this->writeToLogFile( log ) ;
 			}
 		}else{
-			qDebug() << "BUGG!!,tried to check for mails when there are no accounts configured" ;
+			QString log = QString( "BUGG!!,tried to check for mails when there are no accounts configured" ) ;
+			qDebug() << log ;
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
@@ -453,10 +458,10 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	 * we create a new QNetworkAccessManager object everytime we check mail instead of creating one instance
 	 * and reuse it because one instance method produces odd behaviors i currently do not understand
 	 * when network goes down after its being used.
-	 * 
+	 *
 	 * It basically just stop working and it doesnt give any indications that its not working and it continues
 	 * to not work and not give an indication that its not working even when a network connect is re established.
-	 * 
+	 *
 	 * For this reason,we create a new instance everytime we check for mail because a new instance will behave
 	 * as expected regardless of the network connection status
 	 */
@@ -491,7 +496,9 @@ void qCheckGMail::walletOpened( bool opened )
 			this->walletNotOPenedError();
 		}
 	}else{
-		qDebug() << "BUGG!!,walletOpened(): m_wallet is void" ;
+		QString log = QString( "BUGG!!,walletOpened(): m_wallet is void" ) ;
+		qDebug() << log ;
+		this->writeToLogFile( log ) ;
 	}
 }
 
@@ -519,8 +526,9 @@ void qCheckGMail::getAccountsInfo()
 		m_wallet->closeWallet( m_walletName,false ) ;
 		this->deleteKWallet();
 	}else{
-		qDebug() << "BUGG!!,getAccountsInfo(): m_wallet is void" ;
-		return ;
+		QString log = QString( "BUGG!!,getAccountsInfo(): m_wallet is void" ) ;
+		qDebug() << log ;
+		this->writeToLogFile( log ) ;
 	}
 }
 
@@ -538,7 +546,9 @@ void qCheckGMail::walletNotOPenedError()
 	if( m_wallet ){
 		this->deleteKWallet();
 	}else{
-		qDebug() << "BUGG!!,walletNotOPenedError(): m_wallet is void" ;
+		QString log = QString( "BUGG!!,walletNotOPenedError(): m_wallet is void" ) ;
+		qDebug() << log ;
+		this->writeToLogFile( log ) ;
 	}
 }
 
@@ -683,6 +693,23 @@ int qCheckGMail::autoStartDisabled()
 	}
 
 	return 1 ;
+}
+
+void qCheckGMail::initLogFile()
+{
+	QString logFile = configurationoptionsdialog::logFile() ;
+	QString logFile_old = logFile + QString( ".old" ) ;
+	QFile f( logFile_old ) ;
+	f.remove() ;
+	QFile::rename( logFile,logFile_old ) ;
+}
+
+void qCheckGMail::writeToLogFile( QString log )
+{
+	QString logFile = configurationoptionsdialog::logFile() ;
+	QFile f( logFile ) ;
+	f.open( QIODevice::WriteOnly | QIODevice::Append ) ;
+	f.write( log.toAscii() ) ;
 }
 
 bool qCheckGMail::autoStartEnabled()
