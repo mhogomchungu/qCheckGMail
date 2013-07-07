@@ -431,15 +431,15 @@ void qCheckGMail::checkMail()
 				this->checkMail( m_accounts.at( m_currentAccount ) );
 			}else{
 				QString log = QString( "WARNING,tried to check for mails when mail checking is already in progress" ) ;
-				qDebug() << log ;
 				this->writeToLogFile( log ) ;
 			}
 		}else{
 			QString log = QString( "BUGG!!,tried to check for mails when there are no accounts configured" ) ;
-			qDebug() << log ;
+			this->writeToLogFile( log ) ;
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
+		this->writeToLogFile( QString( "dont have credentials,(re)trying to open wallet" ) ) ;
 		this->getAccountsInformation() ;
 	}
 }
@@ -503,7 +503,6 @@ void qCheckGMail::walletOpened( bool opened )
 		}
 	}else{
 		QString log = QString( "BUGG!!,walletOpened(): m_wallet is void" ) ;
-		qDebug() << log ;
 		this->writeToLogFile( log ) ;
 	}
 }
@@ -533,7 +532,6 @@ void qCheckGMail::getAccountsInfo()
 		this->deleteKWallet();
 	}else{
 		QString log = QString( "BUGG!!,getAccountsInfo(): m_wallet is void" ) ;
-		qDebug() << log ;
 		this->writeToLogFile( log ) ;
 	}
 }
@@ -553,7 +551,6 @@ void qCheckGMail::walletNotOPenedError()
 		this->deleteKWallet();
 	}else{
 		QString log = QString( "BUGG!!,walletNotOPenedError(): m_wallet is void" ) ;
-		qDebug() << log ;
 		this->writeToLogFile( log ) ;
 	}
 }
@@ -722,6 +719,7 @@ void qCheckGMail::initLogFile()
 
 void qCheckGMail::writeToLogFile( QString log )
 {
+	qDebug() << log ;
 	QString logFile = configurationoptionsdialog::logFile() ;
 	QFile f( logFile ) ;
 	f.open( QIODevice::WriteOnly | QIODevice::Append ) ;
