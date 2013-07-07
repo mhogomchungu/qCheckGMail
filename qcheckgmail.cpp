@@ -122,7 +122,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 	QByteArray content = r->readAll() ;
 
 	r->setObjectName( QString( "QNetworkReply" ) ) ;
-	connect( r,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
+	//connect( r,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	r->deleteLater();
 
 	if( content.isEmpty() ){
@@ -452,13 +452,18 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	/*
 	 * we create a new QNetworkAccessManager object everytime we check mail instead of creating one instance
 	 * and reuse it because one instance method produces odd behaviors i currently do not understand
-	 * when network goes down after its being used.It basically just stop working and have so far being
-	 * un able to make it start working again after it auto recognized the network is up again
+	 * when network goes down after its being used.
+	 * 
+	 * It basically just stop working and it doesnt give any indications that its not working and it continues
+	 * to not work and not give an indication that its not working even when a network connect is re established.
+	 * 
+	 * For this reason,we create a new instance everytime we check for mail because a new instance will behave
+	 * as expected regardless of the network connection status
 	 */
 	m_manager = new QNetworkAccessManager( this ) ;
 	m_manager->setObjectName( QString( "m_manager" ) ) ;
 
-	connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
+	//connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_manager->get( rqt ) ;
