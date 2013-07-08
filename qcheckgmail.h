@@ -62,6 +62,7 @@ public:
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 private slots:
 	void run( void ) ;
+	void configurationWindowClosed( int ) ;
 	void googleQueryResponce( QNetworkReply * ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;
@@ -77,7 +78,6 @@ private slots:
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
-	void configurationWindowClosed( void ) ;
 	void initLogFile( void ) ;
 	void writeToLogFile( QString ) ;
 	void noInternet( void ) ;

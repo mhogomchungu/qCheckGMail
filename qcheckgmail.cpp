@@ -124,7 +124,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 
-	r->setObjectName( QString( "QNetworkReply" ) ) ;
+	//r->setObjectName( QString( "QNetworkReply" ) ) ;
 	//connect( r,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	r->deleteLater();
 
@@ -362,14 +362,16 @@ void qCheckGMail::configureAccounts()
 void qCheckGMail::configurationoptionWindow()
 {
 	configurationoptionsdialog * cg = new configurationoptionsdialog() ;
-	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( setTimer( int ) ) ) ;
+	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( configurationWindowClosed( int ) ) ) ;
 	connect( cg,SIGNAL( reportOnAllAccounts( bool ) ),this,SLOT( reportOnAllAccounts( bool ) ) ) ;
 	cg->ShowUI() ;
 }
 
-void qCheckGMail::configurationWindowClosed()
+void qCheckGMail::configurationWindowClosed( int r )
 {
-
+	if( m_interval != r ){
+		this->setTimer( r ) ;
+	}
 }
 
 void qCheckGMail::reportOnAllAccounts( bool b )
@@ -472,8 +474,8 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	 * as expected regardless of the network connection status
 	 */
 	m_manager = new QNetworkAccessManager( this ) ;
-	m_manager->setObjectName( QString( "m_manager" ) ) ;
-
+	
+	//m_manager->setObjectName( QString( "m_manager" ) ) ;
 	//connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 
