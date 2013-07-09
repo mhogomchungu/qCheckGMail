@@ -474,7 +474,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	 * as expected regardless of the network connection status
 	 */
 	m_manager = new QNetworkAccessManager( this ) ;
-	
+
 	//m_manager->setObjectName( QString( "m_manager" ) ) ;
 	//connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
@@ -725,7 +725,7 @@ void qCheckGMail::writeToLogFile( QString log )
 	QString logFile = configurationoptionsdialog::logFile() ;
 	QFile f( logFile ) ;
 	f.open( QIODevice::WriteOnly | QIODevice::Append ) ;
-	f.write( log.toAscii() ) ;
+	f.write( log.toAscii() + "\n" ) ;
 }
 
 bool qCheckGMail::autoStartEnabled()
