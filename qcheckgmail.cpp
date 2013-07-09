@@ -124,8 +124,6 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 
-	//r->setObjectName( QString( "QNetworkReply" ) ) ;
-	//connect( r,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	r->deleteLater();
 
 	if( content.isEmpty() ){
@@ -208,27 +206,32 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\"><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
-	m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
+	/*
+	 * done processing a label in an account,go to the next label if present
+	 */
+	m_currentLabel++ ;
 
 	if( m_currentLabel < m_numberOfLabels ){
 		/*
-		 * account has more labels to go through,go through the next one
+		 * account has more labels and are we are at the next one and are about to go through it
 		 */
 		const accounts& acc = m_accounts.at( m_currentAccount ) ;
 		this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
 	}else{
-		m_currentAccount++ ; // we are done processing one account,go to the next one if present
+		/*
+		 * we are done processing an account,go to the next one if available
+		 */
+		m_currentAccount++ ;
 
 		if( m_currentAccount < m_numberOfAccounts ){
 			/*
-			 * there are more accounts,process the next one
+			 * more accounts are configured and we are at the next one and are about to go through it
 			 */
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
 			/*
 			 * done checking all labels on all accounts
 			 */
-
 			m_accountsStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
@@ -257,6 +260,9 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 /*
  * This function stops on the first account it finds with a new email.
  * This function will hence report only the first account it finds with new email
+ *
+ * This mail checking way is visually more appealing on the tray bubble when only one
+ * account is set up
  */
 void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 {
@@ -293,27 +299,32 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 		this->doneCheckingMail() ;
 	}else{
-		m_currentLabel++ ; //we just processed a label,increment one to go to the next one if present
+		/*
+		 * done processing a label in an account,go to the next label if present
+		 */
+		m_currentLabel++ ;
 
 		if( m_currentLabel < m_numberOfLabels ){
 			/*
-			 * account has more labels to go through,go through the second one
+			 * account has more labels and are we are at the next one and are about to go through it
 			 */
 			const accounts& acc = m_accounts.at( m_currentAccount ) ;
 			this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
 		}else{
-			m_currentAccount++ ; // we are done processing one account,go to the next one if present
+			/*
+			 * we are done processing an account,go to the next one if available
+			 */
+			m_currentAccount++ ;
 
 			if( m_currentAccount < m_numberOfAccounts ){
 				/*
-				 * there are more accounts,check the next account
+				 * more accounts are configured and we are at the next one and are about to go through it
 				 */
 				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 			}else{
 				/*
 				 * there are no more accounts to go through
 				 */
-
 				KStatusNotifierItem::setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
 				KStatusNotifierItem::setStatus( KStatusNotifierItem::Passive ) ;
@@ -326,9 +337,17 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 void qCheckGMail::doneCheckingMail()
 {
 	m_manager->deleteLater();
-	m_mutex->lock();
+	//m_mutex->lock();
 	m_checkingMail = false ;
-	m_mutex->unlock();
+	//m_mutex->unlock();
+	if( m_redoMailCheck ){
+		/*
+		 * we are redoing checking mail because a user changed account properties while we
+		 * were in the middle of checking mail.We are redoing the check to give a corrent
+		 * account info in the tray bubble
+		 */
+		this->checkMail() ;
+	}
 }
 
 void qCheckGMail::newEmailNotify()
@@ -347,7 +366,16 @@ void qCheckGMail::pauseCheckingMail( bool b )
 		KStatusNotifierItem::setOverlayIconByName( QString( "" ) );
 		this->startTimer();
 
-		this->checkMail();
+		bool checking ;
+		m_mutex->lock();
+		checking = m_checkingMail ;
+		m_mutex->unlock();
+		if( checking ){
+			QString log = QString( "WARNING,manual mail check attempted when mail checking is already in progress" ) ;
+			this->writeToLogFile( log ) ;
+		}else{
+			this->checkMail() ;
+		}
 	}
 }
 
@@ -382,6 +410,7 @@ void qCheckGMail::reportOnAllAccounts( bool b )
 void qCheckGMail::kwalletmanagerClosed( void )
 {
 	if( m_wallet->isOpen() ){
+		m_redoMailCheck = true ;
 		this->getAccountsInfo();
 	}else{
 		this->deleteKWallet();
@@ -405,36 +434,14 @@ void qCheckGMail::checkMail()
 		* check for updates on the first account
 		*/
 		if( m_numberOfAccounts > 0 ){
-			/*
-			 * We could get here twice at the same time when a manual check is done just after or before an automatic one.
-			 * Guard againts it with a mutex.
-			 */
-			bool canCheckMail ;
-
-			m_mutex->lock() ;
-			if( m_checkingMail ){
-				/*
-				 * mail checking in progress,do not attempt to start another mail checking machinery
-				 */
-				canCheckMail = false ;
-			}else{
-				/*
-				 * mail checking NOT in progress,attempt to start another mail checking machinery
-				 */
-				canCheckMail = true ;
-			}
-			m_mutex->unlock();
-
-			if( canCheckMail ){
-				m_accountsStatus  = QString( "<table>" );
-				m_mailCount       = 0 ;
-				m_currentAccount  = 0 ;
-				m_checkingMail = true ;
-				this->checkMail( m_accounts.at( m_currentAccount ) );
-			}else{
-				QString log = QString( "WARNING,tried to check for mails when mail checking is already in progress" ) ;
-				this->writeToLogFile( log ) ;
-			}
+			m_accountsStatus  = QString( "<table>" ) ;
+			m_mailCount       = 0 ;
+			m_currentAccount  = 0 ;
+			//m_mutex->lock() ;
+			m_checkingMail    = true ;
+			//m_mutex->unlock() ;
+			m_redoMailCheck   = false;
+			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
 			QString log = QString( "BUGG!!,tried to check for mails when there are no accounts configured" ) ;
 			this->writeToLogFile( log ) ;
@@ -448,7 +455,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_currentLabel = 0 ;
+	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
@@ -475,8 +482,6 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	 */
 	m_manager = new QNetworkAccessManager( this ) ;
 
-	//m_manager->setObjectName( QString( "m_manager" ) ) ;
-	//connect( m_manager,SIGNAL( destroyed( QObject * ) ),this,SLOT( objectGone( QObject * ) ) ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_manager->get( rqt ) ;

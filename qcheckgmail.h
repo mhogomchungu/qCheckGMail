@@ -113,6 +113,7 @@ private:
 	bool m_checkingMail ;
 	bool m_reportOnAllAccounts ;
 	bool m_enableDebug ;
+	bool m_redoMailCheck ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
