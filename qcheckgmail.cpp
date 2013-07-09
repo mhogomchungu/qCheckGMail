@@ -367,9 +367,9 @@ void qCheckGMail::pauseCheckingMail( bool b )
 		this->startTimer();
 
 		bool checking ;
-		m_mutex->lock();
+		//m_mutex->lock();
 		checking = m_checkingMail ;
-		m_mutex->unlock();
+		//m_mutex->unlock();
 		if( checking ){
 			QString log = QString( "WARNING,manual mail check attempted when mail checking is already in progress" ) ;
 			this->writeToLogFile( log ) ;
