@@ -337,10 +337,11 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 void qCheckGMail::doneCheckingMail()
 {
 	m_manager->deleteLater();
-	//m_mutex->lock();
+	m_mutex->lock();
 	m_checkingMail = false ;
-	//m_mutex->unlock();
-	if( m_redoMailCheck ){
+	bool redoMailCheck = m_redoMailCheck ;
+	m_mutex->unlock();
+	if( redoMailCheck ){
 		/*
 		 * we are redoing checking mail because a user changed account properties while we
 		 * were in the middle of checking mail.We are redoing the check to give a corrent
@@ -367,9 +368,9 @@ void qCheckGMail::pauseCheckingMail( bool b )
 		this->startTimer();
 
 		bool checking ;
-		//m_mutex->lock();
+		m_mutex->lock();
 		checking = m_checkingMail ;
-		//m_mutex->unlock();
+		m_mutex->unlock();
 		if( checking ){
 			QString log = QString( "WARNING,manual mail check attempted when mail checking is already in progress" ) ;
 			this->writeToLogFile( log ) ;
@@ -410,7 +411,9 @@ void qCheckGMail::reportOnAllAccounts( bool b )
 void qCheckGMail::kwalletmanagerClosed( void )
 {
 	if( m_wallet->isOpen() ){
+		m_mutex->lock();
 		m_redoMailCheck = true ;
+		m_mutex->unlock();
 		this->getAccountsInfo();
 	}else{
 		this->deleteKWallet();
@@ -437,11 +440,27 @@ void qCheckGMail::checkMail()
 			m_accountsStatus  = QString( "<table>" ) ;
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
-			//m_mutex->lock() ;
-			m_checkingMail    = true ;
-			//m_mutex->unlock() ;
+
+			bool cancheckMail = false ;
+
+			m_mutex->lock() ;
+
+			if( m_checkingMail ){
+				QString log = QString( "WARNING!!,automatic mail checking attempted while mail checking is already in progress" ) ;
+				this->writeToLogFile( log ) ;
+			}else{
+				cancheckMail   = true ;
+				m_checkingMail = true ;
+			}
+
 			m_redoMailCheck   = false;
-			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
+			m_mutex->unlock() ;
+
+			if( cancheckMail ){
+				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
+			}else{
+				;
+			}
 		}else{
 			QString log = QString( "BUGG!!,tried to check for mails when there are no accounts configured" ) ;
 			this->writeToLogFile( log ) ;
@@ -683,6 +702,7 @@ int qCheckGMail::instanceAlreadyRunning()
 		qDebug() << tr( "another instance is already running,exiting this one" ) ;
 	}
 
+	QCoreApplication::exit( 1 ) ;
 	return 1 ;
 }
 
@@ -712,6 +732,7 @@ int qCheckGMail::autoStartDisabled()
 		qDebug() << tr( "autostart disabled,exiting this one" ) ;
 	}
 
+	QCoreApplication::exit( 1 ) ;
 	return 1 ;
 }
 
