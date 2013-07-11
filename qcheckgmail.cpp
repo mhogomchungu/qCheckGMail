@@ -109,6 +109,9 @@ void qCheckGMail::run()
 
 	m_timer->stop() ;
 	m_timer->start( m_interval ) ;
+	
+	m_manager = new QNetworkAccessManager( this ) ;
+	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 }
 
 void qCheckGMail::noInternet( void )
@@ -336,7 +339,6 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 void qCheckGMail::doneCheckingMail()
 {
-	m_manager->deleteLater();
 	m_mutex->lock();
 	m_checkingMail = false ;
 	bool redoMailCheck = m_redoMailCheck ;
@@ -371,8 +373,9 @@ void qCheckGMail::pauseCheckingMail( bool b )
 		bool checking = m_checkingMail ;
 		m_mutex->unlock();
 		if( checking ){
-			QString log = QString( "WARNING,manual mail check attempted when mail checking is already in progress" ) ;
+			QString log = QString( "WARNING,manual mail check from auto pause attempted when mail checking is already in progress" ) ;
 			this->writeToLogFile( log ) ;
+			this->stuck();
 		}else{
 			this->checkMail() ;
 		}
@@ -445,15 +448,16 @@ void qCheckGMail::checkMail()
 			m_mutex->lock() ;
 
 			if( m_checkingMail ){
-				QString log = QString( "WARNING!!,automatic mail checking attempted while mail checking is already in progress" ) ;
+				QString log = QString( "WARNING!!,mail checking attempted while mail checking is already in progress" ) ;
 				this->writeToLogFile( log ) ;
+				this->stuck();
 			}else{
 				cancheckMail   = true ;
 				m_checkingMail = true ;
 			}
 
 			m_redoMailCheck   = false ;
-			
+
 			m_mutex->unlock() ;
 
 			if( cancheckMail ){
@@ -472,6 +476,20 @@ void qCheckGMail::checkMail()
 	}
 }
 
+void qCheckGMail::stuck()
+{
+	/*
+	 * possible reason for getting stuck.
+	 * 1. On my system,m_manager->get() just stops working when its called and the network is down and i have yet
+	 *    to discover how to make it start working it again when the network is reestablished.
+	 */
+	QString err = tr( "email checking is still in progress or i am stuck,if its the latter then please restart me" ) ;
+	QString icon = QString( "qCheckGMailError" ) ;
+	this->changeIcon( icon );
+	KStatusNotifierItem::setToolTip( icon,tr( "error" ),err ) ;
+	KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
+}
+
 void qCheckGMail::checkMail( const accounts& acc )
 {
 	m_currentLabel   = 0 ;
@@ -487,21 +505,6 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	url.setPassword( acc.passWord() ) ;
 
 	QNetworkRequest rqt( url ) ;
-
-	/*
-	 * we create a new QNetworkAccessManager object everytime we check mail instead of creating one instance
-	 * and reuse it because one instance method produces odd behaviors i currently do not understand
-	 * when network goes down after its being used.
-	 *
-	 * It basically just stop working and it doesnt give any indications that its not working and it continues
-	 * to not work and not give an indication that its not working even when a network connect is re established.
-	 *
-	 * For this reason,we create a new instance everytime we check for mail because a new instance will behave
-	 * as expected regardless of the network connection status
-	 */
-	m_manager = new QNetworkAccessManager( this ) ;
-
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_manager->get( rqt ) ;
 }

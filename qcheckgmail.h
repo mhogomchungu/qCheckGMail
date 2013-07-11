@@ -100,6 +100,7 @@ private:
 	void reportOnlyFirstAccountWithMail( const QByteArray& ) ;
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
+	void stuck( void ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
 	bool m_gotCredentials ;
