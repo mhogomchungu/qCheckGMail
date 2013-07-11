@@ -30,6 +30,7 @@ qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
 
 qCheckGMail::~qCheckGMail()
 {
+	m_manager->deleteLater() ;
 	m_menu->deleteLater() ;
 	m_timer->deleteLater() ;
 	delete m_mutex ;
@@ -106,12 +107,12 @@ void qCheckGMail::run()
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
 
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
-
-	m_timer->stop() ;
-	m_timer->start( m_interval ) ;
 	
 	m_manager = new QNetworkAccessManager( this ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
+	
+	m_timer->stop() ;
+	m_timer->start( m_interval ) ;
 }
 
 void qCheckGMail::noInternet( void )
@@ -646,8 +647,12 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 	if( m_numberOfAccounts > 0 ){
 		QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
 		int index = url.size() - QString( "/feed/atom/" ).size() ;
-		url.truncate( index ) ;
-		KToolInvocation::invokeBrowser( url ) ;
+		if( index != -1 ){
+			url.truncate( index ) ;
+			KToolInvocation::invokeBrowser( url ) ;
+		}else{
+			KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
+		}
 	}else{
 		KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
 	}
@@ -705,7 +710,6 @@ int qCheckGMail::instanceAlreadyRunning()
 		qDebug() << tr( "another instance is already running,exiting this one" ) ;
 	}
 
-	QCoreApplication::exit( 1 ) ;
 	return 1 ;
 }
 
@@ -735,7 +739,6 @@ int qCheckGMail::autoStartDisabled()
 		qDebug() << tr( "autostart disabled,exiting this one" ) ;
 	}
 
-	QCoreApplication::exit( 1 ) ;
 	return 1 ;
 }
 
