@@ -647,12 +647,8 @@ void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
 	if( m_numberOfAccounts > 0 ){
 		QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
 		int index = url.size() - QString( "/feed/atom/" ).size() ;
-		if( index != -1 ){
-			url.truncate( index ) ;
-			KToolInvocation::invokeBrowser( url ) ;
-		}else{
-			KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
-		}
+		url.truncate( index ) ;
+		KToolInvocation::invokeBrowser( url ) ;
 	}else{
 		KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
 	}
