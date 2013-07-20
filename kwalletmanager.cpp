@@ -219,8 +219,6 @@ void kwalletmanager::pushButtonClose()
 
 void kwalletmanager::pushButtonDeleteEntry()
 {
-	m_deleteRow = m_table->currentRow() ;
-	this->deleteRow();
 }
 
 void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -246,16 +244,30 @@ void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
 
 void kwalletmanager::deleteRow()
 {
-	if( m_table->rowCount() == -1 ){
-		return ;
+	QMessageBox msg( this ) ;
+	QTableWidgetItem * item = m_table->currentItem() ;
+	QString acc = m_table->item( item->row(),0 )->text() ;
+
+	msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( acc ) ) ;
+
+	msg.addButton( tr( "yes" ),QMessageBox::YesRole ) ;
+	QPushButton * no_button = msg.addButton( tr( "no" ),QMessageBox::NoRole ) ;
+	msg.setDefaultButton( no_button ) ;
+
+	msg.exec() ;
+
+	if( msg.clickedButton() != no_button ){
+		this->deleteRow( item->row() ) ;
 	}
-	if( m_table->rowCount() >=  m_deleteRow ){
-		m_table->removeRow( m_deleteRow ) ;
+}
+
+void kwalletmanager::deleteRow( int row )
+{
+	if( row < m_accounts.size() ){
+		m_accounts.remove( row ) ;
 	}
-	if( m_accounts.size() > 0 ){
-		if( m_accounts.size() >= m_deleteRow ){
-			m_accounts.remove( m_deleteRow ) ;
-		}
+	if( row < m_table->rowCount() ){
+		m_table->removeRow( row ) ;
 	}
 }
 

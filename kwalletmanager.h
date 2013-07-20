@@ -52,17 +52,18 @@ public:
 signals:
 	void kwalletmanagerClosed( void ) ;
 private slots:
+	void deleteRow() ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void pushButtonDeleteEntry( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void walletOpened( bool ) ;
-	void deleteRow( void ) ;
 	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
 private:
+	void deleteRow( int ) ;
 	void selectRow( int row,bool highlight ) ;
 	QString getPassWordFromAccount( QString ) ;
 	void HideUI( void ) ;
