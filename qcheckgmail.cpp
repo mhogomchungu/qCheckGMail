@@ -658,8 +658,9 @@ void qCheckGMail::startTimer()
 {
 	QList<QAction*> ac = m_menu->actions() ;
 	int j = ac.size() ;
+	QString pauseMenuContext = QString( "pauseCheckingMail" ) ;
 	for( int i = 0 ; i < j ; i++ ){
-		if( ac.at( i )->objectName() == QString( "pauseCheckingMail" ) ){
+		if( ac.at( i )->objectName() == pauseMenuContext ){
 			if( ac.at( i )->isChecked() ){
 				;
 			}else{

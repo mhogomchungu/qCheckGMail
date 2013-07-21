@@ -82,12 +82,12 @@ install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION 
 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
 )
 
-install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
-install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
-install ( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
-install ( FILES translations.ts/german_DE.ts DESTINATION share/qCheckGMail/translations.ts/ )
-install ( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
-install ( FILES translations.ts/french_FR.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/german_DE.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install ( FILES translations.ts/french_FR.ts DESTINATION share/qCheckGMail/translations.ts/ )
 
 install ( FILES translations.qm/greek_GR.qm DESTINATION share/qCheckGMail/translations.qm/ )
 install ( FILES translations.qm/dutch_NL.qm DESTINATION share/qCheckGMail/translations.qm/ )
