@@ -64,7 +64,7 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     <message>
         <location filename="../addaccount.cpp" line="91"/>
         <source>ERROR: one or more reguired field is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>ERREUR : un ou plusieurs champs obligatoires sont manquants</translation>
     </message>
     <message>
         <source>ERROR: one or more reguired field is missing</source>
@@ -224,17 +224,17 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../kwalletmanager.cpp" line="251"/>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
-        <translation type="unfinished"></translation>
+        <translation>est-vous sur de vouloir supprimer le compte « %1 » ?</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="253"/>
         <source>yes</source>
-        <translation type="unfinished"></translation>
+        <translation>oui</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="254"/>
         <source>no</source>
-        <translation type="unfinished"></translation>
+        <translation>non</translation>
     </message>
 </context>
 <context>
@@ -337,7 +337,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../qcheckgmail.cpp" line="487"/>
         <source>recommending a restart as i am probably stuck</source>
-        <translation type="unfinished"></translation>
+        <translation>nous vous recommendons de redémarrer en cas de bloquage de l&apos;applet</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="490"/>
