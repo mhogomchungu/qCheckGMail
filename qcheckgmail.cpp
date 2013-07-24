@@ -440,10 +440,7 @@ void qCheckGMail::checkMail()
 		* check for updates on the first account
 		*/
 		if( m_numberOfAccounts > 0 ){
-			m_accountsStatus  = QString( "<table>" ) ;
-			m_mailCount       = 0 ;
-			m_currentAccount  = 0 ;
-
+			
 			bool cancheckMail = false ;
 
 			m_mutex->lock() ;
@@ -462,6 +459,9 @@ void qCheckGMail::checkMail()
 			m_mutex->unlock() ;
 
 			if( cancheckMail ){
+				m_accountsStatus  = QString( "<table>" ) ;
+				m_mailCount       = 0 ;
+				m_currentAccount  = 0 ;
 				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 			}else{
 				;
