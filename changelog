@@ -22,3 +22,8 @@ version 1.2.0
 version 1.2.1
 - Store preferences in QSettings object
 - Fix a build issue on debian systems
+
+version 1.2.2
+- Update translation files
+- Ask a user to confirm if they really want to delete an account
+- General bux fixes and improvements
