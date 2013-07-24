@@ -63,7 +63,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
     <message>
         <location filename="../addaccount.cpp" line="91"/>
         <source>ERROR: one or more reguired field is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>ΣΦΑΛΜΑ: ένα ή περισσότερα απαιτούμενα πεδία είναι κενά</translation>
     </message>
     <message>
         <source>ERROR: one or more reguired field is missing</source>
@@ -231,17 +231,17 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../kwalletmanager.cpp" line="251"/>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
-        <translation type="unfinished"></translation>
+        <translation>Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό &quot;%1&quot; ;</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="253"/>
         <source>yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ναι</translation>
     </message>
     <message>
         <location filename="../kwalletmanager.cpp" line="254"/>
         <source>no</source>
-        <translation type="unfinished"></translation>
+        <translation>Όχι</translation>
     </message>
 </context>
 <context>
@@ -352,7 +352,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../qcheckgmail.cpp" line="487"/>
         <source>recommending a restart as i am probably stuck</source>
-        <translation type="unfinished"></translation>
+        <translation>Το qCheckGMail δεν ανταποκρίνεται. Προτείνεται επανεκκίνηση</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="490"/>
@@ -376,14 +376,14 @@ ERROR: minimum time interval is 5 minutes
         <translation>Σφάλμα, αδυναμία ανοίγματος του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="693"/>
-        <location filename="../qcheckgmail.cpp" line="706"/>
+        <location filename="../qcheckgmail.cpp" line="694"/>
+        <location filename="../qcheckgmail.cpp" line="707"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="722"/>
-        <location filename="../qcheckgmail.cpp" line="735"/>
+        <location filename="../qcheckgmail.cpp" line="723"/>
+        <location filename="../qcheckgmail.cpp" line="736"/>
         <source>autostart disabled,exiting this one</source>
         <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>

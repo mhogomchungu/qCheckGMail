@@ -361,14 +361,14 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
         <translation>erreur, échec lors de l&apos;ouverture du portefeuille</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="693"/>
-        <location filename="../qcheckgmail.cpp" line="706"/>
+        <location filename="../qcheckgmail.cpp" line="694"/>
+        <location filename="../qcheckgmail.cpp" line="707"/>
         <source>another instance is already running,exiting this one</source>
         <translation>une autre instance de CheckGMail est déjà lancée, veuillez l&apos;arrêter</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="722"/>
-        <location filename="../qcheckgmail.cpp" line="735"/>
+        <location filename="../qcheckgmail.cpp" line="723"/>
+        <location filename="../qcheckgmail.cpp" line="736"/>
         <source>autostart disabled,exiting this one</source>
         <translation>l&apos;autostart est désactivé, veuillez l&apos;arrêter</translation>
     </message>

@@ -296,14 +296,14 @@ ERROR: minimum time interval is 5 minutes
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="693"/>
-        <location filename="../qcheckgmail.cpp" line="706"/>
+        <location filename="../qcheckgmail.cpp" line="694"/>
+        <location filename="../qcheckgmail.cpp" line="707"/>
         <source>another instance is already running,exiting this one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="722"/>
-        <location filename="../qcheckgmail.cpp" line="735"/>
+        <location filename="../qcheckgmail.cpp" line="723"/>
+        <location filename="../qcheckgmail.cpp" line="736"/>
         <source>autostart disabled,exiting this one</source>
         <translation type="unfinished"></translation>
     </message>

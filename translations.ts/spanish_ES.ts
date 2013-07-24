@@ -336,7 +336,7 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../qcheckgmail.cpp" line="487"/>
         <source>recommending a restart as i am probably stuck</source>
-        <translation>parece que se ha colgado, se recomienda reiniciar</translation>
+        <translation>parece que no responde, se recomienda reiniciar</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="490"/>
@@ -360,14 +360,14 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
         <translation>error, ha fallado al abrir la cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="693"/>
-        <location filename="../qcheckgmail.cpp" line="706"/>
+        <location filename="../qcheckgmail.cpp" line="694"/>
+        <location filename="../qcheckgmail.cpp" line="707"/>
         <source>another instance is already running,exiting this one</source>
         <translation>ya está ejecutándose otra cartera, saliendo de ésta</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="722"/>
-        <location filename="../qcheckgmail.cpp" line="735"/>
+        <location filename="../qcheckgmail.cpp" line="723"/>
+        <location filename="../qcheckgmail.cpp" line="736"/>
         <source>autostart disabled,exiting this one</source>
         <translation>inicio automático desactivado, saliendo</translation>
     </message>
