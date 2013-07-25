@@ -26,7 +26,7 @@
 
 kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
-	m_walletName = configurationoptionsdialog::walletName() ;
+	m_walletName     = configurationoptionsdialog::walletName() ;
 	m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
 }
 
