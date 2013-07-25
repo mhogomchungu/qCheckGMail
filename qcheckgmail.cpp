@@ -464,7 +464,7 @@ void qCheckGMail::stuck()
 	 * 1. On my system,m_manager->get() just stops working when its called and the network is down and i have yet
 	 *    to discover how to make it start working it again when the network is reestablished.
 	 */
-	QString err = tr( "recommending a restart as i am probably stuck" ) ;
+	QString err = tr( "qCheckGMail is not responding and starting it is recommended" ) ;
 	QString icon = QString( "qCheckGMailError" ) ;
 	this->changeIcon( icon );
 	KStatusNotifierItem::setToolTip( icon,tr( "error" ),err ) ;
