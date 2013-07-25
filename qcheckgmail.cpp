@@ -384,12 +384,10 @@ void qCheckGMail::pauseCheckingMail( bool b )
 
 void qCheckGMail::configureAccounts()
 {
-	this->stopTimer();
-	kwalletmanager * cfg = new kwalletmanager() ;
-	connect( cfg,SIGNAL( kwalletmanagerClosed() ),this,SLOT( kwalletmanagerClosed() ) ) ;
-	connect( cfg,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
-
-	cfg->ShowUI() ;
+	kwalletmanager * wallet = new kwalletmanager() ;
+	connect( wallet,SIGNAL( kwalletmanagerClosed() ),this,SLOT( kwalletmanagerClosed() ) ) ;
+	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
+	wallet->ShowUI() ;
 }
 
 void qCheckGMail::configurationoptionWindow()
