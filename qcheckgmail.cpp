@@ -19,8 +19,7 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() ),
-	m_gotCredentials( false ),m_walletName( "qCheckGMail" )
+qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() )
 {
 	KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
 	KStatusNotifierItem::setCategory( KStatusNotifierItem::ApplicationStatus ) ;
@@ -102,15 +101,15 @@ void qCheckGMail::run()
 
 	m_checkingMail = false ;
 
-	this->getAccountsInformation();
+	this->getAccountsInfo();
 
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
 
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
-	
+
 	m_manager = new QNetworkAccessManager( this ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
-	
+
 	m_timer->stop() ;
 	m_timer->start( m_interval ) ;
 }
@@ -386,8 +385,10 @@ void qCheckGMail::pauseCheckingMail( bool b )
 void qCheckGMail::configureAccounts()
 {
 	this->stopTimer();
-	kwalletmanager * cfg = new kwalletmanager( &m_wallet,m_walletName ) ;
+	kwalletmanager * cfg = new kwalletmanager() ;
 	connect( cfg,SIGNAL( kwalletmanagerClosed() ),this,SLOT( kwalletmanagerClosed() ) ) ;
+	connect( cfg,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
+
 	cfg->ShowUI() ;
 }
 
@@ -413,21 +414,9 @@ void qCheckGMail::reportOnAllAccounts( bool b )
 
 void qCheckGMail::kwalletmanagerClosed( void )
 {
-	if( m_wallet->isOpen() ){
-		m_mutex->lock();
-		m_redoMailCheck = true ;
-		m_mutex->unlock();
-		this->getAccountsInfo();
-	}else{
-		this->deleteKWallet();
-	}
-	this->startTimer();
-}
-
-void qCheckGMail::deleteKWallet()
-{
-	m_wallet->deleteLater();
-	m_wallet = 0 ;
+	m_mutex->lock();
+	m_redoMailCheck = true ;
+	m_mutex->unlock();
 }
 
 /*
@@ -435,45 +424,36 @@ void qCheckGMail::deleteKWallet()
  */
 void qCheckGMail::checkMail()
 {
-	if( m_gotCredentials ){
-		/*
-		* check for updates on the first account
-		*/
-		if( m_numberOfAccounts > 0 ){
-			
-			bool cancheckMail = false ;
+	if( m_numberOfAccounts > 0 ){
 
-			m_mutex->lock() ;
+		bool cancheckMail = false ;
+		m_mutex->lock() ;
 
-			if( m_checkingMail ){
-				QString log = QString( "WARNING!!,mail checking attempted while mail checking is already in progress" ) ;
-				this->writeToLogFile( log ) ;
-				this->stuck();
-			}else{
-				cancheckMail   = true ;
-				m_checkingMail = true ;
-			}
-
-			m_redoMailCheck   = false ;
-
-			m_mutex->unlock() ;
-
-			if( cancheckMail ){
-				m_accountsStatus  = QString( "<table>" ) ;
-				m_mailCount       = 0 ;
-				m_currentAccount  = 0 ;
-				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
-			}else{
-				;
-			}
-		}else{
-			QString log = QString( "BUGG!!,tried to check for mails when there are no accounts configured" ) ;
+		if( m_checkingMail ){
+			QString log = QString( "WARNING!!,mail checking attempted while mail checking is already in progress" ) ;
 			this->writeToLogFile( log ) ;
+			this->stuck();
+		}else{
+			cancheckMail   = true ;
+			m_checkingMail = true ;
+		}
+
+		m_redoMailCheck   = false ;
+
+		m_mutex->unlock() ;
+
+		if( cancheckMail ){
+			m_accountsStatus  = QString( "<table>" ) ;
+			m_mailCount       = 0 ;
+			m_currentAccount  = 0 ;
+			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
+		}else{
+			;
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
 		this->writeToLogFile( QString( "dont have credentials,(re)trying to open wallet" ) ) ;
-		this->getAccountsInformation() ;
+		this->getAccountsInfo() ;
 	}
 }
 
@@ -517,53 +497,30 @@ void qCheckGMail::objectGone( QObject * obj )
 	}
 }
 
-void qCheckGMail::getAccountsInformation()
+void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 {
-	m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
-	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
-}
+	/*
+	 * get accounts information from kwallet
+	 */
+	m_accounts = acc ;
 
-void qCheckGMail::walletOpened( bool opened )
-{
-	if( m_wallet ){
-		if( opened ){
-			this->getAccountsInfo();
-		}else{
-			this->walletNotOPenedError();
-		}
+	m_numberOfAccounts = m_accounts.size() ;
+
+	if( m_accounts.size() > 0 ){
+		this->checkMail() ;
 	}else{
-		QString log = QString( "BUGG!!,walletOpened(): m_wallet is void" ) ;
-		this->writeToLogFile( log ) ;
+		/*
+		 * wallet is empty,warn the user about it
+		 */
+		this->noAccountConfigured() ;
 	}
 }
 
 void qCheckGMail::getAccountsInfo()
 {
-	if( m_wallet ){
-		/*
-		 * get accounts information from kwallet
-		 */
-		m_accounts = kwalletmanager::getAccounts( m_wallet ) ;
-
-		m_numberOfAccounts = m_accounts.size() ;
-
-		m_gotCredentials = m_numberOfAccounts > 0 ;
-
-		if( m_gotCredentials ){
-			this->checkMail() ;
-		}else{
-			/*
-			 * wallet is empty,warn the user about it
-			 */
-			this->noAccountConfigured() ;
-		}
-
-		m_wallet->closeWallet( m_walletName,false ) ;
-		this->deleteKWallet();
-	}else{
-		QString log = QString( "BUGG!!,getAccountsInfo(): m_wallet is void" ) ;
-		this->writeToLogFile( log ) ;
-	}
+	kwalletmanager * wallet = new kwalletmanager() ;
+	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
+	wallet->getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()
@@ -571,18 +528,6 @@ void qCheckGMail::noAccountConfigured()
 	QString x( "qCheckGMailError" );
 	this->changeIcon( x ) ;
 	KStatusNotifierItem::setToolTip( x,tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
-}
-
-void qCheckGMail::walletNotOPenedError()
-{
-	qDebug() << tr( "wallet not opened" ) ;
-	KStatusNotifierItem::setToolTip( QString( "qCheckGMailError"),tr( "status" ),tr( "error,failed to open wallet" ) ) ;
-	if( m_wallet ){
-		this->deleteKWallet();
-	}else{
-		QString log = QString( "BUGG!!,walletNotOPenedError(): m_wallet is void" ) ;
-		this->writeToLogFile( log ) ;
-	}
 }
 
 void qCheckGMail::setLocalLanguage()

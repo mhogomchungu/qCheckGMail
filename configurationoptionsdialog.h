@@ -49,6 +49,8 @@ public:
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
 	static void setDefaultQSettingOptions( QSettings& ) ;
+	static QString passwordFolderName( void ) ;
+	static QString walletName( void ) ;
 	static QString logFile( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;

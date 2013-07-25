@@ -40,6 +40,36 @@ void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings 
 	settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
 }
 
+QString configurationoptionsdialog::walletName()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt   = QString( "walletName" ) ;
+	QString value = QString( "qCheckGMail" ) ;
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::passwordFolderName()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt   = QString( "passwordFolder" ) ;
+	QString value = QString( "qCheckGMail" ) ;
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
 QString configurationoptionsdialog::logFile()
 {
 	KStandardDirs k ;

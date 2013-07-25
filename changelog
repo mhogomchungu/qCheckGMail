@@ -27,3 +27,6 @@ version 1.2.2
 - Update translation files
 - Ask a user to confirm if they really want to delete an account
 - General bux fixes and improvements
+
+version 2.0.0
+- Add support for arbitrary wallet name to allow use of kde default wallet

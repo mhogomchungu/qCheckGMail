@@ -36,6 +36,7 @@
 #include "accounts.h"
 #include "kwallet.h"
 #include "addaccount.h"
+#include "configurationoptionsdialog.h"
 
 namespace Ui {
 class kwalletmanager;
@@ -45,12 +46,13 @@ class kwalletmanager : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit kwalletmanager( KWallet::Wallet ** wallet = 0,QString walletName = QString(),QWidget * parent = 0 ) ;
+	explicit kwalletmanager( QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
-	static QVector<accounts> getAccounts( KWallet::Wallet * ) ;
+	void getAccounts( void ) ;
 	~kwalletmanager();
 signals:
 	void kwalletmanagerClosed( void ) ;
+	void getAccountsInfo( QVector<accounts> ) ;
 private slots:
 	void deleteRow() ;
 	void pushButtonAdd( void ) ;
@@ -59,6 +61,7 @@ private slots:
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void walletOpened( bool ) ;
+	void walletOpened_1( bool );
 	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
@@ -72,11 +75,11 @@ private:
 
 	QVector<accounts> m_accounts ;
 	KWallet::Wallet * m_wallet ;
-	KWallet::Wallet ** m_wallet_p ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	QString m_walletName ;
+	QString m_passwordFolder ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

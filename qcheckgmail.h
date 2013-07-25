@@ -42,7 +42,6 @@
 #include <kstatusnotifieritem.h>
 #include <knotification.h>
 #include <kmenu.h>
-#include <kwallet.h>
 
 #include "accounts.h"
 #include "kwalletmanager.h"
@@ -68,13 +67,13 @@ private slots:
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
-	void walletOpened( bool ) ;
 	void kwalletmanagerClosed( void ) ;
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
 	void objectGone( QObject * ) ;
+	void getAccountsInfo( QVector<accounts> ) ;
 private:
 	QString nameToDisplay( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
@@ -85,13 +84,11 @@ private:
 	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
-	void deleteKWallet( void ) ;
-	void getAccountsInfo( void ) ;
 	void walletNotOPenedError( void ) ;
 	void checkMail( const accounts& acc,const QString& label );
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( QString icon ) ;
-	void getAccountsInformation( void ) ;
+	void getAccountsInfo( void ) ;
 	void setTimerEvents( void ) ;
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
@@ -103,12 +100,9 @@ private:
 	void stuck( void ) ;
 	KMenu * m_menu ;
 	QTimer * m_timer ;
-	bool m_gotCredentials ;
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;
 	QVector<accounts> m_accounts ;
-	KWallet::Wallet * m_wallet ;
-	QString m_walletName ;
 	QString m_accountsStatus ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
