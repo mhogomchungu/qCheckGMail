@@ -57,7 +57,6 @@ private slots:
 	void deleteRow() ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
-	void pushButtonDeleteEntry( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void walletOpened( bool ) ;
@@ -66,6 +65,7 @@ private slots:
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
 private:
+	void buildGUI( void ) ;
 	void deleteRow( int ) ;
 	void selectRow( int row,bool highlight ) ;
 	QString getPassWordFromAccount( QString ) ;

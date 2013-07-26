@@ -88,19 +88,6 @@
     </column>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pushButtonAccountDelete">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>280</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>delete</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButtonAccountAdd">
    <property name="geometry">
     <rect>
@@ -118,7 +105,6 @@
  <tabstops>
   <tabstop>tableWidget</tabstop>
   <tabstop>pushButtonAccountAdd</tabstop>
-  <tabstop>pushButtonAccountDelete</tabstop>
   <tabstop>pushButtonClose</tabstop>
  </tabstops>
  <resources/>

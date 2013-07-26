@@ -21,7 +21,7 @@
 #include "kwalletmanager.h"
 #include "ui_kwalletmanager.h"
 
-#define LABEL_IDENTIFIER "-qCheckGMail-LABEL_ID"
+#define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
 kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
@@ -30,7 +30,7 @@ kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),
 	m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
 }
 
-void kwalletmanager::ShowUI()
+void kwalletmanager::buildGUI()
 {
 	m_ui = new Ui::kwalletmanager ;
 	m_ui->setupUi( this );
@@ -39,7 +39,6 @@ void kwalletmanager::ShowUI()
 
 	connect( m_ui->pushButtonAccountAdd,SIGNAL( clicked() ),this,SLOT( pushButtonAdd() ) ) ;
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
-	connect( m_ui->pushButtonAccountDelete,SIGNAL( clicked() ),this,SLOT( pushButtonDeleteEntry() ) ) ;
 
 	connect( m_ui->tableWidget,SIGNAL( itemClicked( QTableWidgetItem * ) ),
 		 this,SLOT( tableItemClicked( QTableWidgetItem * ) ) ) ;
@@ -52,10 +51,14 @@ void kwalletmanager::ShowUI()
 
 	m_table = m_ui->tableWidget ;
 
-	m_ui->pushButtonAccountDelete->setVisible( false ) ;
 	m_ui->pushButtonAccountAdd->setFocus() ;
 
 	m_ui->groupBox->setTitle( QString( "" ) ) ;
+}
+
+void kwalletmanager::ShowUI()
+{
+	this->buildGUI();
 
 	m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
 	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
@@ -63,8 +66,6 @@ void kwalletmanager::ShowUI()
 
 void kwalletmanager::walletOpened_1( bool walletOpened )
 {
-	QVector<accounts> acc ;
-
 	if( walletOpened ){
 		QString passWord ;
 		QString labels ;
@@ -87,12 +88,10 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 				m_wallet->readPassword( accName + labels_id,labels ) ;
 				m_wallet->readPassword( accName + displayName_id,displayName ) ;
 
-				acc.append( accounts( accName,passWord,displayName,labels ) ) ;
+				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
 	}
-
-	emit getAccountsInfo( acc ) ;
 	this->deleteLater() ;
 }
 
@@ -171,6 +170,8 @@ void kwalletmanager::walletOpened( bool b )
 kwalletmanager::~kwalletmanager()
 {
 	emit kwalletmanagerClosed() ;
+	emit getAccountsInfo( m_accounts ) ;
+
 	if( m_ui ){
 		delete m_ui ;
 	}
@@ -206,7 +207,6 @@ void kwalletmanager::HideUI()
 		m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
 	}
 
-	emit getAccountsInfo( m_accounts ) ;
 	this->deleteLater();
 }
 
@@ -221,10 +221,6 @@ void kwalletmanager::pushButtonAdd()
 void kwalletmanager::pushButtonClose()
 {
 	this->HideUI();
-}
-
-void kwalletmanager::pushButtonDeleteEntry()
-{
 }
 
 void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
