@@ -80,6 +80,7 @@ private:
 	QTableWidget * m_table ;
 	QString m_walletName ;
 	QString m_passwordFolder ;
+	QString m_defaultWalletName ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

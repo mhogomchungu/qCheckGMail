@@ -28,6 +28,5 @@ version 1.2.2
 - Ask a user to confirm if they really want to delete an account
 - General bux fixes and improvements
 
-version 2.0.0
-- Add support for arbitrary wallet name to allow use of kde default wallet.This breaks compatibility with existing account format
-  and hence accounts will have to be reset
+version 1.2.3
+- Add support for arbitrary wallet names to allow storage of credentials in kde's default wallet.

@@ -26,8 +26,22 @@
 
 kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
-	m_walletName     = configurationoptionsdialog::walletName() ;
-	m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
+	m_walletName        = configurationoptionsdialog::walletName() ;
+	m_defaultWalletName = configurationoptionsdialog::defaultWalletName() ;
+
+	if( m_walletName == m_defaultWalletName ){
+		/*
+		 * We are using qCheckGMail wallet and hence we can store credentials in the default folder
+		 * since nobody else will be using it as nobody else should be using our wallet
+		 */
+		m_passwordFolder = KWallet::Wallet::PasswordFolder() ;
+	}else{
+		/*
+		 * We are not using qCheckGMail's wallet and hence could be using a shared one.
+		 * Store credentials in a private folder
+		 */
+		m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
+	}
 }
 
 void kwalletmanager::buildGUI()
@@ -176,6 +190,18 @@ kwalletmanager::~kwalletmanager()
 		delete m_ui ;
 	}
 	if( m_wallet ){
+		if( m_walletName == m_defaultWalletName ){
+			/*
+			 * This is our personal wallet and hence we close it when done with it
+			 */
+			m_wallet->closeWallet( m_walletName,true ) ;
+		}else{
+			/*
+			 * we dont force close the wallet since we could be using a shared wallet and others may be
+			 * using it or expect it to be open
+			 */
+			m_wallet->closeWallet( m_walletName,false ) ;
+		}
 		m_wallet->deleteLater() ;
 	}
 }

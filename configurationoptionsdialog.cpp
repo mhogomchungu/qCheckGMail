@@ -70,6 +70,11 @@ QString configurationoptionsdialog::passwordFolderName()
 	}
 }
 
+QString configurationoptionsdialog::defaultWalletName()
+{
+	return QString( "qCheckGMail" ) ;
+}
+
 QString configurationoptionsdialog::logFile()
 {
 	KStandardDirs k ;
