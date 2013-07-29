@@ -57,6 +57,11 @@ QString configurationoptionsdialog::walletName()
 
 QString configurationoptionsdialog::passwordFolderName()
 {
+	return QString( "qCheckGMail" ) ;
+#if 0
+	/*
+	 * probably not a good idea to allow users to set password folder name
+	 */
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
@@ -68,6 +73,7 @@ QString configurationoptionsdialog::passwordFolderName()
 		settings.setValue( opt,value ) ;
 		return value ;
 	}
+#endif
 }
 
 QString configurationoptionsdialog::defaultWalletName()
