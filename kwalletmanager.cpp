@@ -78,32 +78,30 @@ void kwalletmanager::ShowUI()
 
 void kwalletmanager::walletOpened( bool walletOpened )
 {
-	m_walletOpened = walletOpened ;
-	
-	if( m_walletOpened ){
-		
+	if( walletOpened ){
+
 		this->buildGUI();
 
-		m_wallet->setFolder( m_passwordFolder ) ;
-
-		QStringList accountNames = m_wallet->entryList() ;
-
-		int j = accountNames.size() ;
 		QString passWord ;
 
-		m_accounts.clear();
-
-		QTableWidgetItem * item ;
 		QString labels ;
 		QString labels_id = QString( LABEL_IDENTIFIER ) ;
 
 		QString displayName ;
 		QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
+		QTableWidgetItem * item ;
+
 		int row = 0 ;
 
+		m_wallet->setFolder( m_passwordFolder ) ;
+
+		QStringList acc = m_wallet->entryList() ;
+
+		int j = acc.size() ;
+
 		for( int i = 0 ; i < j ; i++ ){
-			const QString& accName = accountNames.at( i ) ;
+			const QString& accName = acc.at( i ) ;
 			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 				;
 			}else{
@@ -152,10 +150,8 @@ void kwalletmanager::getAccounts( void )
 
 void kwalletmanager::walletOpened_1( bool walletOpened )
 {
-	m_walletOpened = walletOpened ;
-	
-	if( m_walletOpened ){
-		
+	if( walletOpened ){
+
 		QString passWord ;
 		QString labels ;
 		QString displayName ;
@@ -180,8 +176,10 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
+
+		emit getAccountsInfo( m_accounts ) ;
 	}
-	
+
 	this->deleteLater() ;
 }
 
@@ -207,10 +205,6 @@ kwalletmanager::~kwalletmanager()
 		}
 		m_wallet->deleteLater() ;
 	}
-
-	if( m_walletOpened ){
-		emit getAccountsInfo( m_accounts ) ;
-	}
 }
 
 void kwalletmanager::closeEvent( QCloseEvent * e )
@@ -223,28 +217,26 @@ void kwalletmanager::HideUI()
 {
 	this->hide();
 
-	if( m_walletOpened ){
-		
-		m_wallet->removeFolder( m_passwordFolder ) ;
-		m_wallet->createFolder( m_passwordFolder ) ;
-		m_wallet->setFolder( m_passwordFolder ) ;
+	m_wallet->removeFolder( m_passwordFolder ) ;
+	m_wallet->createFolder( m_passwordFolder ) ;
+	m_wallet->setFolder( m_passwordFolder ) ;
 
-		QString labels_id  = QString( LABEL_IDENTIFIER ) ;
-		QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
+	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
+	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
-		int j = m_accounts.size() ;
+	int j = m_accounts.size() ;
 
-		for( int i = 0 ; i < j ; i++ ){
-			
-			const accounts& acc    = m_accounts.at( i ) ;
-			const QString& accName = acc.accountName() ;
-			
-			m_wallet->writePassword( accName,acc.passWord() ) ;
-			m_wallet->writePassword( accName + display_id,acc.displayName() ) ;
-			m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
-		}
+	for( int i = 0 ; i < j ; i++ ){
+
+		const accounts& acc    = m_accounts.at( i ) ;
+		const QString& accName = acc.accountName() ;
+
+		m_wallet->writePassword( accName,acc.passWord() ) ;
+		m_wallet->writePassword( accName + display_id,acc.displayName() ) ;
+		m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
 	}
 
+	emit getAccountsInfo( m_accounts ) ;
 	this->deleteLater() ;
 }
 

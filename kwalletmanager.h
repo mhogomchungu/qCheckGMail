@@ -81,7 +81,6 @@ private:
 	QString m_walletName ;
 	QString m_passwordFolder ;
 	QString m_defaultWalletName ;
-	bool m_walletOpened ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

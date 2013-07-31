@@ -19,31 +19,53 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail() : m_menu( new KMenu() ),m_timer( new QTimer() )
+qCheckGMail::qCheckGMail()
 {
-	KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
+	m_menu  = new KMenu() ;
+	m_timer = new QTimer( this ) ;
 	KStatusNotifierItem::setCategory( KStatusNotifierItem::ApplicationStatus ) ;
-
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
+	this->setTrayIconToVisible( true ) ;
 }
 
 qCheckGMail::~qCheckGMail()
 {
-	m_manager->deleteLater() ;
 	m_menu->deleteLater() ;
-	m_timer->deleteLater() ;
 	delete m_mutex ;
+}
+
+void qCheckGMail::setTrayIconToVisible( bool showIcon )
+{
+	if( showIcon ){
+		KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
+	}else{
+		KStatusNotifierItem::setStatus( KStatusNotifierItem::Passive ) ;
+	}
+}
+
+void qCheckGMail::showToolTip( QString x,QString y, QString z )
+{
+	KStatusNotifierItem::setToolTip( x,y,z ) ;
+}
+
+void qCheckGMail::showPausedIcon( bool paused )
+{
+	if( paused ){
+		KStatusNotifierItem::setOverlayIconByName( QString( "qCheckGMail-GotMail" ) ) ;
+	}else{
+		KStatusNotifierItem::setOverlayIconByName( QString( "" ) ) ;
+	}
+}
+
+void qCheckGMail::changeIcon( QString icon )
+{
+	KStatusNotifierItem::setIconByName( icon );
+	KStatusNotifierItem::setAttentionIconByName( icon ) ;
 }
 
 void qCheckGMail::start()
 {
 	QMetaObject::invokeMethod( this,"run",Qt::QueuedConnection ) ;
-}
-
-void qCheckGMail::changeIcon( QString icon )
-{
-	this->setIconByName( icon );
-	this->setAttentionIconByName( icon ) ;
 }
 
 void qCheckGMail::run()
@@ -58,7 +80,7 @@ void qCheckGMail::run()
 
 	this->setLocalLanguage();
 
-	KStatusNotifierItem::setToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
+	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 
 	QAction * ac = new QAction( m_menu ) ;
 
@@ -108,7 +130,7 @@ void qCheckGMail::run()
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 
 	m_manager = new QNetworkAccessManager( this ) ;
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( googleQueryResponce( QNetworkReply * ) ) ) ;
+	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_timer->stop() ;
 	m_timer->start( m_interval ) ;
@@ -116,14 +138,14 @@ void qCheckGMail::run()
 
 void qCheckGMail::noInternet( void )
 {
-	KStatusNotifierItem::setToolTip( QString( "qCheckGMailError" ),
-					 tr( "failed to connect" ),
-					 tr( "check mail skipped,user is not connected to the internet" ) ) ;
+	this->showToolTip( QString( "qCheckGMailError" ),
+				 tr( "failed to connect" ),
+				 tr( "check mail skipped,user is not connected to the internet" ) ) ;
 	this->changeIcon( QString( "qCheckGMailError" ) );
 	this->doneCheckingMail() ;
 }
 
-void qCheckGMail::googleQueryResponce( QNetworkReply * r )
+void qCheckGMail::emailStatusQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 
@@ -140,7 +162,7 @@ void qCheckGMail::googleQueryResponce( QNetworkReply * r )
 	}
 }
 
-QString qCheckGMail::nameToDisplay()
+QString qCheckGMail::displayName()
 {
 	const accounts& account    = m_accounts.at( m_currentAccount ) ;
 	const QString& displayName = account.displayName() ;
@@ -180,7 +202,7 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	QString e = tr( "%1 account has wrong username/password combination" ).arg( x ) ;
 
 	this->changeIcon( z ) ;
-	KStatusNotifierItem::setToolTip( z,tr( "failed to log in" ),e ) ;
+	this->showToolTip( z,tr( "failed to log in" ),e ) ;
 	this->doneCheckingMail() ;
 }
 
@@ -202,10 +224,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	int mailCount_1 = mailCount.toInt() ;
 
 	if( mailCount_1 == 0 ){
-		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\">%1</td><td>0</td></tr>" ).arg( this->nameToDisplay() ) ;
+		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\">%1</td><td>0</td></tr>" ).arg( this->displayName() ) ;
 	}else{
 		m_mailCount += mailCount_1 ;
-		QString z = this->nameToDisplay() ;
+		QString z = this->displayName() ;
 		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\"><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
 	}
 
@@ -238,21 +260,21 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			m_accountsStatus += QString( "</table>" ) ;
 
 			if( m_mailCount > 0 ){
-				KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
 				QString icon = QString( "qCheckGMail-GotMail" ) ;
 				this->changeIcon( icon ) ;
+				this->setTrayIconToVisible( true ) ;
 				if( m_mailCount == 1 ){
-					KStatusNotifierItem::setToolTip( icon,tr( "found 1 new email" ),m_accountsStatus ) ;
+					this->showToolTip( icon,tr( "found 1 new email" ),m_accountsStatus ) ;
 				}else{
 					QString x = QString::number( m_mailCount ) ;
-					KStatusNotifierItem::setToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
+					this->showToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
 				this->newEmailNotify();
 			}else{
-				KStatusNotifierItem::setStatus( KStatusNotifierItem::Passive ) ;
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
-				KStatusNotifierItem::setToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
+				this->setTrayIconToVisible( false ) ;
+				this->showToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
 			}
 
 			this->doneCheckingMail() ;
@@ -292,14 +314,11 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
-		KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
 		QString icon = QString( "qCheckGMail-GotMail" ) ;
 		this->changeIcon( icon ) ;
-
-		KStatusNotifierItem::setToolTip( icon,this->nameToDisplay(),info ) ;
-
+		this->setTrayIconToVisible( true ) ;
+		this->showToolTip( icon,this->displayName(),info ) ;
 		this->newEmailNotify();
-
 		this->doneCheckingMail() ;
 	}else{
 		/*
@@ -328,9 +347,9 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				/*
 				 * there are no more accounts to go through
 				 */
-				KStatusNotifierItem::setToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
+				this->showToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
 				this->changeIcon( QString( "qCheckGMail" ) ) ;
-				KStatusNotifierItem::setStatus( KStatusNotifierItem::Passive ) ;
+				this->setTrayIconToVisible( false ) ;
 				this->doneCheckingMail() ;
 			}
 		}
@@ -360,13 +379,13 @@ void qCheckGMail::newEmailNotify()
 	       KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
 }
 
-void qCheckGMail::pauseCheckingMail( bool b )
+void qCheckGMail::pauseCheckingMail( bool pauseAction )
 {
-	if( b ){
+	this->showPausedIcon( pauseAction ) ;
+
+	if( pauseAction ){
 		this->stopTimer();
-		KStatusNotifierItem::setOverlayIconByName( QString( "qCheckGMail-GotMail" ) );
 	}else{
-		KStatusNotifierItem::setOverlayIconByName( QString( "" ) );
 		this->startTimer();
 
 		m_mutex->lock();
@@ -417,6 +436,22 @@ void qCheckGMail::kwalletmanagerClosed( void )
 	m_mutex->unlock();
 }
 
+void qCheckGMail::stuck()
+{
+	/*
+	 * We will get here if an attempt to check for email update is made while another attempt is already in progress.
+	 * The most likely reason to get here is if the network is down and hence the already in progress attempt is stuck
+	 * somewhere in QNetworkAccessManager object.
+	 *
+	 * Below warning is misleading but it has to do for now.
+	 */
+	QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
+	QString icon = QString( "qCheckGMailError" ) ;
+	this->changeIcon( icon );
+	this->showToolTip( icon,tr( "error" ),err ) ;
+	this->setTrayIconToVisible( true ) ;
+}
+
 /*
  * This should be the only function that initiate email checking
  */
@@ -453,20 +488,6 @@ void qCheckGMail::checkMail()
 		this->writeToLogFile( QString( "dont have credentials,(re)trying to open wallet" ) ) ;
 		this->getAccountsInfo() ;
 	}
-}
-
-void qCheckGMail::stuck()
-{
-	/*
-	 * possible reason for getting stuck.
-	 * 1. On my system,m_manager->get() just stops working when its called and the network is down and i have yet
-	 *    to discover how to make it start working it again when the network is reestablished.
-	 */
-	QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
-	QString icon = QString( "qCheckGMailError" ) ;
-	this->changeIcon( icon );
-	KStatusNotifierItem::setToolTip( icon,tr( "error" ),err ) ;
-	KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
 }
 
 void qCheckGMail::checkMail( const accounts& acc )
@@ -525,7 +546,7 @@ void qCheckGMail::noAccountConfigured()
 {
 	QString x( "qCheckGMailError" );
 	this->changeIcon( x ) ;
-	KStatusNotifierItem::setToolTip( x,tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
+	this->showToolTip( x,tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
 }
 
 void qCheckGMail::setLocalLanguage()

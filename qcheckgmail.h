@@ -62,7 +62,7 @@ public:
 private slots:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;
-	void googleQueryResponce( QNetworkReply * ) ;
+	void emailStatusQueryResponce( QNetworkReply * ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
@@ -75,8 +75,11 @@ private slots:
 	void objectGone( QObject * ) ;
 	void getAccountsInfo( QVector<accounts> ) ;
 private:
-	QString nameToDisplay( void ) ;
+	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;
+	void setTrayIconToVisible( bool ) ;
+	void showToolTip( QString,QString,QString ) ;
+	void showPausedIcon( bool ) ;
 	void initLogFile( void ) ;
 	void writeToLogFile( QString ) ;
 	void noInternet( void ) ;
