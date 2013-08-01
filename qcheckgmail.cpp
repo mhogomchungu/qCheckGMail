@@ -138,10 +138,12 @@ void qCheckGMail::run()
 
 void qCheckGMail::noInternet( void )
 {
-	this->showToolTip( QString( "qCheckGMailError" ),
-				 tr( "failed to connect" ),
-				 tr( "check mail skipped,user is not connected to the internet" ) ) ;
-	this->changeIcon( QString( "qCheckGMailError" ) );
+	QString header = tr( "a network related error was detected" ) ;
+	QString msg    = tr( "a functioal internet connection appears not to be present" ) ;
+	QString icon   = QString( "qCheckGMailError" ) ;
+	
+	this->showToolTip( icon,header,msg ) ;
+	this->changeIcon( icon );
 	this->doneCheckingMail() ;
 }
 
@@ -202,7 +204,7 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	QString e = tr( "%1 account has wrong username/password combination" ).arg( x ) ;
 
 	this->changeIcon( z ) ;
-	this->showToolTip( z,tr( "failed to log in" ),e ) ;
+	this->showToolTip( z,tr( "account related error was detected" ),e ) ;
 	this->doneCheckingMail() ;
 }
 
@@ -440,15 +442,16 @@ void qCheckGMail::stuck()
 {
 	/*
 	 * We will get here if an attempt to check for email update is made while another attempt is already in progress.
-	 * The most likely reason to get here is if the network is down and hence the already in progress attempt is stuck
-	 * somewhere in QNetworkAccessManager object.
-	 *
-	 * Below warning is misleading but it has to do for now.
+	 * Mail checking usually takes a few seconds and hence the most likely reason to get here is if the network is down 
+	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
 	 */
-	QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
+	//QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
+	QString x = tr( "a network related error was detected" ) ;
+	QString z = tr( "qCheckGMail is not responding and restarting it is recommended if you are not having network related issues." ) ;
+	
 	QString icon = QString( "qCheckGMailError" ) ;
 	this->changeIcon( icon );
-	this->showToolTip( icon,tr( "error" ),err ) ;
+	this->showToolTip( icon,x,z ) ;
 	this->setTrayIconToVisible( true ) ;
 }
 
@@ -546,7 +549,7 @@ void qCheckGMail::noAccountConfigured()
 {
 	QString x( "qCheckGMailError" );
 	this->changeIcon( x ) ;
-	this->showToolTip( x,tr( "error" ),tr( "no account appear to be configured in the wallet" ) ) ;
+	this->showToolTip( x,tr( "account related error was detected" ),tr( "no account appear to be configured in the wallet" ) ) ;
 }
 
 void qCheckGMail::setLocalLanguage()

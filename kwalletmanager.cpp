@@ -164,6 +164,8 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 
 		int j = accountNames.size() ;
 
+		QVector<accounts> acc ;
+		
 		for( int i = 0 ; i < j ; i++ ){
 			const QString& accName = accountNames.at( i ) ;
 			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
@@ -173,11 +175,11 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 				m_wallet->readPassword( accName + labels_id,labels ) ;
 				m_wallet->readPassword( accName + displayName_id,displayName ) ;
 
-				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
+				acc.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
 
-		emit getAccountsInfo( m_accounts ) ;
+		emit getAccountsInfo( acc ) ;
 	}
 
 	this->deleteLater() ;
