@@ -138,8 +138,8 @@ void qCheckGMail::run()
 
 void qCheckGMail::noInternet( void )
 {
-	QString header = tr( "a network related error was detected" ) ;
-	QString msg    = tr( "a functioal internet connection appears not to be present" ) ;
+	QString header = tr( "network problem detected" ) ;
+	QString msg    = tr( "could not connect to the internet." ) ;
 	QString icon   = QString( "qCheckGMailError" ) ;
 	
 	this->showToolTip( icon,header,msg ) ;
@@ -446,8 +446,10 @@ void qCheckGMail::stuck()
 	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
 	 */
 	//QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
-	QString x = tr( "a network related error was detected" ) ;
-	QString z = tr( "qCheckGMail is not responding and restarting it is recommended if you are not having network related issues." ) ;
+	QString x = tr( "network problem detected" ) ;
+	QString msg_1 = tr( "email checking is taking longer than expected." ) ;
+	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists." ) ;
+	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
 	
 	QString icon = QString( "qCheckGMailError" ) ;
 	this->changeIcon( icon );
