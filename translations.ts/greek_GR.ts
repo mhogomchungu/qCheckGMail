@@ -150,7 +150,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
         <translation>Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="181"/>
+        <location filename="../configurationoptionsdialog.cpp" line="222"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -163,7 +163,7 @@ ERROR: illegal characters detected in the the update interval field
 </translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="188"/>
+        <location filename="../configurationoptionsdialog.cpp" line="229"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes
@@ -209,37 +209,36 @@ ERROR: minimum time interval is 5 minutes
         <translation>Ετικέτες λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.ui" line="101"/>
         <source>delete</source>
-        <translation>Διαγραφή</translation>
+        <translation type="obsolete">Διαγραφή</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.ui" line="114"/>
+        <location filename="../kwalletmanager.ui" line="101"/>
         <source>add</source>
         <translation>Προσθήκη</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="231"/>
+        <location filename="../kwalletmanager.cpp" line="265"/>
         <source>delete entry</source>
         <translation>Διαγραφή καταχώρησης</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="237"/>
+        <location filename="../kwalletmanager.cpp" line="271"/>
         <source>edit entry</source>
         <translation>Επεξεργασία καταχώρησης</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="251"/>
+        <location filename="../kwalletmanager.cpp" line="285"/>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
         <translation>Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό &quot;%1&quot; ;</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="253"/>
+        <location filename="../kwalletmanager.cpp" line="287"/>
         <source>yes</source>
         <translation>Ναι</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="254"/>
+        <location filename="../kwalletmanager.cpp" line="288"/>
         <source>no</source>
         <translation>Όχι</translation>
     </message>
@@ -247,54 +246,50 @@ ERROR: minimum time interval is 5 minutes
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../qcheckgmail.cpp" line="62"/>
-        <location filename="../qcheckgmail.cpp" line="332"/>
-        <location filename="../qcheckgmail.cpp" line="579"/>
+        <location filename="../qcheckgmail.cpp" line="132"/>
+        <location filename="../qcheckgmail.cpp" line="352"/>
         <source>status</source>
         <translation>Κατάσταση</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="62"/>
+        <location filename="../qcheckgmail.cpp" line="132"/>
         <source>opening wallet</source>
         <translation>Άνοιγμα πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="66"/>
+        <location filename="../qcheckgmail.cpp" line="83"/>
         <source>check mail now</source>
         <translation>Έλεγχος για μηνύματα τώρα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="74"/>
+        <location filename="../qcheckgmail.cpp" line="91"/>
         <source>pause checking mail</source>
         <translation>Παύση ελέγχου για νέα μηνύματα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="85"/>
+        <location filename="../qcheckgmail.cpp" line="102"/>
         <source>configure accounts</source>
         <translation>Επεξεργασία λογαριασμών</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="93"/>
+        <location filename="../qcheckgmail.cpp" line="110"/>
         <source>configure options</source>
         <translation>Επεξεργασία ρυθμίσεων</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="121"/>
         <source>failed to connect</source>
-        <translation>Αποτυχία σύνδεσης</translation>
+        <translation type="obsolete">Αποτυχία σύνδεσης</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="122"/>
         <source>check mail skipped,user is not connected to the internet</source>
-        <translation>Ο έλεγχος για μηνύματα ματαιώθηκε, δεν υπάρχει σύνδεση στο διαδίκτυο</translation>
+        <translation type="obsolete">Ο έλεγχος για μηνύματα ματαιώθηκε, δεν υπάρχει σύνδεση στο διαδίκτυο</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="184"/>
         <source>failed to log in</source>
-        <translation>Αποτυχία εισόδου</translation>
+        <translation type="obsolete">Αποτυχία εισόδου</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="181"/>
+        <location filename="../qcheckgmail.cpp" line="204"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
     </message>
@@ -311,7 +306,7 @@ ERROR: minimum time interval is 5 minutes
         <translation type="obsolete">Λανθασμένος συνδυασμός χρήστη/κωδικού πρόσβασης</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="291"/>
+        <location filename="../qcheckgmail.cpp" line="314"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 μήνυμα από &lt;b&gt;%1&lt;/b&gt; σας περιμένει&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
@@ -324,66 +319,88 @@ ERROR: minimum time interval is 5 minutes
         <translation type="obsolete">1 μήνυμα σας περιμένει</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="293"/>
+        <location filename="../qcheckgmail.cpp" line="316"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 μηνύματα σας περιμένουν</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="256"/>
-        <location filename="../qcheckgmail.cpp" line="332"/>
+        <location filename="../qcheckgmail.cpp" line="279"/>
+        <location filename="../qcheckgmail.cpp" line="352"/>
         <source>no new email found</source>
         <translation>Δεν βρέθηκε νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="246"/>
+        <location filename="../qcheckgmail.cpp" line="141"/>
+        <location filename="../qcheckgmail.cpp" line="449"/>
+        <source>network problem detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="142"/>
+        <source>could not connect to the internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="207"/>
+        <location filename="../qcheckgmail.cpp" line="555"/>
+        <source>account related error was detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="269"/>
         <source>found 1 new email</source>
         <translation>Βρέθηκε 1 νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="249"/>
+        <location filename="../qcheckgmail.cpp" line="272"/>
         <source>found %2 new emails</source>
         <translation>Βρέθηκαν %2 νέα μηνύματα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="474"/>
+        <location filename="../qcheckgmail.cpp" line="450"/>
+        <source>email checking is taking longer than expected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="451"/>
+        <source>Recommending restarting qCheckGMail if the problem persists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="493"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>Δεν έχετε προνόμια, νέα προσπάθεια για άνοιγμα του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="487"/>
         <source>recommending a restart as i am probably stuck</source>
-        <translation>Το qCheckGMail δεν ανταποκρίνεται. Προτείνεται επανεκκίνηση</translation>
+        <translation type="obsolete">Το qCheckGMail δεν ανταποκρίνεται. Προτείνεται επανεκκίνηση</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="490"/>
-        <location filename="../qcheckgmail.cpp" line="573"/>
         <source>error</source>
-        <translation>Σφάλμα</translation>
+        <translation type="obsolete">Σφάλμα</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="573"/>
+        <location filename="../qcheckgmail.cpp" line="555"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>Δεν έχει ρυθμιστεί κανένας λογαριασμός στο πορτοφόλι</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="578"/>
         <source>wallet not opened</source>
-        <translation>Το πορτοφόλι δεν είναι ανοικτό</translation>
+        <translation type="obsolete">Το πορτοφόλι δεν είναι ανοικτό</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="579"/>
         <source>error,failed to open wallet</source>
-        <translation>Σφάλμα, αδυναμία ανοίγματος του πορτοφολιού</translation>
+        <translation type="obsolete">Σφάλμα, αδυναμία ανοίγματος του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="694"/>
-        <location filename="../qcheckgmail.cpp" line="707"/>
+        <location filename="../qcheckgmail.cpp" line="664"/>
+        <location filename="../qcheckgmail.cpp" line="677"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="723"/>
-        <location filename="../qcheckgmail.cpp" line="736"/>
+        <location filename="../qcheckgmail.cpp" line="693"/>
+        <location filename="../qcheckgmail.cpp" line="706"/>
         <source>autostart disabled,exiting this one</source>
         <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>

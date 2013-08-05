@@ -142,7 +142,7 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
         <translation>cerrar</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="181"/>
+        <location filename="../configurationoptionsdialog.cpp" line="222"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -155,7 +155,7 @@ ERROR: caracteres no válidos detectados en el campo de intervalo de actualizaci
 </translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="188"/>
+        <location filename="../configurationoptionsdialog.cpp" line="229"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes
@@ -201,37 +201,36 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
         <translation>etiquetas de cuenta</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.ui" line="101"/>
         <source>delete</source>
-        <translation>borrar</translation>
+        <translation type="obsolete">borrar</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.ui" line="114"/>
+        <location filename="../kwalletmanager.ui" line="101"/>
         <source>add</source>
         <translation>añadir</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="231"/>
+        <location filename="../kwalletmanager.cpp" line="265"/>
         <source>delete entry</source>
         <translation>borrar entrada</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="237"/>
+        <location filename="../kwalletmanager.cpp" line="271"/>
         <source>edit entry</source>
         <translation>editar entrada</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="251"/>
+        <location filename="../kwalletmanager.cpp" line="285"/>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
         <translation>¿Está seguro de que quiere borrar la cuenta &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="253"/>
+        <location filename="../kwalletmanager.cpp" line="287"/>
         <source>yes</source>
         <translation>sí</translation>
     </message>
     <message>
-        <location filename="../kwalletmanager.cpp" line="254"/>
+        <location filename="../kwalletmanager.cpp" line="288"/>
         <source>no</source>
         <translation>no</translation>
     </message>
@@ -239,54 +238,50 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../qcheckgmail.cpp" line="62"/>
-        <location filename="../qcheckgmail.cpp" line="332"/>
-        <location filename="../qcheckgmail.cpp" line="579"/>
+        <location filename="../qcheckgmail.cpp" line="132"/>
+        <location filename="../qcheckgmail.cpp" line="352"/>
         <source>status</source>
         <translation>estado</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="62"/>
+        <location filename="../qcheckgmail.cpp" line="132"/>
         <source>opening wallet</source>
         <translation>abriendo cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="66"/>
+        <location filename="../qcheckgmail.cpp" line="83"/>
         <source>check mail now</source>
         <translation>comprobar correo ahora</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="74"/>
+        <location filename="../qcheckgmail.cpp" line="91"/>
         <source>pause checking mail</source>
         <translation>pausar comprobación de correo</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="85"/>
+        <location filename="../qcheckgmail.cpp" line="102"/>
         <source>configure accounts</source>
         <translation>configurar cuentas</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="93"/>
+        <location filename="../qcheckgmail.cpp" line="110"/>
         <source>configure options</source>
         <translation>configurar opciones</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="121"/>
         <source>failed to connect</source>
-        <translation>ha fallado al conectar</translation>
+        <translation type="obsolete">ha fallado al conectar</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="122"/>
         <source>check mail skipped,user is not connected to the internet</source>
-        <translation>comprobación de correo omitida, el usuario no está conectado a Internet</translation>
+        <translation type="obsolete">comprobación de correo omitida, el usuario no está conectado a Internet</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="184"/>
         <source>failed to log in</source>
-        <translation>ha fallado al identificarse</translation>
+        <translation type="obsolete">ha fallado al identificarse</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="181"/>
+        <location filename="../qcheckgmail.cpp" line="204"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>%1 cuenta tiene una combinación usuario/contraseña errónea</translation>
     </message>
@@ -303,71 +298,93 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
         <translation type="obsolete">combinación usaurio/contraseña errónea</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="291"/>
+        <location filename="../qcheckgmail.cpp" line="314"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 correo de &lt;b&gt;%1&lt;/b&gt; está esperando&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="293"/>
+        <location filename="../qcheckgmail.cpp" line="316"/>
         <source>%2 emails are waiting for you</source>
         <translation>%2 correos están esperando</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="256"/>
-        <location filename="../qcheckgmail.cpp" line="332"/>
+        <location filename="../qcheckgmail.cpp" line="279"/>
+        <location filename="../qcheckgmail.cpp" line="352"/>
         <source>no new email found</source>
         <translation>no se ha encontrado ningún correo nuevo</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="246"/>
+        <location filename="../qcheckgmail.cpp" line="141"/>
+        <location filename="../qcheckgmail.cpp" line="449"/>
+        <source>network problem detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="142"/>
+        <source>could not connect to the internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="207"/>
+        <location filename="../qcheckgmail.cpp" line="555"/>
+        <source>account related error was detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="269"/>
         <source>found 1 new email</source>
         <translation>se ha encontrado 1 correo nuevo</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="249"/>
+        <location filename="../qcheckgmail.cpp" line="272"/>
         <source>found %2 new emails</source>
         <translation>encontrados %2 correos nuevos</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="474"/>
+        <location filename="../qcheckgmail.cpp" line="450"/>
+        <source>email checking is taking longer than expected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="451"/>
+        <source>Recommending restarting qCheckGMail if the problem persists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qcheckgmail.cpp" line="493"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>no tiene credenciales,(re)intentar abrir cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="487"/>
         <source>recommending a restart as i am probably stuck</source>
-        <translation>parece que no responde, se recomienda reiniciar</translation>
+        <translation type="obsolete">parece que no responde, se recomienda reiniciar</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="490"/>
-        <location filename="../qcheckgmail.cpp" line="573"/>
         <source>error</source>
-        <translation>error</translation>
+        <translation type="obsolete">error</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="573"/>
+        <location filename="../qcheckgmail.cpp" line="555"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>parece no haber ninguna cuenta configurada en la cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="578"/>
         <source>wallet not opened</source>
-        <translation>cartera cerrada</translation>
+        <translation type="obsolete">cartera cerrada</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="579"/>
         <source>error,failed to open wallet</source>
-        <translation>error, ha fallado al abrir la cartera</translation>
+        <translation type="obsolete">error, ha fallado al abrir la cartera</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="694"/>
-        <location filename="../qcheckgmail.cpp" line="707"/>
+        <location filename="../qcheckgmail.cpp" line="664"/>
+        <location filename="../qcheckgmail.cpp" line="677"/>
         <source>another instance is already running,exiting this one</source>
         <translation>ya está ejecutándose otra cartera, saliendo de ésta</translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="723"/>
-        <location filename="../qcheckgmail.cpp" line="736"/>
+        <location filename="../qcheckgmail.cpp" line="693"/>
+        <location filename="../qcheckgmail.cpp" line="706"/>
         <source>autostart disabled,exiting this one</source>
         <translation>inicio automático desactivado, saliendo</translation>
     </message>
