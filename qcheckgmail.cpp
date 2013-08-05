@@ -70,17 +70,13 @@ void qCheckGMail::start()
 
 void qCheckGMail::run()
 {
-	this->initLogFile();
-
 	m_enableDebug = KCmdLineArgs::allArguments().contains( "-d" ) ;
 
+	this->setLocalLanguage();
+	
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
-
-	this->setLocalLanguage();
-
-	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 
 	QAction * ac = new QAction( m_menu ) ;
 
@@ -123,8 +119,6 @@ void qCheckGMail::run()
 
 	m_checkingMail = false ;
 
-	this->getAccountsInfo();
-
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
 
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
@@ -134,12 +128,18 @@ void qCheckGMail::run()
 
 	m_timer->stop() ;
 	m_timer->start( m_interval ) ;
+	
+	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
+	
+	this->getAccountsInfo() ;
+	
+	this->initLogFile() ;
 }
 
 void qCheckGMail::noInternet( void )
 {
 	QString header = tr( "network problem detected" ) ;
-	QString msg    = tr( "could not connect to the internet." ) ;
+	QString msg    = tr( "could not connect to the internet" ) ;
 	QString icon   = QString( "qCheckGMailError" ) ;
 	
 	this->showToolTip( icon,header,msg ) ;
@@ -448,7 +448,7 @@ void qCheckGMail::stuck()
 	//QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
 	QString x = tr( "network problem detected" ) ;
 	QString msg_1 = tr( "email checking is taking longer than expected." ) ;
-	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists." ) ;
+	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
 	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
 	
 	QString icon = QString( "qCheckGMailError" ) ;
@@ -465,6 +465,7 @@ void qCheckGMail::checkMail()
 	if( m_numberOfAccounts > 0 ){
 
 		bool cancheckMail = false ;
+		
 		m_mutex->lock() ;
 
 		if( m_checkingMail ){
