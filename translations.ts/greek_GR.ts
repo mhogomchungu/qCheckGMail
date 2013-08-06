@@ -142,12 +142,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
     <message>
         <location filename="../configurationoptionsdialog.ui" line="187"/>
         <source>leave blank to reset to default</source>
-        <translation type="unfinished"></translation>
+        <translation>Αφήστε το πεδίο κενό για επαναφορά στο προκαθορισμένο</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
         <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Όνομα πορτοφολιού</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="245"/>

@@ -134,12 +134,12 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
     <message>
         <location filename="../configurationoptionsdialog.ui" line="187"/>
         <source>leave blank to reset to default</source>
-        <translation type="unfinished"></translation>
+        <translation>dejar en blanco para restaurar valor predeterminado</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
         <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>nombre de cartera</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="245"/>
@@ -332,7 +332,7 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../qcheckgmail.cpp" line="139"/>
         <source>could not connect to the internet</source>
-        <translation></translation>
+        <translation>no se pudo conectar a internet</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="204"/>

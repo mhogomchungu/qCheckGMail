@@ -267,6 +267,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEditUpdateCheckInterval</tabstop>
+  <tabstop>lineEditWalletName</tabstop>
+  <tabstop>checkBoxAutoStartEnabled</tabstop>
+  <tabstop>comboBoxLocalLanguage</tabstop>
+  <tabstop>checkBoxReportOnAllAccounts</tabstop>
+  <tabstop>pushButtonClose</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
