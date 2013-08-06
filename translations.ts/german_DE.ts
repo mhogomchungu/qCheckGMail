@@ -134,12 +134,12 @@ Gehostete Domainadressen  müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werd
     <message>
         <location filename="../configurationoptionsdialog.ui" line="187"/>
         <source>leave blank to reset to default</source>
-        <translation type="unfinished"></translation>
+        <translation>Frei lassen, um Standardwert zu setzen</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
         <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name der Brieftasche</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="245"/>
