@@ -119,14 +119,12 @@ void qCheckGMail::run()
 
 	m_checkingMail = false ;
 
-	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
-
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 
 	m_manager = new QNetworkAccessManager( this ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
 
-	m_timer->stop() ;
+	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
 	m_timer->start( m_interval ) ;
 	
 	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;

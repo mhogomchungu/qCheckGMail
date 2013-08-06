@@ -165,7 +165,7 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 		int j = accountNames.size() ;
 
 		QVector<accounts> acc ;
-		
+
 		for( int i = 0 ; i < j ; i++ ){
 			const QString& accName = accountNames.at( i ) ;
 			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
@@ -189,24 +189,22 @@ kwalletmanager::~kwalletmanager()
 {
 	emit kwalletmanagerClosed() ;
 
-	if( m_ui ){
-		delete m_ui ;
+	if( m_walletName == m_defaultWalletName ){
+		/*
+		 * This is our personal wallet and hence we close it when done with it
+		 */
+		m_wallet->closeWallet( m_walletName,true ) ;
+	}else{
+		/*
+		 * we dont force close the wallet since we could be using a shared wallet and others may be
+		 * using it or expect it to be open
+		 */
+		m_wallet->closeWallet( m_walletName,false ) ;
 	}
-	if( m_wallet ){
-		if( m_walletName == m_defaultWalletName ){
-			/*
-			 * This is our personal wallet and hence we close it when done with it
-			 */
-			m_wallet->closeWallet( m_walletName,true ) ;
-		}else{
-			/*
-			 * we dont force close the wallet since we could be using a shared wallet and others may be
-			 * using it or expect it to be open
-			 */
-			m_wallet->closeWallet( m_walletName,false ) ;
-		}
-		m_wallet->deleteLater() ;
-	}
+
+	m_wallet->deleteLater() ;
+
+	delete m_ui ;
 }
 
 void kwalletmanager::closeEvent( QCloseEvent * e )
@@ -345,7 +343,7 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,
 	item->setTextAlignment( Qt::AlignCenter ) ;
 	m_table->setItem( row,2,item ) ;
 
-	m_table->setCurrentCell( m_table->rowCount() - 1,2 ) ;
+	this->selectRow( row,true ) ;
 }
 
 void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
