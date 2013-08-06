@@ -31,9 +31,9 @@ int startApp( void )
 {
 	if( KUniqueApplication::start() ){
 		KUniqueApplication a ;
-		qCheckGMail w;
-		w.start();
-		return a.exec();
+		qCheckGMail w ;
+		w.start() ;
+		return a.exec() ;
 	}else{
 		return qCheckGMail::instanceAlreadyRunning() ;
 	}
@@ -52,14 +52,14 @@ int main(int argc, char *argv[])
 				"(c)2013,ink Francis\nemail:mhogomchungu@gmail.com",
 				"https://github.com/mhogomchungu/qCheckGMail/issues" );
 
-	KCmdLineArgs::init( argc,argv,&aboutData );
+	KCmdLineArgs::init( argc,argv,&aboutData ) ;
 
-	KCmdLineOptions options;
+	KCmdLineOptions options ;
 	options.add( "a",ki18n( "auto start application" ) ) ;
 	options.add( "d",ki18n( "show debug output on the terminal" ) ) ;
 
 	KCmdLineArgs::addCmdLineOptions( options ) ;
-	KUniqueApplication::addCmdLineOptions();
+	KUniqueApplication::addCmdLineOptions() ;
 
 	if( KCmdLineArgs::allArguments().contains( "-a" ) ){
 		if( configurationoptionsdialog::autoStartEnabled() ){

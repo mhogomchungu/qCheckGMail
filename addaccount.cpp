@@ -23,9 +23,9 @@
 
 addaccount::addaccount( QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
 {
-	m_ui->setupUi( this );
+	m_ui->setupUi( this ) ;
 	this->setFixedSize( this->size() ) ;
-	this->setWindowFlags( Qt::Window | Qt::Dialog );
+	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
 	m_row = -1 ;
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
@@ -37,7 +37,7 @@ addaccount::addaccount( int row,QString accName,QString accPassword,QString accD
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() ) ;
-	this->setWindowFlags( Qt::Window | Qt::Dialog );
+	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
 	m_row = row ;
 
@@ -64,8 +64,8 @@ void addaccount::ShowUI()
 
 void addaccount::HideUI()
 {
-	this->hide();
-	this->deleteLater();
+	this->hide() ;
+	this->deleteLater() ;
 }
 
 addaccount::~addaccount()
@@ -75,8 +75,8 @@ addaccount::~addaccount()
 
 void addaccount::closeEvent( QCloseEvent * e )
 {
-	e->ignore();
-	this->HideUI();
+	e->ignore() ;
+	this->HideUI() ;
 }
 
 void addaccount::add()
@@ -96,11 +96,11 @@ void addaccount::add()
 		}else{
 			emit editAccount( m_row,accName,password,displayN,labels ) ;
 		}
-		this->HideUI();
+		this->HideUI() ;
 	}
 }
 
 void addaccount::cancel()
 {
-	this->HideUI();
+	this->HideUI() ;
 }

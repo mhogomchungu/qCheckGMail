@@ -119,12 +119,11 @@ void qCheckGMail::run()
 
 	m_checkingMail = false ;
 
-	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
-
 	m_manager = new QNetworkAccessManager( this ) ;
 	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
+	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 	m_timer->start( m_interval ) ;
 	
 	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
@@ -224,11 +223,15 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	int mailCount_1 = mailCount.toInt() ;
 
 	if( mailCount_1 == 0 ){
-		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\">%1</td><td>0</td></tr>" ).arg( this->displayName() ) ;
+		QString z = this->displayName() ;
+		QString x = QString( "<tr valign=\"middle\"><td>%1</td><td>0</td></tr>" ).arg( z ) ;
+		m_accountsStatus += x ;
 	}else{
 		m_mailCount += mailCount_1 ;
 		QString z = this->displayName() ;
-		m_accountsStatus += QString( "<tr valign=\"middle\"><td width=\"80%\"><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( mailCount ) ;
+		QString y = mailCount ;
+		QString x = QString( "<tr valign=\"middle\"><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( y ) ;
+		m_accountsStatus += x ;
 	}
 
 	/*
@@ -424,9 +427,9 @@ void qCheckGMail::configurationWindowClosed( int r )
 	}
 }
 
-void qCheckGMail::reportOnAllAccounts( bool b )
+void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )
 {
-	m_reportOnAllAccounts = b ;
+	m_reportOnAllAccounts = reportOnAllAccounts ;
 }
 
 void qCheckGMail::kwalletmanagerClosed( void )
@@ -522,9 +525,6 @@ void qCheckGMail::objectGone( QObject * obj )
 
 void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 {
-	/*
-	 * get accounts information from kwallet
-	 */
 	m_accounts = acc ;
 
 	m_numberOfAccounts = m_accounts.size() ;
@@ -548,7 +548,7 @@ void qCheckGMail::getAccountsInfo()
 
 void qCheckGMail::noAccountConfigured()
 {
-	QString x( "qCheckGMailError" );
+	QString x( "qCheckGMailError" ) ;
 	this->changeIcon( x ) ;
 	this->showToolTip( x,tr( "account related error was detected" ),tr( "no account appear to be configured in the wallet" ) ) ;
 }
@@ -642,11 +642,6 @@ void qCheckGMail::startTimer()
 void qCheckGMail::stopTimer()
 {
 	m_timer->stop() ;
-}
-
-void qCheckGMail::setTimerEvents()
-{
-	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 }
 
 int qCheckGMail::instanceAlreadyRunning()

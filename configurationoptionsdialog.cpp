@@ -26,10 +26,10 @@
 configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
 {
-	m_ui->setupUi( this );
+	m_ui->setupUi( this ) ;
 
 	this->setFixedSize( this->size() ) ;
-	this->setWindowFlags( Qt::Window | Qt::Dialog );
+	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 }
@@ -243,19 +243,19 @@ void configurationoptionsdialog::HideUI()
 
 configurationoptionsdialog::~configurationoptionsdialog()
 {
-	delete m_ui;
+	delete m_ui ;
 }
 
 void configurationoptionsdialog::closeEvent( QCloseEvent * e )
 {
-	e->ignore();
-	this->HideUI();
+	e->ignore() ;
+	this->HideUI() ;
 }
 
 
 void configurationoptionsdialog::pushButtonClose()
 {
-	this->HideUI();
+	this->HideUI() ;
 }
 
 void configurationoptionsdialog::setSupportedLanguages()

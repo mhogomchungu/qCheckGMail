@@ -37,7 +37,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 	m_labelUrls.append( baseLabel ) ;
 
 	if( m_labels.endsWith( "," ) ){
-		m_labels.truncate( m_labels.size() - 1 );
+		m_labels.truncate( m_labels.size() - 1 ) ;
 	}
 
 	if( m_labels.isEmpty() ){

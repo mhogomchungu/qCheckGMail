@@ -47,9 +47,9 @@ kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),
 void kwalletmanager::buildGUI()
 {
 	m_ui = new Ui::kwalletmanager ;
-	m_ui->setupUi( this );
-	this->setFixedSize( this->size() );
-	this->setWindowFlags( Qt::Window | Qt::Dialog );
+	m_ui->setupUi( this ) ;
+	this->setFixedSize( this->size() ) ;
+	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
 	connect( m_ui->pushButtonAccountAdd,SIGNAL( clicked() ),this,SLOT( pushButtonAdd() ) ) ;
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
@@ -80,7 +80,7 @@ void kwalletmanager::walletOpened( bool walletOpened )
 {
 	if( walletOpened ){
 
-		this->buildGUI();
+		this->buildGUI() ;
 
 		QString passWord ;
 
