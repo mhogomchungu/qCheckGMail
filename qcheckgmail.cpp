@@ -73,7 +73,7 @@ void qCheckGMail::run()
 	m_enableDebug = KCmdLineArgs::allArguments().contains( "-d" ) ;
 
 	this->setLocalLanguage();
-	
+
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
@@ -125,11 +125,11 @@ void qCheckGMail::run()
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 	m_timer->start( m_interval ) ;
-	
+
 	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
-	
+
 	this->getAccountsInfo() ;
-	
+
 	this->initLogFile() ;
 }
 
@@ -138,7 +138,7 @@ void qCheckGMail::noInternet( void )
 	QString header = tr( "network problem detected" ) ;
 	QString msg    = tr( "could not connect to the internet" ) ;
 	QString icon   = QString( "qCheckGMailError" ) ;
-	
+
 	this->showToolTip( icon,header,msg ) ;
 	this->changeIcon( icon );
 	this->doneCheckingMail() ;
@@ -223,15 +223,12 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	int mailCount_1 = mailCount.toInt() ;
 
 	if( mailCount_1 == 0 ){
-		QString z = this->displayName() ;
-		QString x = QString( "<tr valign=\"middle\"><td>%1</td><td>0</td></tr>" ).arg( z ) ;
-		m_accountsStatus += x ;
+		QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>0</td></tr>" ) ;
+		m_accountsStatus += r.arg( this->displayName() ) ;
 	}else{
 		m_mailCount += mailCount_1 ;
-		QString z = this->displayName() ;
-		QString y = mailCount ;
-		QString x = QString( "<tr valign=\"middle\"><td><b>%1</b></td><td><b>%2</b></td></tr>" ).arg( z ).arg( y ) ;
-		m_accountsStatus += x ;
+		QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
+		m_accountsStatus += r.arg( this->displayName() ).arg( mailCount ) ;
 	}
 
 	/*
@@ -443,7 +440,7 @@ void qCheckGMail::stuck()
 {
 	/*
 	 * We will get here if an attempt to check for email update is made while another attempt is already in progress.
-	 * Mail checking usually takes a few seconds and hence the most likely reason to get here is if the network is down 
+	 * Mail checking usually takes a few seconds and hence the most likely reason to get here is if the network is down
 	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
 	 */
 	//QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
@@ -451,7 +448,7 @@ void qCheckGMail::stuck()
 	QString msg_1 = tr( "email checking is taking longer than expected." ) ;
 	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
 	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
-	
+
 	QString icon = QString( "qCheckGMailError" ) ;
 	this->changeIcon( icon );
 	this->showToolTip( icon,x,z ) ;
@@ -466,7 +463,7 @@ void qCheckGMail::checkMail()
 	if( m_numberOfAccounts > 0 ){
 
 		bool cancheckMail = false ;
-		
+
 		m_mutex->lock() ;
 
 		if( m_checkingMail ){
