@@ -309,18 +309,18 @@ ERROR: minimum time interval is 5 minutes
         <location filename="../qcheckgmail.cpp" line="138"/>
         <location filename="../qcheckgmail.cpp" line="450"/>
         <source>network problem detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Netzwerkprobleme entdeckt</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="139"/>
         <source>could not connect to the internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Es konnte keine Verbindung zum Internet hergestellt werden</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="204"/>
         <location filename="../qcheckgmail.cpp" line="553"/>
         <source>account related error was detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein Kontobezogener Fehler ist aufgetreten</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="270"/>
@@ -335,12 +335,12 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../qcheckgmail.cpp" line="451"/>
         <source>email checking is taking longer than expected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Überprüfung auf neue E-Mails dauert länger als erwartet.</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="452"/>
         <source>Recommending restarting qCheckGMail if the problem persists</source>
-        <translation type="unfinished"></translation>
+        <translation>Es wird empfohlen qCheckGMail neu zu starten, wenn die Probleme weiterhin bestehen</translation>
     </message>
     <message>
         <location filename="../qcheckgmail.cpp" line="494"/>
