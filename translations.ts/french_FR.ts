@@ -133,17 +133,27 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
         <translation>langue de l&apos;application</translation>
     </message>
     <message>
+        <location filename="../configurationoptionsdialog.ui" line="187"/>
+        <source>leave blank to reset to default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
+        <source>wallet&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../configurationoptionsdialog.ui" line="245"/>
         <source>report on all accounts</source>
         <translation>rapport sur tous les comptes</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="221"/>
+        <location filename="../configurationoptionsdialog.ui" line="266"/>
         <source>close</source>
         <translation>fermer</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="222"/>
+        <location filename="../configurationoptionsdialog.cpp" line="237"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -156,7 +166,7 @@ ERREUR : des caractères non permis ont été détectés dans le champ du délai
 </translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="229"/>
+        <location filename="../configurationoptionsdialog.cpp" line="244"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes

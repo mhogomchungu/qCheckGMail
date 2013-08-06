@@ -55,6 +55,20 @@ QString configurationoptionsdialog::walletName()
 	}
 }
 
+void configurationoptionsdialog::saveWalletName( QString walletName )
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "walletName" ) ;
+
+	if( walletName.isEmpty() ){
+		settings.setValue( opt,QString( "qCheckGMail" ) ) ;
+	}else{
+		settings.setValue( opt,walletName ) ;
+	}
+}
+
 QString configurationoptionsdialog::passwordFolderName()
 {
 	return QString( "qCheckGMail" ) ;
@@ -125,7 +139,7 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 	}
 }
 
-void configurationoptionsdialog::reportOnAllAccounts_1( bool b )
+void configurationoptionsdialog::saveReportOnAllAccounts( bool b )
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
@@ -203,6 +217,7 @@ void configurationoptionsdialog::ShowUI()
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
 	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
+	m_ui->lineEditWalletName->setText( configurationoptionsdialog::walletName() ) ;
 	this->setSupportedLanguages();
 	this->show();
 }
@@ -233,9 +248,11 @@ void configurationoptionsdialog::HideUI()
 
 	this->saveLocalLanguage() ;
 
-	this->reportOnAllAccounts_1( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+	this->saveReportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
 
 	this->saveTimeToConfigFile() ;
+
+	this->saveWalletName( m_ui->lineEditWalletName->text() ) ;
 
 	emit setTimer( z * 60 * 1000 ) ;
 	this->deleteLater() ;

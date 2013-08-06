@@ -132,17 +132,27 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
         <translation>idioma de localización</translation>
     </message>
     <message>
+        <location filename="../configurationoptionsdialog.ui" line="187"/>
+        <source>leave blank to reset to default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
+        <source>wallet&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../configurationoptionsdialog.ui" line="245"/>
         <source>report on all accounts</source>
         <translation>informar de todas las cuentas</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="221"/>
+        <location filename="../configurationoptionsdialog.ui" line="266"/>
         <source>close</source>
         <translation>cerrar</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="222"/>
+        <location filename="../configurationoptionsdialog.cpp" line="237"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -155,7 +165,7 @@ ERROR: caracteres no válidos detectados en el campo de intervalo de actualizaci
 </translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="229"/>
+        <location filename="../configurationoptionsdialog.cpp" line="244"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes

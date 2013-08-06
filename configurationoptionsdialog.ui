@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>549</width>
-    <height>294</height>
+    <height>315</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>20</x>
      <y>10</y>
      <width>511</width>
-     <height>251</height>
+     <height>271</height>
     </rect>
    </property>
    <property name="title">
@@ -34,7 +34,7 @@
       <x>20</x>
       <y>10</y>
       <width>471</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -74,9 +74,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>70</y>
+      <y>110</y>
       <width>471</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -119,9 +119,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>130</y>
+      <y>160</y>
       <width>471</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -162,13 +162,58 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>471</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLineEdit" name="lineEditWalletName">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>10</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>leave blank to reset to default</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>271</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>wallet's name</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>180</y>
+      <y>210</y>
       <width>471</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -178,9 +223,9 @@
      <property name="geometry">
       <rect>
        <x>290</x>
-       <y>10</y>
+       <y>0</y>
        <width>171</width>
-       <height>31</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -212,7 +257,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>260</y>
+     <y>280</y>
      <width>91</width>
      <height>31</height>
     </rect>

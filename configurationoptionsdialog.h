@@ -62,7 +62,8 @@ signals:
 private slots:
 	void pushButtonClose( void ) ;
 private:
-	void reportOnAllAccounts_1( bool ) ;
+	void saveWalletName( QString ) ;
+	void saveReportOnAllAccounts( bool ) ;
 	void saveTimeToConfigFile( void ) ;
 	void setSupportedLanguages( void ) ;
 	void saveLocalLanguage( void ) ;

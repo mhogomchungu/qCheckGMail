@@ -132,17 +132,27 @@ Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </t
         <translation>Taal</translation>
     </message>
     <message>
+        <location filename="../configurationoptionsdialog.ui" line="187"/>
+        <source>leave blank to reset to default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
+        <source>wallet&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../configurationoptionsdialog.ui" line="245"/>
         <source>report on all accounts</source>
         <translation>Rapporteren voor alle accounts</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="221"/>
+        <location filename="../configurationoptionsdialog.ui" line="266"/>
         <source>close</source>
         <translation>Sluiten</translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="222"/>
+        <location filename="../configurationoptionsdialog.cpp" line="237"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -155,7 +165,7 @@ FOUT: ongeldige karakters in veld van interval gedetecteerd
 </translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="229"/>
+        <location filename="../configurationoptionsdialog.cpp" line="244"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes
