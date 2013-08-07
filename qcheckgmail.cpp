@@ -129,8 +129,6 @@ void qCheckGMail::run()
 	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
 
 	this->getAccountsInfo() ;
-
-	this->initLogFile() ;
 }
 
 void qCheckGMail::noInternet( void )
@@ -392,8 +390,6 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 		bool checking = m_checkingMail ;
 		m_mutex->unlock();
 		if( checking ){
-			QString log = QString( "WARNING,manual mail check from auto pause attempted when mail checking is already in progress" ) ;
-			this->writeToLogFile( log ) ;
 			this->stuck();
 		}else{
 			this->checkMail() ;
@@ -467,8 +463,6 @@ void qCheckGMail::checkMail()
 		m_mutex->lock() ;
 
 		if( m_checkingMail ){
-			QString log = QString( "WARNING!!,mail checking attempted while mail checking is already in progress" ) ;
-			this->writeToLogFile( log ) ;
 			this->stuck();
 		}else{
 			cancheckMail   = true ;
@@ -489,7 +483,6 @@ void qCheckGMail::checkMail()
 		}
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
-		this->writeToLogFile( QString( "dont have credentials,(re)trying to open wallet" ) ) ;
 		this->getAccountsInfo() ;
 	}
 }
@@ -697,24 +690,6 @@ int qCheckGMail::autoStartDisabled()
 	}
 
 	return 1 ;
-}
-
-void qCheckGMail::initLogFile()
-{
-	QString logFile = configurationoptionsdialog::logFile() ;
-	QString logFile_old = logFile + QString( ".old" ) ;
-	QFile f( logFile_old ) ;
-	f.remove() ;
-	QFile::rename( logFile,logFile_old ) ;
-}
-
-void qCheckGMail::writeToLogFile( QString log )
-{
-	qDebug() << log ;
-	QString logFile = configurationoptionsdialog::logFile() ;
-	QFile f( logFile ) ;
-	f.open( QIODevice::WriteOnly | QIODevice::Append ) ;
-	f.write( log.toAscii() + "\n" ) ;
 }
 
 bool qCheckGMail::autoStartEnabled()

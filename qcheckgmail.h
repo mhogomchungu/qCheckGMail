@@ -80,8 +80,6 @@ private:
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( QString,QString,QString ) ;
 	void showPausedIcon( bool ) ;
-	void initLogFile( void ) ;
-	void writeToLogFile( QString ) ;
 	void noInternet( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void newEmailNotify( void ) ;
