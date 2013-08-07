@@ -134,12 +134,12 @@ Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </t
     <message>
         <location filename="../configurationoptionsdialog.ui" line="187"/>
         <source>leave blank to reset to default</source>
-        <translation type="unfinished"></translation>
+        <translation>Leeg laten om naar standaard te resetten</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
         <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Naam van portefeuille</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="245"/>

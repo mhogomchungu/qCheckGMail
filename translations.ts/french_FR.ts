@@ -135,12 +135,12 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     <message>
         <location filename="../configurationoptionsdialog.ui" line="187"/>
         <source>leave blank to reset to default</source>
-        <translation type="unfinished"></translation>
+        <translation>laisser vide pour ré-initialiser aux valeurs par défaut</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="200"/>
         <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>nom du portefeuille</translation>
     </message>
     <message>
         <location filename="../configurationoptionsdialog.ui" line="245"/>
