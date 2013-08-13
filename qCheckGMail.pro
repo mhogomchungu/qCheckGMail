@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     storage_backends/password_dialog.cpp \
     storage_backends/lxqt_wallet_interface.cpp \
     storage_backends/lxqt_kwallet.cpp \
-    storage_backends/lxqt_internal_wallet.cpp
+    storage_backends/lxqt_internal_wallet.cpp \
+    storage_backends/open_wallet_thread.cpp
 
 HEADERS += \
     qcheckgmail.h \
@@ -36,7 +37,8 @@ HEADERS += \
     storage_backends/lxqtwallet.h \
     storage_backends/lxqt_wallet_interface.h \
     storage_backends/lxqt_kwallet.h \
-    storage_backends/lxqt_internal_wallet.h
+    storage_backends/lxqt_internal_wallet.h \
+    storage_backends/open_wallet_thread.h
 
 FORMS += \
     walletmanager.ui \

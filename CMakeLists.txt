@@ -95,13 +95,13 @@ endif()
 
 QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h 
 storage_backends/lxqt_internal_wallet.h ${KWALLET_1} storage_backends/password_dialog.h
-storage_backends/lxqt_wallet_interface.h
+storage_backends/lxqt_wallet_interface.h storage_backends/open_wallet_thread.h
 )
 
 QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui storage_backends/password_dialog.ui )
 
 add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp storage_backends/lxqt_internal_wallet.cpp 
-storage_backends/lxqt_wallet_interface.cpp ${KWALLET_2}
+storage_backends/lxqt_wallet_interface.cpp storage_backends/open_wallet_thread.cpp  ${KWALLET_2}
 storage_backends/password_dialog.cpp storage_backends/lxqt_wallet_interface.cpp
 walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
 
