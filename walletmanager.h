@@ -34,53 +34,56 @@
 #include <QCursor>
 
 #include "accounts.h"
-#include "kwallet.h"
+#include "storage_backends/lxqt_wallet_interface.h"
 #include "addaccount.h"
 #include "configurationoptionsdialog.h"
 
 namespace Ui {
-class kwalletmanager;
+class walletmanager;
 }
 
-class kwalletmanager : public QDialog
+class walletmanager : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit kwalletmanager( QWidget * parent = 0 ) ;
+	explicit walletmanager( QWidget * parent = 0 ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;
-	~kwalletmanager();
+	~walletmanager();
 signals:
-	void kwalletmanagerClosed( void ) ;
+	void walletmanagerClosed( void ) ;
 	void getAccountsInfo( QVector<accounts> ) ;
 private slots:
+	void walletIsOpen( bool ) ;
 	void deleteRow() ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void walletOpened( bool ) ;
-	void walletOpened_1( bool );
 	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
 private:
+	void setFolderPath( void ) ;
+	void walletIsOpen_1( bool ) ;
+	void walletIsOpen_2( bool ) ;
 	void buildGUI( void ) ;
 	void deleteRow( int ) ;
 	void selectRow( int row,bool highlight ) ;
 	QString getPassWordFromAccount( QString ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
-	Ui::kwalletmanager * m_ui ;
+	Ui::walletmanager * m_ui ;
 
 	QVector<accounts> m_accounts ;
-	KWallet::Wallet * m_wallet ;
+	lxqt::Wallet::Wallet * m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	QString m_walletName ;
 	QString m_passwordFolder ;
 	QString m_defaultWalletName ;
+	bool m_getAccInfo ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

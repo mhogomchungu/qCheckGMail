@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>kwalletmanager</class>
- <widget class="QDialog" name="kwalletmanager">
+ <class>walletmanager</class>
+ <widget class="QDialog" name="walletmanager">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>

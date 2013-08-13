@@ -399,8 +399,8 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 
 void qCheckGMail::configureAccounts()
 {
-	kwalletmanager * wallet = new kwalletmanager() ;
-	connect( wallet,SIGNAL( kwalletmanagerClosed() ),this,SLOT( kwalletmanagerClosed() ) ) ;
+	walletmanager * wallet = new walletmanager() ;
+	connect( wallet,SIGNAL( walletmanagerClosed() ),this,SLOT( walletmanagerClosed() ) ) ;
 	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
 	wallet->ShowUI() ;
 }
@@ -425,7 +425,7 @@ void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )
 	m_reportOnAllAccounts = reportOnAllAccounts ;
 }
 
-void qCheckGMail::kwalletmanagerClosed( void )
+void qCheckGMail::walletmanagerClosed( void )
 {
 	m_mutex->lock();
 	m_redoMailCheck = true ;
@@ -531,7 +531,7 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 
 void qCheckGMail::getAccountsInfo()
 {
-	kwalletmanager * wallet = new kwalletmanager() ;
+	walletmanager * wallet = new walletmanager() ;
 	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
 	wallet->getAccounts() ;
 }

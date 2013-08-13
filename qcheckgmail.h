@@ -44,7 +44,7 @@
 #include <kmenu.h>
 
 #include "accounts.h"
-#include "kwalletmanager.h"
+#include "walletmanager.h"
 #include "configurationoptionsdialog.h"
 
 class qCheckGMail : public KStatusNotifierItem
@@ -67,7 +67,7 @@ private slots:
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
-	void kwalletmanagerClosed( void ) ;
+	void walletmanagerClosed( void ) ;
 	void setTimer( int ) ;
 	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;

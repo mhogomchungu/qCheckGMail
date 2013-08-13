@@ -18,35 +18,21 @@
  */
 
 
-#include "kwalletmanager.h"
-#include "ui_kwalletmanager.h"
+#include "walletmanager.h"
+#include "ui_walletmanager.h"
 
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
-kwalletmanager::kwalletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
+walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
 	m_walletName        = configurationoptionsdialog::walletName() ;
 	m_defaultWalletName = configurationoptionsdialog::defaultWalletName() ;
-
-	if( m_walletName == m_defaultWalletName ){
-		/*
-		 * We are using qCheckGMail wallet and hence we can store credentials in the default folder
-		 * since nobody else will be using it as nobody else should be using our wallet
-		 */
-		m_passwordFolder = KWallet::Wallet::PasswordFolder() ;
-	}else{
-		/*
-		 * We are not using qCheckGMail's wallet and hence could be using a shared one.
-		 * Store credentials in a private folder
-		 */
-		m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
-	}
 }
 
-void kwalletmanager::buildGUI()
+void walletmanager::buildGUI()
 {
-	m_ui = new Ui::kwalletmanager ;
+	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
@@ -70,17 +56,51 @@ void kwalletmanager::buildGUI()
 	m_ui->groupBox->setTitle( QString( "" ) ) ;
 }
 
-void kwalletmanager::ShowUI()
+void walletmanager::ShowUI()
 {
-	m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
-	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
+	m_getAccInfo = false ;
+	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	}else{
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+	}
+	m_wallet->setAParent( this ) ;
+	m_wallet->open( m_walletName ) ;
 }
 
-void kwalletmanager::walletOpened( bool walletOpened )
+void walletmanager::walletIsOpen( bool walletOpened )
+{
+	if( m_getAccInfo ){
+		this->walletIsOpen_1( walletOpened ) ;
+	}else{
+		this->walletIsOpen_2( walletOpened ) ;
+	}
+}
+
+void walletmanager::setFolderPath()
+{
+	if( m_walletName == m_defaultWalletName ){
+		/*
+		 * We are using qCheckGMail wallet and hence we can store credentials in the default folder
+		 * since nobody else will be using it as nobody else should be using our wallet
+		 */
+		m_passwordFolder = m_wallet->storagePath() ;
+	}else{
+		/*
+		 * We are not using qCheckGMail's wallet and hence could be using a shared one.
+		 * Store credentials in a private folder
+		 */
+		m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
+	}
+}
+
+void walletmanager::walletIsOpen_2( bool walletOpened )
 {
 	if( walletOpened ){
 
 		this->buildGUI() ;
+
+		this->setFolderPath() ;
 
 		QString passWord ;
 
@@ -94,9 +114,7 @@ void kwalletmanager::walletOpened( bool walletOpened )
 
 		int row = 0 ;
 
-		m_wallet->setFolder( m_passwordFolder ) ;
-
-		QStringList acc = m_wallet->entryList() ;
+		QStringList acc = m_wallet->readAllKeys() ;
 
 		int j = acc.size() ;
 
@@ -114,21 +132,21 @@ void kwalletmanager::walletOpened( bool walletOpened )
 				item->setTextAlignment( Qt::AlignCenter ) ;
 				m_table->setItem( row,0,item ) ;
 
-				m_wallet->readPassword( accName + displayName_id,displayName ) ;
+				displayName = m_wallet->readValue( accName + displayName_id ) ;
 
 				item = new QTableWidgetItem() ;
 				item->setText( displayName ) ;
 				item->setTextAlignment( Qt::AlignCenter ) ;
 				m_table->setItem( row,1,item ) ;
 
-				m_wallet->readPassword( accName + labels_id,labels ) ;
+				labels = m_wallet->readValue( accName + labels_id ) ;
 
 				item = new QTableWidgetItem() ;
 				item->setText( labels ) ;
 				item->setTextAlignment( Qt::AlignCenter ) ;
 				m_table->setItem( row,2,item ) ;
 
-				m_wallet->readPassword( accName,passWord ) ;
+				passWord = m_wallet->readValue( accName ) ;
 
 				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
@@ -142,15 +160,23 @@ void kwalletmanager::walletOpened( bool walletOpened )
 	}
 }
 
-void kwalletmanager::getAccounts( void )
+void walletmanager::getAccounts( void )
 {
-	m_wallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
-	connect( m_wallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened_1( bool ) ) ) ;
+	m_getAccInfo = true ;
+	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	}else{
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+	}
+	m_wallet->setAParent( this ) ;
+	m_wallet->open( m_walletName ) ;
 }
 
-void kwalletmanager::walletOpened_1( bool walletOpened )
+void walletmanager::walletIsOpen_1( bool walletOpened )
 {
 	if( walletOpened ){
+
+		this->setFolderPath() ;
 
 		QString passWord ;
 		QString labels ;
@@ -158,9 +184,7 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 		QString labels_id      = QString( LABEL_IDENTIFIER ) ;
 		QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
-		m_wallet->setFolder( m_passwordFolder ) ;
-
-		QStringList accountNames = m_wallet->entryList() ;
+		QStringList accountNames = m_wallet->readAllKeys() ;
 
 		int j = accountNames.size() ;
 
@@ -171,9 +195,9 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
 				;
 			}else{
-				m_wallet->readPassword( accName,passWord ) ;
-				m_wallet->readPassword( accName + labels_id,labels ) ;
-				m_wallet->readPassword( accName + displayName_id,displayName ) ;
+				passWord    = m_wallet->readValue( accName ) ;
+				labels      = m_wallet->readValue( accName + labels_id ) ;
+				displayName = m_wallet->readValue( accName + displayName_id ) ;
 
 				acc.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
@@ -185,21 +209,21 @@ void kwalletmanager::walletOpened_1( bool walletOpened )
 	this->deleteLater() ;
 }
 
-kwalletmanager::~kwalletmanager()
+walletmanager::~walletmanager()
 {
-	emit kwalletmanagerClosed() ;
+	emit walletmanagerClosed() ;
 
 	if( m_walletName == m_defaultWalletName ){
 		/*
 		 * This is our personal wallet and hence we close it when done with it
 		 */
-		m_wallet->closeWallet( m_walletName,true ) ;
+		m_wallet->closeWallet( true ) ;
 	}else{
 		/*
 		 * we dont force close the wallet since we could be using a shared wallet and others may be
 		 * using it or expect it to be open
 		 */
-		m_wallet->closeWallet( m_walletName,false ) ;
+		m_wallet->closeWallet( false ) ;
 	}
 
 	m_wallet->deleteLater() ;
@@ -207,40 +231,46 @@ kwalletmanager::~kwalletmanager()
 	delete m_ui ;
 }
 
-void kwalletmanager::closeEvent( QCloseEvent * e )
+void walletmanager::closeEvent( QCloseEvent * e )
 {
 	e->ignore();
 	this->HideUI();
 }
 
-void kwalletmanager::HideUI()
+void walletmanager::HideUI()
 {
 	this->hide();
 
-	m_wallet->removeFolder( m_passwordFolder ) ;
-	m_wallet->createFolder( m_passwordFolder ) ;
-	m_wallet->setFolder( m_passwordFolder ) ;
+	int i ;
+	int j ;
+
+	QStringList acc = m_wallet->readAllKeys() ;
+
+	j = acc.size() ;
+	for( i = 0 ; i < j ; i++ ){
+		m_wallet->deleteKey( acc.at( i ) ) ;
+	}
 
 	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
 	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
-	int j = m_accounts.size() ;
+	j = m_accounts.size() ;
 
-	for( int i = 0 ; i < j ; i++ ){
+	for( i = 0 ; i < j ; i++ ){
 
 		const accounts& acc    = m_accounts.at( i ) ;
 		const QString& accName = acc.accountName() ;
 
-		m_wallet->writePassword( accName,acc.passWord() ) ;
-		m_wallet->writePassword( accName + display_id,acc.displayName() ) ;
-		m_wallet->writePassword( accName + labels_id,acc.labels() ) ;
+		m_wallet->addKey( accName,acc.passWord().toAscii() ) ;
+		m_wallet->addKey( accName + display_id,acc.displayName().toAscii() ) ;
+		m_wallet->addKey( accName + labels_id,acc.labels().toAscii() ) ;
 	}
 
 	emit getAccountsInfo( m_accounts ) ;
 	this->deleteLater() ;
 }
 
-void kwalletmanager::pushButtonAdd()
+void walletmanager::pushButtonAdd()
 {
 	addaccount * ac = new addaccount( this ) ;
 	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),
@@ -248,12 +278,12 @@ void kwalletmanager::pushButtonAdd()
 	ac->ShowUI() ;
 }
 
-void kwalletmanager::pushButtonClose()
+void walletmanager::pushButtonClose()
 {
 	this->HideUI();
 }
 
-void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
+void walletmanager::tableItemClicked( QTableWidgetItem * item )
 {
 	m_deleteRow = item->row() ;
 
@@ -274,7 +304,7 @@ void kwalletmanager::tableItemClicked( QTableWidgetItem * item )
 	m.exec( QCursor::pos() ) ;
 }
 
-void kwalletmanager::deleteRow()
+void walletmanager::deleteRow()
 {
 	QMessageBox msg( this ) ;
 	QTableWidgetItem * item = m_table->currentItem() ;
@@ -293,7 +323,7 @@ void kwalletmanager::deleteRow()
 	}
 }
 
-void kwalletmanager::deleteRow( int row )
+void walletmanager::deleteRow( int row )
 {
 	if( row < m_accounts.size() ){
 		m_accounts.remove( row ) ;
@@ -303,7 +333,7 @@ void kwalletmanager::deleteRow( int row )
 	}
 }
 
-void kwalletmanager::editEntry()
+void walletmanager::editEntry()
 {
 	int row = m_table->currentRow() ;
 
@@ -318,7 +348,7 @@ void kwalletmanager::editEntry()
 	ac->ShowUI() ;
 }
 
-void kwalletmanager::addAccount( QString accountName,QString accountPassword,
+void walletmanager::addAccount( QString accountName,QString accountPassword,
 				 QString displayName,QString accountLabels )
 {
 	m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels ) ) ;
@@ -346,7 +376,7 @@ void kwalletmanager::addAccount( QString accountName,QString accountPassword,
 	this->selectRow( row,true ) ;
 }
 
-void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
+void walletmanager::editAccount( int row,QString accName,QString accPassword,
 				  QString accDisplayName,QString accLabels )
 {
 	m_accounts.replace( row,accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
@@ -355,7 +385,7 @@ void kwalletmanager::editAccount( int row,QString accName,QString accPassword,
 	m_table->item( row,2 )->setText( accLabels ) ;
 }
 
-void kwalletmanager::selectRow( int row,bool highlight )
+void walletmanager::selectRow( int row,bool highlight )
 {
 	int j = m_table->columnCount() ;
 	for( int i = 0 ; i < j ; i++ ){
@@ -369,7 +399,7 @@ void kwalletmanager::selectRow( int row,bool highlight )
 	}
 }
 
-QString kwalletmanager::getPassWordFromAccount( QString accName )
+QString walletmanager::getPassWordFromAccount( QString accName )
 {
 	QString p ;
 	int j = m_accounts.size() ;
@@ -382,7 +412,7 @@ QString kwalletmanager::getPassWordFromAccount( QString accName )
 	return p ;
 }
 
-void kwalletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
+void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
 {
 	if( current && previous ){
 		if( current->row() == previous->row() ){
