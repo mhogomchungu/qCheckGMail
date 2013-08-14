@@ -79,38 +79,31 @@ void qCheckGMail::run()
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
 
 	QAction * ac = new QAction( m_menu ) ;
-
 	ac->setText( tr( "check mail now" ) ) ;
-
 	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
-
 	m_menu->addAction( ac ) ;
 
 	ac = new QAction( m_menu ) ;
-
 	ac->setText( tr( "pause checking mail" ) ) ;
 	ac->setObjectName( QString( "pauseCheckingMail" ) ) ;
 	ac->setCheckable( true ) ;
 	ac->setChecked( false ) ;
-
 	connect( ac,SIGNAL( toggled( bool ) ),this,SLOT( pauseCheckingMail( bool ) ) ) ;
-
 	m_menu->addAction( ac ) ;
 
 	ac = new QAction( m_menu ) ;
-
 	ac->setText( tr( "configure accounts" ) ) ;
-
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configureAccounts() ) ) ;
-
 	m_menu->addAction( ac ) ;
 
 	ac = new QAction( m_menu ) ;
+	ac->setText( tr( "configure password" ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( configurePassWord() ) ) ;
+	m_menu->addAction( ac ) ;
 
+	ac = new QAction( m_menu ) ;
 	ac->setText( tr( "configure options" ) ) ;
-
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationoptionWindow() ) ) ;
-
 	m_menu->addAction( ac ) ;
 
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
@@ -527,6 +520,12 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 		 */
 		this->noAccountConfigured() ;
 	}
+}
+
+void qCheckGMail::configurePassWord()
+{
+	walletmanager * wallet = new walletmanager() ;
+	wallet->changeWalletPassword() ;
 }
 
 void qCheckGMail::getAccountsInfo()

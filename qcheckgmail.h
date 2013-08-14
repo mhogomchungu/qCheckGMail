@@ -74,6 +74,7 @@ private slots:
 	void reportOnAllAccounts( bool ) ;
 	void objectGone( QObject * ) ;
 	void getAccountsInfo( QVector<accounts> ) ;
+	void configurePassWord( void ) ;
 private:
 	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,QString ) ;

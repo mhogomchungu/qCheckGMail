@@ -30,6 +30,11 @@ walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_
 	m_defaultWalletName = configurationoptionsdialog::defaultWalletName() ;
 }
 
+bool walletmanager::internalStorageInUse()
+{
+	return !lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ;
+}
+
 void walletmanager::buildGUI()
 {
 	m_ui = new Ui::walletmanager ;
@@ -58,7 +63,7 @@ void walletmanager::buildGUI()
 
 void walletmanager::ShowUI()
 {
-	m_getAccInfo = false ;
+	m_action = walletmanager::openWallet ;
 	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
 		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
 	}else{
@@ -68,12 +73,33 @@ void walletmanager::ShowUI()
 	m_wallet->open( m_walletName ) ;
 }
 
+void walletmanager::changeWalletPassword()
+{
+	m_action = walletmanager::changePassWord ;
+	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	}else{
+		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+	}
+	m_wallet->setAParent( this ) ;
+	/*
+	 * below method will call walletKeyChanged(bool) to return its status
+	 */
+	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
+}
+
+void walletmanager::walletKeyChanged( bool keyChanged )
+{
+	Q_UNUSED( keyChanged ) ;
+	this->deleteLater() ;
+}
+
 void walletmanager::walletIsOpen( bool walletOpened )
 {
-	if( m_getAccInfo ){
-		this->walletIsOpen_1( walletOpened ) ;
-	}else{
-		this->walletIsOpen_2( walletOpened ) ;
+	switch( m_action ){
+		case walletmanager::openWallet     : return this->walletIsOpen_2( walletOpened ) ;
+		case walletmanager::getAccountInfo : return this->walletIsOpen_1( walletOpened ) ;
+		case walletmanager::changePassWord : ;
 	}
 }
 
@@ -162,7 +188,7 @@ void walletmanager::walletIsOpen_2( bool walletOpened )
 
 void walletmanager::getAccounts( void )
 {
-	m_getAccInfo = true ;
+	m_action = walletmanager::getAccountInfo ;
 	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
 		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
 	}else{
