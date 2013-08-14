@@ -80,6 +80,7 @@ private slots:
 	void createAWallet( QString ) ;
 	void openWalletThreadResult( bool ) ;
 	void openWalletThreadResult_1( bool ) ;
+	void password( QString,bool ) ;
 private:
 	bool openWallet( void ) ;
 	lxqt_wallet_t m_wallet ;
