@@ -32,7 +32,7 @@
 #define LXQT_INTERNAL_WALLET_H
 
 #include "lxqt_wallet_interface.h"
-#include "lxqtwallet.h"
+#include "../backend/lxqtwallet.h"
 #include "password_dialog.h"
 #include "open_wallet_thread.h"
 #include "changepassworddialog.h"

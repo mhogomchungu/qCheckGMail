@@ -34,7 +34,7 @@
 #include <QCursor>
 
 #include "accounts.h"
-#include "storage_backends/lxqt_wallet_interface.h"
+#include "storage_backends/frontend/lxqt_wallet_interface.h"
 #include "addaccount.h"
 #include "configurationoptionsdialog.h"
 

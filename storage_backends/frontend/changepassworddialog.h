@@ -36,7 +36,7 @@
 #include <QDebug>
 #include <QCloseEvent>
 
-#include "lxqtwallet.h"
+#include "../backend/lxqtwallet.h"
 #include "open_wallet_thread.h"
 
 namespace Ui {
