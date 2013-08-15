@@ -32,7 +32,7 @@ walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_
 
 bool walletmanager::internalStorageInUse()
 {
-	return !lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ;
+	return !lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ;
 }
 
 void walletmanager::buildGUI()
@@ -64,24 +64,24 @@ void walletmanager::buildGUI()
 void walletmanager::ShowUI()
 {
 	m_action = walletmanager::openWallet ;
-	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
 	}else{
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
 	}
-	m_wallet->setAParent( this ) ;
+	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
 }
 
 void walletmanager::changeWalletPassword()
 {
 	m_action = walletmanager::changePassWord ;
-	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
 	}else{
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
 	}
-	m_wallet->setAParent( this ) ;
+	m_wallet->setInterfaceObject( this ) ;
 	/*
 	 * below method will call walletKeyChanged(bool) to return its status
 	 */
@@ -189,12 +189,12 @@ void walletmanager::walletIsOpen_2( bool walletOpened )
 void walletmanager::getAccounts( void )
 {
 	m_action = walletmanager::getAccountInfo ;
-	if( lxqt::Wallet::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
 	}else{
-		m_wallet = lxqt::Wallet::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
 	}
-	m_wallet->setAParent( this ) ;
+	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
 }
 
