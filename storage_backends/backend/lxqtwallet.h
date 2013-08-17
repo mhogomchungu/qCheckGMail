@@ -51,7 +51,13 @@ typedef struct lxqt_wallet_struct * lxqt_wallet_t ;
  * the size of the variable.
  */
 #define LXQT_WALLET_KEY_SIZE 512
-#define LXQT_WALLET_VALUE_SIZE 1036
+#define LXQT_WALLET_VALUE_SIZE 3580
+
+struct lxqt_key_value{
+	char key[ LXQT_WALLET_KEY_SIZE ] ;
+	char value[ LXQT_WALLET_VALUE_SIZE ] ;
+	u_int32_t value_size ;
+};
 
 /*
  * error values
@@ -72,13 +78,6 @@ typedef enum{
 	lxqt_wallet_failed_to_create_key_hash,
 	lxqt_wallet_libgcrypt_version_mismatch
 }lxqt_wallet_error;
-
-
-struct lxqt_key_value{
-	char key[ LXQT_WALLET_KEY_SIZE ] ;
-	char value[ LXQT_WALLET_VALUE_SIZE ] ;
-	u_int32_t value_size ;
-};
 
 /*
  * maximum values for key and key_value are shown and explained above.
