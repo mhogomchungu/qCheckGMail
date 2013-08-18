@@ -154,37 +154,44 @@ QByteArray lxqt::Wallet::internalWallet::readValue( const QString& key )
 
 QVector<lxqt::Wallet::walletKeyValues> lxqt::Wallet::internalWallet::readAllKeyValues( void )
 {
-	const struct lxqt_key_value * r = lxqt_wallet_read_all_key_values( m_wallet ) ;
+	QVector<lxqt::Wallet::walletKeyValues> w ;
 
-	QVector<walletKeyValues> w ;
-
-	if( r == 0 ){
-		return w ;
-	}else{
-		size_t j = lxqt_wallet_wallet_size( m_wallet ) ;
+	int k = lxqt_wallet_wallet_entry_count( m_wallet ) ;
+	lxqt_wallet_key_values_t * values = lxqt_wallet_read_all_key_values( m_wallet ) ;
+	if( values != NULL ){
 		walletKeyValues s ;
-		for( size_t i = 0 ; i < j ; i++ ){
-			s.key = QString( r[ i ].key ) ;
-			s.value = QByteArray( r[ i ].value,r[ i ].value_size - 1 ) ;
+		int i = 0 ;
+		while( i < k ){
+			s.key = QByteArray( values[ i ].key,values[ i ].key_size ) ;
+			s.value = QByteArray( values[ i ].key_value,values[ i ].key_value_size ) ;
+			free( values[ i ].key ) ;
+			free( values[ i ].key_value ) ;
+			i++ ;
 			w.append( s ) ;
 		}
-		return w ;
+		free( values ) ;
 	}
+
+	return w ;
 }
 
 QStringList lxqt::Wallet::internalWallet::readAllKeys()
 {
-	const struct lxqt_key_value * r = lxqt_wallet_read_all_key_values( m_wallet ) ;
+	lxqt_wallet_key_values_t * values = lxqt_wallet_read_all_keys( m_wallet ) ;
 
 	QStringList l ;
-	if( r == 0 ){
+	if( values == NULL ){
 		return l ;
 	}else{
-		size_t j = lxqt_wallet_wallet_size( m_wallet ) ;
+		int k = lxqt_wallet_wallet_entry_count( m_wallet ) ;
 		walletKeyValues s ;
-		for( size_t i = 0 ; i < j ; i++ ){
-			l.append( QString( r[ i ].key ) ) ;
+		int i = 0 ;
+		while( i < k ){
+			l.append( QByteArray( values[ i ].key,values[ i ].key_size ) ) ;
+			free( values[ i ].key ) ;
+			i++ ;
 		}
+		free( values ) ;
 		return l ;
 	}
 }
