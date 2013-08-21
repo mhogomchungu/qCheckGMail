@@ -36,8 +36,12 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 
 void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings )
 {
-	KStandardDirs k ;
-	settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
+	#if USE_KDE_STATUS_NOTIFIER
+		KStandardDirs k ;
+		settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
+	#else
+		settings.setPath( QSettings::IniFormat,QSettings::UserScope,QDir::homePath() + QString( "/.config" ) ) ;
+	#endif
 }
 
 QString configurationoptionsdialog::walletName()
@@ -97,8 +101,12 @@ QString configurationoptionsdialog::defaultWalletName()
 
 QString configurationoptionsdialog::logFile()
 {
-	KStandardDirs k ;
-	return k.localxdgconfdir() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
+	#if USE_KDE_STATUS_NOTIFIER
+		KStandardDirs k ;
+		return k.localxdgconfdir() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
+	#else
+		return QString( "%1/.config/%2/%1.log" ).arg( QDir::homePath() ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
+	#endif
 }
 
 bool configurationoptionsdialog::autoStartEnabled()

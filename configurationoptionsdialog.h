@@ -32,6 +32,7 @@
 #include <kstandarddirs.h>
 
 #include "language_path.h"
+#include "kde_status_notifier.h"
 
 namespace Ui {
 class configurationoptionsdialog;

@@ -19,48 +19,48 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail()
+qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 {
-	m_menu  = new KMenu() ;
 	m_timer = new QTimer( this ) ;
-	KStatusNotifierItem::setCategory( KStatusNotifierItem::ApplicationStatus ) ;
+
+	statusicon::setCategory( statusicon::ApplicationStatus ) ;
+
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
 	this->setTrayIconToVisible( true ) ;
 }
 
 qCheckGMail::~qCheckGMail()
 {
-	m_menu->deleteLater() ;
 	delete m_mutex ;
 }
 
 void qCheckGMail::setTrayIconToVisible( bool showIcon )
 {
 	if( showIcon ){
-		KStatusNotifierItem::setStatus( KStatusNotifierItem::NeedsAttention ) ;
+		statusicon::setStatus( statusicon::NeedsAttention ) ;
 	}else{
-		KStatusNotifierItem::setStatus( KStatusNotifierItem::Passive ) ;
+		statusicon::setStatus( statusicon::Passive ) ;
 	}
 }
 
 void qCheckGMail::showToolTip( QString x,QString y, QString z )
 {
-	KStatusNotifierItem::setToolTip( x,y,z ) ;
+	statusicon::setToolTip( x,y,z ) ;
 }
 
 void qCheckGMail::showPausedIcon( bool paused )
 {
 	if( paused ){
-		KStatusNotifierItem::setOverlayIconByName( QString( "qCheckGMail-GotMail" ) ) ;
+		statusicon::setOverlayIcon( QString( "qCheckGMail-GotMail" ) ) ;
 	}else{
-		KStatusNotifierItem::setOverlayIconByName( QString( "" ) ) ;
+		statusicon::setOverlayIcon( QString( "" ) ) ;
 	}
 }
 
 void qCheckGMail::changeIcon( QString icon )
 {
-	KStatusNotifierItem::setIconByName( icon );
-	KStatusNotifierItem::setAttentionIconByName( icon ) ;
+	statusicon::setIcon( icon );
+	statusicon::setAttentionIcon( icon ) ;
 }
 
 void qCheckGMail::start()
@@ -70,43 +70,36 @@ void qCheckGMail::start()
 
 void qCheckGMail::run()
 {
-	m_enableDebug = KCmdLineArgs::allArguments().contains( "-d" ) ;
+	m_enableDebug = this->enableDebug() ;
 
 	this->setLocalLanguage();
 
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 
-	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( trayIconClicked( bool,QPoint ) ) ) ;
-
-	QAction * ac = new QAction( m_menu ) ;
+	QAction * ac = statusicon::getAction() ;
 	ac->setText( tr( "check mail now" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
-	m_menu->addAction( ac ) ;
 
-	ac = new QAction( m_menu ) ;
+	ac = statusicon::getAction() ;
 	ac->setText( tr( "pause checking mail" ) ) ;
 	ac->setObjectName( QString( "pauseCheckingMail" ) ) ;
 	ac->setCheckable( true ) ;
 	ac->setChecked( false ) ;
 	connect( ac,SIGNAL( toggled( bool ) ),this,SLOT( pauseCheckingMail( bool ) ) ) ;
-	m_menu->addAction( ac ) ;
 
-	ac = new QAction( m_menu ) ;
+	ac = statusicon::getAction() ;
 	ac->setText( tr( "configure accounts" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configureAccounts() ) ) ;
-	m_menu->addAction( ac ) ;
 
-	ac = new QAction( m_menu ) ;
+	ac = statusicon::getAction() ;
 	ac->setText( tr( "configure password" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurePassWord() ) ) ;
-	m_menu->addAction( ac ) ;
 
-	ac = new QAction( m_menu ) ;
+	ac = statusicon::getAction() ;
 	ac->setText( tr( "configure options" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationoptionWindow() ) ) ;
-	m_menu->addAction( ac ) ;
 
-	KStatusNotifierItem::setContextMenu( m_menu ) ;
+	statusicon::setContextMenu() ;
 
 	m_mutex = new QMutex() ;
 
@@ -260,7 +253,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 					QString x = QString::number( m_mailCount ) ;
 					this->showToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
-				this->newEmailNotify();
+				statusicon::newEmailNotify() ;
 			}else{
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
@@ -309,7 +302,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		this->changeIcon( icon ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( icon,this->displayName(),info ) ;
-		this->newEmailNotify();
+		statusicon::newEmailNotify() ;
 		this->doneCheckingMail() ;
 	}else{
 		/*
@@ -361,13 +354,6 @@ void qCheckGMail::doneCheckingMail()
 		 */
 		this->checkMail() ;
 	}
-}
-
-void qCheckGMail::newEmailNotify()
-{
-	QByteArray r( "qCheckGMail" ) ;
-	KNotification::event( QString( "qCheckGMail-NewMail" ),QString( "" ),QPixmap(),0,0,
-	       KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
 }
 
 void qCheckGMail::pauseCheckingMail( bool pauseAction )
@@ -596,24 +582,9 @@ void qCheckGMail::setTimer( int time )
 	this->startTimer() ;
 }
 
-void qCheckGMail::trayIconClicked( bool x,const QPoint & y )
-{
-	Q_UNUSED( x ) ;
-	Q_UNUSED( y ) ;
-
-	if( m_numberOfAccounts > 0 ){
-		QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-		int index = url.size() - QString( "/feed/atom/" ).size() ;
-		url.truncate( index ) ;
-		KToolInvocation::invokeBrowser( url ) ;
-	}else{
-		KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
-	}
-}
-
 void qCheckGMail::startTimer()
 {
-	QList<QAction*> ac = m_menu->actions() ;
+	QList<QAction*> ac = statusicon::getMenuActions() ;
 	int j = ac.size() ;
 	QString pauseMenuContext = QString( "pauseCheckingMail" ) ;
 	for( int i = 0 ; i < j ; i++ ){

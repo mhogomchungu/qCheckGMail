@@ -37,17 +37,13 @@
 #include <QtNetwork/QNetworkReply>
 #include <QFile>
 
-#include <kcmdlineargs.h>
-#include <ktoolinvocation.h>
-#include <kstatusnotifieritem.h>
-#include <knotification.h>
-#include <kmenu.h>
-
+#include "statusicon.h"
 #include "accounts.h"
 #include "walletmanager.h"
 #include "configurationoptionsdialog.h"
+#include "kde_status_notifier.h"
 
-class qCheckGMail : public KStatusNotifierItem
+class qCheckGMail : public statusicon
 {
 	Q_OBJECT
 public:
@@ -69,7 +65,6 @@ private slots:
 	void checkMail( void ) ;
 	void walletmanagerClosed( void ) ;
 	void setTimer( int ) ;
-	void trayIconClicked( bool,const QPoint & ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
 	void objectGone( QObject * ) ;
@@ -83,7 +78,6 @@ private:
 	void showPausedIcon( bool ) ;
 	void noInternet( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
-	void newEmailNotify( void ) ;
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
 	void walletNotOPenedError( void ) ;
@@ -99,7 +93,6 @@ private:
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void stuck( void ) ;
-	KMenu * m_menu ;
 	QTimer * m_timer ;
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;

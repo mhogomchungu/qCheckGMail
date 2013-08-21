@@ -8,11 +8,25 @@ cmake
 kde-devel
 qt4-devel
 
-To build,run the following commands from the source folder
+To build WITH KDE support(kwallet integration and kde tray icon functionality),run the following commands from the source folder
 
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`  -DCMAKE_BUILD_TYPE=RELEASE ..
+make
+make install
+
+Note:
+The last command must be run from root's account and depending on your distribution,you may need to run one of below two:
+su -c "make install"
+sudo make install
+
+
+To build WITHOUT KDE support,ie to build a "pure" Qt application,run the following commands from the source folder
+
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DNOKDESUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE ..
 make
 make install
 

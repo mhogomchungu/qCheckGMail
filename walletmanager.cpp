@@ -78,19 +78,18 @@ void walletmanager::changeWalletPassword()
 	m_action = walletmanager::changePassWord ;
 	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
 		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+		this->deleteLater() ;
 	}else{
 		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
 	}
 	m_wallet->setInterfaceObject( this ) ;
-	/*
-	 * below method will call walletKeyChanged(bool) to return its status
-	 */
-	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
+
 }
 
-void walletmanager::walletKeyChanged( bool keyChanged )
+void walletmanager::walletpassWordChanged( bool passwordChanged )
 {
-	Q_UNUSED( keyChanged ) ;
+	Q_UNUSED( passwordChanged ) ;
 	this->deleteLater() ;
 }
 
@@ -253,7 +252,6 @@ walletmanager::~walletmanager()
 	}
 
 	m_wallet->deleteLater() ;
-
 	delete m_ui ;
 }
 

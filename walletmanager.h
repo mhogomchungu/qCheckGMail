@@ -62,6 +62,7 @@ signals:
 	void walletmanagerClosed( void ) ;
 	void getAccountsInfo( QVector<accounts> ) ;
 private slots:
+	void walletpassWordChanged( bool ) ;
 	void walletIsOpen( bool ) ;
 	void deleteRow() ;
 	void pushButtonAdd( void ) ;
@@ -71,7 +72,6 @@ private slots:
 	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
-	void walletKeyChanged( bool ) ;
 private:
 	void changePassword( bool ) ;
 	void setFolderPath( void ) ;

@@ -50,7 +50,8 @@ HEADERS += \
     storage_backends/frontend/lxqt_wallet_interface.h \
     storage_backends/frontend/lxqt_kwallet.h \
     storage_backends/frontend/lxqt_internal_wallet.h \
-    storage_backends/frontend/changepassworddialog.h
+    storage_backends/frontend/changepassworddialog.h \
+    statusicon.h
 
 SOURCES += \
     walletmanager.cpp \
@@ -65,7 +66,8 @@ SOURCES += \
     storage_backends/frontend/lxqt_wallet_interface.cpp \
     storage_backends/frontend/lxqt_kwallet.cpp \
     storage_backends/frontend/lxqt_internal_wallet.cpp \
-    storage_backends/frontend/changepassworddialog.cpp
+    storage_backends/frontend/changepassworddialog.cpp \
+    statusicon.cpp
 
 FORMS += \
     walletmanager.ui \
@@ -74,3 +76,5 @@ FORMS += \
     storage_backends/frontend/password_dialog.ui \
     storage_backends/frontend/changepassworddialog.ui
 
+RESOURCES += \
+    icon.qrc

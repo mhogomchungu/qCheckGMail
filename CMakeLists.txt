@@ -22,17 +22,19 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h )
+QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
 
 QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
-add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp 
-walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${ICONS} )
+QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+
+add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp 
+walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 
-TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ) 
+TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork ) 
 
 install ( FILES qCheckGMail-GotMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
@@ -76,6 +78,18 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
 )
+
+if( NOKDESUPPORT ) 
+	message( STATUS "\n-------------------------------------------------------------------------------------------" )
+	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
+	message( STATUS "-------------------------------------------------------------------------------------------" )
+	file( WRITE "${PROJECT_BINARY_DIR}/kde_status_notifier.h" "\n#define USE_KDE_STATUS_NOTIFIER 0" )
+else()
+	message( STATUS "\n------------------------------------------------------------------------------------------" )
+	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
+	message( STATUS "------------------------------------------------------------------------------------------" )
+	file( WRITE "${PROJECT_BINARY_DIR}/kde_status_notifier.h" "\n#define USE_KDE_STATUS_NOTIFIER 1" )
+endif()
 
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"

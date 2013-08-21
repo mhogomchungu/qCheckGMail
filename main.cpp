@@ -17,6 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "kde_status_notifier.h"
+
+#if USE_KDE_STATUS_NOTIFIER
 #include <QApplication>
 
 #include <kapplication.h>
@@ -71,3 +74,28 @@ int main(int argc, char *argv[])
 		return startApp() ;
 	}
 }
+
+#else
+#include <QApplication>
+#include "qcheckgmail.h"
+
+int main(int argc, char *argv[])
+{
+	QApplication a( argc,argv ) ;
+	QStringList v = QCoreApplication::arguments() ;
+	if( v.contains( "-a" ) ){
+		if( configurationoptionsdialog::autoStartEnabled() ){
+			qCheckGMail w ;
+			w.start() ;
+			return a.exec() ;
+		}else{
+			return qCheckGMail::autoStartDisabled() ;
+		}
+	}else{
+		qCheckGMail w ;
+		w.start() ;
+		return a.exec() ;
+	}
+}
+
+#endif
