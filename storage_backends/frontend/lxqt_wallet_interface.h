@@ -88,7 +88,7 @@ Q_DECL_EXPORT lxqt::Wallet::Wallet * getWalletBackend( lxqt::Wallet::walletBackE
  * return a list of all wallets
  * returned value is undefined if the backend is not supported
  */
-QStringList walletList( lxqt::Wallet::walletBackEnd ) ;
+Q_DECL_EXPORT QStringList walletList( lxqt::Wallet::walletBackEnd ) ;
 
 /*
  * Below class is the interface that implements various backends.
