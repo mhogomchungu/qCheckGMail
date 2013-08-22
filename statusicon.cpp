@@ -26,7 +26,7 @@
 statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accounts )
 {
 	m_menu = new KMenu() ;
-
+	KStatusNotifierItem::setContextMenu( m_menu ) ;
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( activateRequested_1( bool,QPoint ) ) ) ;
 }
 
@@ -66,6 +66,16 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 	KStatusNotifierItem::setToolTipIconByPixmap( QIcon( QString( ":/" ) + iconName ) ) ;
 }
 
+void statusicon::addAction( QAction * ac )
+{
+	m_menu->addAction( ac ) ;
+}
+
+QObject * statusicon::statusQObject()
+{
+	return this ;
+}
+
 void statusicon::newEmailNotify()
 {
 	QByteArray r( "qCheckGMail" ) ;
@@ -76,18 +86,6 @@ void statusicon::newEmailNotify()
 bool statusicon::enableDebug()
 {
 	return KCmdLineArgs::allArguments().contains( "-d" ) ;
-}
-
-void statusicon::setContextMenu()
-{
-	KStatusNotifierItem::setContextMenu( m_menu ) ;
-}
-
-QAction * statusicon::getAction()
-{
-	QAction * ac = new QAction( m_menu ) ;
-	m_menu->addAction( ac ) ;
-	return ac ;
 }
 
 QList<QAction *> statusicon::getMenuActions()
@@ -118,6 +116,10 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 	Q_UNUSED( reason ) ;
 }
 
+void statusicon::addQuitAction()
+{
+}
+
 #else
 statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accounts )
 {
@@ -125,6 +127,7 @@ statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accou
 	m_menu = new QMenu() ;
 	connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
+	m_trayIcon->setContextMenu( m_menu ) ;
 }
 
 statusicon::~statusicon()
@@ -169,25 +172,17 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 	m_trayIcon->setToolTip( subTitle ) ;
 }
 
-QAction * statusicon::getAction()
-{
-	QAction * ac = new QAction( m_menu ) ;
-	m_menu->addAction( ac ) ;
-	return ac ;
-}
-
 QList<QAction *> statusicon::getMenuActions()
 {
 	return m_menu->actions() ;
 }
 
-void statusicon::setContextMenu()
+void statusicon::addQuitAction()
 {
 	QAction * ac = new QAction( m_menu ) ;
 	ac->setText( tr( "quit" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 	m_menu->addAction( ac ) ;
-	m_trayIcon->setContextMenu( m_menu ) ;
 	m_trayIcon->show() ;
 }
 
@@ -201,10 +196,20 @@ bool statusicon::enableDebug()
 	return QCoreApplication::arguments().contains( "-a" ) ;
 }
 
+void statusicon::addAction( QAction * ac )
+{
+	m_menu->addAction( ac ) ;
+}
+
 void statusicon::activateRequested_1( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
+}
+
+QObject * statusicon::statusQObject()
+{
+	return this ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )

@@ -66,39 +66,40 @@ typedef enum{
  * key can not be NULL,
  * a NULL value or a non NULL value of size 0 will be taken as an empty value.
  */
-lxqt_wallet_error lxqt_wallet_add_key( lxqt_wallet_t,const char * key,const void * key_value,u_int32_t key_value_length ) ;
+lxqt_wallet_error lxqt_wallet_add_key( lxqt_wallet_t,const char * key,u_int32_t key_size,const char * key_value,u_int32_t key_value_length ) ;
 
 /*
  * open "wallet_name" wallet of application "application_name" using a password of size password_length.
  *
  * The rest of the API except lxqt_wallet_create() are undefined if this function returns a non zero number
  */
-lxqt_wallet_error lxqt_wallet_open( lxqt_wallet_t *,const char * password,size_t password_length,
+lxqt_wallet_error lxqt_wallet_open( lxqt_wallet_t *,const char * password,u_int32_t password_length,
 		      const char * wallet_name,const char * application_name ) ;
 
 /*
  * create a new wallet named "wallet_name" owned by application "application_name" using a password "password" of size "password_length".
  */
-lxqt_wallet_error lxqt_wallet_create( const char * password,size_t password_length,const char * wallet_name,const char * application_name ) ;
+lxqt_wallet_error lxqt_wallet_create( const char * password,u_int32_t password_length,const char * wallet_name,const char * application_name ) ;
 
 /*
  * returns a value of a key.
  * caller of this function is responsible for the returned buffer and should free() it when done with it
  * NULL is returned if the key could not be found
  */
-void lxqt_wallet_read_key_value( lxqt_wallet_t,const char * key,void ** value,size_t * value_size ) ;
+void lxqt_wallet_read_key_value( lxqt_wallet_t,const char * key,u_int32_t key_size,char ** value,u_int32_t * value_size ) ;
 
 /*
  * returns 1 if a wallet has a key and 0 otherwise 
  */
-int lxqt_wallet_wallet_has_key( lxqt_wallet_t,const char * key ) ;
+int lxqt_wallet_wallet_has_key( lxqt_wallet_t,const char * key,u_int32_t key_size ) ;
 
 /*
  * returns 1 if wallet has value and 0 otherwise.
- * if key argument is not NULL,the value of the key will be returned.
+ * if key argument is not NULL,the  key will be returned through it.
+ * if key_size is not NULL,the size size will be returned through it. 
  * It is the responsibility of the caller to free() the returned key memory when done with it
  */
-int lxqt_wallet_wallet_has_value( lxqt_wallet_t,char ** key,const void * value,size_t value_size ) ;
+int lxqt_wallet_wallet_has_value( lxqt_wallet_t,char ** key,u_int32_t * key_size,const char * value,u_int32_t value_size ) ;
 
 /*
  * give a list of all wallets that belong to a program
@@ -112,7 +113,7 @@ char ** lxqt_wallet_wallet_list( const char * application_name,int * size ) ;
 /*
  * delete a key.
  */
-lxqt_wallet_error lxqt_wallet_delete_key( lxqt_wallet_t,const char * key ) ;
+lxqt_wallet_error lxqt_wallet_delete_key( lxqt_wallet_t,const char * key,u_int32_t key_size ) ;
 
 /*
  * delete a wallet named "wallet_name" of an application named "application_name" exists
@@ -134,7 +135,7 @@ int lxqt_wallet_exists( const char * wallet_name,const char * application_name )
  * returns a path to where the wallet file is stored.
  * on return path_buffer will contain something like "/home/$USER/.local/application_name/wallets"
  */
-void lxqt_wallet_application_wallet_path( char * path_buffer,size_t path_buffer_size,const char * application_name ) ;
+void lxqt_wallet_application_wallet_path( char * path_buffer,u_int32_t path_buffer_size,const char * application_name ) ;
 
 /*
  * returns number of bytes keys in the volume consume
@@ -148,9 +149,9 @@ int lxqt_wallet_wallet_entry_count( lxqt_wallet_t ) ;
 
 typedef struct{
 	char * key ;
-	size_t key_size ;
+	u_int32_t key_size ;
 	char * key_value ;
-	size_t key_value_size ;
+	u_int32_t key_value_size ;
 }lxqt_wallet_key_values_t ;
 
 /*
@@ -169,9 +170,9 @@ lxqt_wallet_key_values_t * lxqt_wallet_read_all_key_values( lxqt_wallet_t ) ;
 lxqt_wallet_key_values_t * lxqt_wallet_read_all_keys( lxqt_wallet_t ) ;
 
 /*
- * chance the wallet password
+ * change the wallet password
  */
-lxqt_wallet_error lxqt_wallet_change_wallet_password( lxqt_wallet_t,const char * new_password,size_t new_password_size ) ;
+lxqt_wallet_error lxqt_wallet_change_wallet_password( lxqt_wallet_t,const char * new_password,u_int32_t new_password_size ) ;
 
 /*
  * undocumented API
@@ -211,7 +212,7 @@ int main( int argc,char * argv[] )
 	
 	int i ;
 	int k ;
-	size_t q ;
+	u_int32_t q ;
 	
 	if( argc  < 2 ){
 		printf( "wrong number of arguments\n" ) ;
@@ -254,7 +255,7 @@ int main( int argc,char * argv[] )
 		}else{
 			f = argv[ 3 ] ;
 			z = argv[ 4 ] ;
-			r = lxqt_wallet_add_key( wallet,f,z,strlen( z ) ) ; 
+			r = lxqt_wallet_add_key( wallet,f,strlen( f ) + 1,z,strlen( z )) ; 
 			
 			lxqt_wallet_close( &wallet ) ;
 		}
@@ -280,7 +281,7 @@ int main( int argc,char * argv[] )
 		}else{
 			f = argv[ 3 ] ;
 			e = NULL ;
-			lxqt_wallet_read_key_value( wallet,f,(void**)&e,&q ) ;
+			lxqt_wallet_read_key_value( wallet,f,strlen( f ) + 1,&e,&q ) ;
 			
 			if( e ){
 				printf( "key=%s:value=%s\n",f,e ) ;
@@ -341,7 +342,7 @@ int main( int argc,char * argv[] )
 		
 		if( r == lxqt_wallet_no_error ){
 			f = argv[ 3 ] ;
-			r = lxqt_wallet_delete_key( wallet,f ) ;
+			r = lxqt_wallet_delete_key( wallet,f,strlen( f ) + 1 ) ;
 			lxqt_wallet_close( &wallet ) ;
 		}else{
 			if( r == lxqt_wallet_wrong_password ){
@@ -389,69 +390,9 @@ int main( int argc,char * argv[] )
 		
 		if( r == lxqt_wallet_no_error ){
 			f = argv[ 3 ] ;
-			r = lxqt_wallet_wallet_has_value( wallet,&e,f,strlen( f ) ) ;
+			r = lxqt_wallet_wallet_has_value( wallet,&e,&q,f,strlen( f ) ) ;
 			if( e != NULL ){
-				printf( "key=\"%s\"\n",e ) ;
-				free( e ) ;
-			}else{
-				printf( "key=\"\"\n" ) ;
-			}
-			lxqt_wallet_close( &wallet ) ;
-		}else{
-			if( r == lxqt_wallet_wrong_password ){
-				puts( "wrong password" ) ;
-			}else{
-				puts( "general error has occured" ) ;
-			}
-		}
-	}else if( stringsAreEqual( command,"value" ) ){
-		/*
-		 * returns a key with a particular value 
-		 * additional arguments: password value
-		 * eg ./wallet value xxx zzz
-		 */
-		if( argc < 3 ){
-			r = lxqt_wallet_invalid_argument ;
-		}else{
-			f = argv[ 2 ] ;
-			r = lxqt_wallet_open( &wallet,f,strlen( f ),wallet_name,application_name ) ;
-		}
-		
-		if( r == lxqt_wallet_no_error ){
-			f = argv[ 3 ] ;
-			r = lxqt_wallet_wallet_has_value( wallet,&e,f,strlen( f ) ) ;
-			if( e != NULL ){
-				printf( "key=\"%s\"\n",e ) ;
-				free( e ) ;
-			}else{
-				printf( "key=\"\"\n" ) ;
-			}
-			lxqt_wallet_close( &wallet ) ;
-		}else{
-			if( r == lxqt_wallet_wrong_password ){
-				puts( "wrong password" ) ;
-			}else{
-				puts( "general error has occured" ) ;
-			}
-		}
-	}else if( stringsAreEqual( command,"value" ) ){
-		/*
-		 * returns a key with a particular value 
-		 * additional arguments: password value
-		 * eg ./wallet value xxx zzz
-		 */
-		if( argc < 3 ){
-			r = lxqt_wallet_invalid_argument ;
-		}else{
-			f = argv[ 2 ] ;
-			r = lxqt_wallet_open( &wallet,f,strlen( f ),wallet_name,application_name ) ;
-		}
-		
-		if( r == lxqt_wallet_no_error ){
-			f = argv[ 3 ] ;
-			r = lxqt_wallet_wallet_has_value( wallet,&e,f,strlen( f ) ) ;
-			if( e != NULL ){
-				printf( "key=\"%s\"\n",e ) ;
+				printf( "key=\"%s\"\nkey size=%d\n",e,q ) ;
 				free( e ) ;
 			}else{
 				printf( "key=\"\"\n" ) ;
@@ -486,6 +427,7 @@ int main( int argc,char * argv[] )
 	}
 	return r ;
 }
+
 #endif
 
 #ifdef __cplusplus

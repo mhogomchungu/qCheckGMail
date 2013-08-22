@@ -43,7 +43,7 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 	}
 }
 
-void qCheckGMail::showToolTip( QString x,QString y, QString z )
+void qCheckGMail::showToolTip( QString x,QString y,QString z )
 {
 	statusicon::setToolTip( x,y,z ) ;
 }
@@ -76,30 +76,37 @@ void qCheckGMail::run()
 
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 
-	QAction * ac = statusicon::getAction() ;
+	QObject * parent = statusicon::statusQObject() ;
+
+	QAction * ac = new QAction( parent ) ;
 	ac->setText( tr( "check mail now" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
+	statusicon::addAction( ac ) ;
 
-	ac = statusicon::getAction() ;
+	ac = new QAction( parent ) ;
 	ac->setText( tr( "pause checking mail" ) ) ;
 	ac->setObjectName( QString( "pauseCheckingMail" ) ) ;
 	ac->setCheckable( true ) ;
 	ac->setChecked( false ) ;
 	connect( ac,SIGNAL( toggled( bool ) ),this,SLOT( pauseCheckingMail( bool ) ) ) ;
+	statusicon::addAction( ac ) ;
 
-	ac = statusicon::getAction() ;
+	ac = new QAction( parent ) ;
 	ac->setText( tr( "configure accounts" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configureAccounts() ) ) ;
+	statusicon::addAction( ac ) ;
 
-	ac = statusicon::getAction() ;
+	ac = new QAction( parent ) ;
 	ac->setText( tr( "configure password" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurePassWord() ) ) ;
+	statusicon::addAction( ac ) ;
 
-	ac = statusicon::getAction() ;
+	ac = new QAction( parent ) ;
 	ac->setText( tr( "configure options" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationoptionWindow() ) ) ;
+	statusicon::addAction( ac ) ;
 
-	statusicon::setContextMenu() ;
+	statusicon::addQuitAction() ;
 
 	m_mutex = new QMutex() ;
 

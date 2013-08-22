@@ -52,7 +52,7 @@ public:
 		SystemServices = 3,
 		Hardware = 4,
 		Reserved = 129
-	} ;
+	};
 	enum ItemStatus{
 		Passive = 1,
 		Active = 2,
@@ -68,9 +68,10 @@ public:
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
-	QAction * getAction( void ) ;
+	void addAction( QAction * ) ;
+	QObject * statusQObject( void ) ;
 	QList< QAction * > getMenuActions( void ) ;
-	void setContextMenu( void ) ;
+	void addQuitAction( void ) ;
 private slots:
 	void quit( void ) ;
 	void activateRequested_1( bool,const QPoint & ) ;
