@@ -515,6 +515,11 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 	}
 }
 
+const QVector<accounts>& qCheckGMail::configuredAccounts()
+{
+	return m_accounts ;
+}
+
 void qCheckGMail::configurePassWord()
 {
 	walletmanager * wallet = new walletmanager() ;
@@ -576,6 +581,11 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 		translator->load( r.constData(),langPath ) ;
 		qapp.installTranslator( translator ) ;
 	}
+}
+
+QWidget * qCheckGMail::widget()
+{
+	return statusicon::widget() ;
 }
 
 void qCheckGMail::setTimer()

@@ -51,7 +51,8 @@ HEADERS += \
     storage_backends/frontend/lxqt_kwallet.h \
     storage_backends/frontend/lxqt_internal_wallet.h \
     storage_backends/frontend/changepassworddialog.h \
-    statusicon.h
+    statusicon.h \
+    qcheckgmailplugin.h
 
 SOURCES += \
     walletmanager.cpp \
@@ -67,7 +68,8 @@ SOURCES += \
     storage_backends/frontend/lxqt_kwallet.cpp \
     storage_backends/frontend/lxqt_internal_wallet.cpp \
     storage_backends/frontend/changepassworddialog.cpp \
-    statusicon.cpp
+    statusicon.cpp \
+    qcheckgmailplugin.cpp
 
 FORMS += \
     walletmanager.ui \

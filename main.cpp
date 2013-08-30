@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kde_status_notifier.h"
+#include "tray_application_type.h"
 
 #if USE_KDE_STATUS_NOTIFIER
 #include <QApplication>
@@ -74,7 +74,11 @@ int main(int argc, char *argv[])
 		return startApp() ;
 	}
 }
-
+#elif USE_LXQT_PLUGIN
+int main( void )
+{
+	return 0 ;
+}
 #else
 #include <QApplication>
 #include "qcheckgmail.h"

@@ -6,6 +6,10 @@ SET( QT_USE_QTNETWORK TRUE )
 SET( QT_USE_QTCORE TRUE )
 SET( QT_USE_QTGUI TRUE )
 
+if( LXQTSUPPORT )
+	set( NOKDESUPPORT "true" )
+endif()
+
 ADD_SUBDIRECTORY( storage_backends )
 
 find_package( Qt4 COMPONENTS REQUIRED )
@@ -22,33 +26,17 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
-
-QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-
-QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
-
-add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp 
-walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-
-TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork ) 
-
 install ( FILES qCheckGMail-GotMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMailError.svg DESTINATION share/icons )
 
-install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-
-install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications 
-PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
+install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
 install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
+PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
 #install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
@@ -79,16 +67,79 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
 )
 
-if( NOKDESUPPORT ) 
+if( LXQTSUPPORT )
+	INCLUDE(FindPkgConfig)
+
+	pkg_check_modules( LXQT razorqt )
+	if( LXQT_FOUND )
+
+	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h )
+
+	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
+
+	QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+
+		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp
+			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+
+		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
+
+		install( TARGETS qCheckGMail LIBRARY DESTINATION "/usr/lib/razor-panel/" )
+
+		message( STATUS "\n------------------------------------------------------------------------------------------" )
+		message( STATUS "lxqt support found,will build lxqt panel plugin based application" )
+		message( STATUS "------------------------------------------------------------------------------------------" )
+		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_LXQT_PLUGIN 1\n#define USE_KDE_STATUS_NOTIFIER 0\n" )
+	else()
+		message( FATAL_ERROR "razor-qt/lxqt libraries not found" )
+	endif()
+elseif( NOKDESUPPORT )
+
+	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
+
+	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
+
+	QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+
+	add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp
+		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+
+	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
+
+	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
+
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 	message( STATUS "-------------------------------------------------------------------------------------------" )
-	file( WRITE "${PROJECT_BINARY_DIR}/kde_status_notifier.h" "\n#define USE_KDE_STATUS_NOTIFIER 0" )
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define USE_LXQT_PLUGIN 0\n" )
 else()
+
+	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
+
+	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
+
+	QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+
+	add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp
+		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+
+	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
+
+	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
+
 	message( STATUS "\n------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
 	message( STATUS "------------------------------------------------------------------------------------------" )
-	file( WRITE "${PROJECT_BINARY_DIR}/kde_status_notifier.h" "\n#define USE_KDE_STATUS_NOTIFIER 1" )
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
 endif()
 
 # desktop file section

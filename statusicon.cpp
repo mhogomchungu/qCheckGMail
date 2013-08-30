@@ -23,7 +23,7 @@
 
 #if USE_KDE_STATUS_NOTIFIER
 
-statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accounts )
+statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
 	m_menu = new KMenu() ;
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
@@ -33,6 +33,11 @@ statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accou
 statusicon::~statusicon()
 {
 	m_menu->deleteLater() ;
+}
+
+QWidget * statusicon::widget()
+{
+	return 0 ;
 }
 
 void statusicon::setAttentionIcon( const QString& name )
@@ -120,14 +125,129 @@ void statusicon::addQuitAction()
 {
 }
 
+#elif USE_LXQT_PLUGIN
+
+statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
+{
+	m_toolButton.setIcon( QIcon( QString( ":/qCheckGMailError" ) ) ) ;
+}
+
+statusicon::~statusicon()
+{
+}
+
+void statusicon::setAttentionIcon( const QString& name )
+{
+	Q_UNUSED( name ) ;
+}
+
+void statusicon::setCategory( const statusicon::ItemCategory category )
+{
+	Q_UNUSED( category ) ;
+}
+
+void statusicon::quit()
+{
+	QCoreApplication::quit() ;
+}
+
+void statusicon::setIcon( const QString& name )
+{
+	m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ; ;
+}
+
+void statusicon::setOverlayIcon( const QString& name )
+{
+	Q_UNUSED( name ) ;
+}
+
+void statusicon::setStatus( const statusicon::ItemStatus status )
+{
+	Q_UNUSED( status ) ;
+}
+
+void statusicon::setToolTip( const QString& iconName,const QString& title,const QString& subTitle )
+{
+	Q_UNUSED( iconName ) ;
+	Q_UNUSED( title ) ;
+	m_toolButton.setToolTip( subTitle ) ;
+}
+
+QList<QAction *> statusicon::getMenuActions()
+{
+	QList<QAction *> l ;
+	return l ;
+}
+
+void statusicon::addQuitAction()
+{
+	//QAction * ac = new QAction( this ) ;
+	//ac->setText( tr( "quit" ) ) ;
+	//connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+	//m_toolButton.addAction( ac ) ;
+}
+
+void statusicon::newEmailNotify()
+{
+
+}
+
+void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
+{
+	Q_UNUSED( reason ) ;
+	return ;
+
+	if( reason != QSystemTrayIcon::Context ){
+		if( m_accounts.size() > 0 ){
+			QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+			int index = url.size() - QString( "/feed/atom/" ).size() ;
+			url.truncate( index ) ;
+			QDesktopServices::openUrl( QUrl( url ) ) ;
+		}else{
+			QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
+		}
+	}
+}
+
+bool statusicon::enableDebug()
+{
+	return false ;
+}
+
+void statusicon::addAction( QAction * ac )
+{
+	m_toolButton.addAction( ac ) ;
+}
+
+QWidget * statusicon::widget()
+{
+	return &m_toolButton ;
+}
+
+void statusicon::activateRequested_1( bool x,const QPoint& y )
+{
+	Q_UNUSED( x ) ;
+	Q_UNUSED( y ) ;
+}
+
+QObject * statusicon::statusQObject()
+{
+	return this ;
+}
+
 #else
-statusicon::statusicon( const QVector<accounts>& accounts  ) : m_accounts( accounts )
+statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
 	m_trayIcon = new QSystemTrayIcon( this ) ;
 	m_menu = new QMenu() ;
 	connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
 	m_trayIcon->setContextMenu( m_menu ) ;
+}
+
+QWidget * statusicon::widget()
+{
+	return 0 ;
 }
 
 statusicon::~statusicon()
@@ -225,6 +345,7 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 		}
 	}
 }
+
 #endif
 
 

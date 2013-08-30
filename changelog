@@ -30,3 +30,8 @@ version 1.2.2
 
 version 1.2.3
 - Add support for arbitrary wallet names to allow storage of credentials in kde's default wallet.
+
+version 1.2.4
+- Add support for building a pure QT application without any dependencies or KDE or any of its libraries.
+- Add support for building a razor-qt tray plugin application for a better integration with that desktop environment.This build will
+  also have no dependencies on KDE or any of its libraries.

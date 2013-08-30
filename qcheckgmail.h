@@ -41,13 +41,13 @@
 #include "accounts.h"
 #include "walletmanager.h"
 #include "configurationoptionsdialog.h"
-#include "kde_status_notifier.h"
+#include "tray_application_type.h"
 
 class qCheckGMail : public statusicon
 {
 	Q_OBJECT
 public:
-	qCheckGMail();
+	qCheckGMail() ;
 	~qCheckGMail();
 	void start( void ) ;
 	void earlyExit( void ) ;
@@ -55,6 +55,8 @@ public:
 	static int autoStartDisabled( void ) ;
 	static bool autoStartEnabled( void ) ;
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
+	QWidget * widget( void ) ;
+	const QVector<accounts>& configuredAccounts( void ) ;
 private slots:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;

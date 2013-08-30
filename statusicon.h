@@ -27,7 +27,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-#include "kde_status_notifier.h"
+#include "tray_application_type.h"
 #include "accounts.h"
 
 #if USE_KDE_STATUS_NOTIFIER
@@ -37,9 +37,16 @@
 #include <kmenu.h>
 #include <ktoolinvocation.h>
 #include <kcmdlineargs.h>
+
 class statusicon : public KStatusNotifierItem
 {
+
+#elif USE_LXQT_PLUGIN
+#include <QToolButton>
+class statusicon : public QObject
+{
 #else
+
 #include <QMenu>
 class statusicon : public QObject
 {
@@ -58,7 +65,7 @@ public:
 		Active = 2,
 		NeedsAttention = 3
 	};
-	statusicon( const QVector<accounts>& ) ;
+	statusicon(  const QVector<accounts>& ) ;
 	virtual ~statusicon() ;
 	static void newEmailNotify( void ) ;
 	static bool enableDebug( void ) ;
@@ -69,6 +76,7 @@ public:
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
 	void addAction( QAction * ) ;
+	QWidget * widget( void ) ;
 	QObject * statusQObject( void ) ;
 	QList< QAction * > getMenuActions( void ) ;
 	void addQuitAction( void ) ;
@@ -79,11 +87,15 @@ private slots:
 private:
 #if USE_KDE_STATUS_NOTIFIER
 	KMenu * m_menu ;
+	const QVector<accounts>& m_accounts ;
+#elif USE_LXQT_PLUGIN
+	QToolButton m_toolButton ;
+	const QVector<accounts>& m_accounts ;
 #else
 	QMenu * m_menu ;
 	QSystemTrayIcon * m_trayIcon ;
+	const QVector<accounts>m_accounts ;
 #endif
-	const QVector<accounts>& m_accounts ;
 };
 
 #endif // STATUSICON_H
