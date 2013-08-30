@@ -75,6 +75,9 @@ int main(int argc, char *argv[])
 	}
 }
 #elif USE_LXQT_PLUGIN
+/*
+ * we dont get here
+ */
 int main( void )
 {
 	return 0 ;

@@ -153,7 +153,7 @@ void statusicon::quit()
 
 void statusicon::setIcon( const QString& name )
 {
-	m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ; ;
+	m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ;
 }
 
 void statusicon::setOverlayIcon( const QString& name )

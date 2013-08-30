@@ -31,14 +31,6 @@ install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMail.svg DESTINATION share/icons )
 install ( FILES qCheckGMailError.svg DESTINATION share/icons )
 
-install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
-PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
-
-install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
-
 #install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install ( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
@@ -87,7 +79,11 @@ if( LXQTSUPPORT )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
 
-		install( TARGETS qCheckGMail LIBRARY DESTINATION "/usr/lib/razor-panel/" )
+		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/razor-panel/ )
+
+		install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/razor/razor-panel/
+			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+		)
 
 		message( STATUS "\n------------------------------------------------------------------------------------------" )
 		message( STATUS "lxqt support found,will build lxqt panel plugin based application" )
@@ -114,6 +110,14 @@ elseif( NOKDESUPPORT )
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
+	install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	)
+
+	install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	)
+
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 	message( STATUS "-------------------------------------------------------------------------------------------" )
@@ -136,12 +140,30 @@ else()
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
+	install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	)
+
+	install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	)
+
 	message( STATUS "\n------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
 	message( STATUS "------------------------------------------------------------------------------------------" )
 	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
 endif()
 
+if( LXQTSUPPORT )
+# desktop file section
+file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
+"[Desktop Entry]
+Type=Service
+ServiceTypes=RazorPanel/Plugin
+Name=qChechGMailPlugIn
+Comment=a plugin to check for mail in gmail accounts\n")
+
+else()
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "#!/usr/bin/env xdg-open
@@ -191,4 +213,4 @@ X-DBUS-StartupType=Unique
 X-KDE-SubstituteUID=false
 X-KDE-Username=
 Categories=Network;X-MandrivaLinux-Internet;\n")
-
+endif()

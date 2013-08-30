@@ -45,7 +45,8 @@ QString qChechGMailPlugIn::themeId() const
 void qChechGMailPlugIn::activated( IRazorPanelPlugin::ActivationReason reason )
 {
 	qDebug() << int( reason ) ;
-	if( reason == IRazorPanelPlugin::Trigger ){
+
+	if( reason == IRazorPanelPlugin::MiddleClick ){
 		const QVector<accounts>& acc = m_gmail->configuredAccounts() ;
 		if( acc.size() > 0 ){
 			QString url = acc.at( 0 ).defaultLabelUrl() ;
@@ -62,5 +63,5 @@ void qChechGMailPlugIn::activated( IRazorPanelPlugin::ActivationReason reason )
 
 IRazorPanelPlugin::Flags qChechGMailPlugIn::flags() const
 {
-	return  IRazorPanelPlugin::PreferRightAlignment ;
+	return IRazorPanelPlugin::PreferRightAlignment ;
 }
