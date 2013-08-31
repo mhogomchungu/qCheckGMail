@@ -78,13 +78,13 @@ void walletmanager::changeWalletPassword()
 	m_action = walletmanager::changePassWord ;
 	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
 		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+		m_wallet->setInterfaceObject( this ) ;
 		this->deleteLater() ;
 	}else{
 		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		m_wallet->setInterfaceObject( this ) ;
 		m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
 	}
-	m_wallet->setInterfaceObject( this ) ;
-
 }
 
 void walletmanager::walletpassWordChanged( bool passwordChanged )

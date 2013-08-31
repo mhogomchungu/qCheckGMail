@@ -23,6 +23,9 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 {
 	m_timer = new QTimer( this ) ;
 
+	m_numberOfAccounts = 0 ;
+	m_numberOfLabels   = 0 ;
+
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
