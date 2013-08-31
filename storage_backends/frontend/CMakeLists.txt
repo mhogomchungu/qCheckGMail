@@ -24,50 +24,50 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-if( NOKDESUPPORT ) 
+if( NOKDESUPPORT )
 	SET( KDE_SUPPORT "false" )
 	SET( KWALLET_SUPPORT "false" )
 	file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n" )
 else()
 	SET( KDE_SUPPORT "true" )
-	
+
 	find_package( KDE4 )
 	include (KDE4Defaults)
 	include_directories(${KDE4_INCLUDES})
 	add_definitions( -I${KDE4_INCLUDE_DIR} )
-	
+
 	if( NOKWALLETSUPPORT )
-		SET( KWALLET_SUPPORT "false" )	
+		SET( KWALLET_SUPPORT "false" )
 		file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n" )
-	else()	
+	else()
 		find_library( LIBKWALLETBACKEND libkwalletbackend.so )
 		if( NOT LIBKWALLETBACKEND )
 			# some distributions do not have libkwalletbackend.so for reasons i currently do not know
 			# look for libkwalletbackend.sp.4 when the above happen
 			find_library( LIBKWALLETBACKEND libkwalletbackend.so.4 )
 			file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n" )
-			SET( KWALLET_SUPPORT "false" )	
+			SET( KWALLET_SUPPORT "false" )
 		else()
 			SET( KWALLET_SUPPORT "true" )
 			file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 1\n" )
 		endif()
 
 		if( NOT LIBKWALLETBACKEND )
-			SET( KWALLET_SUPPORT "false" )	
+			SET( KWALLET_SUPPORT "false" )
 			file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n" )
 			#message( FATAL_ERROR "could not find libkwalletbackend.so or libkwalletbackend.so.4,please make sure you have kwallet development libraries installed and try again" )
 		else()
-			SET( KWALLET_SUPPORT "true" )	
+			SET( KWALLET_SUPPORT "true" )
 			file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 1\n" )
 		endif()
 	endif()
-	
+
 	find_library( LIBKDEUI libkdeui.so )
 	if( NOT LIBKDEUI )
 		# adding this one just in case the same case as above happen
 		find_library( LIBKDEUI libkdeui.so.5 )
 	endif()
-	
+
 	if( NOT LIBKDEUI )
 		SET( KDE_SUPPORT "false" )
 		message( STATUS "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
@@ -75,7 +75,7 @@ else()
 
 	find_library( LIBKDECORE libkdecore.so )
 	if( NOT LIBKDECORE )
-		# adding this one just in case the same case as above happen	
+		# adding this one just in case the same case as above happen
 		find_library( LIBKDECORE libkdecore.so.5 )
 	endif()
 
@@ -123,11 +123,11 @@ if( KDE_SUPPORT )
 		QT4_WRAP_CPP( MOC ${MOC_FILES} )
 		add_library( lxqtwallet SHARED ${UI} ${SRC} ${MOC} )
 		set( link_libraries "-L${KDE4_LIB_DIR} -L${QT_LIBRARY_DIR} ${LIBKDEUI} ${LIBKDECORE}" )
-	endif()	
+	endif()
 else()
 	QT4_WRAP_CPP( MOC ${MOC_FILES} )
 	add_library( lxqtwallet SHARED ${UI} ${SRC} ${MOC} )
-endif()	
+endif()
 
 set_target_properties( lxqtwallet PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIC -pedantic " )
 set_target_properties( lxqtwallet PROPERTIES SOVERSION "${LIBRARY_VERSION}" )

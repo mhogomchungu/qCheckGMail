@@ -60,18 +60,19 @@ if( LXQTSUPPORT )
 	if( LXQT_FOUND )
 
 		include_directories( "${LXQT_INCLUDEDIR}" )
-		
+
 		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h )
 
 		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 
-		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp 
+		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp
 			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
 
@@ -101,6 +102,7 @@ elseif( NOKDESUPPORT )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
 	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
 
@@ -123,7 +125,7 @@ else()
 	include (KDE4Defaults)
 	include_directories(${KDE4_INCLUDES})
 	add_definitions( -I${KDE4_INCLUDE_DIR} )
-	
+
 	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
 
 	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
@@ -135,7 +137,7 @@ else()
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-
+	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
