@@ -10,6 +10,16 @@ if( LXQTSUPPORT )
 	set( NOKDESUPPORT "true" )
 endif()
 
+# uninstall target
+configure_file(
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+	IMMEDIATE @ONLY )
+
+add_custom_target( uninstall
+COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
+
+
 ADD_SUBDIRECTORY( storage_backends )
 
 find_package( Qt4 REQUIRED )
@@ -39,15 +49,6 @@ install ( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/tran
 install ( FILES translations.qm/french_FR.qm DESTINATION share/qCheckGMail/translations.qm/ )
 
 install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
-
-# uninstall target
-configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-	IMMEDIATE @ONLY )
-
-add_custom_target( uninstall
-COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""

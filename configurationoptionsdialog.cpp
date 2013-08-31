@@ -23,6 +23,10 @@
 #define PROGRAM_NAME "qCheckGMail"
 #define ORGANIZATION_NAME "qCheckGMail"
 
+#if USE_KDE_STATUS_NOTIFIER
+#include <kstandarddirs.h>
+#endif
+
 configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
 {
