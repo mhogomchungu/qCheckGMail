@@ -7,15 +7,14 @@ INCLUDE(FindPkgConfig)
 SET( QT_USE_QTCORE TRUE )
 SET( QT_USE_QTGUI TRUE )
 
-find_package( Qt4 COMPONENTS REQUIRED )
-
-find_package( KDE4 )
-include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES})
-add_definitions( -I${KDE4_INCLUDE_DIR} )
+find_package( Qt4 REQUIRED )
 
 add_definitions( -I${Qt4_INCLUDE_DIR} )
 add_definitions( -I${QT_HEADERS_DIR} )
+add_definitions( -I"${PROJECT_BINARY_DIR}/storage_backends/frontend" )
+add_definitions( -I"${PROJECT_BINARY_DIR}/storage_backends/backend" )
+add_definitions( -I"${PROJECT_BINARY_DIR}" )
+add_definitions( -std=c++0x )
 
 INCLUDE( ${QT_USE_FILE} )
 
@@ -31,6 +30,11 @@ if( NOKDESUPPORT )
 	file( WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n" )
 else()
 	SET( KDE_SUPPORT "true" )
+	
+	find_package( KDE4 )
+	include (KDE4Defaults)
+	include_directories(${KDE4_INCLUDES})
+	add_definitions( -I${KDE4_INCLUDE_DIR} )
 	
 	if( NOKWALLETSUPPORT )
 		SET( KWALLET_SUPPORT "false" )	

@@ -29,8 +29,6 @@
 #include <QSettings>
 #include <QDebug>
 
-#include <kstandarddirs.h>
-
 #include "language_path.h"
 #include "tray_application_type.h"
 

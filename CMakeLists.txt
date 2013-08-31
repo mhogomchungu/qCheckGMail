@@ -12,15 +12,9 @@ endif()
 
 ADD_SUBDIRECTORY( storage_backends )
 
-find_package( Qt4 COMPONENTS REQUIRED )
+find_package( Qt4 REQUIRED )
 
-find_package( KDE4 )
-include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES})
-add_definitions( -I${KDE4_INCLUDE_DIR} )
-
-add_definitions( -I${Qt4_INCLUDE_DIR} )
-add_definitions( -I${QT_HEADERS_DIR} )
+add_definitions( -std=c++0x )
 
 INCLUDE( ${QT_USE_FILE} )
 
@@ -65,13 +59,15 @@ if( LXQTSUPPORT )
 	pkg_check_modules( LXQT razorqt )
 	if( LXQT_FOUND )
 
-	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h )
+		include_directories( "${LXQT_INCLUDEDIR}" )
+		
+		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h )
 
-	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
+		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
-	QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 
-		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp
+		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp 
 			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -123,7 +119,11 @@ elseif( NOKDESUPPORT )
 	message( STATUS "-------------------------------------------------------------------------------------------" )
 	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define USE_LXQT_PLUGIN 0\n" )
 else()
-
+	find_package( KDE4 )
+	include (KDE4Defaults)
+	include_directories(${KDE4_INCLUDES})
+	add_definitions( -I${KDE4_INCLUDE_DIR} )
+	
 	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
 
 	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )

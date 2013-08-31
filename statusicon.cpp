@@ -181,32 +181,15 @@ QList<QAction *> statusicon::getMenuActions()
 
 void statusicon::addQuitAction()
 {
-	//QAction * ac = new QAction( this ) ;
-	//ac->setText( tr( "quit" ) ) ;
-	//connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
-	//m_toolButton.addAction( ac ) ;
 }
 
 void statusicon::newEmailNotify()
 {
-
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
 	Q_UNUSED( reason ) ;
-	return ;
-
-	if( reason != QSystemTrayIcon::Context ){
-		if( m_accounts.size() > 0 ){
-			QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-			int index = url.size() - QString( "/feed/atom/" ).size() ;
-			url.truncate( index ) ;
-			QDesktopServices::openUrl( QUrl( url ) ) ;
-		}else{
-			QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
-		}
-	}
 }
 
 bool statusicon::enableDebug()

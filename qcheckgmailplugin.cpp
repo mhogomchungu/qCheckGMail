@@ -44,8 +44,6 @@ QString qChechGMailPlugIn::themeId() const
 
 void qChechGMailPlugIn::activated( IRazorPanelPlugin::ActivationReason reason )
 {
-	qDebug() << int( reason ) ;
-
 	if( reason == IRazorPanelPlugin::MiddleClick ){
 		const QVector<accounts>& acc = m_gmail->configuredAccounts() ;
 		if( acc.size() > 0 ){
