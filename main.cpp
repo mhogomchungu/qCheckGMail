@@ -42,7 +42,7 @@ int startApp( void )
 	}
 }
 
-int main(int argc, char *argv[])
+int main( int argc,char * argv[] )
 {
 	KAboutData aboutData( 	"qCheckGMail",
 				0,
@@ -86,7 +86,7 @@ int main( void )
 #include <QApplication>
 #include "qcheckgmail.h"
 
-int main(int argc, char *argv[])
+int main( int argc,char * argv[] )
 {
 	QApplication a( argc,argv ) ;
 	QStringList v = QCoreApplication::arguments() ;
