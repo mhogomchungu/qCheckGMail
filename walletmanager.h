@@ -34,9 +34,10 @@
 #include <QCursor>
 
 #include "accounts.h"
-#include "storage_backends/frontend/lxqt_wallet_interface.h"
 #include "addaccount.h"
 #include "configurationoptionsdialog.h"
+
+#include "lxqt_wallet/frontend/lxqt_wallet.h"
 
 namespace Ui {
 class walletmanager;

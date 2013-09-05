@@ -52,7 +52,7 @@ public:
 typedef enum{
 	internalBackEnd,
 	kwalletBackEnd,
-	gnomeKeyringBackEnd
+	secretServiceBackEnd
 }walletBackEnd;
 
 /*
@@ -88,7 +88,7 @@ Q_DECL_EXPORT lxqt::Wallet::Wallet * getWalletBackend( lxqt::Wallet::walletBackE
  * return a list of all wallets
  * returned value is undefined if the backend is not supported
  */
-Q_DECL_EXPORT QStringList walletList( lxqt::Wallet::walletBackEnd ) ;
+QStringList walletList( lxqt::Wallet::walletBackEnd ) ;
 
 /*
  * Below class is the interface that implements various backends.
@@ -143,6 +143,7 @@ public:
 
 	/*
 	 * check if a wallet is opened or not
+	 * If the wallet is not open,secretService backend will block while the user is prompted for a key to inlock it
 	 */
 	virtual bool walletIsOpened( void ) = 0 ;
 
@@ -155,7 +156,7 @@ public:
 	/*
 	 * Behavior of the method according to different back ends.
 	 *
-	 * gnome keyring - backend not implemented yet
+	 * secret service( gnome backend ):
 	 *
 	 * kwallet:
 	 * walletName argument corresponds to the same thing in KWAllet API
@@ -199,12 +200,14 @@ public:
 	/*
 	 * change the wallet key to newWalletKey
 	 * internal backend will emit "walletpassWordChanged(bool)" to notify if the password was changed or not
+	 * This method is undefined in secretService backend
 	 */
 	virtual void changeWalletPassWord( const QString& walletName,const QString& applicationName = QString() ) = 0 ;
 
 	/*
 	 * list all wallets managed by an application.
 	 * This method is equivalent to kwallet's "folderList()"
+	 * This method is undefined in secretService backend
 	 */
 	virtual QStringList managedWalletList( void ) = 0 ;
 };

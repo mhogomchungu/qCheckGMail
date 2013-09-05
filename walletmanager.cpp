@@ -64,11 +64,7 @@ void walletmanager::buildGUI()
 void walletmanager::ShowUI()
 {
 	m_action = walletmanager::openWallet ;
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
-	}else{
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
-	}
+	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
 }
@@ -76,15 +72,9 @@ void walletmanager::ShowUI()
 void walletmanager::changeWalletPassword()
 {
 	m_action = walletmanager::changePassWord ;
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
-		m_wallet->setInterfaceObject( this ) ;
-		m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
-	}else{
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
-		m_wallet->setInterfaceObject( this ) ;
-		m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
-	}
+	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet->setInterfaceObject( this ) ;
+	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
 void walletmanager::walletpassWordChanged( bool passwordChanged )
@@ -137,7 +127,7 @@ void walletmanager::walletIsOpen_2( bool walletOpened )
 
 		QTableWidgetItem * item ;
 
-		int row = 0 ;
+		int row = -1 ;
 
 		QStringList acc = m_wallet->readAllKeys() ;
 
@@ -176,7 +166,7 @@ void walletmanager::walletIsOpen_2( bool walletOpened )
 				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
-		if( row > 0 ){
+		if( row >= 0 ){
 			this->selectRow( row,true ) ;
 		}
 		this->show() ;
@@ -188,11 +178,7 @@ void walletmanager::walletIsOpen_2( bool walletOpened )
 void walletmanager::getAccounts( void )
 {
 	m_action = walletmanager::getAccountInfo ;
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
-	}else{
-		m_wallet = lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
-	}
+	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
 }

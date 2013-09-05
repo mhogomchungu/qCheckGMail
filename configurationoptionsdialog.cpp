@@ -110,7 +110,44 @@ QString configurationoptionsdialog::logFile()
 		return k.localxdgconfdir() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
 	#else
 		return QString( "%1/.config/%2/%1.log" ).arg( QDir::homePath() ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
-	#endif
+#endif
+}
+
+lxqt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "storageSystem" ) ;
+
+	if( settings.contains( opt ) ){
+		QString value = settings.value( opt ).toString() ;
+		if( value == QString( "kwallet" ) ){
+			if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+			}else{
+				settings.setValue( opt,QString( "internal" ) ) ;
+				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+			}
+		}else if( value == QString( "libsecret" ) ){
+			if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::secretServiceBackEnd ) ){
+				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::secretServiceBackEnd ) ;
+			}else{
+				settings.setValue( opt,QString( "internal" ) ) ;
+				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+			}
+		}else{
+			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		}
+	}else{
+		if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+			settings.setValue( opt,QString( "kwallet" ) ) ;
+			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+		}else{
+			settings.setValue( opt,QString( "internal" ) ) ;
+			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+		}
+	}
 }
 
 bool configurationoptionsdialog::autoStartEnabled()

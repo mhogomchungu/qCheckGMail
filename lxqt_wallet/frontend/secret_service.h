@@ -28,31 +28,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef OPEN_WALLET_THREAD_H
-#define OPEN_WALLET_THREAD_H
+#ifndef SECRET_SERVICE_H
+#define SECRET_SERVICE_H
 
-#include <QRunnable>
-#include <QThreadPool>
-#include <QObject>
-#include <QString>
-#include <QStringList>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <libsecret-1/libsecret/secret.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "../backend/lxqtwallet.h"
-
-class openWalletThread : public QObject,public QRunnable
-{
-	Q_OBJECT
-public:
-	openWalletThread( lxqt_wallet_t * wallet,QString password,QString walletName,QString applicationName ) ;
-	void start( void ) ;
-signals:
-	void walletOpened( bool ) ;
-private:
-	void run( void ) ;
-	lxqt_wallet_t * m_wallet ;
-	QString m_password ;
-	QString m_walletName ;
-	QString m_applicationName ;
-};
-
-#endif // OPEN_WALLET_THREAD_H
+#endif

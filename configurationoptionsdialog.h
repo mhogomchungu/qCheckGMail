@@ -32,6 +32,8 @@
 #include "language_path.h"
 #include "tray_application_type.h"
 
+#include "lxqt_wallet/frontend/lxqt_wallet.h"
+
 namespace Ui {
 class configurationoptionsdialog;
 }
@@ -52,6 +54,7 @@ public:
 	static QString defaultWalletName( void ) ;
 	static QString walletName( void ) ;
 	static QString logFile( void ) ;
+	static lxqt::Wallet::Wallet * secureStorageSystem( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 	~configurationoptionsdialog();
