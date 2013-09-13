@@ -179,7 +179,7 @@ else()
 		message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
 		message( STATUS "------------------------------------------------------------------------------------------" )
 		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
-	elseif()
+	else()
 		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
 		
 		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
