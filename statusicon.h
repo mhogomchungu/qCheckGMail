@@ -94,7 +94,7 @@ private:
 #else
 	QMenu * m_menu ;
 	QSystemTrayIcon * m_trayIcon ;
-	const QVector<accounts>m_accounts ;
+	const QVector<accounts>& m_accounts ;
 #endif
 };
 
