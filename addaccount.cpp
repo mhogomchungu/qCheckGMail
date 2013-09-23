@@ -76,7 +76,7 @@ addaccount::~addaccount()
 void addaccount::closeEvent( QCloseEvent * e )
 {
 	e->ignore() ;
-	this->HideUI() ;
+	this->cancel() ;
 }
 
 void addaccount::add()
@@ -102,5 +102,6 @@ void addaccount::add()
 
 void addaccount::cancel()
 {
+	emit cancelSignal() ;
 	this->HideUI() ;
 }

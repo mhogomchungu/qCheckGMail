@@ -20,9 +20,7 @@
 
 #include "walletmanager.h"
 #include "ui_walletmanager.h"
-
-#define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
-#define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
+#include "task.h"
 
 walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
@@ -39,6 +37,7 @@ void walletmanager::buildGUI()
 {
 	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
+	
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
@@ -63,7 +62,7 @@ void walletmanager::buildGUI()
 
 void walletmanager::ShowUI()
 {
-	m_action = walletmanager::openWallet ;
+	m_action = walletmanager::readAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
@@ -86,90 +85,32 @@ void walletmanager::walletpassWordChanged( bool passwordChanged )
 void walletmanager::walletIsOpen( bool walletOpened )
 {
 	switch( m_action ){
-		case walletmanager::openWallet     : return this->walletIsOpen_2( walletOpened ) ;
-		case walletmanager::getAccountInfo : return this->walletIsOpen_1( walletOpened ) ;
+		case walletmanager::readAccountInfo: return this->readAccountInformation( walletOpened ) ;
+		case walletmanager::getAccountInfo : return this->getAccountInformation( walletOpened ) ;
 		case walletmanager::changePassWord : ;
 	}
 }
 
-void walletmanager::setFolderPath()
+void walletmanager::readAccountInformation( bool walletOpened )
 {
-	if( m_walletName == m_defaultWalletName ){
-		/*
-		 * We are using qCheckGMail wallet and hence we can store credentials in the default folder
-		 * since nobody else will be using it as nobody else should be using our wallet
-		 */
-		m_passwordFolder = m_wallet->storagePath() ;
+	if( walletOpened ){
+		this->buildGUI() ;
+		this->disableAll() ;
+		this->show() ;
+		Task * t = new Task( m_wallet,&m_accounts ) ;
+		connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+		t->start( Task::readAccountInfo ) ;
 	}else{
-		/*
-		 * We are not using qCheckGMail's wallet and hence could be using a shared one.
-		 * Store credentials in a private folder
-		 */
-		m_passwordFolder = configurationoptionsdialog::passwordFolderName() ;
+		this->deleteLater() ;
 	}
 }
 
-void walletmanager::walletIsOpen_2( bool walletOpened )
+void walletmanager::getAccountInformation( bool walletOpened )
 {
 	if( walletOpened ){
-
-		this->buildGUI() ;
-
-		this->setFolderPath() ;
-
-		QString passWord ;
-
-		QString labels ;
-		QString labels_id = QString( LABEL_IDENTIFIER ) ;
-
-		QString displayName ;
-		QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
-
-		QTableWidgetItem * item ;
-
-		int row = -1 ;
-
-		QStringList acc = m_wallet->readAllKeys() ;
-
-		int j = acc.size() ;
-
-		for( int i = 0 ; i < j ; i++ ){
-			const QString& accName = acc.at( i ) ;
-			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
-				;
-			}else{
-				row = m_table->rowCount() ;
-
-				m_table->insertRow( row ) ;
-
-				item = new QTableWidgetItem() ;
-				item->setText( accName ) ;
-				item->setTextAlignment( Qt::AlignCenter ) ;
-				m_table->setItem( row,0,item ) ;
-
-				displayName = m_wallet->readValue( accName + displayName_id ) ;
-
-				item = new QTableWidgetItem() ;
-				item->setText( displayName ) ;
-				item->setTextAlignment( Qt::AlignCenter ) ;
-				m_table->setItem( row,1,item ) ;
-
-				labels = m_wallet->readValue( accName + labels_id ) ;
-
-				item = new QTableWidgetItem() ;
-				item->setText( labels ) ;
-				item->setTextAlignment( Qt::AlignCenter ) ;
-				m_table->setItem( row,2,item ) ;
-
-				passWord = m_wallet->readValue( accName ) ;
-
-				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
-			}
-		}
-		if( row >= 0 ){
-			this->selectRow( row,true ) ;
-		}
-		this->show() ;
+		Task * t = new Task( m_wallet,&m_accounts ) ;
+		connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+		t->start( Task::getAccountInfo ) ;
 	}else{
 		this->deleteLater() ;
 	}
@@ -183,55 +124,18 @@ void walletmanager::getAccounts( void )
 	m_wallet->open( m_walletName ) ;
 }
 
-void walletmanager::walletIsOpen_1( bool walletOpened )
-{
-	if( walletOpened ){
-
-		this->setFolderPath() ;
-
-		QString passWord ;
-		QString labels ;
-		QString displayName ;
-		QString labels_id      = QString( LABEL_IDENTIFIER ) ;
-		QString displayName_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
-
-		QStringList accountNames = m_wallet->readAllKeys() ;
-
-		int j = accountNames.size() ;
-
-		QVector<accounts> acc ;
-
-		for( int i = 0 ; i < j ; i++ ){
-			const QString& accName = accountNames.at( i ) ;
-			if( accName.endsWith( labels_id ) || accName.endsWith( displayName_id ) ){
-				;
-			}else{
-				passWord    = m_wallet->readValue( accName ) ;
-				labels      = m_wallet->readValue( accName + labels_id ) ;
-				displayName = m_wallet->readValue( accName + displayName_id ) ;
-
-				acc.append( accounts( accName,passWord,displayName,labels ) ) ;
-			}
-		}
-
-		emit getAccountsInfo( acc ) ;
-	}
-
-	this->deleteLater() ;
-}
-
 walletmanager::~walletmanager()
 {
 	emit walletmanagerClosed() ;
 
 	if( m_walletName == m_defaultWalletName ){
 		/*
-		 * This is our personal wallet and hence we close it when done with it
+		 * For KWalley,this is our personal wallet and hence we close it when done with it
 		 */
 		m_wallet->closeWallet( true ) ;
 	}else{
 		/*
-		 * we dont force close the wallet since we could be using a shared wallet and others may be
+		 * For KWallet,we dont force close the wallet since we could be using a shared wallet and others may be
 		 * using it or expect it to be open
 		 */
 		m_wallet->closeWallet( false ) ;
@@ -243,54 +147,30 @@ walletmanager::~walletmanager()
 
 void walletmanager::closeEvent( QCloseEvent * e )
 {
-	e->ignore();
-	this->HideUI();
+	e->ignore() ;
+	this->HideUI() ;
 }
 
 void walletmanager::HideUI()
 {
-	this->hide();
-
-	int i ;
-	int j ;
-
-	QStringList acc = m_wallet->readAllKeys() ;
-
-	j = acc.size() ;
-	for( i = 0 ; i < j ; i++ ){
-		m_wallet->deleteKey( acc.at( i ) ) ;
-	}
-
-	QString labels_id  = QString( LABEL_IDENTIFIER ) ;
-	QString display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
-
-	j = m_accounts.size() ;
-
-	for( i = 0 ; i < j ; i++ ){
-
-		const accounts& acc    = m_accounts.at( i ) ;
-		const QString& accName = acc.accountName() ;
-
-		m_wallet->addKey( accName,acc.passWord().toAscii() ) ;
-		m_wallet->addKey( accName + display_id,acc.displayName().toAscii() ) ;
-		m_wallet->addKey( accName + labels_id,acc.labels().toAscii() ) ;
-	}
-
 	emit getAccountsInfo( m_accounts ) ;
+	this->hide();
 	this->deleteLater() ;
 }
 
 void walletmanager::pushButtonAdd()
 {
+	this->disableAll() ;
 	addaccount * ac = new addaccount( this ) ;
 	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),
 		 this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
+	connect( ac,SIGNAL( cancelSignal() ),this,SLOT( enableAll() ) ) ;
 	ac->ShowUI() ;
 }
 
 void walletmanager::pushButtonClose()
 {
-	this->HideUI();
+	this->HideUI() ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -316,31 +196,49 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 
 void walletmanager::deleteRow()
 {
-	QMessageBox msg( this ) ;
 	QTableWidgetItem * item = m_table->currentItem() ;
-	QString acc = m_table->item( item->row(),0 )->text() ;
+	m_row = item->row() ;
+	m_accName = m_table->item( m_row,0 )->text() ;
 
-	msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( acc ) ) ;
-
+	QMessageBox msg( this ) ;
+	msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( m_accName ) ) ;
 	msg.addButton( tr( "yes" ),QMessageBox::YesRole ) ;
 	QPushButton * no_button = msg.addButton( tr( "no" ),QMessageBox::NoRole ) ;
 	msg.setDefaultButton( no_button ) ;
 
+	this->disableAll() ;
+
 	msg.exec() ;
 
 	if( msg.clickedButton() != no_button ){
-		this->deleteRow( item->row() ) ;
+		if( m_row < m_accounts.size() ){
+			m_accounts.remove( m_row ) ;
+		}
+		if( m_row < m_table->rowCount() ){
+
+			Task * t = new Task( m_wallet,m_accName ) ;
+			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+			t->start( Task::deleteAccount ) ;
+		}
+	}else{
+		this->enableAll() ;
 	}
 }
 
-void walletmanager::deleteRow( int row )
+void walletmanager::enableAll()
 {
-	if( row < m_accounts.size() ){
-		m_accounts.remove( row ) ;
-	}
-	if( row < m_table->rowCount() ){
-		m_table->removeRow( row ) ;
-	}
+	m_ui->groupBox->setEnabled( true ) ;
+	m_ui->pushButtonAccountAdd->setEnabled( true ) ;
+	m_ui->pushButtonClose->setEnabled( true ) ;
+	m_ui->tableWidget->setEnabled( true ) ;
+}
+
+void walletmanager::disableAll()
+{
+	m_ui->groupBox->setEnabled( false ) ;
+	m_ui->pushButtonAccountAdd->setEnabled( false ) ;
+	m_ui->pushButtonClose->setEnabled( false ) ;
+	m_ui->tableWidget->setEnabled( false ) ;
 }
 
 void walletmanager::editEntry()
@@ -355,44 +253,126 @@ void walletmanager::editEntry()
 	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
 	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),
 		 this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
+	connect( ac,SIGNAL( cancelSignal() ),this,SLOT( enableAll() ) ) ;
 	ac->ShowUI() ;
 }
 
-void walletmanager::addAccount( QString accountName,QString accountPassword,
-				 QString displayName,QString accountLabels )
+void walletmanager::addAccount( QString accName,QString accPassword,
+				 QString accDisplayName,QString accLabels )
 {
-	m_accounts.append( accounts( accountName,accountPassword,displayName,accountLabels ) ) ;
+	m_accName        = accName ;
+	m_accPassWord    = accPassword ;
+	m_accLabels      = accLabels ;
+	m_accDisplayName = accDisplayName ;
 
-	int row = m_table->rowCount() ;
-	m_table->insertRow( row ) ;
-
-	QTableWidgetItem * item ;
-
-	item = new QTableWidgetItem() ;
-	item->setText( accountName ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,0,item ) ;
-
-	item = new QTableWidgetItem() ;
-	item->setText( displayName ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,1,item ) ;
-
-	item = new QTableWidgetItem() ;
-	item->setText( accountLabels ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,2,item ) ;
-
-	this->selectRow( row,true ) ;
+	Task * t = new Task( m_wallet,m_accName,m_accPassWord,m_accLabels,m_accDisplayName ) ;
+	connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+	t->start( Task::addAccount ) ;
 }
 
 void walletmanager::editAccount( int row,QString accName,QString accPassword,
 				  QString accDisplayName,QString accLabels )
 {
-	m_accounts.replace( row,accounts( accName,accPassword,accDisplayName,accLabels ) ) ;
-	m_table->item( row,0 )->setText( accName ) ;
-	m_table->item( row,1 )->setText( accDisplayName ) ;
-	m_table->item( row,2 )->setText( accLabels ) ;
+	m_row            = row ;
+	m_accName        = accName ;
+	m_accPassWord    = accPassword ;
+	m_accLabels      = accLabels ;
+	m_accDisplayName = accDisplayName ;
+
+	Task * t = new Task( m_wallet,m_accName,m_accPassWord,m_accLabels,m_accDisplayName ) ;
+	connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+	t->start( Task::editAccount ) ;
+}
+
+#define TASK( x ) Task::action( r ) == x
+
+void walletmanager::taskComplete( int r )
+{
+	if( TASK( Task::editAccount ) ){
+
+		m_accounts.replace( m_row,accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
+
+		m_table->item( m_row,0 )->setText( m_accName ) ;
+		m_table->item( m_row,1 )->setText( m_accDisplayName ) ;
+		m_table->item( m_row,2 )->setText( m_accLabels ) ;
+		this->enableAll() ;
+
+	}else if( TASK( Task::addAccount ) ){
+
+		m_accounts.append( accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
+
+		int row = m_table->rowCount() ;
+		m_table->insertRow( row ) ;
+
+		QTableWidgetItem * item ;
+
+		item = new QTableWidgetItem() ;
+		item->setText( m_accName ) ;
+		item->setTextAlignment( Qt::AlignCenter ) ;
+		m_table->setItem( row,0,item ) ;
+
+		item = new QTableWidgetItem() ;
+		item->setText( m_accDisplayName ) ;
+		item->setTextAlignment( Qt::AlignCenter ) ;
+		m_table->setItem( row,1,item ) ;
+
+		item = new QTableWidgetItem() ;
+		item->setText( m_accLabels ) ;
+		item->setTextAlignment( Qt::AlignCenter ) ;
+		m_table->setItem( row,2,item ) ;
+
+		this->selectRow( row,true ) ;
+		this->enableAll() ;
+
+	}else if( TASK( Task::deleteAccount ) ){
+
+		m_table->removeRow( m_row ) ;
+		this->enableAll() ;
+
+	}else if( TASK( Task::getAccountInfo ) ){
+
+		emit getAccountsInfo( m_accounts ) ;
+		this->deleteLater() ;
+
+	}else if( TASK( Task::readAccountInfo ) ){
+
+		QTableWidgetItem * item ;
+
+		int j = m_accounts.size() ;
+		int row = -1 ;
+
+		for( int i = 0 ; i < j ; i++ ){
+			row = m_table->rowCount() ;
+
+			m_table->insertRow( row ) ;
+
+			item = new QTableWidgetItem() ;
+			item->setText( m_accounts.at( i ).accountName() ) ;
+			item->setTextAlignment( Qt::AlignCenter ) ;
+			m_table->setItem( row,0,item ) ;
+
+			item = new QTableWidgetItem() ;
+			item->setText( m_accounts.at( i ).displayName() ) ;
+			item->setTextAlignment( Qt::AlignCenter ) ;
+			m_table->setItem( row,1,item ) ;
+
+			item = new QTableWidgetItem() ;
+			item->setText( m_accounts.at( i ).labels() ) ;
+			item->setTextAlignment( Qt::AlignCenter ) ;
+			m_table->setItem( row,2,item ) ;
+		}
+
+		if( row >= 0 ){
+			this->selectRow( row,true ) ;
+		}
+
+		this->enableAll() ;
+	}else{
+		/*
+		 * we do not get here
+		 */
+		this->enableAll() ;
+	}
 }
 
 void walletmanager::selectRow( int row,bool highlight )

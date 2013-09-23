@@ -63,13 +63,13 @@ if( LXQTSUPPORT )
 
 		include_directories( "${LXQT_INCLUDEDIR}" )
 
-		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h )
+		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h task.h )
 
 		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 
-		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp
+		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp task.cpp
 			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -93,13 +93,13 @@ if( LXQTSUPPORT )
 	endif()
 elseif( NOKDESUPPORT )
 
-	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
+	QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
 
 	QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
 	QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 
-	add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp
+	add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
 		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -151,13 +151,13 @@ else()
 			message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
 		endif()
 		
-		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
+		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
 
 		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 
-		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp
+		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
 			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -180,13 +180,13 @@ else()
 		message( STATUS "------------------------------------------------------------------------------------------" )
 		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
 	else()
-		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h )
+		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
 		
 		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
 		
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
 		
-		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp
+		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
 		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 		
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )

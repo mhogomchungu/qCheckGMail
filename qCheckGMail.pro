@@ -41,7 +41,8 @@ HEADERS += \
     addaccount.h \
     accounts.h \
     statusicon.h \
-    qcheckgmailplugin.h
+    qcheckgmailplugin.h \
+    task.h
 
 SOURCES += \
     walletmanager.cpp \
@@ -51,7 +52,8 @@ SOURCES += \
     addaccount.cpp \
     accounts.cpp \
     statusicon.cpp \
-    qcheckgmailplugin.cpp
+    qcheckgmailplugin.cpp \
+    task.cpp
 
 FORMS += \
     walletmanager.ui \

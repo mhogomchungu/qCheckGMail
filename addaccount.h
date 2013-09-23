@@ -47,6 +47,7 @@ public:
 signals:
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
+	void cancelSignal( void ) ;
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;

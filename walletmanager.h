@@ -48,7 +48,7 @@ class walletmanager : public QDialog
 	typedef enum{
 		getAccountInfo,
 		changePassWord,
-		openWallet
+		readAccountInfo
 	}openOperation ;
 
 	Q_OBJECT
@@ -73,13 +73,14 @@ private slots:
 	void editEntry( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
+	void taskComplete( int ) ;
+	void enableAll( void ) ;
 private:
+	void disableAll( void ) ;
 	void changePassword( bool ) ;
-	void setFolderPath( void ) ;
-	void walletIsOpen_1( bool ) ;
-	void walletIsOpen_2( bool ) ;
+	void getAccountInformation( bool ) ;
+	void readAccountInformation( bool ) ;
 	void buildGUI( void ) ;
-	void deleteRow( int ) ;
 	void selectRow( int row,bool highlight ) ;
 	QString getPassWordFromAccount( QString ) ;
 	void HideUI( void ) ;
@@ -96,6 +97,11 @@ private:
 	QString m_defaultWalletName ;
 	bool m_getAccInfo ;
 	openOperation m_action ;
+	QString m_accName ;
+	QString m_accPassWord ;
+	QString m_accLabels ;
+	QString m_accDisplayName ;
+	int m_row ;
 };
 
 #endif // CONFIGURATIONDIALOG_H
