@@ -54,7 +54,6 @@ class walletmanager : public QDialog
 	Q_OBJECT
 public:
 	explicit walletmanager( QWidget * parent = 0 ) ;
-	static bool internalStorageInUse( void ) ;
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;
@@ -93,8 +92,6 @@ private:
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	QString m_walletName ;
-	QString m_passwordFolder ;
-	QString m_defaultWalletName ;
 	bool m_getAccInfo ;
 	openOperation m_action ;
 	QString m_accName ;

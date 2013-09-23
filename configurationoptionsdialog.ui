@@ -174,19 +174,6 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QLineEdit" name="lineEditWalletName">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>leave blank to reset to default</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
@@ -197,13 +184,23 @@
       </rect>
      </property>
      <property name="text">
-      <string>wallet's name</string>
+      <string>account information storage system</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBoxBackEndSystem">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>10</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
      </property>
     </widget>
    </widget>
@@ -269,7 +266,6 @@
  </widget>
  <tabstops>
   <tabstop>lineEditUpdateCheckInterval</tabstop>
-  <tabstop>lineEditWalletName</tabstop>
   <tabstop>checkBoxAutoStartEnabled</tabstop>
   <tabstop>comboBoxLocalLanguage</tabstop>
   <tabstop>checkBoxReportOnAllAccounts</tabstop>

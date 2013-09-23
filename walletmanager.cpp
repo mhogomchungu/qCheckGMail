@@ -25,19 +25,13 @@
 walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
 	m_walletName        = configurationoptionsdialog::walletName() ;
-	m_defaultWalletName = configurationoptionsdialog::defaultWalletName() ;
-}
-
-bool walletmanager::internalStorageInUse()
-{
-	return !lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ;
 }
 
 void walletmanager::buildGUI()
 {
 	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
-	
+
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
@@ -127,20 +121,6 @@ void walletmanager::getAccounts( void )
 walletmanager::~walletmanager()
 {
 	emit walletmanagerClosed() ;
-
-	if( m_walletName == m_defaultWalletName ){
-		/*
-		 * For KWalley,this is our personal wallet and hence we close it when done with it
-		 */
-		m_wallet->closeWallet( true ) ;
-	}else{
-		/*
-		 * For KWallet,we dont force close the wallet since we could be using a shared wallet and others may be
-		 * using it or expect it to be open
-		 */
-		m_wallet->closeWallet( false ) ;
-	}
-
 	m_wallet->deleteLater() ;
 	delete m_ui ;
 }
