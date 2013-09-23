@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
+
 #include "accounts.h"
 
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
@@ -47,8 +48,9 @@ public:
 		readAccountInfo
 	}action ;
 
-	Task( lxqt::Wallet::Wallet * wallet,QString accName,QString accPassWord,QString accLabels,QString accDisplayName ) ;
-	Task( lxqt::Wallet::Wallet * wallet,QString accName ) ;
+	Task( lxqt::Wallet::Wallet * wallet,const QString& accName,const QString& accPassWord,
+	      const QString& accLabels,const QString& accDisplayName ) ;
+	Task( lxqt::Wallet::Wallet * wallet,const QString& accName ) ;
 	Task( lxqt::Wallet::Wallet * wallet,QVector<accounts> * ) ;
 
 	~Task() ;
@@ -57,6 +59,8 @@ public:
 signals:
 	void taskFinished( int ) ;
 private:
+	void addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
+	void deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void run( void ) ;
 	Task::action m_action ;
 	lxqt::Wallet::Wallet * m_wallet ;

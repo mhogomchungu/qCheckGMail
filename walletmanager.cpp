@@ -195,7 +195,6 @@ void walletmanager::deleteRow()
 			m_accounts.remove( m_row ) ;
 		}
 		if( m_row < m_table->rowCount() ){
-
 			Task * t = new Task( m_wallet,m_accName ) ;
 			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
 			t->start( Task::deleteAccount ) ;

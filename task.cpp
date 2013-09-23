@@ -26,7 +26,8 @@
 
 #define TASK( x ) m_action == x
 
-Task::Task( lxqt::Wallet::Wallet * wallet,QString accName,QString accPassWord,QString accLabels,QString accDisplayName ):
+Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName,
+	    const QString& accPassWord,const QString& accLabels,const QString& accDisplayName ):
 	m_action( Task::addAccount ),m_wallet( wallet ),m_accName( accName ),m_accPassWord( accPassWord ),
 	m_accLabels( accLabels ),m_accDisplayName( accDisplayName )
 {
@@ -36,7 +37,7 @@ Task::Task( lxqt::Wallet::Wallet * wallet,QVector<accounts> * acc ) : m_wallet( 
 {
 }
 
-Task::Task( lxqt::Wallet::Wallet * wallet,QString accName ) : m_wallet( wallet ),m_accName( accName )
+Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName ) : m_wallet( wallet ),m_accName( accName )
 {
 }
 
@@ -51,6 +52,20 @@ void Task::start( Task::action action )
 	QThreadPool::globalInstance()->start( this ) ;
 }
 
+void Task::addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels)
+{
+	m_wallet->addKey( accName,m_accPassWord.toAscii() ) ;
+	m_wallet->addKey( accLabels,m_accLabels.toAscii() ) ;
+	m_wallet->addKey( accDisplayName,m_accDisplayName.toAscii() ) ;
+}
+
+void Task::deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels )
+{
+	m_wallet->deleteKey( accName ) ;
+	m_wallet->deleteKey( accLabels ) ;
+	m_wallet->deleteKey( accDisplayName ) ;
+}
+
 void Task::run()
 {
 	QString labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
@@ -58,25 +73,16 @@ void Task::run()
 
 	if( TASK( Task::editAccount ) ){
 
-		m_wallet->deleteKey( m_accName ) ;
-		m_wallet->deleteKey( labels_id ) ;
-		m_wallet->deleteKey( display_id ) ;
-
-		m_wallet->addKey( m_accName,m_accPassWord.toAscii() ) ;
-		m_wallet->addKey( labels_id,m_accLabels.toAscii() ) ;
-		m_wallet->addKey( display_id,m_accDisplayName.toAscii() ) ;
+		this->deleteKey( m_accName,display_id,labels_id ) ;
+		this->addKey( m_accName,display_id,labels_id ) ;
 
 	}else if( TASK( Task::addAccount ) ){
 
-		m_wallet->addKey( m_accName,m_accPassWord.toAscii() ) ;
-		m_wallet->addKey( labels_id,m_accLabels.toAscii() ) ;
-		m_wallet->addKey( display_id,m_accDisplayName.toAscii() ) ;
+		this->addKey( m_accName,display_id,labels_id ) ;
 
 	}else if( TASK( Task::deleteAccount ) ){
 
-		m_wallet->deleteKey( m_accName ) ;
-		m_wallet->deleteKey( labels_id ) ;
-		m_wallet->deleteKey( display_id ) ;
+		this->deleteKey( m_accName,display_id,labels_id ) ;
 
 	}else if( TASK( Task::readAccountInfo ) || TASK( Task::getAccountInfo ) ){
 
