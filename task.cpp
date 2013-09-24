@@ -84,7 +84,7 @@ void Task::run()
 
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 
-	}else if( TASK( Task::readAccountInfo ) || TASK( Task::getAccountInfo ) ){
+	}else if( TASK( Task::showAccountInfo ) || TASK( Task::getAccountInfo ) ){
 
 		QStringList accountNames = m_wallet->readAllKeys() ;
 
@@ -108,5 +108,7 @@ void Task::run()
 				m_acc->append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
+	}else{
+		;
 	}
 }

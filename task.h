@@ -45,7 +45,7 @@ public:
 		deleteAccount,
 		editAccount,
 		getAccountInfo,
-		readAccountInfo
+		showAccountInfo
 	}action ;
 
 	Task( lxqt::Wallet::Wallet * wallet,const QString& accName,const QString& accPassWord,

@@ -24,7 +24,7 @@
 
 walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
-	m_walletName        = configurationoptionsdialog::walletName() ;
+	m_walletName = configurationoptionsdialog::walletName() ;
 }
 
 void walletmanager::buildGUI()
@@ -56,7 +56,15 @@ void walletmanager::buildGUI()
 
 void walletmanager::ShowUI()
 {
-	m_action = walletmanager::readAccountInfo ;
+	m_action = walletmanager::showAccountInfo ;
+	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet->setInterfaceObject( this ) ;
+	m_wallet->open( m_walletName ) ;
+}
+
+void walletmanager::getAccounts( void )
+{
+	m_action = walletmanager::getAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->open( m_walletName ) ;
@@ -64,7 +72,6 @@ void walletmanager::ShowUI()
 
 void walletmanager::changeWalletPassword()
 {
-	m_action = walletmanager::changePassWord ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
@@ -78,44 +85,32 @@ void walletmanager::walletpassWordChanged( bool passwordChanged )
 
 void walletmanager::walletIsOpen( bool walletOpened )
 {
-	switch( m_action ){
-		case walletmanager::readAccountInfo: return this->readAccountInformation( walletOpened ) ;
-		case walletmanager::getAccountInfo : return this->getAccountInformation( walletOpened ) ;
-		case walletmanager::changePassWord : ;
-	}
-}
-
-void walletmanager::readAccountInformation( bool walletOpened )
-{
 	if( walletOpened ){
-		this->buildGUI() ;
-		this->disableAll() ;
-		this->show() ;
-		Task * t = new Task( m_wallet,&m_accounts ) ;
-		connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
-		t->start( Task::readAccountInfo ) ;
+		if( m_action == walletmanager::showAccountInfo ){
+
+			this->buildGUI() ;
+			this->disableAll() ;
+			this->show() ;
+
+			Task * t = new Task( m_wallet,&m_accounts ) ;
+			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+			t->start( Task::showAccountInfo ) ;
+
+		}else if( m_action == walletmanager::getAccountInfo ){
+
+			Task * t = new Task( m_wallet,&m_accounts ) ;
+			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
+			t->start( Task::getAccountInfo ) ;
+
+		}else{
+			/*
+			 * we dont get here
+			 */
+			this->deleteLater() ;
+		}
 	}else{
 		this->deleteLater() ;
 	}
-}
-
-void walletmanager::getAccountInformation( bool walletOpened )
-{
-	if( walletOpened ){
-		Task * t = new Task( m_wallet,&m_accounts ) ;
-		connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
-		t->start( Task::getAccountInfo ) ;
-	}else{
-		this->deleteLater() ;
-	}
-}
-
-void walletmanager::getAccounts( void )
-{
-	m_action = walletmanager::getAccountInfo ;
-	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
-	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->open( m_walletName ) ;
 }
 
 walletmanager::~walletmanager()
@@ -313,7 +308,7 @@ void walletmanager::taskComplete( int r )
 		emit getAccountsInfo( m_accounts ) ;
 		this->deleteLater() ;
 
-	}else if( TASK( Task::readAccountInfo ) ){
+	}else if( TASK( Task::showAccountInfo ) ){
 
 		QTableWidgetItem * item ;
 
