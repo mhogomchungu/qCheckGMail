@@ -129,7 +129,7 @@ void walletmanager::closeEvent( QCloseEvent * e )
 void walletmanager::HideUI()
 {
 	emit getAccountsInfo( m_accounts ) ;
-	this->hide();
+	this->hide() ;
 	this->deleteLater() ;
 }
 
