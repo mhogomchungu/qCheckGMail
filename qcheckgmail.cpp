@@ -452,13 +452,13 @@ void qCheckGMail::checkMail()
 		m_mutex->lock() ;
 
 		if( m_checkingMail ){
-			this->stuck();
+			this->stuck() ;
 		}else{
 			cancheckMail   = true ;
 			m_checkingMail = true ;
 		}
 
-		m_redoMailCheck   = false ;
+		m_redoMailCheck = false ;
 
 		m_mutex->unlock() ;
 
@@ -478,7 +478,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_currentLabel   = 0 ;
+	m_currentLabel = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
@@ -508,7 +508,7 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 
 	m_numberOfAccounts = m_accounts.size() ;
 
-	if( m_accounts.size() > 0 ){
+	if( m_numberOfAccounts > 0 ){
 		this->checkMail() ;
 	}else{
 		/*
