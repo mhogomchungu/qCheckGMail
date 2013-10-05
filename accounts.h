@@ -27,7 +27,7 @@ class accounts
 {
 public:
 	accounts( QString userName = QString(),QString password = QString(),
-		  QString displayName = QString(),QString labels = QString() );
+		  QString displayName = QString(),QString labels = QString() ) ;
 
 	accounts( const accounts& acc ) ;
 	accounts& operator=( const accounts& acc ) ;

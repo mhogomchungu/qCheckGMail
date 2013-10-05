@@ -24,8 +24,6 @@
 
 #include "lxqt_wallet/frontend/lxqt_wallet.h"
 
-#define TASK( x ) m_action == x
-
 Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName,
 	    const QString& accPassWord,const QString& accLabels,const QString& accDisplayName ):
 	m_action( Task::addAccount ),m_wallet( wallet ),m_accName( accName ),m_accPassWord( accPassWord ),
@@ -71,20 +69,25 @@ void Task::run()
 	QString labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
 	QString display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 
-	if( TASK( Task::editAccount ) ){
+	switch( m_action ){
+	case Task::editAccount :
 
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 		this->addKey( m_accName,display_id,labels_id ) ;
 
-	}else if( TASK( Task::addAccount ) ){
+		break ;
+	case Task::addAccount :
 
 		this->addKey( m_accName,display_id,labels_id ) ;
 
-	}else if( TASK( Task::deleteAccount ) ){
+		break ;
+	case Task::deleteAccount :
 
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 
-	}else if( TASK( Task::showAccountInfo ) || TASK( Task::getAccountInfo ) ){
+		break ;
+	case Task::showAccountInfo :
+	case Task::getAccountInfo  :
 
 		QStringList accountNames = m_wallet->readAllKeys() ;
 
@@ -108,7 +111,5 @@ void Task::run()
 				m_acc->append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
 		}
-	}else{
-		;
 	}
 }

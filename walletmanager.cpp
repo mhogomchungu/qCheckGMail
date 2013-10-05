@@ -258,27 +258,28 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 	t->start( Task::editAccount ) ;
 }
 
-#define TASK( x ) Task::action( r ) == x
-
 void walletmanager::taskComplete( int r )
 {
-	if( TASK( Task::editAccount ) ){
+	int row ;
+	int j ;
+	QTableWidgetItem * item ;
+
+	switch( Task::action( r ) ){
+	case Task::editAccount :
 
 		m_accounts.replace( m_row,accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
-
 		m_table->item( m_row,0 )->setText( m_accName ) ;
 		m_table->item( m_row,1 )->setText( m_accDisplayName ) ;
 		m_table->item( m_row,2 )->setText( m_accLabels ) ;
 		this->enableAll() ;
 
-	}else if( TASK( Task::addAccount ) ){
+		break ;
+	case Task::addAccount :
 
 		m_accounts.append( accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
 
-		int row = m_table->rowCount() ;
+		row = m_table->rowCount() ;
 		m_table->insertRow( row ) ;
-
-		QTableWidgetItem * item ;
 
 		item = new QTableWidgetItem() ;
 		item->setText( m_accName ) ;
@@ -298,22 +299,23 @@ void walletmanager::taskComplete( int r )
 		this->selectRow( row,true ) ;
 		this->enableAll() ;
 
-	}else if( TASK( Task::deleteAccount ) ){
+		break ;
+	case Task::deleteAccount :
 
 		m_table->removeRow( m_row ) ;
 		this->enableAll() ;
 
-	}else if( TASK( Task::getAccountInfo ) ){
+		break ;
+	case Task::getAccountInfo :
 
 		emit getAccountsInfo( m_accounts ) ;
 		this->deleteLater() ;
 
-	}else if( TASK( Task::showAccountInfo ) ){
+		break ;
+	case Task::showAccountInfo :
 
-		QTableWidgetItem * item ;
-
-		int j = m_accounts.size() ;
-		int row = -1 ;
+		j = m_accounts.size() ;
+		row = -1 ;
 
 		for( int i = 0 ; i < j ; i++ ){
 			row = m_table->rowCount() ;
@@ -341,10 +343,11 @@ void walletmanager::taskComplete( int r )
 		}
 
 		this->enableAll() ;
-	}else{
+		break ;
+	default:
 		/*
-		 * we do not get here
-		 */
+		* we do not get here
+		*/
 		this->enableAll() ;
 	}
 }
