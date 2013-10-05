@@ -81,7 +81,7 @@ private:
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 
-	QString getPassWordFromAccount( QString ) ;
+	QString getPassWordFromAccount( const QString& ) ;
 
 	Ui::walletmanager * m_ui ;
 

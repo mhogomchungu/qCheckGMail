@@ -338,10 +338,8 @@ void walletmanager::taskComplete( int r )
 			m_table->setItem( row,2,item ) ;
 		}
 
-		if( row >= 0 ){
-			this->selectRow( row,true ) ;
-		}
-
+		this->selectRow( row,true ) ;
+		
 		this->enableAll() ;
 		break ;
 	default:
@@ -354,19 +352,19 @@ void walletmanager::taskComplete( int r )
 
 void walletmanager::selectRow( int row,bool highlight )
 {
-	int j = m_table->columnCount() ;
-	for( int i = 0 ; i < j ; i++ ){
-		m_table->item( row,0 )->setSelected( highlight ) ;
-		m_table->item( row,1 )->setSelected( highlight ) ;
-		m_table->item( row,2 )->setSelected( highlight ) ;
-	}
+	if( row >= 0 ){
+		int j = m_table->columnCount() ;
+		for( int i = 0 ; i < j ; i++ ){
+			m_table->item( row,i )->setSelected( highlight ) ;
+		}
 
-	if( highlight && j > 1 ){
-		m_table->setCurrentCell( row,j - 1 ) ;
+		if( highlight && j > 0 ){
+			m_table->setCurrentCell( row,j - 1 ) ;
+		}
 	}
 }
 
-QString walletmanager::getPassWordFromAccount( QString accName )
+QString walletmanager::getPassWordFromAccount( const QString& accName )
 {
 	QString p ;
 	int j = m_accounts.size() ;
