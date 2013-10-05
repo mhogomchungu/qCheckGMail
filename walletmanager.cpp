@@ -86,23 +86,27 @@ void walletmanager::walletpassWordChanged( bool passwordChanged )
 void walletmanager::walletIsOpen( bool walletOpened )
 {
 	if( walletOpened ){
-		if( m_action == walletmanager::showAccountInfo ){
+		Task * t ;
+		switch( m_action ){
+		case walletmanager::showAccountInfo :
 
 			this->buildGUI() ;
 			this->disableAll() ;
 			this->show() ;
 
-			Task * t = new Task( m_wallet,&m_accounts ) ;
+			t = new Task( m_wallet,&m_accounts ) ;
 			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
 			t->start( Task::showAccountInfo ) ;
 
-		}else if( m_action == walletmanager::getAccountInfo ){
+			break ;
+		case walletmanager::getAccountInfo :
 
-			Task * t = new Task( m_wallet,&m_accounts ) ;
+			t = new Task( m_wallet,&m_accounts ) ;
 			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
 			t->start( Task::getAccountInfo ) ;
 
-		}else{
+			break ;
+		default:
 			/*
 			 * we dont get here
 			 */
