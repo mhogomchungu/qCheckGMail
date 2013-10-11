@@ -190,13 +190,12 @@ void walletmanager::deleteRow()
 	msg.exec() ;
 
 	if( msg.clickedButton() != no_button ){
-		if( m_row < m_accounts.size() ){
-			m_accounts.remove( m_row ) ;
-		}
-		if( m_row < m_table->rowCount() ){
+		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 			Task * t = new Task( m_wallet,m_accName ) ;
 			connect( t,SIGNAL( taskFinished( int ) ),this,SLOT( taskComplete( int ) ) ) ;
 			t->start( Task::deleteAccount ) ;
+		}else{
+			this->enableAll() ;
 		}
 	}else{
 		this->enableAll() ;
@@ -305,7 +304,8 @@ void walletmanager::taskComplete( int r )
 
 		break ;
 	case Task::deleteAccount :
-
+		
+		m_accounts.remove( m_row ) ;
 		m_table->removeRow( m_row ) ;
 		this->enableAll() ;
 
@@ -343,8 +343,8 @@ void walletmanager::taskComplete( int r )
 		}
 
 		this->selectRow( row,true ) ;
-		
 		this->enableAll() ;
+		
 		break ;
 	default:
 		/*

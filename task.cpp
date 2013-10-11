@@ -19,10 +19,9 @@
 
 #include <QThreadPool>
 #include <QStringList>
+#include <QDebug>
 
 #include "task.h"
-
-#include "lxqt_wallet/frontend/lxqt_wallet.h"
 
 Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName,
 	    const QString& accPassWord,const QString& accLabels,const QString& accDisplayName ):
@@ -50,7 +49,7 @@ void Task::start( Task::action action )
 	QThreadPool::globalInstance()->start( this ) ;
 }
 
-void Task::addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels)
+void Task::addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels )
 {
 	m_wallet->addKey( accName,m_accPassWord.toAscii() ) ;
 	m_wallet->addKey( accLabels,m_accLabels.toAscii() ) ;
@@ -64,49 +63,73 @@ void Task::deleteKey( const QString& accName,const QString& accDisplayName,const
 	m_wallet->deleteKey( accDisplayName ) ;
 }
 
+QByteArray Task::getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>& entries,const QString& acc )
+{
+	int j = entries.size() ;
+
+	for( int i = 0 ; i < j ; i++ ){
+		if( entries.at( i ).key == acc ){
+			return entries.at( i ).value ;
+		}
+	}
+
+	return QByteArray() ;
+}
+
 void Task::run()
 {
-	QString labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
-	QString display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
+	QString labels_id  ;
+	QString display_id ;
 
 	switch( m_action ){
 	case Task::editAccount :
 
+		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
+		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 		this->addKey( m_accName,display_id,labels_id ) ;
 
 		break ;
 	case Task::addAccount :
 
+		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
+		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->addKey( m_accName,display_id,labels_id ) ;
 
 		break ;
 	case Task::deleteAccount :
 
+		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
+		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 
 		break ;
 	case Task::showAccountInfo :
 	case Task::getAccountInfo  :
 
-		QStringList accountNames = m_wallet->readAllKeys() ;
-
-		int j = accountNames.size() ;
-
-		QString passWord ;
-		QString labels ;
-		QString displayName ;
+		QVector<lxqt::Wallet::walletKeyValues> entries = m_wallet->readAllKeyValues() ;
 
 		m_acc->clear() ;
 
+		labels_id  = QString( LABEL_IDENTIFIER ) ;
+		display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
+
+		QByteArray passWord ;
+		QByteArray labels ;
+		QByteArray displayName ;
+
+		QString accName ;
+
+		int j = entries.size() ;
+
 		for( int i = 0 ; i < j ; i++ ){
-			const QString& accName = accountNames.at( i ) ;
+			accName = entries.at( i ).key ;
 			if( accName.endsWith( labels_id ) || accName.endsWith( display_id ) ){
 				;
 			}else{
-				passWord    = m_wallet->readValue( accName ) ;
-				labels      = m_wallet->readValue( accName + labels_id ) ;
-				displayName = m_wallet->readValue( accName + display_id ) ;
+				passWord    = this->getAccInfo( entries,accName ) ;
+				labels      = this->getAccInfo( entries,accName + labels_id ) ;
+				displayName = this->getAccInfo( entries,accName + display_id ) ;
 
 				m_acc->append( accounts( accName,passWord,displayName,labels ) ) ;
 			}

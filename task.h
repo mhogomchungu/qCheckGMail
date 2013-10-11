@@ -26,6 +26,7 @@
 #include <QVector>
 
 #include "accounts.h"
+#include "lxqt_wallet/frontend/lxqt_wallet.h"
 
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
@@ -59,6 +60,7 @@ public:
 signals:
 	void taskFinished( int ) ;
 private:
+	QByteArray getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>&,const QString& acc ) ;
 	void addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void run( void ) ;
@@ -69,6 +71,7 @@ private:
 	QString m_accLabels ;
 	QString m_accDisplayName ;
 	QVector<accounts> * m_acc ;
+	QByteArray m_emptyEntry ;
 };
 
 #endif // TASK_H
