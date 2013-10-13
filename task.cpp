@@ -63,44 +63,38 @@ void Task::deleteKey( const QString& accName,const QString& accDisplayName,const
 	m_wallet->deleteKey( accDisplayName ) ;
 }
 
-QByteArray Task::getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>& entries,const QString& acc )
+const QByteArray& Task::getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>& entries,const QString& acc )
 {
 	int j = entries.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		if( entries.at( i ).key == acc ){
-			return entries.at( i ).value ;
+		if( entries.at( i ).getKey() == acc ){
+			return entries.at( i ).getValue() ;
 		}
 	}
 
-	return QByteArray() ;
+	return m_emptyEntry ;
 }
 
 void Task::run()
 {
-	QString labels_id  ;
-	QString display_id ;
+	QString labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
+	QString display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 
 	switch( m_action ){
 	case Task::editAccount :
 
-		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
-		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 		this->addKey( m_accName,display_id,labels_id ) ;
 
 		break ;
 	case Task::addAccount :
 
-		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
-		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->addKey( m_accName,display_id,labels_id ) ;
 
 		break ;
 	case Task::deleteAccount :
 
-		labels_id  = m_accName + QString( LABEL_IDENTIFIER ) ;
-		display_id = m_accName + QString( DISPLAY_NAME_IDENTIFIER ) ;
 		this->deleteKey( m_accName,display_id,labels_id ) ;
 
 		break ;
@@ -114,22 +108,16 @@ void Task::run()
 		labels_id  = QString( LABEL_IDENTIFIER ) ;
 		display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
-		QByteArray passWord ;
-		QByteArray labels ;
-		QByteArray displayName ;
-
-		QString accName ;
-
 		int j = entries.size() ;
 
 		for( int i = 0 ; i < j ; i++ ){
-			accName = entries.at( i ).key ;
+			const QString& accName = entries.at( i ).getKey() ;
 			if( accName.endsWith( labels_id ) || accName.endsWith( display_id ) ){
 				;
 			}else{
-				passWord    = this->getAccInfo( entries,accName ) ;
-				labels      = this->getAccInfo( entries,accName + labels_id ) ;
-				displayName = this->getAccInfo( entries,accName + display_id ) ;
+				const QByteArray& passWord    = this->getAccInfo( entries,accName ) ;
+				const QByteArray& labels      = this->getAccInfo( entries,accName + labels_id ) ;
+				const QByteArray& displayName = this->getAccInfo( entries,accName + display_id ) ;
 
 				m_acc->append( accounts( accName,passWord,displayName,labels ) ) ;
 			}
