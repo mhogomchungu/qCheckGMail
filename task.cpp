@@ -51,9 +51,9 @@ void Task::start( Task::action action )
 
 void Task::addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels )
 {
-	m_wallet->addKey( accName,m_accPassWord.toAscii() ) ;
-	m_wallet->addKey( accLabels,m_accLabels.toAscii() ) ;
-	m_wallet->addKey( accDisplayName,m_accDisplayName.toAscii() ) ;
+	m_wallet->addKey( accName,m_accPassWord.toLatin1() ) ;
+	m_wallet->addKey( accLabels,m_accLabels.toLatin1() ) ;
+	m_wallet->addKey( accDisplayName,m_accDisplayName.toLatin1() ) ;
 }
 
 void Task::deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels )

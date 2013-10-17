@@ -550,7 +550,7 @@ void qCheckGMail::setLocalLanguage()
 	QString lang     = configurationoptionsdialog::localLanguage() ;
 	QString langPath = configurationoptionsdialog::localLanguagePath() ;
 
-	QByteArray r = lang.toAscii() ;
+	QByteArray r = lang.toLatin1() ;
 
 	QByteArray e( "english_US" ) ;
 	if( e == r ){
@@ -573,7 +573,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 	QString lang     = configurationoptionsdialog::localLanguage() ;
 	QString langPath = configurationoptionsdialog::localLanguagePath() ;
 
-	QByteArray r = lang.toAscii() ;
+	QByteArray r = lang.toLatin1() ;
 
 	QByteArray e( "english_US" ) ;
 	if( e == r ){
@@ -627,7 +627,7 @@ void qCheckGMail::stopTimer()
 int qCheckGMail::instanceAlreadyRunning()
 {
 	QString lang = configurationoptionsdialog::localLanguage() ;
-	QByteArray r = lang.toAscii() ;
+	QByteArray r = lang.toLatin1() ;
 
 	QByteArray e( "english_US" ) ;
 	if( e == r ){
@@ -656,7 +656,7 @@ int qCheckGMail::instanceAlreadyRunning()
 int qCheckGMail::autoStartDisabled()
 {
 	QString lang = configurationoptionsdialog::localLanguage() ;
-	QByteArray r = lang.toAscii() ;
+	QByteArray r = lang.toLatin1() ;
 
 	QByteArray e( "english_US" ) ;
 	if( e == r ){
