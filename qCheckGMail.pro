@@ -10,17 +10,6 @@ TARGET = qCheckGMail
 
 TEMPLATE = app
 
-INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/src/qCheckGMail-build/
-
-LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib -lgcrypt -llxqtwallet
-
-TRANSLATIONS += translations.ts/translations.ts
-TRANSLATIONS += translations.ts/greek_GR.ts
-TRANSLATIONS += translations.ts/german_DE.ts
-TRANSLATIONS += translations.ts/dutch_NL.ts
-TRANSLATIONS += translations.ts/spanish_ES.ts
-TRANSLATIONS += translations.ts/french_FR.ts
-
 OTHER_FILES += \
     README.md \
     qCheckGMailError.svg \
@@ -32,7 +21,7 @@ OTHER_FILES += \
     CMakeLists.txt \
     cmake_uninstall.cmake.in \
     changelog \
-    BUILD_INSTRUCTIONS \
+    BUILD_INSTRUCTIONS
 
 HEADERS += \
     walletmanager.h \
@@ -58,7 +47,18 @@ SOURCES += \
 FORMS += \
     walletmanager.ui \
     configurationoptionsdialog.ui \
-    addaccount.ui \
+    addaccount.ui
 
 RESOURCES += \
     icon.qrc
+
+INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/src/qCheckGMail-build/
+
+LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib -lgcrypt -llxqtwallet
+
+TRANSLATIONS += translations.ts/translations.ts
+TRANSLATIONS += translations.ts/greek_GR.ts
+TRANSLATIONS += translations.ts/german_DE.ts
+TRANSLATIONS += translations.ts/dutch_NL.ts
+TRANSLATIONS += translations.ts/spanish_ES.ts
+TRANSLATIONS += translations.ts/french_FR.ts
