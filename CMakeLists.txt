@@ -44,10 +44,10 @@ else()
 	INCLUDE( ${QT_USE_FILE} )
 endif()
 
-install ( FILES qCheckGMail-GotMail.svg DESTINATION share/icons )
-install ( FILES qCheckGMail-NoMail.svg DESTINATION share/icons )
-install ( FILES qCheckGMail.svg DESTINATION share/icons )
-install ( FILES qCheckGMailError.svg DESTINATION share/icons )
+install ( FILES qCheckGMail-GotMail.svg DESTINATION share/pixmaps )
+install ( FILES qCheckGMail-NoMail.svg DESTINATION share/pixmaps )
+install ( FILES qCheckGMail.svg DESTINATION share/pixmaps )
+install ( FILES qCheckGMailError.svg DESTINATION share/pixmaps )
 
 #install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
@@ -240,6 +240,8 @@ else()
 	endif()
 endif()
 
+#Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg
+
 if( LXQTSUPPORT )
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
@@ -259,7 +261,7 @@ Comment=
 Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
-Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg
+Icon=qCheckGMail
 MimeType=
 Name[en_US]=qCheckGMail
 Name=qCheckGMail
@@ -284,7 +286,7 @@ Comment=
 Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail -a
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
-Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg
+Icon=qCheckGMail
 MimeType=
 Name[en_US]=qCheckGMail
 Name=qCheckGMail

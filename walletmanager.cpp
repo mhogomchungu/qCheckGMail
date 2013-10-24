@@ -304,7 +304,7 @@ void walletmanager::taskComplete( int r )
 
 		break ;
 	case Task::deleteAccount :
-		
+
 		m_accounts.remove( m_row ) ;
 		m_table->removeRow( m_row ) ;
 		this->enableAll() ;
@@ -344,7 +344,7 @@ void walletmanager::taskComplete( int r )
 
 		this->selectRow( row,true ) ;
 		this->enableAll() ;
-		
+
 		break ;
 	default:
 		/*
