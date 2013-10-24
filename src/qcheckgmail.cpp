@@ -75,7 +75,7 @@ void qCheckGMail::start()
 
 void qCheckGMail::run()
 {
-	m_enableDebug = this->enableDebug() ;
+	m_enableDebug = statusicon::enableDebug() ;
 
 	this->setLocalLanguage();
 
