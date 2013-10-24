@@ -23,8 +23,9 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 {
 	m_timer = new QTimer( this ) ;
 
-	m_numberOfAccounts = 0 ;
-	m_numberOfLabels   = 0 ;
+	m_numberOfAccounts  = 0 ;
+	m_numberOfLabels    = 0 ;
+	m_previousMailCount = -1;
 
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
@@ -263,7 +264,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 					QString x = QString::number( m_mailCount ) ;
 					this->showToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
-				statusicon::newEmailNotify() ;
+				this->audioNotify() ;
 			}else{
 				QString icon = QString( "qCheckGMail" ) ;
 				this->changeIcon( icon ) ;
@@ -312,7 +313,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		this->changeIcon( icon ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( icon,this->displayName(),info ) ;
-		statusicon::newEmailNotify() ;
+		this->audioNotify() ;
 		this->doneCheckingMail() ;
 	}else{
 		/*
@@ -348,6 +349,15 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			}
 		}
 	}
+}
+
+void qCheckGMail::audioNotify()
+{
+	if( m_mailCount > m_previousMailCount ){
+		statusicon::newEmailNotify() ;
+	}
+
+	m_previousMailCount = m_mailCount ;
 }
 
 void qCheckGMail::doneCheckingMail()

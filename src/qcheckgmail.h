@@ -95,6 +95,7 @@ private:
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void stuck( void ) ;
+	void audioNotify( void ) ;
 	QTimer * m_timer ;
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;
@@ -110,6 +111,7 @@ private:
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
+	int m_previousMailCount ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };

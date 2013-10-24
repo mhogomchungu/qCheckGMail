@@ -12,47 +12,47 @@ TEMPLATE = app
 
 OTHER_FILES += \
     README.md \
-    qCheckGMailError.svg \
-    qCheckGMail.svg \
-    qCheckGMail.pro.user \
-    qCheckGMail.notifyrc \
-    qCheckGMail-NoMail.svg \
-    qCheckGMail-GotMail.svg \
+    icons/qCheckGMailError.svg \
+    icons/qCheckGMail.svg \
+    icons/qCheckGMail.pro.user \
+    icons/qCheckGMail.notifyrc \
+    icons/qCheckGMail-NoMail.svg \
+    icons/qCheckGMail-GotMail.svg \
     CMakeLists.txt \
     cmake_uninstall.cmake.in \
     changelog \
     BUILD_INSTRUCTIONS
 
 HEADERS += \
-    walletmanager.h \
-    qcheckgmail.h \
-    configurationoptionsdialog.h \
-    addaccount.h \
-    accounts.h \
-    statusicon.h \
-    qcheckgmailplugin.h \
-    task.h
+    src/walletmanager.h \
+    src/qcheckgmail.h \
+    src/configurationoptionsdialog.h \
+    src/addaccount.h \
+    src/accounts.h \
+    src/statusicon.h \
+    src/qcheckgmailplugin.h \
+    src/task.h
 
 SOURCES += \
-    walletmanager.cpp \
-    qcheckgmail.cpp \
-    main.cpp \
-    configurationoptionsdialog.cpp \
-    addaccount.cpp \
-    accounts.cpp \
-    statusicon.cpp \
-    qcheckgmailplugin.cpp \
-    task.cpp
+    src/walletmanager.cpp \
+    src/qcheckgmail.cpp \
+    src/main.cpp \
+    src/configurationoptionsdialog.cpp \
+    src/addaccount.cpp \
+    src/accounts.cpp \
+    src/statusicon.cpp \
+    src/qcheckgmailplugin.cpp \
+    src/task.cpp
 
 FORMS += \
-    walletmanager.ui \
-    configurationoptionsdialog.ui \
-    addaccount.ui
+    src/walletmanager.ui \
+    src/configurationoptionsdialog.ui \
+    asrc/ddaccount.ui
 
 RESOURCES += \
-    icon.qrc
+    icons/icon.qrc
 
-INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/src/qCheckGMail-build/
+INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/projects/build/qCheckGMail
 
 LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib -lgcrypt -llxqtwallet
 
