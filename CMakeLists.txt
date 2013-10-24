@@ -44,25 +44,25 @@ else()
 	INCLUDE( ${QT_USE_FILE} )
 endif()
 
-install ( FILES qCheckGMail-GotMail.svg DESTINATION share/pixmaps )
-install ( FILES qCheckGMail-NoMail.svg DESTINATION share/pixmaps )
-install ( FILES qCheckGMail.svg DESTINATION share/pixmaps )
-install ( FILES qCheckGMailError.svg DESTINATION share/pixmaps )
+install( FILES icons/qCheckGMail-GotMail.svg DESTINATION share/pixmaps )
+install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION share/pixmaps )
+install( FILES icons/qCheckGMail.svg         DESTINATION share/pixmaps )
+install( FILES icons/qCheckGMailError.svg    DESTINATION share/pixmaps )
 
-#install ( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
-#install ( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
-#install ( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
-#install ( FILES translations.ts/german_DE.ts DESTINATION share/qCheckGMail/translations.ts/ )
-#install ( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
-#install ( FILES translations.ts/french_FR.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/dutch_NL.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/german_DE.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
+#install( FILES translations.ts/french_FR.ts DESTINATION share/qCheckGMail/translations.ts/ )
 
-install ( FILES translations.qm/greek_GR.qm DESTINATION share/qCheckGMail/translations.qm/ )
-install ( FILES translations.qm/dutch_NL.qm DESTINATION share/qCheckGMail/translations.qm/ )
-install ( FILES translations.qm/german_DE.qm DESTINATION share/qCheckGMail/translations.qm/ )
-install ( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/translations.qm/ )
-install ( FILES translations.qm/french_FR.qm DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/greek_GR.qm   DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/dutch_NL.qm   DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/german_DE.qm  DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/french_FR.qm  DESTINATION share/qCheckGMail/translations.qm/ )
 
-install ( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
+install( FILES qCheckGMail.notifyrc DESTINATION ${DATA_INSTALL_DIR}/qCheckGMail/ )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
@@ -77,17 +77,17 @@ if( LXQTSUPPORT )
 		include_directories( "${LXQT_INCLUDEDIR}" )
 
 		if( QT5 )
-			QT5_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h task.h )
-			QT5_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h src/task.h )
+			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		else()
-			QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h qcheckgmailplugin.h task.h )
-			QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h src/task.h )
+			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		endif()
 		
-		add_library( qCheckGMail MODULE qcheckgmail.cpp accounts.cpp statusicon.cpp qcheckgmailplugin.cpp task.cpp
-			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp src/task.cpp
+			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
@@ -111,17 +111,17 @@ if( LXQTSUPPORT )
 elseif( NOKDESUPPORT )
 
 	if( QT5 )
-		QT5_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-		QT5_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-		QT5_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+		QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+		QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 	else()
-		QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-		QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-		QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+		QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+		QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 	endif()
 
-	add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
-		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+	add_executable( src/qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
@@ -173,17 +173,17 @@ else()
 		endif()
 		
 		if( QT5 )
-			QT5_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-			QT5_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		else()
-			QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-			QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		endif()
 
-		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
-			walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
@@ -192,11 +192,11 @@ else()
 
 		install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
-		install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
 
-		install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
 			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
 
@@ -206,16 +206,16 @@ else()
 		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
 	else()
 		if( QT5 )
-			QT5_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-			QT5_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		else()
-			QT4_WRAP_CPP( MOC qcheckgmail.h walletmanager.h addaccount.h configurationoptionsdialog.h statusicon.h task.h )
-			QT4_WRAP_UI( UI walletmanager.ui addaccount.ui configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icon.qrc )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		endif()
-		add_executable( qCheckGMail main.cpp qcheckgmail.cpp accounts.cpp statusicon.cpp task.cpp
-		walletmanager.cpp addaccount.cpp configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( src/qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 		
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
@@ -225,11 +225,11 @@ else()
 		
 		install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 		
-		install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
 		
-		install ( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
 		
