@@ -25,7 +25,8 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
-	m_previousMailCount = -1;
+	m_previousMailCount = -1 ;
+	m_mailCount         = -1 ;
 
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
@@ -253,7 +254,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 * done checking all labels on all accounts
 			 */
 			m_accountsStatus += QString( "</table>" ) ;
-
 			if( m_mailCount > 0 ){
 				QString icon = QString( "qCheckGMail-GotMail" ) ;
 				this->changeIcon( icon ) ;
@@ -356,8 +356,6 @@ void qCheckGMail::audioNotify()
 	if( m_mailCount > m_previousMailCount ){
 		statusicon::newEmailNotify() ;
 	}
-
-	m_previousMailCount = m_mailCount ;
 }
 
 void qCheckGMail::doneCheckingMail()
@@ -474,6 +472,7 @@ void qCheckGMail::checkMail()
 
 		if( cancheckMail ){
 			m_accountsStatus  = QString( "<table>" ) ;
+			m_previousMailCount = m_mailCount ;
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
