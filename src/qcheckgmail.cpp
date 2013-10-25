@@ -179,7 +179,7 @@ QString qCheckGMail::displayName()
 	}
 }
 
-QString qCheckGMail::getAtomComponent( const QByteArray& msg,QString cmp )
+QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp )
 {
 	QString x = QString( "<%1>" ).arg( cmp ) ;
 	QString z = QString( "</%1>" ).arg( cmp ) ;

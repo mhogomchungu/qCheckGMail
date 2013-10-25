@@ -74,7 +74,7 @@ private slots:
 	void configurePassWord( void ) ;
 private:
 	QString displayName( void ) ;
-	QString getAtomComponent( const QByteArray&,QString ) ;
+	QString getAtomComponent( const QByteArray&,const QString& ) ;
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( QString,QString,QString ) ;
 	void showPausedIcon( bool ) ;
@@ -83,7 +83,7 @@ private:
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
 	void walletNotOPenedError( void ) ;
-	void checkMail( const accounts& acc,const QString& label );
+	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( QString icon ) ;
 	void getAccountsInfo( void ) ;
