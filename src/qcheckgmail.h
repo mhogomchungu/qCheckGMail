@@ -74,7 +74,8 @@ private slots:
 	void configurePassWord( void ) ;
 private:
 	QString displayName( void ) ;
-	QString getAtomComponent( const QByteArray&,const QString& ) ;
+	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
+	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( QString,QString,QString ) ;
 	void showPausedIcon( bool ) ;
@@ -96,6 +97,7 @@ private:
 	void doneCheckingMail( void ) ;
 	void stuck( void ) ;
 	void audioNotify( void ) ;
+	void checkAccountLastUpdate( const QByteArray&,int ) ;
 	QTimer * m_timer ;
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;
@@ -106,12 +108,12 @@ private:
 	bool m_reportOnAllAccounts ;
 	bool m_enableDebug ;
 	bool m_redoMailCheck ;
+	bool m_accountUpdated ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
-	int m_previousMailCount ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };

@@ -25,8 +25,6 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
-	m_previousMailCount = -1 ;
-	m_mailCount         = -1 ;
 
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
@@ -179,15 +177,20 @@ QString qCheckGMail::displayName()
 	}
 }
 
-QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp )
+QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,int from )
 {
 	QString x = QString( "<%1>" ).arg( cmp ) ;
 	QString z = QString( "</%1>" ).arg( cmp ) ;
 
-	int index_1 = msg.indexOf( x ) + x.size() ;
+	int index_1 = msg.indexOf( x,from ) + x.size() ;
 	int index_2 = msg.indexOf( z ) - index_1  ;
 
 	return QString( msg.mid( index_1,index_2 ) ) ;
+}
+
+QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,const QString& entry )
+{
+	return this->getAtomComponent( msg,cmp,msg.indexOf( entry ) ) ;
 }
 
 void qCheckGMail::wrongAccountNameOrPassword()
@@ -226,6 +229,8 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
 		m_accountsStatus += r.arg( this->displayName() ).arg( mailCount ) ;
 	}
+
+	this->checkAccountLastUpdate( msg,mailCount_1 ) ;
 
 	/*
 	 * done processing a label in an account,go to the next label if present
@@ -298,6 +303,8 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 
 	int count = mailCount.toInt() ;
 
+	this->checkAccountLastUpdate( msg,count ) ;
+
 	if( count > 0 ){
 
 		QString info ;
@@ -351,9 +358,67 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 	}
 }
 
+void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
+{
+	accounts * acc = m_accounts.data() + m_currentAccount ;
+	accountLable& label = acc->getAccountLabel( m_currentLabel ) ;
+
+	if( label.emailCount() == -1 ){
+		if( mailCount > 0 ){
+			/*
+			 * we will get here one the first update check after the program startup.
+			 * add to each label the last time the state of the account was changed,ie an email
+			 * was added or read among other things that could happen and registers as an account status change
+			 */
+			m_accountUpdated = true ;
+			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ),QString( "entry" ) ) ) ;
+		}else{
+			/*
+			 *
+			 */
+			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ) ) ) ;
+		}
+	}else{
+		if( mailCount == 0 ){
+			/*
+			 *
+			 *
+			 */
+			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ) ) ) ;
+		}else{
+			QString m = this->getAtomComponent( msg,QString( "modified" ),QString( "entry" ) ) ;
+			const QString& z = label.lastModified() ;
+			if( m != z ){
+				/*
+				 *
+				 */
+				if( mailCount >= label.emailCount() ){
+					/*
+					 *
+					 */
+					m_accountUpdated = true ;
+				}else{
+					/*
+					 *
+					 *
+					 */
+				}
+				label.setLastModifiedTime( m ) ;
+			}else{
+				/*
+				 *
+				 */
+				;
+			}
+		}
+	}
+
+	label.emailCount( mailCount ) ;
+}
+
 void qCheckGMail::audioNotify()
 {
-	if( m_mailCount > m_previousMailCount ){
+	if( m_accountUpdated ){
 		statusicon::newEmailNotify() ;
 	}
 }
@@ -472,9 +537,9 @@ void qCheckGMail::checkMail()
 
 		if( cancheckMail ){
 			m_accountsStatus  = QString( "<table>" ) ;
-			m_previousMailCount = m_mailCount ;
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
+			m_accountUpdated  = false ;
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}else{
 			;

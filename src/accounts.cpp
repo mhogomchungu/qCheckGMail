@@ -19,6 +19,7 @@
 
 #include <QDebug>
 #include "accounts.h"
+#include <QStringList>
 
 accounts::accounts( QString accountName,QString password,QString displayName,QString labels ) :
 	m_accountName( accountName ),m_passWord( password ),m_displayName( displayName ),m_labels( labels )
@@ -34,7 +35,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		baseLabel = QString( "https://mail.google.com/a/%1/feed/atom/" ).arg( domain ) ;
 	}
 
-	m_labelUrls.append( baseLabel ) ;
+	m_labelUrls.append( accountLable( baseLabel ) ) ;
 
 	if( m_labels.endsWith( "," ) ){
 		m_labels.truncate( m_labels.size() - 1 ) ;
@@ -46,30 +47,9 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		QStringList l = m_labels.split( "," ) ;
 		int j = l.size() ;
 		for( int i = 0 ; i < j ; i++ ){
-			m_labelUrls.append( baseLabel + l.at( i ) ) ;
+			m_labelUrls.append( accountLable( baseLabel + l.at( i ) ) ) ;
 		}
 	}
-}
-
-accounts::accounts( const accounts& acc )
-{
-	m_accountName = acc.m_accountName ;
-	m_passWord    = acc.m_passWord    ;
-	m_labels      = acc.m_labels      ;
-	m_labelUrls   = acc.m_labelUrls   ;
-	m_displayName = acc.m_displayName ;
-	m_emptyLabelUrl  = acc.m_emptyLabelUrl  ;
-}
-
-accounts& accounts::operator=( const accounts& acc )
-{
-	m_accountName = acc.m_accountName ;
-	m_passWord    = acc.m_passWord    ;
-	m_labels      = acc.m_labels      ;
-	m_labelUrls   = acc.m_labelUrls   ;
-	m_displayName = acc.m_displayName ;
-	m_emptyLabelUrl  = acc.m_emptyLabelUrl  ;
-	return *this ;
 }
 
 const QString& accounts::accountName() const
@@ -94,12 +74,7 @@ const QString& accounts::labels() const
 
 const QString& accounts::defaultLabelUrl() const
 {
-	return m_labelUrls.at( 0 ) ;
-}
-
-const QStringList& accounts::labelUrls() const
-{
-	return m_labelUrls ;
+	return m_labelUrls.at( 0 ).labelUrl() ;
 }
 
 int accounts::numberOfLabels() const
@@ -107,12 +82,54 @@ int accounts::numberOfLabels() const
 	return m_labelUrls.size() ;
 }
 
+accountLable& accounts::getAccountLabel( int i )
+{
+	accountLable * acc = m_labelUrls.data() + i ;
+	return *acc ;
+}
+
 const QString &accounts::labelUrlAt( int i ) const
 {
 	if( i < m_labelUrls.size() ){
-		return m_labelUrls.at( i ) ;
+		return m_labelUrls.at( i ).labelUrl() ;
 	}else{
-		return m_emptyLabelUrl ;
+		static QString ShouldNotGetHere ;
+		return ShouldNotGetHere ;
 	}
 }
 
+accountLable::accountLable( const QString& labelUrl,int emailCount ) :
+	m_emailCount( emailCount ),m_labelUrl( labelUrl )
+{
+	m_labelName = labelUrl.split( "/" ).last() ;
+}
+
+int accountLable::emailCount() const
+{
+	return m_emailCount ;
+}
+
+const QString& accountLable::labelUrl() const
+{
+	return m_labelUrl ;
+}
+
+const QString& accountLable::labelName() const
+{
+	return m_labelName ;
+}
+
+void accountLable::emailCount( int count )
+{
+	m_emailCount = count ;
+}
+
+const QString& accountLable::lastModified() const
+{
+	return m_lastModifiedTime ;
+}
+
+void accountLable::setLastModifiedTime( const QString& time )
+{
+	m_lastModifiedTime = time ;
+}

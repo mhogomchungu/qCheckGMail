@@ -21,7 +21,23 @@
 #define ACCOUNTS_H
 
 #include <QString>
-#include <QStringList>
+#include <QVector>
+
+class accountLable{
+public:
+	accountLable( const QString& accountLabel = QString(),int accountEmailCount = -1 ) ;
+	const QString& labelUrl( void )     const  ;
+	const QString& labelName( void )    const  ;
+	int emailCount( void )              const  ;
+	const QString& lastModified( void ) const  ;
+	void setLastModifiedTime( const QString& ) ;
+	void emailCount( int ) ;
+private:
+	int m_emailCount ;
+	QString m_labelUrl ;
+	QString m_labelName ;
+	QString m_lastModifiedTime ;
+};
 
 class accounts
 {
@@ -29,24 +45,20 @@ public:
 	accounts( QString userName = QString(),QString password = QString(),
 		  QString displayName = QString(),QString labels = QString() ) ;
 
-	accounts( const accounts& acc ) ;
-	accounts& operator=( const accounts& acc ) ;
-
 	const QString& accountName( void )      const ;
 	const QString& passWord( void )         const ;
 	const QString& defaultLabelUrl( void )  const ;
 	const QString& displayName( void )      const ;
 	const QString& labels( void )           const ;
 	const QString& labelUrlAt( int )        const ;
-	const QStringList& labelUrls( void )    const ;
 	int   numberOfLabels( void )            const ;
+	accountLable& getAccountLabel( int ) ;
 private:
 	QString m_accountName   ;
 	QString m_passWord      ;
 	QString m_displayName   ;
 	QString m_labels        ;
-	QString m_emptyLabelUrl ;
-	QStringList m_labelUrls ;
+	QVector< accountLable > m_labelUrls ;
 };
 
 #endif // ACCOUNTS_H
