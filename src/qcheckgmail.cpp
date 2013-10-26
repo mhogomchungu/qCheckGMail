@@ -365,11 +365,11 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 
 	if( label.emailCount() == -1 ){
 		/*
-		 * we will get here one the first update check after the program startup.
+		 * we will get here on the first update check after the program start.
 		 */
 		if( mailCount > 0 ){
 			/*
-			 * This label has email,mark the time the last email was added or read
+			 * This label has new email(s),mark the time the last email was added or read
 			 */
 			m_accountUpdated = true ;
 			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ),QString( "entry" ) ) ) ;
@@ -386,12 +386,14 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 			 */
 			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ) ) ) ;
 		}else{
+			/*
+			 * This label has atleast one new email
+			 */
 			QString m = this->getAtomComponent( msg,QString( "modified" ),QString( "entry" ) ) ;
 			const QString& z = label.lastModified() ;
 			if( m != z ){
 				/*
-				 * There are new emails and time of last modifed differ,this could be because a new email
-				 *  was added or an unread email was read
+				 * something changed in this label
 				 */
 				if( mailCount >= label.emailCount() ){
 					/*
@@ -399,13 +401,12 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 					 * y number of new emails were added.
 					 *
 					 * x number of emails were read and x number of emails were added to cause total number of
-					 * emails to remain the same while label activity is registered.
+					 * emails to remain the same.
 					 */
 					m_accountUpdated = true ;
 				}else{
 					/*
 					 * Total number of unread emails went down probably because atleast one unread email was read
-					 *
 					 */
 				}
 				label.setLastModifiedTime( m ) ;
