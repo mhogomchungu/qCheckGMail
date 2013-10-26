@@ -62,8 +62,8 @@ install( FILES translations.qm/german_DE.qm  DESTINATION share/qCheckGMail/trans
 install( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/translations.qm/ )
 install( FILES translations.qm/french_FR.qm  DESTINATION share/qCheckGMail/translations.qm/ )
 
-#install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/" )
-install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
+install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/" )
+#install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""

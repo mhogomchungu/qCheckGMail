@@ -36,3 +36,4 @@ version 1.2.4
 - Add support for building a razor-qt tray plugin application for a better integration with that desktop environment.This build will
   also have no dependencies on KDE or any of its libraries.
 - Add a port to Qt5,see build instructions on how to build Qt5 port
+- audio notify only when new emails are detected
