@@ -364,25 +364,25 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 	accountLable& label = acc->getAccountLabel( m_currentLabel ) ;
 
 	if( label.emailCount() == -1 ){
+		/*
+		 * we will get here one the first update check after the program startup.
+		 */
 		if( mailCount > 0 ){
 			/*
-			 * we will get here one the first update check after the program startup.
-			 * add to each label the last time the state of the account was changed,ie an email
-			 * was added or read among other things that could happen and registers as an account status change
+			 * This label has email,mark the time the last email was added or read
 			 */
 			m_accountUpdated = true ;
 			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ),QString( "entry" ) ) ) ;
 		}else{
 			/*
-			 *
+			 * This label has no new email,mark the time it went to this state
 			 */
 			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ) ) ) ;
 		}
 	}else{
 		if( mailCount == 0 ){
 			/*
-			 *
-			 *
+			 * This label has no new email,mark the time it went to this state
 			 */
 			label.setLastModifiedTime( this->getAtomComponent( msg,QString( "modified" ) ) ) ;
 		}else{
@@ -390,30 +390,34 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 			const QString& z = label.lastModified() ;
 			if( m != z ){
 				/*
-				 *
+				 * There are new emails and time of last modifed differ,this could be because a new email
+				 *  was added or an unread email was read
 				 */
 				if( mailCount >= label.emailCount() ){
 					/*
+					 * Two scenarios will bring us here.
+					 * y number of new emails were added.
 					 *
+					 * x number of emails were read and x number of emails were added to cause total number of
+					 * emails to remain the same while label activity is registered.
 					 */
 					m_accountUpdated = true ;
 				}else{
 					/*
-					 *
+					 * Total number of unread emails went down probably because atleast one unread email was read
 					 *
 					 */
 				}
 				label.setLastModifiedTime( m ) ;
 			}else{
 				/*
-				 *
+				 * No activity was registered for this label
 				 */
-				;
 			}
 		}
 	}
 
-	label.emailCount( mailCount ) ;
+	label.setEmailCount( mailCount ) ;
 }
 
 void qCheckGMail::audioNotify()

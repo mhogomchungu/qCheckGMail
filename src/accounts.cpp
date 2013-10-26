@@ -119,7 +119,7 @@ const QString& accountLable::labelName() const
 	return m_labelName ;
 }
 
-void accountLable::emailCount( int count )
+void accountLable::setEmailCount( int count )
 {
 	m_emailCount = count ;
 }

@@ -31,7 +31,7 @@ public:
 	int emailCount( void )              const  ;
 	const QString& lastModified( void ) const  ;
 	void setLastModifiedTime( const QString& ) ;
-	void emailCount( int ) ;
+	void setEmailCount( int ) ;
 private:
 	int m_emailCount ;
 	QString m_labelUrl ;
