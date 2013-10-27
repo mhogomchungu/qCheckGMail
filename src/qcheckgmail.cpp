@@ -48,7 +48,7 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 	}
 }
 
-void qCheckGMail::showToolTip( QString x,QString y,QString z )
+void qCheckGMail::showToolTip( const QString& x,const QString& y,const QString& z )
 {
 	statusicon::setToolTip( x,y,z ) ;
 }
@@ -62,7 +62,7 @@ void qCheckGMail::showPausedIcon( bool paused )
 	}
 }
 
-void qCheckGMail::changeIcon( QString icon )
+void qCheckGMail::changeIcon( const QString& icon )
 {
 	statusicon::setIcon( icon ) ;
 	statusicon::setAttentionIcon( icon ) ;
@@ -461,7 +461,7 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 		bool checking = m_checkingMail ;
 		m_mutex->unlock();
 		if( checking ){
-			this->stuck();
+			this->failedToCheckForNewEmail();
 		}else{
 			this->checkMail() ;
 		}
@@ -509,21 +509,21 @@ void qCheckGMail::walletmanagerClosed( void )
 	m_mutex->unlock();
 }
 
-void qCheckGMail::stuck()
+void qCheckGMail::failedToCheckForNewEmail()
 {
 	/*
 	 * We will get here if an attempt to check for email update is made while another attempt is already in progress.
 	 * Mail checking usually takes a few seconds and hence the most likely reason to get here is if the network is down
 	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
 	 */
-	//QString err = tr( "qCheckGMail is not responding and restarting it is recommended" ) ;
+
 	QString x = tr( "network problem detected" ) ;
 	QString msg_1 = tr( "email checking is taking longer than expected." ) ;
 	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
 	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
 
 	QString icon = QString( "qCheckGMailError" ) ;
-	this->changeIcon( icon );
+	this->changeIcon( icon ) ;
 	this->showToolTip( icon,x,z ) ;
 	this->setTrayIconToVisible( true ) ;
 }
@@ -540,7 +540,7 @@ void qCheckGMail::checkMail()
 		m_mutex->lock() ;
 
 		if( m_checkingMail ){
-			this->stuck() ;
+			this->failedToCheckForNewEmail() ;
 		}else{
 			cancheckMail   = true ;
 			m_checkingMail = true ;

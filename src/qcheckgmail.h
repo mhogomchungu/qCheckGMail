@@ -78,7 +78,7 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 	void setTrayIconToVisible( bool ) ;
-	void showToolTip( QString,QString,QString ) ;
+	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
 	void noInternet( void ) ;
 	void wrongAccountNameOrPassword( void ) ;
@@ -87,7 +87,7 @@ private:
 	void walletNotOPenedError( void ) ;
 	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
-	void changeIcon( QString icon ) ;
+	void changeIcon( const QString& icon ) ;
 	void getAccountsInfo( void ) ;
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
@@ -96,7 +96,7 @@ private:
 	void reportOnlyFirstAccountWithMail( const QByteArray& ) ;
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
-	void stuck( void ) ;
+	void failedToCheckForNewEmail( void ) ;
 	void audioNotify( void ) ;
 	void checkAccountLastUpdate( const QByteArray&,int ) ;
 	QTimer * m_timer ;
