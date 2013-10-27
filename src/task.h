@@ -26,7 +26,7 @@
 #include <QVector>
 
 #include "accounts.h"
-#include "lxqt_wallet/frontend/lxqt_wallet.h"
+#include "../lxqt_wallet/frontend/lxqt_wallet.h"
 
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"

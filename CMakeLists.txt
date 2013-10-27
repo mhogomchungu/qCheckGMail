@@ -44,10 +44,18 @@ else()
 	INCLUDE( ${QT_USE_FILE} )
 endif()
 
-install( FILES icons/qCheckGMail-GotMail.svg DESTINATION share/pixmaps )
-install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION share/pixmaps )
-install( FILES icons/qCheckGMail.svg         DESTINATION share/pixmaps )
-install( FILES icons/qCheckGMailError.svg    DESTINATION share/pixmaps )
+if( NOT "${DATA_INSTALL_DIR}" )
+	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" )
+endif()
+
+file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
+"\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\""
+)
+
+install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
+install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
+install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
+install( FILES icons/qCheckGMailError.svg    DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 
 #install( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )
@@ -56,17 +64,19 @@ install( FILES icons/qCheckGMailError.svg    DESTINATION share/pixmaps )
 #install( FILES translations.ts/spanish_ES.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install( FILES translations.ts/french_FR.ts DESTINATION share/qCheckGMail/translations.ts/ )
 
-install( FILES translations.qm/greek_GR.qm   DESTINATION share/qCheckGMail/translations.qm/ )
-install( FILES translations.qm/dutch_NL.qm   DESTINATION share/qCheckGMail/translations.qm/ )
-install( FILES translations.qm/german_DE.qm  DESTINATION share/qCheckGMail/translations.qm/ )
-install( FILES translations.qm/spanish_ES.qm DESTINATION share/qCheckGMail/translations.qm/ )
-install( FILES translations.qm/french_FR.qm  DESTINATION share/qCheckGMail/translations.qm/ )
+install( FILES translations.qm/greek_GR.qm   DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
+install( FILES translations.qm/dutch_NL.qm   DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
+install( FILES translations.qm/german_DE.qm  DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
+install( FILES translations.qm/spanish_ES.qm DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
+install( FILES translations.qm/french_FR.qm  DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
+
+install( FILES lxqt_wallet/translations.qm/greek_GR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/" )
 #install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
-"\n#define LANGUAGE_FILE_PATH \"${CMAKE_INSTALL_PREFIX}/share/qCheckGMail/translations.qm/\""
+"\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
 )
 
 if( LXQTSUPPORT )
@@ -94,8 +104,10 @@ if( LXQTSUPPORT )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon )
 
+		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
+		
 		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/razor-panel/ )
 
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/razor/razor-panel/
@@ -121,15 +133,17 @@ elseif( NOKDESUPPORT )
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 	endif()
 
-	add_executable( src/qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+	add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
 		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon )
 
+	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
+	
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
 	install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications

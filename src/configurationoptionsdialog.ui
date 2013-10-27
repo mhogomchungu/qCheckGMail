@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>549</width>
-    <height>315</height>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>20</x>
      <y>10</y>
      <width>511</width>
-     <height>271</height>
+     <height>321</height>
     </rect>
    </property>
    <property name="title">
@@ -249,12 +249,57 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>260</y>
+      <width>471</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>271</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>audio notify</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBoxAudioNotify">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>0</y>
+       <width>84</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QPushButton" name="pushButtonClose">
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>280</y>
+     <y>330</y>
      <width>91</width>
      <height>31</height>
     </rect>

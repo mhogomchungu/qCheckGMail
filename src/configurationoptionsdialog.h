@@ -32,7 +32,7 @@
 #include "language_path.h"
 #include "tray_application_type.h"
 
-#include "lxqt_wallet/frontend/lxqt_wallet.h"
+#include "../lxqt_wallet/frontend/lxqt_wallet.h"
 
 namespace Ui {
 class configurationoptionsdialog;
@@ -54,15 +54,18 @@ public:
 	static QString walletName( void ) ;
 	static QString logFile( void ) ;
 	static lxqt::Wallet::Wallet * secureStorageSystem( void ) ;
+	static bool audioNotify( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 	~configurationoptionsdialog();
 signals:
+	void audioNotify( bool ) ;
 	void setTimer( int ) ;
 	void reportOnAllAccounts( bool ) ;
 private slots:
 	void pushButtonClose( void ) ;
 private:
+	void setAudioNotify( bool ) ;
 	void saveWalletName( QString ) ;
 	void saveReportOnAllAccounts( bool ) ;
 	void saveTimeToConfigFile( void ) ;

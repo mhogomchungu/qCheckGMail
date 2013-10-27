@@ -159,6 +159,29 @@ lxqt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 	}
 }
 
+bool configurationoptionsdialog::audioNotify()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "audioNotify" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toBool() ;
+	}else{
+		settings.setValue( opt,true ) ;
+		return true ;
+	}
+}
+
+void configurationoptionsdialog::setAudioNotify( bool audioNotify )
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+	QString opt = QString( "audioNotify" ) ;
+	settings.setValue( opt,audioNotify ) ;
+}
+
 bool configurationoptionsdialog::autoStartEnabled()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
@@ -226,7 +249,7 @@ QString configurationoptionsdialog::localLanguagePath()
 {
 	/*
 	 * LANGUAGE_FILE_PATH is set by the build system and
-	 * it will contain something line $install_prefix/share/qCheckGMail/translations.qm/
+	 * it will contain something line $install_prefix/share/qCheckGMail/
 	 */
 	return QString( LANGUAGE_FILE_PATH ) ;
 }
@@ -275,8 +298,10 @@ void configurationoptionsdialog::ShowUI()
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
 	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
-	this->setSupportedLanguages();
-	this->show();
+	m_ui->checkBoxAudioNotify->setChecked( configurationoptionsdialog::audioNotify() ) ;
+
+	this->setSupportedLanguages() ;
+	this->show() ;
 }
 
 void configurationoptionsdialog::HideUI()
@@ -311,6 +336,10 @@ void configurationoptionsdialog::HideUI()
 
 	emit setTimer( z * 60 * 1000 ) ;
 
+	emit audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
+
+	this->setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
+
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
@@ -338,7 +367,7 @@ void configurationoptionsdialog::pushButtonClose()
 
 void configurationoptionsdialog::setSupportedLanguages()
 {
-	QDir d( configurationoptionsdialog::localLanguagePath() ) ;
+	QDir d( configurationoptionsdialog::localLanguagePath() + QString( "/translations.qm/" ) ) ;
 
 	QStringList l = d.entryList() ;
 	l.removeOne( QString( "." ) ) ;

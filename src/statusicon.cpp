@@ -127,6 +127,9 @@ void statusicon::addQuitAction()
 
 #elif USE_LXQT_PLUGIN
 
+#include <phonon/mediaobject.h>
+#include <phonon/audiooutput.h>
+
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
 	m_toolButton.setIcon( QIcon( QString( ":/qCheckGMailError" ) ) ) ;
@@ -185,6 +188,12 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
+	Phonon::MediaObject * media = new Phonon::MediaObject() ;
+	Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
+	Phonon::createPath( media,output ) ;
+	media->setCurrentSource( QString( AUDIO_NOTIFY_FILE ) ) ;
+	media->play() ;
+	connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
@@ -219,6 +228,10 @@ QObject * statusicon::statusQObject()
 }
 
 #else
+
+#include <phonon/mediaobject.h>
+#include <phonon/audiooutput.h>
+
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
 	m_trayIcon = new QSystemTrayIcon( this ) ;
@@ -291,7 +304,12 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
-
+	Phonon::MediaObject * media = new Phonon::MediaObject() ;
+	Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
+	Phonon::createPath( media,output ) ;
+	media->setCurrentSource( QString( AUDIO_NOTIFY_FILE ) ) ;
+	media->play() ;
+	connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
 }
 
 bool statusicon::enableDebug()

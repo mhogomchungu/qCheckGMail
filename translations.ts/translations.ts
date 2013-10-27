@@ -4,111 +4,111 @@
 <context>
     <name>addaccount</name>
     <message>
-        <location filename="../addaccount.ui" line="17"/>
+        <location filename="../src/addaccount.cpp" line="58"/>
+        <source>edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.cpp" line="59"/>
+        <source>edit account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.cpp" line="91"/>
+        <source>ERROR: one or more reguired field is empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="17"/>
         <source>create a new account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="41"/>
+        <location filename="../src/addaccount.ui" line="41"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="55"/>
+        <location filename="../src/addaccount.ui" line="55"/>
         <source>account password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="74"/>
+        <location filename="../src/addaccount.ui" line="74"/>
         <source>account name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="106"/>
+        <location filename="../src/addaccount.ui" line="106"/>
         <source>multiple labels can be entered by separating them with a comma(,)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="119"/>
+        <location filename="../src/addaccount.ui" line="119"/>
         <source>label(s)(optional)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="138"/>
+        <location filename="../src/addaccount.ui" line="138"/>
         <source>display name(optional)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="168"/>
+        <location filename="../src/addaccount.ui" line="168"/>
         <source>add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../addaccount.ui" line="181"/>
+        <location filename="../src/addaccount.ui" line="181"/>
         <source>cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../addaccount.cpp" line="58"/>
-        <source>edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../addaccount.cpp" line="59"/>
-        <source>edit account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../addaccount.cpp" line="91"/>
-        <source>ERROR: one or more reguired field is empty</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>configurationoptionsdialog</name>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="17"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="17"/>
         <source>option configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="53"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="53"/>
         <source>update interval(minutes)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="108"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="108"/>
         <source>auto start application at log in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="155"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="155"/>
         <source>localization language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="187"/>
-        <source>leave blank to reset to default</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="187"/>
+        <source>account information storage system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="200"/>
-        <source>wallet&apos;s name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../configurationoptionsdialog.ui" line="245"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="242"/>
         <source>report on all accounts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.ui" line="266"/>
+        <location filename="../src/configurationoptionsdialog.ui" line="274"/>
+        <source>audio notify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configurationoptionsdialog.ui" line="308"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="237"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="319"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -117,7 +117,7 @@ ERROR: illegal characters detected in the the update interval field
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../configurationoptionsdialog.cpp" line="244"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="326"/>
         <source>
 
 ERROR: minimum time interval is 5 minutes
@@ -127,179 +127,192 @@ ERROR: minimum time interval is 5 minutes
     </message>
 </context>
 <context>
-    <name>kwalletmanager</name>
-    <message>
-        <location filename="../kwalletmanager.ui" line="17"/>
-        <source>account configuration window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="29"/>
-        <source>&amp;close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="45"/>
-        <source>Accounts information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="76"/>
-        <source>account name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="81"/>
-        <source>display name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="86"/>
-        <source>account labels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.ui" line="101"/>
-        <source>add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.cpp" line="263"/>
-        <source>delete entry</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.cpp" line="269"/>
-        <source>edit entry</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.cpp" line="283"/>
-        <source>are you sure you want to delete &quot;%1&quot; account?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.cpp" line="285"/>
-        <source>yes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../kwalletmanager.cpp" line="286"/>
-        <source>no</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../qcheckgmail.cpp" line="129"/>
-        <location filename="../qcheckgmail.cpp" line="350"/>
+        <location filename="../src/qcheckgmail.cpp" line="129"/>
+        <location filename="../src/qcheckgmail.cpp" line="356"/>
         <source>status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="129"/>
+        <location filename="../src/qcheckgmail.cpp" line="129"/>
         <source>opening wallet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="83"/>
+        <location filename="../src/qcheckgmail.cpp" line="89"/>
         <source>check mail now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="91"/>
+        <location filename="../src/qcheckgmail.cpp" line="94"/>
         <source>pause checking mail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="102"/>
+        <location filename="../src/qcheckgmail.cpp" line="102"/>
         <source>configure accounts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="110"/>
+        <location filename="../src/qcheckgmail.cpp" line="112"/>
         <source>configure options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="201"/>
+        <location filename="../src/qcheckgmail.cpp" line="204"/>
         <source>%1 account has wrong username/password combination</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="312"/>
+        <location filename="../src/qcheckgmail.cpp" line="318"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="314"/>
+        <location filename="../src/qcheckgmail.cpp" line="320"/>
         <source>%2 emails are waiting for you</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="277"/>
-        <location filename="../qcheckgmail.cpp" line="350"/>
+        <location filename="../src/qcheckgmail.cpp" line="281"/>
+        <location filename="../src/qcheckgmail.cpp" line="356"/>
         <source>no new email found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="138"/>
-        <location filename="../qcheckgmail.cpp" line="447"/>
+        <location filename="../src/qcheckgmail.cpp" line="107"/>
+        <source>configure password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="136"/>
+        <location filename="../src/qcheckgmail.cpp" line="520"/>
         <source>network problem detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="139"/>
+        <location filename="../src/qcheckgmail.cpp" line="137"/>
         <source>could not connect to the internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="204"/>
-        <location filename="../qcheckgmail.cpp" line="550"/>
+        <location filename="../src/qcheckgmail.cpp" line="207"/>
+        <location filename="../src/qcheckgmail.cpp" line="632"/>
         <source>account related error was detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="267"/>
+        <location filename="../src/qcheckgmail.cpp" line="271"/>
         <source>found 1 new email</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="270"/>
+        <location filename="../src/qcheckgmail.cpp" line="274"/>
         <source>found %2 new emails</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="448"/>
+        <location filename="../src/qcheckgmail.cpp" line="521"/>
         <source>email checking is taking longer than expected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="449"/>
+        <location filename="../src/qcheckgmail.cpp" line="522"/>
         <source>Recommending restarting qCheckGMail if the problem persists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="491"/>
+        <location filename="../src/qcheckgmail.cpp" line="563"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="550"/>
+        <location filename="../src/qcheckgmail.cpp" line="632"/>
         <source>no account appear to be configured in the wallet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="654"/>
-        <location filename="../qcheckgmail.cpp" line="667"/>
+        <location filename="../src/qcheckgmail.cpp" line="730"/>
+        <location filename="../src/qcheckgmail.cpp" line="743"/>
         <source>another instance is already running,exiting this one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qcheckgmail.cpp" line="683"/>
-        <location filename="../qcheckgmail.cpp" line="696"/>
+        <location filename="../src/qcheckgmail.cpp" line="759"/>
+        <location filename="../src/qcheckgmail.cpp" line="772"/>
         <source>autostart disabled,exiting this one</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>statusicon</name>
+    <message>
+        <location filename="../src/statusicon.cpp" line="299"/>
+        <source>quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>walletmanager</name>
+    <message>
+        <location filename="../src/walletmanager.ui" line="17"/>
+        <source>account configuration window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="29"/>
+        <source>&amp;close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="45"/>
+        <source>Accounts information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="76"/>
+        <source>account name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="81"/>
+        <source>display name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="86"/>
+        <source>account labels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="101"/>
+        <source>add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="162"/>
+        <source>delete entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="168"/>
+        <source>edit entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="183"/>
+        <source>are you sure you want to delete &quot;%1&quot; account?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="184"/>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="185"/>
+        <source>no</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

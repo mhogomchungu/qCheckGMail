@@ -72,6 +72,7 @@ private slots:
 	void objectGone( QObject * ) ;
 	void getAccountsInfo( QVector<accounts> ) ;
 	void configurePassWord( void ) ;
+	void audioNotify( bool ) ;
 private:
 	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
@@ -114,6 +115,7 @@ private:
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
+	bool m_audioNotify ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };

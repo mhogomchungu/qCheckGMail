@@ -37,7 +37,7 @@
 #include "addaccount.h"
 #include "configurationoptionsdialog.h"
 
-#include "lxqt_wallet/frontend/lxqt_wallet.h"
+#include "../lxqt_wallet/frontend/lxqt_wallet.h"
 
 namespace Ui {
 class walletmanager;

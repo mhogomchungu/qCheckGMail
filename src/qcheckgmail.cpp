@@ -30,6 +30,8 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 
 	this->changeIcon( QString( "qCheckGMailError" ) ) ;
 	this->setTrayIconToVisible( true ) ;
+
+	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -62,7 +64,7 @@ void qCheckGMail::showPausedIcon( bool paused )
 
 void qCheckGMail::changeIcon( QString icon )
 {
-	statusicon::setIcon( icon );
+	statusicon::setIcon( icon ) ;
 	statusicon::setAttentionIcon( icon ) ;
 }
 
@@ -75,9 +77,11 @@ void qCheckGMail::run()
 {
 	m_enableDebug = statusicon::enableDebug() ;
 
-	this->setLocalLanguage();
+	this->setLocalLanguage() ;
 
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
+
+	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
 
 	QObject * parent = statusicon::statusQObject() ;
 
@@ -423,7 +427,7 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 
 void qCheckGMail::audioNotify()
 {
-	if( m_accountUpdated ){
+	if( m_accountUpdated && m_audioNotify ){
 		statusicon::newEmailNotify() ;
 	}
 }
@@ -477,6 +481,7 @@ void qCheckGMail::configurationoptionWindow()
 	configurationoptionsdialog * cg = new configurationoptionsdialog() ;
 	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( configurationWindowClosed( int ) ) ) ;
 	connect( cg,SIGNAL( reportOnAllAccounts( bool ) ),this,SLOT( reportOnAllAccounts( bool ) ) ) ;
+	connect( cg,SIGNAL( audioNotify( bool ) ),this,SLOT( audioNotify( bool ) ) ) ;
 	cg->ShowUI() ;
 }
 
@@ -485,6 +490,11 @@ void qCheckGMail::configurationWindowClosed( int r )
 	if( m_interval != r ){
 		this->setTimer( r ) ;
 	}
+}
+
+void qCheckGMail::audioNotify( bool audioNotify )
+{
+	m_audioNotify = audioNotify ;
 }
 
 void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )
@@ -624,8 +634,6 @@ void qCheckGMail::noAccountConfigured()
 
 void qCheckGMail::setLocalLanguage()
 {
-	QTranslator * translator = new QTranslator( this ) ;
-
 	QString lang     = configurationoptionsdialog::localLanguage() ;
 	QString langPath = configurationoptionsdialog::localLanguagePath() ;
 
@@ -637,7 +645,13 @@ void qCheckGMail::setLocalLanguage()
 		 *english_US language,its the default and hence dont load anything
 		 */
 	}else{
-		translator->load( r.constData(),langPath ) ;
+		QTranslator * translator = new QTranslator( this ) ;
+
+		translator->load( r.constData(),langPath + QString( "/translations.qm/" ) ) ;
+		QCoreApplication::installTranslator( translator ) ;
+
+		translator = new QTranslator( this ) ;
+		translator->load( r.constData(),langPath + QString( "/lxqt_wallet/translations.qm/" ) ) ;
 		QCoreApplication::installTranslator( translator ) ;
 	}
 }
@@ -660,7 +674,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 		 *english_US language,its the default and hence dont load anything
 		 */
 	}else{
-		translator->load( r.constData(),langPath ) ;
+		translator->load( r.constData(),langPath + QString( "/translations.qm/" ) ) ;
 		qapp.installTranslator( translator ) ;
 	}
 }
@@ -724,7 +738,7 @@ int qCheckGMail::instanceAlreadyRunning()
 
 		QString langPath = configurationoptionsdialog::localLanguagePath() ;
 		QTranslator translator ;
-		translator.load( r.constData(),langPath ) ;
+		translator.load( r.constData(),langPath + QString( "/translations.qm/" ) ) ;
 		qapp.installTranslator( &translator ) ;
 		qDebug() << tr( "another instance is already running,exiting this one" ) ;
 	}
@@ -753,7 +767,7 @@ int qCheckGMail::autoStartDisabled()
 
 		QString langPath = configurationoptionsdialog::localLanguagePath() ;
 		QTranslator translator ;
-		translator.load( r.constData(),langPath ) ;
+		translator.load( r.constData(),langPath + QString( "/translations.qm/" ) ) ;
 		qapp.installTranslator( &translator ) ;
 		qDebug() << tr( "autostart disabled,exiting this one" ) ;
 	}

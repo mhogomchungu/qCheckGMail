@@ -10,6 +10,8 @@ TARGET = qCheckGMail
 
 TEMPLATE = app
 
+SUBDIRS = . lxqt_wallet
+
 OTHER_FILES += \
     README.md \
     icons/qCheckGMailError.svg \
@@ -47,12 +49,12 @@ SOURCES += \
 FORMS += \
     src/walletmanager.ui \
     src/configurationoptionsdialog.ui \
-    asrc/ddaccount.ui
+    src/addaccount.ui
 
 RESOURCES += \
     icons/icon.qrc
 
-INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/projects/build/qCheckGMail
+INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/projects/build/build-qCheckGMail-Desktop-Debug
 
 LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib -lgcrypt -llxqtwallet
 
