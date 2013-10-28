@@ -368,17 +368,17 @@ void walletmanager::selectRow( int row,bool highlight )
 	}
 }
 
-QString walletmanager::getPassWordFromAccount( const QString& accName )
+const QString& walletmanager::getPassWordFromAccount( const QString& accName )
 {
-	QString p ;
 	int j = m_accounts.size() ;
 	for( int i = 0 ; i < j ; i++ ){
 		if( m_accounts.at( i ).accountName() == accName ){
-			p = m_accounts.at( i ).passWord() ;
-			break ;
+			return m_accounts.at( i ).passWord() ;
 		}
 	}
-	return p ;
+
+	static QString shouldNotGetHere ;
+	return shouldNotGetHere ;
 }
 
 void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )

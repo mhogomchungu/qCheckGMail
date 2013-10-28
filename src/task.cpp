@@ -73,7 +73,8 @@ const QByteArray& Task::getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>
 		}
 	}
 
-	return m_emptyEntry ;
+	static QByteArray shouldNotGetHere ;
+	return shouldNotGetHere ;
 }
 
 void Task::run()
