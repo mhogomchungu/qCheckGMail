@@ -37,12 +37,14 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DLXQTSUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE 
 make
 make install
 
-To build a Qt5 port,add "-DQT5=true" to the cmake argument list
-
 Note:
 The last command must be run from root's account and depending on your distribution,you may need to run one of below two:
 su -c "make install"
 sudo make install
+
+To build a Qt5 port,add "-DQT5=true" to the cmake argument list
+
+A none KDE build will require presence of phonon library and its development files
 
 Possible build issues:
 Problem:
