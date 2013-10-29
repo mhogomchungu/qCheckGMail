@@ -134,7 +134,7 @@ Gehostete Domainadressen  müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werd
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="187"/>
         <source>account information storage system</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichersystem für Kontoinformationen</translation>
     </message>
     <message>
         <source>leave blank to reset to default</source>
@@ -152,7 +152,7 @@ Gehostete Domainadressen  müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werd
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="274"/>
         <source>audio notify</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiobenachrichtigung</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="308"/>
@@ -314,7 +314,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../src/qcheckgmail.cpp" line="107"/>
         <source>configure password</source>
-        <translation type="unfinished"></translation>
+        <translation>Passwort konfigurieren</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="136"/>
@@ -397,7 +397,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../src/statusicon.cpp" line="299"/>
         <source>quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Verlassen</translation>
     </message>
 </context>
 <context>
@@ -405,7 +405,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../src/walletmanager.ui" line="17"/>
         <source>account configuration window</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontokonfigurationsfenster</translation>
     </message>
     <message>
         <location filename="../src/walletmanager.ui" line="29"/>
