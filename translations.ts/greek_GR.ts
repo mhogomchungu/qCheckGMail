@@ -133,7 +133,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="187"/>
         <source>account information storage system</source>
-        <translation type="unfinished"></translation>
+        <translation>Σύστημα αποθήκευσης πληροφοριών λογαριασμού</translation>
     </message>
     <message>
         <source>english_US</source>
@@ -160,7 +160,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="274"/>
         <source>audio notify</source>
-        <translation type="unfinished"></translation>
+        <translation>Ηχητική ειδοποίηση</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="308"/>
@@ -338,7 +338,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../src/qcheckgmail.cpp" line="107"/>
         <source>configure password</source>
-        <translation type="unfinished"></translation>
+        <translation>Επεξεργασία κωδικού πρόσβασης</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="136"/>
@@ -421,7 +421,7 @@ ERROR: minimum time interval is 5 minutes
     <message>
         <location filename="../src/statusicon.cpp" line="299"/>
         <source>quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Κλείσιμο</translation>
     </message>
 </context>
 <context>
