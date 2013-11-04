@@ -18,13 +18,54 @@
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.ui" line="42"/>
-        <source>change</source>
+        <source>Change</source>
         <translation>ändern</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.ui" line="55"/>
-        <source>ok</source>
+        <source>Ok</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.ui" line="126"/>
+        <source>Enter current password below.</source>
+        <translation>Geben Sie unten das aktuelle Passwort ein.</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.ui" line="145"/>
+        <source>Enter new password below.</source>
+        <translation>Geben Sie unten das neue Passwort ein.</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.ui" line="164"/>
+        <source>Re enter new password below.</source>
+        <translation>Geben Sie unten das neue Passwort erneut ein.</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.ui" line="183"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.ui" line="214"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Enter password information below to create a new wallet &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt;&apos; for application &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%2&lt;/span&gt;&apos;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Geben Sie unten die Passwortinformationen ein, um eine neu Brieftasche &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt;&apos; für das folgende Programm zu erstellen &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%2&lt;/span&gt;&apos;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>change</source>
+        <translation type="obsolete">ändern</translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation type="obsolete">OK</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.ui" line="107"/>
@@ -32,24 +73,20 @@
         <translation>&quot;qCheckGMail&quot; will das &quot;wallet&quot; Passwort ändern</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.ui" line="126"/>
         <source>enter current password below</source>
-        <translation>Geben Sie unten das aktuelle Passwort ein</translation>
+        <translation type="obsolete">Geben Sie unten das aktuelle Passwort ein</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.ui" line="145"/>
         <source>enter new password below</source>
-        <translation>Geben Sie unten das neue Passwort ein</translation>
+        <translation type="obsolete">Geben Sie unten das neue Passwort ein</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.ui" line="164"/>
         <source>re enter new password below</source>
-        <translation>Geben Sie unten das neue Passwort erneut ein</translation>
+        <translation type="obsolete">Geben Sie unten das neue Passwort erneut ein</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.ui" line="183"/>
         <source>cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="obsolete">Abbrechen</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.ui" line="196"/>
@@ -67,13 +104,12 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.ui" line="214"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;enter password information below to create a new wallet &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt;&apos; for application &apos;&lt;span style=&quot; font-weight:600;&quot;&gt;%2&lt;/span&gt;&apos;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
@@ -83,52 +119,88 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>lxqt::Wallet::changePassWordDialog</name>
     <message>
-        <location filename="../frontend/changepassworddialog.cpp" line="69"/>
         <source>create a new wallet</source>
+        <translation type="obsolete">Eine neue Brieftasche erzeugen</translation>
+    </message>
+    <message>
+        <source>create</source>
+        <translation type="obsolete">Erzeugen</translation>
+    </message>
+    <message>
+        <source>passwords do not match</source>
+        <translation type="obsolete">Die Passwörter stimmen nicht überein</translation>
+    </message>
+    <message>
+        <source>new passwords do not match</source>
+        <translation type="obsolete">Die neuen Passwörter stimmen nicht überein</translation>
+    </message>
+    <message>
+        <source>wallet password could not be changed</source>
+        <translation type="obsolete">Das Brieftaschenpasswort konnte nicht geändert werden</translation>
+    </message>
+    <message>
+        <source>wallet could not be opened with the presented key</source>
+        <translation type="obsolete">Die Brieftasche konnte nicht mit dem präsentierten Schlüssel geöffnet werden</translation>
+    </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.cpp" line="69"/>
+        <source>Create a new wallet</source>
         <translation>Eine neue Brieftasche erzeugen</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="71"/>
-        <source>create</source>
+        <source>Create</source>
         <translation>Erzeugen</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="96"/>
-        <source>passwords do not match</source>
+        <source>Passwords do not match</source>
         <translation>Die Passwörter stimmen nicht überein</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="135"/>
-        <source>new passwords do not match</source>
+        <source>New passwords do not match</source>
         <translation>Die neuen Passwörter stimmen nicht überein</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="199"/>
-        <source>wallet password could not be changed</source>
+        <source>Wallet password could not be changed</source>
         <translation>Das Brieftaschenpasswort konnte nicht geändert werden</translation>
     </message>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="208"/>
-        <source>wallet could not be opened with the presented key</source>
+        <source>Wallet could not be opened with the presented key</source>
         <translation>Die Brieftasche konnte nicht mit dem präsentierten Schlüssel geöffnet werden</translation>
     </message>
 </context>
 <context>
     <name>lxqt::Wallet::password_dialog</name>
     <message>
-        <location filename="../frontend/password_dialog.cpp" line="68"/>
         <source>yes</source>
+        <translation type="obsolete">Ja</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation type="obsolete">No</translation>
+    </message>
+    <message>
+        <location filename="../frontend/password_dialog.cpp" line="68"/>
+        <source>Yes</source>
         <translation>Ja</translation>
     </message>
     <message>
         <location filename="../frontend/password_dialog.cpp" line="69"/>
-        <source>no</source>
+        <source>No</source>
         <translation>No</translation>
     </message>
     <message>
         <location filename="../frontend/password_dialog.cpp" line="78"/>
-        <location filename="../frontend/password_dialog.cpp" line="135"/>
         <source>wallet could not be opened with the presented key</source>
+        <translation>Die Brieftasche konnte nicht mit dem präsentierten Schlüssel geöffnet werden</translation>
+    </message>
+    <message>
+        <location filename="../frontend/password_dialog.cpp" line="135"/>
+        <source>Wallet could not be opened with the presented key</source>
         <translation>Die Brieftasche konnte nicht mit dem präsentierten Schlüssel geöffnet werden</translation>
     </message>
 </context>
@@ -155,7 +227,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;wallet &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; does not exist,do you want to create it?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Wallet &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; does not exist, do you want to create it?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -168,7 +240,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;An application &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; has requested to open a wallet&lt;span style=&quot; font-weight:600;&quot;&gt; &apos;%2&apos;&lt;/span&gt;.Enter the password below for this wallet to unlock it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;An application &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; has requested to open a wallet&lt;span style=&quot; font-weight:600;&quot;&gt; &apos;%2&apos;&lt;/span&gt;. Enter the password below for this wallet to unlock it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -177,17 +249,53 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../frontend/password_dialog.ui" line="125"/>
-        <source>unlock</source>
+        <source>Unlock</source>
         <translation>Öffnen</translation>
     </message>
     <message>
         <location filename="../frontend/password_dialog.ui" line="141"/>
-        <source>cancel</source>
+        <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../frontend/password_dialog.ui" line="154"/>
         <location filename="../frontend/password_dialog.ui" line="167"/>
+        <source>Ok</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;wallet &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; does not exist,do you want to create it?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Die Brieftasche &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; existiert nicht, möchten Sie sie erzeugen?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;An application &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; has requested to open a wallet&lt;span style=&quot; font-weight:600;&quot;&gt; &apos;%2&apos;&lt;/span&gt;.Enter the password below for this wallet to unlock it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Das Programm &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; möchte eine Brieftasche öffnen&lt;span style=&quot; font-weight:600;&quot;&gt; &apos;%2&apos;&lt;/span&gt;.Geben Sie unten das Passwort der Brieftasche ein, um sie zu öffnen&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>unlock</source>
+        <translation type="obsolete">Öffnen</translation>
+    </message>
+    <message>
+        <source>cancel</source>
+        <translation type="obsolete">Abbrechen</translation>
+    </message>
+    <message>
+        <location filename="../frontend/password_dialog.ui" line="154"/>
         <source>ok</source>
         <translation>OK</translation>
     </message>

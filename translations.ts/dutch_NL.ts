@@ -134,7 +134,7 @@ Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </t
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="187"/>
         <source>account information storage system</source>
-        <translation type="unfinished"></translation>
+        <translation>opslagsysteem accountinformatie</translation>
     </message>
     <message>
         <source>leave blank to reset to default</source>
@@ -152,7 +152,7 @@ Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </t
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="274"/>
         <source>audio notify</source>
-        <translation type="unfinished"></translation>
+        <translation>geluidsnotificatie</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="308"/>
@@ -320,7 +320,7 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="107"/>
         <source>configure password</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachtwoord instellen</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="136"/>
@@ -403,7 +403,7 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../src/statusicon.cpp" line="299"/>
         <source>quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Verlaten</translation>
     </message>
 </context>
 <context>
@@ -431,7 +431,7 @@ FOUT: minimum tijdinterval is 5 minuten</translation>
     <message>
         <location filename="../src/walletmanager.ui" line="81"/>
         <source>display name</source>
-        <translation type="unfinished"></translation>
+        <translation>Naam weegeven</translation>
     </message>
     <message>
         <location filename="../src/walletmanager.ui" line="86"/>
