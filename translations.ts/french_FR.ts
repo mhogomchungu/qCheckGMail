@@ -29,7 +29,7 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     <message>
         <location filename="../src/addaccount.ui" line="106"/>
         <source>multiple labels can be entered by separating them with a comma(,)</source>
-        <translation>plusieurs label peuvent être saisis en les séparant par des virgules(,)</translation>
+        <translation>plusieurs labels peuvent être saisis en les séparant par des virgules(,)</translation>
     </message>
     <message>
         <location filename="../src/addaccount.ui" line="119"/>
@@ -135,7 +135,7 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="187"/>
         <source>account information storage system</source>
-        <translation type="unfinished"></translation>
+        <translation>système de stockage des informations du compte</translation>
     </message>
     <message>
         <source>leave blank to reset to default</source>
@@ -153,7 +153,7 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="274"/>
         <source>audio notify</source>
-        <translation type="unfinished"></translation>
+        <translation>notification audio</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="308"/>
@@ -323,7 +323,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/qcheckgmail.cpp" line="107"/>
         <source>configure password</source>
-        <translation type="unfinished"></translation>
+        <translation>configuration du mot de passe</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="136"/>
@@ -334,7 +334,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/qcheckgmail.cpp" line="137"/>
         <source>could not connect to the internet</source>
-        <translation>imposible de se connecter au réseau</translation>
+        <translation>impossible de se connecter au réseau</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="207"/>
@@ -360,7 +360,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/qcheckgmail.cpp" line="522"/>
         <source>Recommending restarting qCheckGMail if the problem persists</source>
-        <translation>Nous vous recommendons de relancer qCkeckGmail si le problème persiste</translation>
+        <translation>Nous vous recommandons de relancer qCkeckGmail si le problème persiste</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="563"/>
@@ -369,7 +369,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>recommending a restart as i am probably stuck</source>
-        <translation type="obsolete">nous vous recommendons de redémarrer en cas de bloquage de l&apos;applet</translation>
+        <translation>obsolete">nous vous recommandons de redémarrer en cas de blocage de l&apos;applet</translation>
     </message>
     <message>
         <source>error</source>
@@ -382,11 +382,11 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>wallet not opened</source>
-        <translation type="obsolete">le portefeuille n&apos;est pas ouvert</translation>
+        <translation>le portefeuille n&apos;est pas ouvert</translation>
     </message>
     <message>
         <source>error,failed to open wallet</source>
-        <translation type="obsolete">erreur, échec lors de l&apos;ouverture du portefeuille</translation>
+        <translation>obsolete">erreur, échec lors de l&apos;ouverture du portefeuille</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="730"/>
@@ -406,7 +406,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/statusicon.cpp" line="299"/>
         <source>quit</source>
-        <translation type="unfinished"></translation>
+        <translation>quitter</translation>
     </message>
 </context>
 <context>
