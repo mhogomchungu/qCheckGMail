@@ -68,46 +68,46 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     </message>
     <message>
         <source>ERROR: one or more reguired field is missing</source>
-        <translation type="obsolete">ERREUR : un ou plusieurs champs obligatoires sont manquants</translation>
+        <translation>ERREUR : un ou plusieurs champs obligatoires sont manquants</translation>
     </message>
 </context>
 <context>
     <name>configurationDialog</name>
     <message>
         <source>account configuration window</source>
-        <translation type="obsolete">fenêtre de configuration du compte</translation>
+        <translation>fenêtre de configuration du compte</translation>
     </message>
     <message>
         <source>&amp;close</source>
-        <translation type="obsolete">&amp;_fermer</translation>
+        <translation>&amp;_fermer</translation>
     </message>
     <message>
         <source>Accounts information</source>
-        <translation type="obsolete">Informations sur les comptes</translation>
+        <translation>Informations sur les comptes</translation>
     </message>
     <message>
         <source>account name</source>
-        <translation type="obsolete">nom du compte</translation>
+        <translation>nom du compte</translation>
     </message>
     <message>
         <source>display name</source>
-        <translation type="obsolete">afficher le nom</translation>
+        <translation>afficher le nom</translation>
     </message>
     <message>
         <source>account labels</source>
-        <translation type="obsolete">labels des comptes</translation>
+        <translation>labels des comptes</translation>
     </message>
     <message>
         <source>delete</source>
-        <translation type="obsolete">supprimer</translation>
+        <translation>supprimer</translation>
     </message>
     <message>
         <source>add</source>
-        <translation type="obsolete">ajouter</translation>
+        <translation>ajouter</translation>
     </message>
     <message>
         <source>delete entry</source>
-        <translation type="obsolete">supprimer l&apos;entrée</translation>
+        <translation>supprimer l&apos;entrée</translation>
     </message>
 </context>
 <context>
@@ -139,11 +139,11 @@ Les adresses de domaine hébergés doivent être ajoutées avec la partie « @AB
     </message>
     <message>
         <source>leave blank to reset to default</source>
-        <translation type="obsolete">laisser vide pour ré-initialiser aux valeurs par défaut</translation>
+        <translation>laisser vide pour ré-initialiser aux valeurs par défaut</translation>
     </message>
     <message>
         <source>wallet&apos;s name</source>
-        <translation type="obsolete">nom du portefeuille</translation>
+        <translation>nom du portefeuille</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="242"/>
@@ -191,55 +191,55 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <name>kwalletmanager</name>
     <message>
         <source>account configuration window</source>
-        <translation type="obsolete">fenêtre de configuration du compte</translation>
+        <translation>fenêtre de configuration du compte</translation>
     </message>
     <message>
         <source>&amp;close</source>
-        <translation type="obsolete">&amp;_fermer</translation>
+        <translation>&amp;_fermer</translation>
     </message>
     <message>
         <source>Accounts information</source>
-        <translation type="obsolete">Informations sur les comptes</translation>
+        <translation>Informations sur les comptes</translation>
     </message>
     <message>
         <source>account name</source>
-        <translation type="obsolete">nom du compte</translation>
+        <translation>nom du compte</translation>
     </message>
     <message>
         <source>display name</source>
-        <translation type="obsolete">afficher le nom</translation>
+        <translation>afficher le nom</translation>
     </message>
     <message>
         <source>account labels</source>
-        <translation type="obsolete">labels des comptes</translation>
+        <translation>labels des comptes</translation>
     </message>
     <message>
         <source>delete</source>
-        <translation type="obsolete">supprimer</translation>
+        <translation>supprimer</translation>
     </message>
     <message>
         <source>add</source>
-        <translation type="obsolete">ajouter</translation>
+        <translation>ajouter</translation>
     </message>
     <message>
         <source>delete entry</source>
-        <translation type="obsolete">supprimer l&apos;entrée</translation>
+        <translation>supprimer l&apos;entrée</translation>
     </message>
     <message>
         <source>edit entry</source>
-        <translation type="obsolete">modifier l&apos;entrée</translation>
+        <translation>modifier l&apos;entrée</translation>
     </message>
     <message>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
-        <translation type="obsolete">est-vous sur de vouloir supprimer le compte « %1 » ?</translation>
+        <translation>êtes-vous sur de vouloir supprimer le compte « %1 » ?</translation>
     </message>
     <message>
         <source>yes</source>
-        <translation type="obsolete">oui</translation>
+        <translation>oui</translation>
     </message>
     <message>
         <source>no</source>
-        <translation type="obsolete">non</translation>
+        <translation>non</translation>
     </message>
 </context>
 <context>
@@ -277,15 +277,15 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>failed to connect</source>
-        <translation type="obsolete">échec de connexion</translation>
+        <translation>échec de connexion</translation>
     </message>
     <message>
         <source>check mail skipped,user is not connected to the internet</source>
-        <translation type="obsolete">pas de vérification des mails, l&apos;utilisateur n&apos;est pas connecté au réseau</translation>
+        <translation>pas de vérification des mails, l&apos;utilisateur n&apos;est pas connecté au réseau</translation>
     </message>
     <message>
         <source>failed to log in</source>
-        <translation type="obsolete">échec de la connexion</translation>
+        <translation>échec de la connexion</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="204"/>
@@ -294,15 +294,15 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>new mail found</source>
-        <translation type="obsolete">nouvel émail trouvé</translation>
+        <translation>nouvel émail trouvé</translation>
     </message>
     <message>
         <source>no new mail</source>
-        <translation type="obsolete">pas de nouvel émail</translation>
+        <translation>pas de nouvel émail</translation>
     </message>
     <message>
         <source>wrong username/password combination</source>
-        <translation type="obsolete">mauvaise combinaison nom utilisateur/mot de passe</translation>
+        <translation>mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="318"/>
@@ -369,11 +369,11 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>recommending a restart as i am probably stuck</source>
-        <translation>obsolete">nous vous recommandons de redémarrer en cas de blocage de l&apos;applet</translation>
+        <translation>nous vous recommandons de redémarrer en cas de blocage de l&apos;applet</translation>
     </message>
     <message>
         <source>error</source>
-        <translation type="obsolete">erreur</translation>
+        <translation>erreur</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="632"/>
@@ -386,7 +386,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     </message>
     <message>
         <source>error,failed to open wallet</source>
-        <translation>obsolete">erreur, échec lors de l&apos;ouverture du portefeuille</translation>
+        <translation>erreur, échec lors de l&apos;ouverture du portefeuille</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="730"/>
@@ -459,7 +459,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/walletmanager.cpp" line="183"/>
         <source>are you sure you want to delete &quot;%1&quot; account?</source>
-        <translation>est-vous sur de vouloir supprimer le compte « %1 » ?</translation>
+        <translation>êtes-vous sur de vouloir supprimer le compte « %1 » ?</translation>
     </message>
     <message>
         <location filename="../src/walletmanager.cpp" line="184"/>
