@@ -419,7 +419,7 @@ ERREUR : l&apos;intervalle minimum est de 5 minutes
     <message>
         <location filename="../src/walletmanager.ui" line="29"/>
         <source>&amp;close</source>
-        <translation>&amp;_fermer</translation>
+        <translation>&amp;fermer</translation>
     </message>
     <message>
         <location filename="../src/walletmanager.ui" line="45"/>
