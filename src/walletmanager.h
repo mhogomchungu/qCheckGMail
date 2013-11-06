@@ -52,7 +52,7 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	explicit walletmanager( QWidget * parent = 0 ) ;
+	explicit walletmanager( QDialog * parent = 0 ) ;
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;

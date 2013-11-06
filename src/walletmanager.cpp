@@ -22,7 +22,7 @@
 #include "ui_walletmanager.h"
 #include "task.h"
 
-walletmanager::walletmanager( QWidget * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
+walletmanager::walletmanager( QDialog * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
 	m_walletName = configurationoptionsdialog::walletName() ;
 }
@@ -59,6 +59,7 @@ void walletmanager::ShowUI()
 	m_action = walletmanager::showAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
+	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
 	m_wallet->open( m_walletName ) ;
 }
 
@@ -67,6 +68,7 @@ void walletmanager::getAccounts( void )
 	m_action = walletmanager::getAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
+	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
 	m_wallet->open( m_walletName ) ;
 }
 
@@ -74,6 +76,7 @@ void walletmanager::changeWalletPassword()
 {
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
+	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
 	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
