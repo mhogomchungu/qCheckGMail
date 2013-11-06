@@ -86,7 +86,7 @@ private:
 	Ui::walletmanager * m_ui ;
 
 	QVector<accounts> m_accounts ;
-	lxqt::Wallet::Wallet * m_wallet ;
+	LxQt::Wallet::Wallet * m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;

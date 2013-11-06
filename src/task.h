@@ -49,10 +49,10 @@ public:
 		showAccountInfo
 	}action ;
 
-	Task( lxqt::Wallet::Wallet * wallet,const QString& accName,const QString& accPassWord,
+	Task( LxQt::Wallet::Wallet * wallet,const QString& accName,const QString& accPassWord,
 	      const QString& accLabels,const QString& accDisplayName ) ;
-	Task( lxqt::Wallet::Wallet * wallet,const QString& accName ) ;
-	Task( lxqt::Wallet::Wallet * wallet,QVector<accounts> * ) ;
+	Task( LxQt::Wallet::Wallet * wallet,const QString& accName ) ;
+	Task( LxQt::Wallet::Wallet * wallet,QVector<accounts> * ) ;
 
 	~Task() ;
 
@@ -60,12 +60,12 @@ public:
 signals:
 	void taskFinished( int ) ;
 private:
-	const QByteArray& getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>&,const QString& acc ) ;
+	const QByteArray& getAccInfo( const QVector<LxQt::Wallet::walletKeyValues>&,const QString& acc ) ;
 	void addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void run( void ) ;
 	Task::action m_action ;
-	lxqt::Wallet::Wallet * m_wallet ;
+	LxQt::Wallet::Wallet * m_wallet ;
 	QString m_accName ;
 	QString m_accPassWord ;
 	QString m_accLabels ;

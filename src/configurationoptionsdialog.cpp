@@ -37,13 +37,13 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::internalBackEnd ) ){
+	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::internalBackEnd ) ){
 		m_ui->comboBoxBackEndSystem->addItem( QString( "internal wallet" ) ) ;
 	}
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
 		m_ui->comboBoxBackEndSystem->addItem( QString( "kde wallet" ) ) ;
 	}
-	if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::secretServiceBackEnd ) ){
+	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
 		m_ui->comboBoxBackEndSystem->addItem( QString( "gnome wallet" ) ) ;
 	}
 
@@ -118,7 +118,7 @@ QString configurationoptionsdialog::logFile()
 	#endif
 }
 
-lxqt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
+LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
@@ -128,33 +128,33 @@ lxqt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 	if( settings.contains( opt ) ){
 		QString value = settings.value( opt ).toString() ;
 		if( value == QString( "gnome wallet" ) ){
-			if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::secretServiceBackEnd ) ){
-				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::secretServiceBackEnd ) ;
+			if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
+				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 			}else{
 				settings.setValue( opt,QString( "internal wallet" ) ) ;
-				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
 		}else if( value == QString( "kde wallet" ) ){
-			if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
-				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
+			if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
+				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 			}else{
 				settings.setValue( opt,QString( "internal wallet" ) ) ;
-				return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
 		}else{
 			settings.setValue( opt,QString( "internal wallet" ) ) ;
-			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 		}
 	}else{
-		if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::kwalletBackEnd ) ){
+		if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
 			settings.setValue( opt,QString( "kde wallet" ) ) ;
-			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::kwalletBackEnd ) ;
-		}else if( lxqt::Wallet::backEndIsSupported( lxqt::Wallet::secretServiceBackEnd ) ){
+			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
+		}else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
 			settings.setValue( opt,QString( "gnome wallet" ) ) ;
-			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::secretServiceBackEnd ) ;
+			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 		}else{
 			settings.setValue( opt,QString( "internal wallet" ) ) ;
-			return lxqt::Wallet::getWalletBackend( lxqt::Wallet::internalBackEnd ) ;
+			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 		}
 	}
 }

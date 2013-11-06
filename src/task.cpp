@@ -23,18 +23,18 @@
 
 #include "task.h"
 
-Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName,
+Task::Task( LxQt::Wallet::Wallet * wallet,const QString& accName,
 	    const QString& accPassWord,const QString& accLabels,const QString& accDisplayName ):
 	m_action( Task::addAccount ),m_wallet( wallet ),m_accName( accName ),m_accPassWord( accPassWord ),
 	m_accLabels( accLabels ),m_accDisplayName( accDisplayName )
 {
 }
 
-Task::Task( lxqt::Wallet::Wallet * wallet,QVector<accounts> * acc ) : m_wallet( wallet ),m_acc( acc )
+Task::Task( LxQt::Wallet::Wallet * wallet,QVector<accounts> * acc ) : m_wallet( wallet ),m_acc( acc )
 {
 }
 
-Task::Task( lxqt::Wallet::Wallet * wallet,const QString& accName ) : m_wallet( wallet ),m_accName( accName )
+Task::Task( LxQt::Wallet::Wallet * wallet,const QString& accName ) : m_wallet( wallet ),m_accName( accName )
 {
 }
 
@@ -63,7 +63,7 @@ void Task::deleteKey( const QString& accName,const QString& accDisplayName,const
 	m_wallet->deleteKey( accDisplayName ) ;
 }
 
-const QByteArray& Task::getAccInfo( const QVector<lxqt::Wallet::walletKeyValues>& entries,const QString& acc )
+const QByteArray& Task::getAccInfo( const QVector<LxQt::Wallet::walletKeyValues>& entries,const QString& acc )
 {
 	int j = entries.size() ;
 
@@ -102,7 +102,7 @@ void Task::run()
 	case Task::showAccountInfo :
 	case Task::getAccountInfo  :
 
-		QVector<lxqt::Wallet::walletKeyValues> entries = m_wallet->readAllKeyValues() ;
+		QVector<LxQt::Wallet::walletKeyValues> entries = m_wallet->readAllKeyValues() ;
 
 		m_acc->clear() ;
 

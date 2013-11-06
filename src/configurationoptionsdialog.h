@@ -53,7 +53,7 @@ public:
 	static QString defaultWalletName( void ) ;
 	static QString walletName( void ) ;
 	static QString logFile( void ) ;
-	static lxqt::Wallet::Wallet * secureStorageSystem( void ) ;
+	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
