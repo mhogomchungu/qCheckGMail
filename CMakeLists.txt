@@ -54,7 +54,9 @@ file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
 
 #install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 #install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
-#install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
+install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}/pixmaps" )
+install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}/icons" )
+
 #install( FILES icons/qCheckGMailError.svg    DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 
 #install( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
