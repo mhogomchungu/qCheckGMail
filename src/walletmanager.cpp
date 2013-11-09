@@ -60,7 +60,7 @@ void walletmanager::ShowUI()
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
-	m_wallet->open( m_walletName ) ;
+	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
 void walletmanager::getAccounts( void )
@@ -69,7 +69,7 @@ void walletmanager::getAccounts( void )
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
-	m_wallet->open( m_walletName ) ;
+	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
 void walletmanager::changeWalletPassword()
