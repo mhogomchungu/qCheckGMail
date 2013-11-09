@@ -74,18 +74,27 @@ void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings 
 	#endif
 }
 
-QString configurationoptionsdialog::walletName()
+QString configurationoptionsdialog::KWalletWalletName()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
-	QString opt   = QString( "walletName" ) ;
-	QString value = QString( "qCheckGMail" ) ;
+	QString opt   = QString( "KWalletName" ) ;
+
 	if( settings.contains( opt ) ){
 		return settings.value( opt ).toString() ;
 	}else{
-		settings.setValue( opt,value ) ;
-		return value ;
+		LxQt::Wallet::Wallet * w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
+		if( w ){
+			QString value = w->localDefaultWalletName() ;
+			settings.setValue( opt,value ) ;
+			w->deleteLater() ;
+			return value ;
+		}else{
+			QString value = QString( "kdewallet" ) ;
+			settings.setValue( opt,value ) ;
+			return value ;
+		}
 	}
 }
 

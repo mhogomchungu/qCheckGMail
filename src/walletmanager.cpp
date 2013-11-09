@@ -24,7 +24,6 @@
 
 walletmanager::walletmanager( QDialog * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
-	m_walletName = configurationoptionsdialog::walletName() ;
 }
 
 void walletmanager::buildGUI()
@@ -60,6 +59,13 @@ void walletmanager::ShowUI()
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
+
+	if( m_wallet->backEnd() == LxQt::Wallet::kwalletBackEnd ){
+		m_walletName = configurationoptionsdialog::KWalletWalletName() ;
+	}else{
+		m_walletName = configurationoptionsdialog::defaultWalletName() ;
+	}
+
 	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
@@ -69,6 +75,13 @@ void walletmanager::getAccounts( void )
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
+
+	if( m_wallet->backEnd() == LxQt::Wallet::kwalletBackEnd ){
+		m_walletName = configurationoptionsdialog::KWalletWalletName() ;
+	}else{
+		m_walletName = configurationoptionsdialog::defaultWalletName() ;
+	}
+
 	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
