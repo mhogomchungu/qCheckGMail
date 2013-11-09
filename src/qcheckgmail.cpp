@@ -26,9 +26,13 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
+	m_newEmailIcon = configurationoptionsdialog::newEmailIcon() ;
+	m_errorIcon    = configurationoptionsdialog::errorIcon() ;
+	m_noEmailIcon  = configurationoptionsdialog::noEmailIcon() ;
+
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
-	this->changeIcon( QString( "qCheckGMailError" ) ) ;
+	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
 
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
@@ -56,7 +60,7 @@ void qCheckGMail::showToolTip( const QString& x,const QString& y,const QString& 
 void qCheckGMail::showPausedIcon( bool paused )
 {
 	if( paused ){
-		statusicon::setOverlayIcon( QString( "qCheckGMail-GotMail" ) ) ;
+		statusicon::setOverlayIcon( m_newEmailIcon ) ;
 	}else{
 		statusicon::setOverlayIcon( QString( "" ) ) ;
 	}
@@ -126,7 +130,7 @@ void qCheckGMail::run()
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
 	m_timer->start( m_interval ) ;
 
-	this->showToolTip( QString( "qCheckGMailError" ),tr( "status" ),tr( "opening wallet" ) ) ;
+	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
 
 	this->getAccountsInfo() ;
 }
@@ -135,10 +139,9 @@ void qCheckGMail::noInternet( void )
 {
 	QString header = tr( "network problem detected" ) ;
 	QString msg    = tr( "could not connect to the internet" ) ;
-	QString icon   = QString( "qCheckGMailError" ) ;
 
-	this->showToolTip( icon,header,msg ) ;
-	this->changeIcon( icon );
+	this->showToolTip( m_errorIcon,header,msg ) ;
+	this->changeIcon( m_errorIcon );
 	this->doneCheckingMail() ;
 }
 
@@ -200,11 +203,10 @@ QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,
 void qCheckGMail::wrongAccountNameOrPassword()
 {
 	QString x = m_accounts.at( m_currentAccount ).accountName() ;
-	QString z = QString( "qCheckGMailError" ) ;
 	QString e = tr( "%1 account has wrong username/password combination" ).arg( x ) ;
 
-	this->changeIcon( z ) ;
-	this->showToolTip( z,tr( "account related error was detected" ),e ) ;
+	this->changeIcon( m_errorIcon ) ;
+	this->showToolTip( m_errorIcon,tr( "account related error was detected" ),e ) ;
 	this->doneCheckingMail() ;
 }
 
@@ -264,21 +266,19 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			m_accountsStatus += QString( "</table>" ) ;
 			if( m_mailCount > 0 ){
-				QString icon = QString( "qCheckGMail-GotMail" ) ;
-				this->changeIcon( icon ) ;
+				this->changeIcon( m_newEmailIcon ) ;
 				this->setTrayIconToVisible( true ) ;
 				if( m_mailCount == 1 ){
-					this->showToolTip( icon,tr( "found 1 new email" ),m_accountsStatus ) ;
+					this->showToolTip( m_newEmailIcon,tr( "found 1 new email" ),m_accountsStatus ) ;
 				}else{
 					QString x = QString::number( m_mailCount ) ;
-					this->showToolTip( icon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
+					this->showToolTip( m_newEmailIcon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
 				this->audioNotify() ;
 			}else{
-				QString icon = QString( "qCheckGMail" ) ;
-				this->changeIcon( icon ) ;
+				this->changeIcon( m_noEmailIcon ) ;
 				this->setTrayIconToVisible( false ) ;
-				this->showToolTip( icon,tr( "no new email found" ),m_accountsStatus ) ;
+				this->showToolTip( m_noEmailIcon,tr( "no new email found" ),m_accountsStatus ) ;
 			}
 
 			this->doneCheckingMail() ;
@@ -320,10 +320,9 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
-		QString icon = QString( "qCheckGMail-GotMail" ) ;
-		this->changeIcon( icon ) ;
+		this->changeIcon( m_newEmailIcon ) ;
 		this->setTrayIconToVisible( true ) ;
-		this->showToolTip( icon,this->displayName(),info ) ;
+		this->showToolTip( m_newEmailIcon,this->displayName(),info ) ;
 		this->audioNotify() ;
 		this->doneCheckingMail() ;
 	}else{
@@ -353,8 +352,8 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				/*
 				 * there are no more accounts to go through
 				 */
-				this->showToolTip( QString( "qCheckGMail" ),tr( "status" ),tr( "no new email found" ) ) ;
-				this->changeIcon( QString( "qCheckGMail" ) ) ;
+				this->showToolTip( m_noEmailIcon,tr( "status" ),tr( "no new email found" ) ) ;
+				this->changeIcon( m_noEmailIcon ) ;
 				this->setTrayIconToVisible( false ) ;
 				this->doneCheckingMail() ;
 			}
@@ -522,9 +521,8 @@ void qCheckGMail::failedToCheckForNewEmail()
 	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
 	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
 
-	QString icon = QString( "qCheckGMailError" ) ;
-	this->changeIcon( icon ) ;
-	this->showToolTip( icon,x,z ) ;
+	this->changeIcon( m_errorIcon ) ;
+	this->showToolTip( m_errorIcon,x,z ) ;
 	this->setTrayIconToVisible( true ) ;
 }
 
@@ -627,9 +625,8 @@ void qCheckGMail::getAccountsInfo()
 
 void qCheckGMail::noAccountConfigured()
 {
-	QString x( "qCheckGMailError" ) ;
-	this->changeIcon( x ) ;
-	this->showToolTip( x,tr( "account related error was detected" ),tr( "no account appear to be configured in the wallet" ) ) ;
+	this->changeIcon( m_errorIcon ) ;
+	this->showToolTip( m_errorIcon,tr( "account related error was detected" ),tr( "no account appear to be configured in the wallet" ) ) ;
 }
 
 void qCheckGMail::setLocalLanguage()

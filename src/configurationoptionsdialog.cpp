@@ -183,6 +183,54 @@ bool configurationoptionsdialog::audioNotify()
 	}
 }
 
+QString configurationoptionsdialog::noEmailIcon()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "noEmailIconColor" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "grey" ) ;
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::newEmailIcon()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "newEmailIconColor" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "blue" ) ;
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::errorIcon()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "errorIconColor" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "red" ) ;
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
 void configurationoptionsdialog::setAudioNotify( bool audioNotify )
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;

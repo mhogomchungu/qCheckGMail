@@ -2,9 +2,8 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
 	 <qresource>
-		 <file>qCheckGMailError.svg</file>
-		 <file>qCheckGMail-GotMail.svg</file>		 
-		 <file>qCheckGMail-NoMail.svg</file>
-		 <file>qCheckGMail.svg</file>
+		 <file>red.svg</file>
+		 <file>blue.svg</file>		 
+		 <file>grey.svg</file>
 	 </qresource>
  </RCC>

@@ -115,6 +115,9 @@ private:
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
+	QString m_newEmailIcon ;
+	QString m_errorIcon ;
+	QString m_noEmailIcon ;
 	bool m_audioNotify ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
