@@ -53,19 +53,24 @@ void walletmanager::buildGUI()
 	m_ui->groupBox->setTitle( QString( "" ) ) ;
 }
 
-void walletmanager::ShowUI()
+void walletmanager::setWalletName()
 {
-	m_action = walletmanager::showAccountInfo ;
-	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
-	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
-
+	if( m_wallet->backEnd() == LxQt::Wallet::internalBackEnd ){
+		m_wallet->setImage( QString( ":/%1" ).arg( configurationoptionsdialog::noEmailIcon() ) ) ;
+	}
 	if( m_wallet->backEnd() == LxQt::Wallet::kwalletBackEnd ){
 		m_walletName = configurationoptionsdialog::KWalletWalletName() ;
 	}else{
 		m_walletName = configurationoptionsdialog::defaultWalletName() ;
 	}
+}
 
+void walletmanager::ShowUI()
+{
+	m_action = walletmanager::showAccountInfo ;
+	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet->setInterfaceObject( this ) ;
+	this->setWalletName() ;
 	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
@@ -74,14 +79,7 @@ void walletmanager::getAccounts( void )
 	m_action = walletmanager::getAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
-
-	if( m_wallet->backEnd() == LxQt::Wallet::kwalletBackEnd ){
-		m_walletName = configurationoptionsdialog::KWalletWalletName() ;
-	}else{
-		m_walletName = configurationoptionsdialog::defaultWalletName() ;
-	}
-
+	this->setWalletName() ;
 	m_wallet->open( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
@@ -89,7 +87,7 @@ void walletmanager::changeWalletPassword()
 {
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->setImage( QString( ":/qCheckGMail" ) ) ;
+	this->setWalletName() ;
 	m_wallet->changeWalletPassWord( m_walletName,QString( "qCheckGMail" ) ) ;
 }
 
