@@ -26,6 +26,8 @@
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QPixmap>
+#include <QPainter>
 
 #include "tray_application_type.h"
 #include "audio_file_path.h"
@@ -73,6 +75,7 @@ public:
 	void setAttentionIcon( const QString& name ) ;
 	void setCategory( const ItemCategory category ) ;
 	void setIcon( const QString& name ) ;
+	void setIcon( const QString& name,int count ) ;
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;

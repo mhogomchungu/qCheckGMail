@@ -231,6 +231,21 @@ QString configurationoptionsdialog::errorIcon()
 	}
 }
 
+bool configurationoptionsdialog::displayEmailCount()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "displayEmailCount" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toBool() ;
+	}else{
+		settings.setValue( opt,true ) ;
+		return true ;
+	}
+}
+
 void configurationoptionsdialog::setAudioNotify( bool audioNotify )
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;

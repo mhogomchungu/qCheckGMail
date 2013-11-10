@@ -58,6 +58,7 @@ public:
 	static QString noEmailIcon( void ) ;
 	static QString newEmailIcon( void ) ;
 	static QString errorIcon( void ) ;
+	static bool displayEmailCount( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 	~configurationoptionsdialog();

@@ -30,6 +30,8 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 	m_errorIcon    = configurationoptionsdialog::errorIcon() ;
 	m_noEmailIcon  = configurationoptionsdialog::noEmailIcon() ;
 
+	m_displayEmailCount = configurationoptionsdialog::displayEmailCount() ;
+
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 
 	this->changeIcon( m_errorIcon ) ;
@@ -69,7 +71,15 @@ void qCheckGMail::showPausedIcon( bool paused )
 void qCheckGMail::changeIcon( const QString& icon )
 {
 	statusicon::setIcon( icon ) ;
-	statusicon::setAttentionIcon( icon ) ;
+}
+
+void qCheckGMail::changeIcon( const QString& icon,int count )
+{
+	if( m_displayEmailCount ){
+		statusicon::setIcon( icon,count ) ;
+	}else{
+		statusicon::setIcon( icon ) ;
+	}
 }
 
 void qCheckGMail::start()
@@ -266,7 +276,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 			 */
 			m_accountsStatus += QString( "</table>" ) ;
 			if( m_mailCount > 0 ){
-				this->changeIcon( m_newEmailIcon ) ;
+				this->changeIcon( m_newEmailIcon,m_mailCount ) ;
 				this->setTrayIconToVisible( true ) ;
 				if( m_mailCount == 1 ){
 					this->showToolTip( m_newEmailIcon,tr( "found 1 new email" ),m_accountsStatus ) ;
@@ -320,7 +330,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
-		this->changeIcon( m_newEmailIcon ) ;
+		this->changeIcon( m_newEmailIcon,m_mailCount ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( m_newEmailIcon,this->displayName(),info ) ;
 		this->audioNotify() ;

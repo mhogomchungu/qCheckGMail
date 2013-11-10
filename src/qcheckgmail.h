@@ -88,6 +88,7 @@ private:
 	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( const QString& icon ) ;
+	void changeIcon( const QString& icon,int ) ;
 	void getAccountsInfo( void ) ;
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
@@ -115,10 +116,11 @@ private:
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
+	bool m_audioNotify ;
+	bool m_displayEmailCount ;
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
-	bool m_audioNotify ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };
