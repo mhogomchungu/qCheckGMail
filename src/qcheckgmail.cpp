@@ -75,7 +75,7 @@ void qCheckGMail::changeIcon( const QString& icon )
 
 void qCheckGMail::changeIcon( const QString& icon,int count )
 {
-	if( m_displayEmailCount ){
+	if( m_displayEmailCount && count > 0 ){
 		statusicon::setIcon( icon,count ) ;
 	}else{
 		statusicon::setIcon( icon ) ;
