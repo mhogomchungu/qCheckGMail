@@ -21,6 +21,35 @@
 
 #include <QDebug>
 
+static QPixmap _icon( const QString& name,int count )
+{
+	QIcon icon( QString( ":/" ) + name ) ;
+	QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
+	int size = pixmap.height() * 0.01 * configurationoptionsdialog::fontSize() ;
+	QPainter paint( &pixmap ) ;
+	QFont font( configurationoptionsdialog::fontFamily() ) ;
+	QFontMetrics fm( font ) ;
+	QString number = QString::number( count ) ;
+
+	paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
+	paint.setRenderHint( QPainter::Antialiasing ) ;
+
+	if( fm.width( number ) > pixmap.width() ) {
+		while( fm.width( number ) > pixmap.width() && size > 0 ){
+			size = size - 1 ;
+			font.setPointSize( size ) ;
+		}
+	}
+
+	font.setPixelSize( size ) ;
+	font.setBold( true ) ;
+	paint.setFont( font ) ;
+	paint.setPen( QColor( configurationoptionsdialog::fontColor() ) ) ;
+	paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,number ) ;
+	paint.end() ;
+	return pixmap ;
+}
+
 #if USE_KDE_STATUS_NOTIFIER
 
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
@@ -58,37 +87,9 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	if( count > 0 ){
-		QIcon icon( QString( ":/" ) + name ) ;
-		QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-		QPainter paint( &pixmap ) ;
-		paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
-		paint.setRenderHint( QPainter::Antialiasing ) ;
-		QFont font( "Helvetica" ) ;
-		int size = pixmap.height() * 0.8 ;
-		QFontMetrics fm( font ) ;
-
-		if( fm.width( QString::number( count ) ) > pixmap.width() ) {
-			while( fm.width( QString::number( count ) ) > pixmap.width() && size > 0 ){
-				size = size - 1 ;
-				font.setPointSize( size ) ;
-				//QFontMetrics fm( font ) ;
-			}
-		}
-
-		font.setPixelSize( size ) ;
-		font.setBold( true ) ;
-		paint.setFont( font ) ;
-		paint.setPen( QColor( "black" ) ) ;
-		paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,QString::number( count ) ) ;
-		paint.end() ;
-		KStatusNotifierItem::setIconByPixmap( pixmap ) ;
-		KStatusNotifierItem::setAttentionIconByPixmap( pixmap ) ;
-	}else{
-		QIcon icon = QIcon( QString( ":/" ) + name ).pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-		KStatusNotifierItem::setIconByPixmap( icon ) ;
-		KStatusNotifierItem::setAttentionIconByPixmap( icon ) ;
-	}
+	QPixmap pixmap = _icon( name,count ) ;
+	KStatusNotifierItem::setIconByPixmap( pixmap ) ;
+	KStatusNotifierItem::setAttentionIconByPixmap( pixmap ) ;
 }
 
 void statusicon::setOverlayIcon( const QString& name )
@@ -197,34 +198,8 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	if( count > 0 ){
-		QIcon icon( QString( ":/" ) + name ) ;
-		QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-		QPainter paint( &pixmap ) ;
-		paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
-		paint.setRenderHint( QPainter::Antialiasing ) ;
-		QFont font( "Helvetica" ) ;
-		int size = pixmap.height() * 0.8 ;
-		QFontMetrics fm( font ) ;
-		
-		if( fm.width( QString::number( count ) ) > pixmap.width() ) {
-			while( fm.width( QString::number( count ) ) > pixmap.width() && size > 0 ){
-				size = size - 1 ;
-				font.setPointSize( size ) ;
-				//QFontMetrics fm( font ) ;
-			}
-		}
-		
-		font.setPixelSize( size ) ;
-		font.setBold( true ) ;
-		paint.setFont( font ) ;
-		paint.setPen( QColor( "black" ) ) ;
-		paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,QString::number( count ) ) ;
-		paint.end() ;
-		m_toolButton.setIcon( pixmap ) ;
-	}else{
-		m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ;
-	}
+	QPixmap pixmap = _icon( name,count ) ;
+	m_toolButton.setIcon( pixmap ) ;
 }
 
 void statusicon::setOverlayIcon( const QString& name )
@@ -341,34 +316,8 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	if( count > 0 ){
-		QIcon icon( QString( ":/" ) + name ) ;
-		QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-		QPainter paint( &pixmap ) ;
-		paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
-		paint.setRenderHint( QPainter::Antialiasing ) ;
-		QFont font( "Helvetica" ) ;
-		int size = pixmap.height() * 0.8 ;
-		QFontMetrics fm( font ) ;
-		
-		if( fm.width( QString::number( count ) ) > pixmap.width() ) {
-			while( fm.width( QString::number( count ) ) > pixmap.width() && size > 0 ){
-				size = size - 1 ;
-				font.setPointSize( size ) ;
-				//QFontMetrics fm( font ) ;
-			}
-		}
-		
-		font.setPixelSize( size ) ;
-		font.setBold( true ) ;
-		paint.setFont( font ) ;
-		paint.setPen( QColor( "black" ) ) ;
-		paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,QString::number( count ) ) ;
-		paint.end() ;
-		m_trayIcon->setIcon( pixmap ) ;
-	}else{
-		m_trayIcon->setIcon( QIcon( QString( ":/" ) + name ) ) ;
-	}
+	QPixmap pixmap = _icon( name,count ) ;
+	m_trayIcon->setIcon( pixmap ) ;
 }
 
 void statusicon::setOverlayIcon( const QString& name )

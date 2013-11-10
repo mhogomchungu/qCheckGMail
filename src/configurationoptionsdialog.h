@@ -58,6 +58,9 @@ public:
 	static QString noEmailIcon( void ) ;
 	static QString newEmailIcon( void ) ;
 	static QString errorIcon( void ) ;
+	static QString fontFamily( void ) ;
+	static QString fontColor( void ) ;
+	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;

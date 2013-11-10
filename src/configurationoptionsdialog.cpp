@@ -231,6 +231,54 @@ QString configurationoptionsdialog::errorIcon()
 	}
 }
 
+QString configurationoptionsdialog::fontFamily()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "displayEmailCountFontFamily" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "Helvetica" ) ;
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::fontColor()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "displayEmailCountFontColor" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "black" ) ;
+		settings.setValue( opt,value ) ;
+		return value ;
+	}
+}
+
+int configurationoptionsdialog::fontSize()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "displayEmailCountFontSize" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toInt() ;
+	}else{
+		QString value = QString( "80" ) ;
+		settings.setValue( opt,value ) ;
+		return 80 ;
+	}
+}
+
 bool configurationoptionsdialog::displayEmailCount()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;

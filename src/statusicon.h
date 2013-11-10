@@ -32,6 +32,7 @@
 #include "tray_application_type.h"
 #include "audio_file_path.h"
 #include "accounts.h"
+#include "configurationoptionsdialog.h"
 
 #if USE_KDE_STATUS_NOTIFIER
 #include <knotification.h>
