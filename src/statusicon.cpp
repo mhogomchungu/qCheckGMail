@@ -195,6 +195,38 @@ void statusicon::setIcon( const QString& name )
 	m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ;
 }
 
+void statusicon::setIcon( const QString& name,int count )
+{
+	if( count > 0 ){
+		QIcon icon( QString( ":/" ) + name ) ;
+		QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
+		QPainter paint( &pixmap ) ;
+		paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
+		paint.setRenderHint( QPainter::Antialiasing ) ;
+		QFont font( "Helvetica" ) ;
+		int size = pixmap.height() * 0.8 ;
+		QFontMetrics fm( font ) ;
+		
+		if( fm.width( QString::number( count ) ) > pixmap.width() ) {
+			while( fm.width( QString::number( count ) ) > pixmap.width() && size > 0 ){
+				size = size - 1 ;
+				font.setPointSize( size ) ;
+				//QFontMetrics fm( font ) ;
+			}
+		}
+		
+		font.setPixelSize( size ) ;
+		font.setBold( true ) ;
+		paint.setFont( font ) ;
+		paint.setPen( QColor( "black" ) ) ;
+		paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,QString::number( count ) ) ;
+		paint.end() ;
+		m_toolButton.setIcon( pixmap ) ;
+	}else{
+		m_toolButton.setIcon( QIcon( QString( ":/" ) + name ) ) ;
+	}
+}
+
 void statusicon::setOverlayIcon( const QString& name )
 {
 	Q_UNUSED( name ) ;
@@ -305,6 +337,38 @@ void statusicon::quit()
 void statusicon::setIcon( const QString& name )
 {
 	m_trayIcon->setIcon( QIcon( QString( ":/" ) + name ) ) ;
+}
+
+void statusicon::setIcon( const QString& name,int count )
+{
+	if( count > 0 ){
+		QIcon icon( QString( ":/" ) + name ) ;
+		QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
+		QPainter paint( &pixmap ) ;
+		paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
+		paint.setRenderHint( QPainter::Antialiasing ) ;
+		QFont font( "Helvetica" ) ;
+		int size = pixmap.height() * 0.8 ;
+		QFontMetrics fm( font ) ;
+		
+		if( fm.width( QString::number( count ) ) > pixmap.width() ) {
+			while( fm.width( QString::number( count ) ) > pixmap.width() && size > 0 ){
+				size = size - 1 ;
+				font.setPointSize( size ) ;
+				//QFontMetrics fm( font ) ;
+			}
+		}
+		
+		font.setPixelSize( size ) ;
+		font.setBold( true ) ;
+		paint.setFont( font ) ;
+		paint.setPen( QColor( "black" ) ) ;
+		paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,QString::number( count ) ) ;
+		paint.end() ;
+		m_trayIcon->setIcon( pixmap ) ;
+	}else{
+		m_trayIcon->setIcon( QIcon( QString( ":/" ) + name ) ) ;
+	}
 }
 
 void statusicon::setOverlayIcon( const QString& name )
