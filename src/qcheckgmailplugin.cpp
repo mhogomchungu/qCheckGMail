@@ -29,7 +29,7 @@ qChechGMailPlugIn::qChechGMailPlugIn( const IRazorPanelPluginStartupInfo& startu
 
 qChechGMailPlugIn::~qChechGMailPlugIn()
 {
-	m_gmail->deleteLater() ;
+	delete m_gmail ;
 }
 
 QWidget * qChechGMailPlugIn::widget()

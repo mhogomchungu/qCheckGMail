@@ -20,9 +20,8 @@
 #ifndef QCHECKGMAILPLUGIN_H
 #define QCHECKGMAILPLUGIN_H
 #include <QObject>
-#include <razorqt/irazorpanel.h>
-#include <razorqt/irazorpanelplugin.h>
-#include <razorqt/razorplugininfo.h>
+#include "lxqt/irazorpanel.h"
+#include "lxqt/irazorpanelplugin.h"
 
 #include <QToolButton>
 #include <QVector>

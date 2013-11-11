@@ -121,6 +121,7 @@ private:
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
+	QString m_applicationIcon ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 };

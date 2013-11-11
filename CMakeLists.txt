@@ -87,10 +87,11 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 if( LXQTSUPPORT )
 	INCLUDE(FindPkgConfig)
 
-	pkg_check_modules( LXQT razorqt )
+	pkg_check_modules( LXQT lxqt )
 	if( LXQT_FOUND )
 
-		include_directories( "${LXQT_INCLUDEDIR}" )
+		add_definitions( -I${LXQT_INCLUDE_DIR})
+		include_directories( ${LXQT_INCLUDE_DIRS} )
 
 		if( QT5 )
 			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h src/task.h )
@@ -109,13 +110,13 @@ if( LXQTSUPPORT )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon )
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon ${LXQT_LIBRARIES})
 
 		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
 		
-		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/razor-panel/ )
+		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/lxqt-panel/ )
 
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/razor/razor-panel/
+		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/lxqt/lxqt-panel/
 			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
 

@@ -32,6 +32,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QCursor>
+#include <QIcon>
 
 #include "accounts.h"
 #include "addaccount.h"
@@ -52,7 +53,7 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	explicit walletmanager( QDialog * parent = 0 ) ;
+	explicit walletmanager( const QString& icon = QString(),QDialog * parent = 0 ) ;
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;
@@ -98,6 +99,7 @@ private:
 	QString m_accPassWord ;
 	QString m_accLabels ;
 	QString m_accDisplayName ;
+	QString m_icon ;
 	int m_row ;
 };
 

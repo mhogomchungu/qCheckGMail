@@ -22,8 +22,9 @@
 #include "ui_walletmanager.h"
 #include "task.h"
 
-walletmanager::walletmanager( QDialog * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
+walletmanager::walletmanager( const QString& icon,QDialog * parent ) :QDialog( parent ),m_ui( 0 ),m_wallet( 0 )
 {
+	m_icon = QString( ":/%1" ).arg( icon ) ;
 }
 
 void walletmanager::buildGUI()
@@ -33,6 +34,7 @@ void walletmanager::buildGUI()
 
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
+	this->setWindowIcon( QIcon( m_icon ) ) ;
 
 	connect( m_ui->pushButtonAccountAdd,SIGNAL( clicked() ),this,SLOT( pushButtonAdd() ) ) ;
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;

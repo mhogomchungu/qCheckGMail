@@ -30,6 +30,8 @@ qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 	m_errorIcon    = configurationoptionsdialog::errorIcon() ;
 	m_noEmailIcon  = configurationoptionsdialog::noEmailIcon() ;
 
+	m_applicationIcon = m_noEmailIcon ;
+
 	m_displayEmailCount = configurationoptionsdialog::displayEmailCount() ;
 
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
@@ -477,7 +479,7 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 
 void qCheckGMail::configureAccounts()
 {
-	walletmanager * wallet = new walletmanager() ;
+	walletmanager * wallet = new walletmanager( m_applicationIcon ) ;
 	connect( wallet,SIGNAL( walletmanagerClosed() ),this,SLOT( walletmanagerClosed() ) ) ;
 	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
 	wallet->ShowUI() ;
@@ -620,13 +622,13 @@ const QVector<accounts>& qCheckGMail::configuredAccounts()
 
 void qCheckGMail::configurePassWord()
 {
-	walletmanager * wallet = new walletmanager() ;
+	walletmanager * wallet = new walletmanager( m_applicationIcon ) ;
 	wallet->changeWalletPassword() ;
 }
 
 void qCheckGMail::getAccountsInfo()
 {
-	walletmanager * wallet = new walletmanager() ;
+	walletmanager * wallet = new walletmanager( m_applicationIcon ) ;
 	connect( wallet,SIGNAL( getAccountsInfo( QVector<accounts> ) ),this,SLOT( getAccountsInfo( QVector<accounts> ) ) ) ;
 	wallet->getAccounts() ;
 }
