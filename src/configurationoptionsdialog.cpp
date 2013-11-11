@@ -62,6 +62,23 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 			break ;
 		}
 	}
+
+	this->installEventFilter( this ) ;
+}
+
+bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
+{
+	if( watched == this ){
+		if( event->type() == QEvent::KeyPress ){
+			QKeyEvent * keyEvent = static_cast< QKeyEvent* >( event ) ;
+			if( keyEvent->key() == Qt::Key_Escape ){
+				this->HideUI() ;
+				return true ;
+			}
+		}
+	}
+
+	return false ;
 }
 
 void configurationoptionsdialog::setDefaultQSettingOptions( QSettings& settings )

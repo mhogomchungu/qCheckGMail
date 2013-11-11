@@ -28,6 +28,8 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QDebug>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include "language_path.h"
 #include "tray_application_type.h"
@@ -42,7 +44,8 @@ class configurationoptionsdialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationoptionsdialog( QWidget * parent = 0 );
+	explicit configurationoptionsdialog( QWidget * parent = 0 ) ;
+	~configurationoptionsdialog() ;
 	static bool autoStartEnabled( void ) ;
 	static void enableAutoStart( bool ) ;
 	static bool reportOnAllAccounts( void ) ;
@@ -64,7 +67,6 @@ public:
 	static bool displayEmailCount( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
-	~configurationoptionsdialog();
 signals:
 	void audioNotify( bool ) ;
 	void setTimer( int ) ;
@@ -72,6 +74,7 @@ signals:
 private slots:
 	void pushButtonClose( void ) ;
 private:
+	bool eventFilter( QObject * watched,QEvent * event ) ;
 	void setAudioNotify( bool ) ;
 	void saveWalletName( QString ) ;
 	void saveReportOnAllAccounts( bool ) ;

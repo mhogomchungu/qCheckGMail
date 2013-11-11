@@ -33,6 +33,8 @@
 #include <QAction>
 #include <QCursor>
 #include <QIcon>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include "accounts.h"
 #include "addaccount.h"
@@ -82,6 +84,7 @@ private:
 	void selectRow( int row,bool highlight ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
+	bool eventFilter ( QObject * watched,QEvent * event ) ;
 
 	const QString& getPassWordFromAccount( const QString& ) ;
 

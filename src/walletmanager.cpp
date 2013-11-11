@@ -53,6 +53,8 @@ void walletmanager::buildGUI()
 	m_ui->pushButtonAccountAdd->setFocus() ;
 
 	m_ui->groupBox->setTitle( QString( "" ) ) ;
+
+	this->installEventFilter( this ) ;
 }
 
 void walletmanager::setWalletName()
@@ -144,6 +146,21 @@ void walletmanager::closeEvent( QCloseEvent * e )
 {
 	e->ignore() ;
 	this->HideUI() ;
+}
+
+bool walletmanager::eventFilter( QObject * watched,QEvent * event )
+{
+	if( watched == this ){
+		if( event->type() == QEvent::KeyPress ){
+			QKeyEvent * keyEvent = static_cast< QKeyEvent* >( event ) ;
+			if( keyEvent->key() == Qt::Key_Escape ){
+				this->HideUI() ;
+				return true ;
+			}
+		}
+	}
+
+	return false ;
 }
 
 void walletmanager::HideUI()
