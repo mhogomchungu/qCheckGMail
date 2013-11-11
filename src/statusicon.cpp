@@ -169,7 +169,7 @@ void statusicon::addQuitAction()
 
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
-	m_toolButton.setIcon( QIcon( QString( ":/qCheckGMailError" ) ) ) ;
+	m_toolButton.setPopupMode( QToolButton::InstantPopup ) ;
 }
 
 statusicon::~statusicon()

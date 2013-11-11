@@ -69,7 +69,7 @@ public:
 		Active = 2,
 		NeedsAttention = 3
 	};
-	statusicon(  const QVector<accounts>& ) ;
+	statusicon( const QVector<accounts>& ) ;
 	virtual ~statusicon() ;
 	static void newEmailNotify( void ) ;
 	static bool enableDebug( void ) ;
