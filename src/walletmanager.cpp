@@ -58,7 +58,7 @@ void walletmanager::buildGUI()
 void walletmanager::setWalletName()
 {
 	if( m_wallet->backEnd() == LxQt::Wallet::internalBackEnd ){
-		m_wallet->setImage( QString( ":/%1" ).arg( configurationoptionsdialog::noEmailIcon() ) ) ;
+		m_wallet->setImage( m_icon ) ;
 	}
 	if( m_wallet->backEnd() == LxQt::Wallet::kwalletBackEnd ){
 		m_walletName = configurationoptionsdialog::KWalletWalletName() ;

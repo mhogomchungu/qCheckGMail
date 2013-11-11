@@ -34,8 +34,10 @@ static QPixmap _icon( const QString& name,int count )
 	paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
 	paint.setRenderHint( QPainter::Antialiasing ) ;
 
-	if( fm.width( number ) > pixmap.width() ) {
-		while( fm.width( number ) > pixmap.width() && size > 0 ){
+	int width = pixmap.width() * 0.8 ;
+	
+	if( fm.width( number ) > width ) {
+		while( fm.width( number ) > width && size > 0 ){
 			size = size - 1 ;
 			font.setPointSize( size ) ;
 		}

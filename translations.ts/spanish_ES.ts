@@ -134,7 +134,7 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="187"/>
         <source>account information storage system</source>
-        <translation type="unfinished"></translation>
+        <translation>sistema de almacenamiento de cuenta</translation>
     </message>
     <message>
         <source>leave blank to reset to default</source>
@@ -152,7 +152,7 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="274"/>
         <source>audio notify</source>
-        <translation type="unfinished"></translation>
+        <translation>sonido de notificación</translation>
     </message>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="308"/>
@@ -322,7 +322,7 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../src/qcheckgmail.cpp" line="107"/>
         <source>configure password</source>
-        <translation type="unfinished"></translation>
+        <translation>configurar contraseña</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="136"/>
@@ -405,7 +405,7 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../src/statusicon.cpp" line="299"/>
         <source>quit</source>
-        <translation type="unfinished"></translation>
+        <translation>salir</translation>
     </message>
 </context>
 <context>
@@ -428,7 +428,7 @@ ERROR: el intervalo de tiempo mínimo es 5 minutos
     <message>
         <location filename="../src/walletmanager.ui" line="76"/>
         <source>account name</source>
-        <translation type="unfinished"></translation>
+        <translation>nombre de cuenta</translation>
     </message>
     <message>
         <location filename="../src/walletmanager.ui" line="81"/>
