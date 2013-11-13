@@ -78,7 +78,7 @@ private slots:
 private:
 	bool eventFilter( QObject * watched,QEvent * event ) ;
 	void setAudioNotify( bool ) ;
-	void saveWalletName( QString ) ;
+	void saveStorageSystem( const QString& ) ;
 	void saveReportOnAllAccounts( bool ) ;
 	void saveTimeToConfigFile( void ) ;
 	void setSupportedLanguages( void ) ;

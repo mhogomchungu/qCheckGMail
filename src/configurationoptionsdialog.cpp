@@ -41,7 +41,8 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 		m_ui->comboBoxBackEndSystem->addItem( QString( "internal wallet" ) ) ;
 	}
 	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-		m_ui->comboBoxBackEndSystem->addItem( QString( "kde wallet" ) ) ;
+		m_ui->comboBoxBackEndSystem->addItem( QString( "default kde wallet" ) ) ;
+		m_ui->comboBoxBackEndSystem->addItem( QString( "qCheckGMail kde wallet" ) ) ;
 	}
 	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
 		m_ui->comboBoxBackEndSystem->addItem( QString( "gnome wallet" ) ) ;
@@ -96,37 +97,31 @@ QString configurationoptionsdialog::KWalletWalletName()
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
-	QString opt   = QString( "KWalletName" ) ;
+	QString opt = QString( "storageSystem" ) ;
 
-	if( settings.contains( opt ) ){
-		return settings.value( opt ).toString() ;
+	QString s = settings.value( opt ).toString() ;
+
+	if( s == QString( "qCheckGMail kde wallet" ) ){
+		return QString( "qCheckGMail" ) ;
 	}else{
 		LxQt::Wallet::Wallet * w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 		if( w ){
 			QString value = w->localDefaultWalletName() ;
-			settings.setValue( opt,value ) ;
 			w->deleteLater() ;
 			return value ;
 		}else{
-			QString value = QString( "kdewallet" ) ;
-			settings.setValue( opt,value ) ;
-			return value ;
+			settings.setValue( opt,QString( "default kde wallet" ) )  ;
+			return QString( "kdewallet" ) ;
 		}
 	}
 }
 
-void configurationoptionsdialog::saveWalletName( QString walletName )
+void configurationoptionsdialog::saveStorageSystem( const QString& system )
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
-
-	QString opt = QString( "walletName" ) ;
-
-	if( walletName.isEmpty() ){
-		settings.setValue( opt,QString( "qCheckGMail" ) ) ;
-	}else{
-		settings.setValue( opt,walletName ) ;
-	}
+	QString opt = QString( "storageSystem" ) ;
+	settings.setValue( opt,system ) ;
 }
 
 QString configurationoptionsdialog::defaultWalletName()
@@ -160,7 +155,7 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 				settings.setValue( opt,QString( "internal wallet" ) ) ;
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
-		}else if( value == QString( "kde wallet" ) ){
+		}else if( value.contains( QString( "kde" ) ) ){
 			if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 			}else{
@@ -173,7 +168,7 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 		}
 	}else{
 		if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-			settings.setValue( opt,QString( "kde wallet" ) ) ;
+			settings.setValue( opt,QString( "default kde wallet" ) ) ;
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 		}else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
 			settings.setValue( opt,QString( "gnome wallet" ) ) ;
@@ -486,11 +481,9 @@ void configurationoptionsdialog::HideUI()
 
 	this->setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
-	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
-	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
-
 	QString s = m_ui->comboBoxBackEndSystem->currentText() ;
-	settings.setValue( QString( "storageSystem" ),s ) ;
+
+	this->saveStorageSystem( s ) ;
 
 	emit enablePassWordChange( s == QString( "internal wallet" ) ) ;
 
