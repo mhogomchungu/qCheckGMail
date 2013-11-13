@@ -290,9 +290,9 @@ int configurationoptionsdialog::fontSize()
 	if( settings.contains( opt ) ){
 		return settings.value( opt ).toInt() ;
 	}else{
-		QString value = QString( "80" ) ;
+		QString value = QString( "60" ) ;
 		settings.setValue( opt,value ) ;
-		return 80 ;
+		return 60 ;
 	}
 }
 
