@@ -39,3 +39,4 @@ version 1.2.4
 - Audio notify only when new emails are detected
 - Add an option to show number of unread emails in the application icon,the option can be switched off in the config file.
 - Add an option to change around application icons colors,the changes can be made through the config file.
+- With KWallet storage backend,add an option to use KDE default wallet(kdewallet) or qCheckGMail wallet.

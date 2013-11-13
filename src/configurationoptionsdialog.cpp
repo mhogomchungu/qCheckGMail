@@ -166,13 +166,16 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 		}
 	}else{
 		if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-			settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
+			settings.setValue( opt,QString( qCheckGMail_KDE_wALLET ) ) ;
+			settings.sync() ;
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 		}else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
 			settings.setValue( opt,QString( "gnome wallet" ) ) ;
+			settings.sync() ;
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 		}else{
 			settings.setValue( opt,QString( "internal wallet" ) ) ;
+			settings.sync() ;
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 		}
 	}
@@ -205,6 +208,7 @@ QString configurationoptionsdialog::noEmailIcon()
 	}else{
 		QString value = QString( "grey" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return value ;
 	}
 }
@@ -221,6 +225,7 @@ QString configurationoptionsdialog::newEmailIcon()
 	}else{
 		QString value = QString( "blue" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return value ;
 	}
 }
@@ -237,6 +242,7 @@ QString configurationoptionsdialog::errorIcon()
 	}else{
 		QString value = QString( "red" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return value ;
 	}
 }
@@ -253,6 +259,7 @@ QString configurationoptionsdialog::fontFamily()
 	}else{
 		QString value = QString( "Helvetica" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return value ;
 	}
 }
@@ -269,6 +276,7 @@ QString configurationoptionsdialog::fontColor()
 	}else{
 		QString value = QString( "black" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return value ;
 	}
 }
@@ -294,6 +302,7 @@ int configurationoptionsdialog::fontSize()
 	}else{
 		QString value = QString( "60" ) ;
 		settings.setValue( opt,value ) ;
+		settings.sync() ;
 		return 60 ;
 	}
 }
@@ -309,6 +318,7 @@ bool configurationoptionsdialog::displayEmailCount()
 		return settings.value( opt ).toBool() ;
 	}else{
 		settings.setValue( opt,true ) ;
+		settings.sync() ;
 		return true ;
 	}
 }
@@ -332,6 +342,7 @@ bool configurationoptionsdialog::autoStartEnabled()
 		return settings.value( opt ).toBool() ;
 	}else{
 		settings.setValue( opt,true ) ;
+		settings.sync() ;
 		return true ;
 	}
 }
@@ -355,6 +366,7 @@ bool configurationoptionsdialog::reportOnAllAccounts()
 		return settings.value( opt ).toBool() ;
 	}else{
 		settings.setValue( opt,true ) ;
+		settings.sync() ;
 		return true ;
 	}
 }
@@ -380,6 +392,7 @@ QString configurationoptionsdialog::localLanguage()
 	}else{
 		QString lang = QString( "english_US" ) ;
 		settings.setValue( opt,lang ) ;
+		settings.sync() ;
 		return lang ;
 	}
 }
@@ -409,6 +422,7 @@ void configurationoptionsdialog::saveTimeToConfigFile()
 	QString opt = QString( "interval" ) ;
 	QString time = m_ui->lineEditUpdateCheckInterval->text() ;
 	settings.setValue( opt,time ) ;
+	settings.sync() ;
 }
 
 int configurationoptionsdialog::getTimeFromConfigFile()
@@ -427,6 +441,7 @@ int configurationoptionsdialog::getTimeFromConfigFile()
 		}
 	}else{
 		settings.setValue( opt,QString( "30" ) ) ;
+		settings.sync() ;
 		return 30 * 60 * 1000 ;
 	}
 }
