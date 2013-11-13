@@ -76,7 +76,6 @@ private slots:
 	void editAccount( int,QString,QString,QString,QString ) ;
 	void taskComplete( int ) ;
 	void enableAll( void ) ;
-	void setWalletName( void ) ;
 private:
 	void disableAll( void ) ;
 	void changePassword( bool ) ;
@@ -95,7 +94,6 @@ private:
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
-	QString m_walletName ;
 	bool m_getAccInfo ;
 	openOperation m_action ;
 	QString m_accName ;

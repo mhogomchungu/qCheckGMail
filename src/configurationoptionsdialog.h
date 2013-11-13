@@ -53,8 +53,7 @@ public:
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
 	static void setDefaultQSettingOptions( QSettings& ) ;
-	static QString defaultWalletName( void ) ;
-	static QString KWalletWalletName( void ) ;
+	static QString walletName( LxQt::Wallet::walletBackEnd ) ;
 	static QString logFile( void ) ;
 	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
