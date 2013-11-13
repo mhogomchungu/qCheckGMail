@@ -21,24 +21,10 @@
 
 qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 {
-	m_timer = new QTimer( this ) ;
-
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
-	m_newEmailIcon = configurationoptionsdialog::newEmailIcon() ;
-	m_errorIcon    = configurationoptionsdialog::errorIcon() ;
-	m_noEmailIcon  = configurationoptionsdialog::noEmailIcon() ;
-
-	m_applicationIcon = m_noEmailIcon ;
-
-	m_displayEmailCount = configurationoptionsdialog::displayEmailCount() ;
-
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
-
-	this->changeIcon( m_errorIcon ) ;
-	this->setTrayIconToVisible( true ) ;
-
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
 }
 
@@ -89,14 +75,39 @@ void qCheckGMail::start()
 
 void qCheckGMail::run()
 {
-	m_enableDebug = statusicon::enableDebug() ;
+	m_enableDebug         = statusicon::enableDebug() ;
+	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
+	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
+	m_interval            = configurationoptionsdialog::getTimeFromConfigFile() ;
+	m_newEmailIcon        = configurationoptionsdialog::newEmailIcon() ;
+	m_errorIcon           = configurationoptionsdialog::errorIcon() ;
+	m_noEmailIcon         = configurationoptionsdialog::noEmailIcon() ;
+	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
+
+	m_applicationIcon     = m_noEmailIcon ;
+
+	this->changeIcon( m_errorIcon ) ;
+	this->setTrayIconToVisible( true ) ;
+
+	m_mutex = new QMutex() ;
+
+	m_checkingMail = false ;
+
+	m_manager = new QNetworkAccessManager( this ) ;
+	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
+
+	m_timer = new QTimer( this ) ;
+	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
+	m_timer->start( m_interval ) ;
 
 	this->setLocalLanguage() ;
+	this->addActionsToMenu() ;
+	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
+	this->getAccountsInfo() ;
+}
 
-	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
-
-	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
-
+void qCheckGMail::addActionsToMenu()
+{
 	QObject * parent = statusicon::statusQObject() ;
 
 	QAction * ac = new QAction( parent ) ;
@@ -119,6 +130,8 @@ void qCheckGMail::run()
 
 	ac = new QAction( parent ) ;
 	ac->setText( tr( "configure password" ) ) ;
+	ac->setObjectName( QString( "configurePassword" ) ) ;
+	ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurePassWord() ) ) ;
 	statusicon::addAction( ac ) ;
 
@@ -128,21 +141,6 @@ void qCheckGMail::run()
 	statusicon::addAction( ac ) ;
 
 	statusicon::addQuitAction() ;
-
-	m_mutex = new QMutex() ;
-
-	m_checkingMail = false ;
-
-	m_manager = new QNetworkAccessManager( this ) ;
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
-
-	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
-	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
-	m_timer->start( m_interval ) ;
-
-	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
-
-	this->getAccountsInfo() ;
 }
 
 void qCheckGMail::noInternet( void )
@@ -489,9 +487,22 @@ void qCheckGMail::configurationoptionWindow()
 {
 	configurationoptionsdialog * cg = new configurationoptionsdialog() ;
 	connect( cg,SIGNAL( setTimer( int ) ),this,SLOT( configurationWindowClosed( int ) ) ) ;
+	connect( cg,SIGNAL( enablePassWordChange( bool ) ),this,SLOT( enablePassWordChange( bool ) ) ) ;
 	connect( cg,SIGNAL( reportOnAllAccounts( bool ) ),this,SLOT( reportOnAllAccounts( bool ) ) ) ;
 	connect( cg,SIGNAL( audioNotify( bool ) ),this,SLOT( audioNotify( bool ) ) ) ;
 	cg->ShowUI() ;
+}
+
+void qCheckGMail::enablePassWordChange( bool changeable )
+{
+	QList<QAction *> acs = statusicon::getMenuActions() ;
+	int j = acs.size() ;
+	QString s( "configurePassword" ) ;
+	for( int i = 0 ; i < j ; i++ ){
+		if( acs.at( i )->objectName() == s ){
+			acs.at( i )->setEnabled( changeable ) ;
+		}
+	}
 }
 
 void qCheckGMail::configurationWindowClosed( int r )
@@ -513,9 +524,9 @@ void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )
 
 void qCheckGMail::walletmanagerClosed( void )
 {
-	m_mutex->lock();
+	m_mutex->lock() ;
 	m_redoMailCheck = true ;
-	m_mutex->unlock();
+	m_mutex->unlock() ;
 }
 
 void qCheckGMail::failedToCheckForNewEmail()

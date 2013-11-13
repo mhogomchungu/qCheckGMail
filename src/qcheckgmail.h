@@ -73,6 +73,7 @@ private slots:
 	void getAccountsInfo( QVector<accounts> ) ;
 	void configurePassWord( void ) ;
 	void audioNotify( bool ) ;
+	void enablePassWordChange( bool ) ;
 private:
 	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
@@ -100,6 +101,7 @@ private:
 	void failedToCheckForNewEmail( void ) ;
 	void audioNotify( void ) ;
 	void checkAccountLastUpdate( const QByteArray&,int ) ;
+	void addActionsToMenu( void ) ;
 	QTimer * m_timer ;
 	int m_interval ;
 	QNetworkAccessManager * m_manager ;

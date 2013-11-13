@@ -280,6 +280,15 @@ QString configurationoptionsdialog::fontColor()
 	}
 }
 
+bool configurationoptionsdialog::usingInternalStorageSystem()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "storageSystem" ) ;
+	return settings.value( opt ).toString() == QString( "internal wallet" ) ;
+}
+
 int configurationoptionsdialog::fontSize()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
@@ -480,7 +489,10 @@ void configurationoptionsdialog::HideUI()
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
-	settings.setValue( QString( "storageSystem" ),m_ui->comboBoxBackEndSystem->currentText() ) ;
+	QString s = m_ui->comboBoxBackEndSystem->currentText() ;
+	settings.setValue( QString( "storageSystem" ),s ) ;
+
+	emit enablePassWordChange( s == QString( "internal wallet" ) ) ;
 
 	this->deleteLater() ;
 }

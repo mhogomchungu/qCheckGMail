@@ -63,6 +63,7 @@ public:
 	static QString errorIcon( void ) ;
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
+	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;
 	void ShowUI( void ) ;
@@ -71,6 +72,7 @@ signals:
 	void audioNotify( bool ) ;
 	void setTimer( int ) ;
 	void reportOnAllAccounts( bool ) ;
+	void enablePassWordChange( bool ) ;
 private slots:
 	void pushButtonClose( void ) ;
 private:

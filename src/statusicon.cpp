@@ -35,7 +35,7 @@ static QPixmap _icon( const QString& name,int count )
 	paint.setRenderHint( QPainter::Antialiasing ) ;
 
 	int width = pixmap.width() * 0.8 ;
-	
+
 	if( fm.width( number ) > width ) {
 		while( fm.width( number ) > width && size > 0 ){
 			size = size - 1 ;
@@ -57,7 +57,9 @@ static QPixmap _icon( const QString& name,int count )
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
 {
 	m_menu = new KMenu() ;
+	m_menu->clear() ;
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
+	KStatusNotifierItem::setStandardActionsEnabled( false ) ;
 	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( activateRequested_1( bool,QPoint ) ) ) ;
 }
 
@@ -139,6 +141,7 @@ QList<QAction *> statusicon::getMenuActions()
 
 void statusicon::quit()
 {
+	QCoreApplication::exit() ;
 }
 
 void statusicon::activateRequested_1( bool x,const QPoint& y )
@@ -162,6 +165,10 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 
 void statusicon::addQuitAction()
 {
+	QAction * ac = new QAction( m_menu ) ;
+	ac->setText( tr( "quit" ) ) ;
+	connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+	m_menu->addAction( ac ) ;
 }
 
 #elif USE_LXQT_PLUGIN
@@ -223,8 +230,7 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 
 QList<QAction *> statusicon::getMenuActions()
 {
-	QList<QAction *> l ;
-	return l ;
+	return m_toolButton.actions() ;
 }
 
 void statusicon::addQuitAction()
