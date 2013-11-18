@@ -21,9 +21,6 @@
 
 qCheckGMail::qCheckGMail() : statusicon( m_accounts )
 {
-	m_numberOfAccounts  = 0 ;
-	m_numberOfLabels    = 0 ;
-
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
 }
@@ -86,6 +83,9 @@ void qCheckGMail::run()
 
 	m_applicationIcon     = m_noEmailIcon ;
 
+	m_numberOfAccounts  = 0 ;
+	m_numberOfLabels    = 0 ;
+	
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
 
@@ -501,6 +501,7 @@ void qCheckGMail::enablePassWordChange( bool changeable )
 	for( int i = 0 ; i < j ; i++ ){
 		if( acs.at( i )->objectName() == s ){
 			acs.at( i )->setEnabled( changeable ) ;
+			break ;
 		}
 	}
 }
@@ -726,6 +727,7 @@ void qCheckGMail::startTimer()
 				m_timer->stop() ;
 				m_timer->start( m_interval ) ;
 			}
+			break ;
 		}
 	}
 }

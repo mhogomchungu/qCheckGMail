@@ -125,6 +125,7 @@ void configurationoptionsdialog::saveStorageSystem( const QString& system )
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 	QString opt = QString( "storageSystem" ) ;
 	settings.setValue( opt,system ) ;
+	settings.sync() ;
 }
 
 QString configurationoptionsdialog::logFile()
