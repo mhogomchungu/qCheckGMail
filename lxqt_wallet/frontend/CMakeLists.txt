@@ -79,7 +79,7 @@ else()
 			SET(KWALLET_SUPPORT "false")
 			file(APPEND  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n")
 		else()
-			find_library(LIBKWALLETBACKEND libkwalletbackend.so)
+			find_library(LIBKWALLETBACKEND libkwalletbackend.so PATHS ${KDE_LIBRARY_PATH})
 			if(NOT LIBKWALLETBACKEND)
 				# some distributions do not have libkwalletbackend.so for reasons i currently do not know
 				# look for libkwalletbackend.sp.4 when the above happen
@@ -101,7 +101,7 @@ else()
 			endif()
 		endif()
 	
-		find_library(LIBKDEUI libkdeui.so)
+		find_library(LIBKDEUI libkdeui.so PATHS ${KDE_LIBRARY_PATH})
 		if(NOT LIBKDEUI)
 			# adding this one just in case the same case as above happen
 			find_library(LIBKDEUI libkdeui.so.5)
@@ -112,7 +112,7 @@ else()
 			message(STATUS "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again")
 		endif()
 
-		find_library(LIBKDECORE libkdecore.so)
+		find_library(LIBKDECORE libkdecore.so PATHS ${KDE_LIBRARY_PATH})
 		if(NOT LIBKDECORE)
 			# adding this one just in case the same case as above happen
 			find_library(LIBKDECORE libkdecore.so.5)

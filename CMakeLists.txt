@@ -172,7 +172,7 @@ else()
 		include_directories(${KDE4_INCLUDES})
 		add_definitions( -I${KDE4_INCLUDE_DIR} )
 
-		find_library( LIBKDEUI_ libkdeui.so )
+		find_library( LIBKDEUI_ libkdeui.so PATHS ${KDE_LIBRARY_PATH} )
 		if( NOT LIBKDEUI_ )
 			# adding this one just in case the same case as above happen
 			find_library( LIBKDEUI_ libkdeui.so.5 )
@@ -183,7 +183,7 @@ else()
 			message( FATAL_ERROR "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
 		endif()
 
-		find_library( LIBKDECORE_ libkdecore.so )
+		find_library( LIBKDECORE_ libkdecore.so PATHS ${KDE_LIBRARY_PATH} )
 		if( NOT LIBKDECORE_ )
 			# adding this one just in case the same case as above happen
 			find_library( LIBKDECORE_ libkdecore.so.5 )
