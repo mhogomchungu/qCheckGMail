@@ -85,7 +85,7 @@ void qCheckGMail::run()
 
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
-	
+
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
 
@@ -372,7 +372,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 {
 	accounts * acc = m_accounts.data() + m_currentAccount ;
-	accountLable& label = acc->getAccountLabel( m_currentLabel ) ;
+	accountLabel& label = acc->getAccountLabel( m_currentLabel ) ;
 
 	if( label.emailCount() == -1 ){
 		/*

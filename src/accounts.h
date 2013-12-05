@@ -23,9 +23,9 @@
 #include <QString>
 #include <QVector>
 
-class accountLable{
+class accountLabel{
 public:
-	accountLable( const QString& accountLabel = QString(),int accountEmailCount = -1 ) ;
+	accountLabel( const QString& accountLabel = QString(),int accountEmailCount = -1 ) ;
 	const QString& labelUrl( void )     const  ;
 	const QString& labelName( void )    const  ;
 	int emailCount( void )              const  ;
@@ -52,13 +52,13 @@ public:
 	const QString& labels( void )           const ;
 	const QString& labelUrlAt( int )        const ;
 	int   numberOfLabels( void )            const ;
-	accountLable& getAccountLabel( int ) ;
+	accountLabel& getAccountLabel( int ) ;
 private:
 	QString m_accountName   ;
 	QString m_passWord      ;
 	QString m_displayName   ;
 	QString m_labels        ;
-	QVector< accountLable > m_labelUrls ;
+	QVector< accountLabel > m_labelUrls ;
 };
 
 #endif // ACCOUNTS_H

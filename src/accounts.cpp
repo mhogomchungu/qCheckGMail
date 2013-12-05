@@ -35,7 +35,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		baseLabel = QString( "https://mail.google.com/a/%1/feed/atom/" ).arg( domain ) ;
 	}
 
-	m_labelUrls.append( accountLable( baseLabel ) ) ;
+	m_labelUrls.append( accountLabel( baseLabel ) ) ;
 
 	if( m_labels.endsWith( "," ) ){
 		m_labels.truncate( m_labels.size() - 1 ) ;
@@ -47,7 +47,7 @@ accounts::accounts( QString accountName,QString password,QString displayName,QSt
 		QStringList l = m_labels.split( "," ) ;
 		int j = l.size() ;
 		for( int i = 0 ; i < j ; i++ ){
-			m_labelUrls.append( accountLable( baseLabel + l.at( i ) ) ) ;
+			m_labelUrls.append( accountLabel( baseLabel + l.at( i ) ) ) ;
 		}
 	}
 }
@@ -82,9 +82,9 @@ int accounts::numberOfLabels() const
 	return m_labelUrls.size() ;
 }
 
-accountLable& accounts::getAccountLabel( int i )
+accountLabel& accounts::getAccountLabel( int i )
 {
-	accountLable * acc = m_labelUrls.data() + i ;
+	accountLabel * acc = m_labelUrls.data() + i ;
 	return *acc ;
 }
 
@@ -98,38 +98,38 @@ const QString &accounts::labelUrlAt( int i ) const
 	}
 }
 
-accountLable::accountLable( const QString& labelUrl,int emailCount ) :
+accountLabel::accountLabel( const QString& labelUrl,int emailCount ) :
 	m_emailCount( emailCount ),m_labelUrl( labelUrl )
 {
 	m_labelName = labelUrl.split( "/" ).last() ;
 }
 
-int accountLable::emailCount() const
+int accountLabel::emailCount() const
 {
 	return m_emailCount ;
 }
 
-const QString& accountLable::labelUrl() const
+const QString& accountLabel::labelUrl() const
 {
 	return m_labelUrl ;
 }
 
-const QString& accountLable::labelName() const
+const QString& accountLabel::labelName() const
 {
 	return m_labelName ;
 }
 
-void accountLable::setEmailCount( int count )
+void accountLabel::setEmailCount( int count )
 {
 	m_emailCount = count ;
 }
 
-const QString& accountLable::lastModified() const
+const QString& accountLabel::lastModified() const
 {
 	return m_lastModifiedTime ;
 }
 
-void accountLable::setLastModifiedTime( const QString& time )
+void accountLabel::setLastModifiedTime( const QString& time )
 {
 	m_lastModifiedTime = time ;
 }
