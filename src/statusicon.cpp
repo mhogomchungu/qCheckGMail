@@ -36,7 +36,7 @@ static QPixmap _icon( const QString& name,int count )
 
 	int width = pixmap.width() * 0.8 ;
 
-	if( fm.width( number ) > width ) {
+	if( fm.width( number ) > width ){
 		while( fm.width( number ) > width && size > 0 ){
 			size = size - 1 ;
 			font.setPointSize( size ) ;

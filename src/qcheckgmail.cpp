@@ -89,6 +89,9 @@ void qCheckGMail::run()
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
 
+	m_timeOut = new QTimer( this ) ;
+	connect( m_timeOut,SIGNAL( timeout() ),this,SLOT( timerExpired() ) ) ;
+
 	m_mutex = new QMutex() ;
 
 	m_checkingMail = false ;
@@ -149,7 +152,17 @@ void qCheckGMail::noInternet( void )
 	QString msg    = tr( "could not connect to the internet" ) ;
 
 	this->showToolTip( m_errorIcon,header,msg ) ;
-	this->changeIcon( m_errorIcon );
+	this->changeIcon( m_errorIcon ) ;
+	this->doneCheckingMail() ;
+}
+
+void qCheckGMail::timerExpired()
+{
+	m_timeOut->stop() ;
+	m_networkReply->abort() ;
+	m_networkReply->close() ;
+	m_networkReply->deleteLater() ;
+	this->failedToCheckForNewEmail() ;
 	this->doneCheckingMail() ;
 }
 
@@ -158,6 +171,7 @@ void qCheckGMail::emailStatusQueryResponce( QNetworkReply * r )
 	QByteArray content = r->readAll() ;
 
 	r->deleteLater();
+	m_timeOut->stop() ;
 
 	if( content.isEmpty() ){
 		this->noInternet() ;
@@ -460,15 +474,16 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 	this->showPausedIcon( pauseAction ) ;
 
 	if( pauseAction ){
-		this->stopTimer();
+		m_timeOut->stop() ;
+		this->stopTimer() ;
 	}else{
-		this->startTimer();
+		this->startTimer() ;
 
 		m_mutex->lock();
 		bool checking = m_checkingMail ;
-		m_mutex->unlock();
+		m_mutex->unlock() ;
 		if( checking ){
-			this->failedToCheckForNewEmail();
+			this->failedToCheckForNewEmail() ;
 		}else{
 			this->checkMail() ;
 		}
@@ -601,7 +616,12 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
 	QNetworkRequest rqt( url ) ;
 
-	m_manager->get( rqt ) ;
+	m_networkReply = m_manager->get( rqt ) ;
+
+	/*
+	 * set network time out to 2 minutes
+	 */
+	m_timeOut->start( 1000 * 2 * 60 ) ;
 }
 
 void qCheckGMail::objectGone( QObject * obj )

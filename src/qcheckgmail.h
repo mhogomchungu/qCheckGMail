@@ -36,6 +36,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QFile>
+#include <QTimer>
 
 #include "statusicon.h"
 #include "accounts.h"
@@ -74,6 +75,7 @@ private slots:
 	void configurePassWord( void ) ;
 	void audioNotify( bool ) ;
 	void enablePassWordChange( bool ) ;
+	void timerExpired( void  ) ;
 private:
 	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
@@ -126,6 +128,9 @@ private:
 	QString m_applicationIcon ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
+	QTimer * m_timeOut ;
+	bool m_timeExpired ;
+	QNetworkReply * m_networkReply ;
 };
 
 #endif // QCHECKGMAIL_H
