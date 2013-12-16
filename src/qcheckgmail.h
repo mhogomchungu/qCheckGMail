@@ -62,6 +62,7 @@ private slots:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;
 	void emailStatusQueryResponce( QNetworkReply * ) ;
+	void emailStatusQueryResponce( void ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;

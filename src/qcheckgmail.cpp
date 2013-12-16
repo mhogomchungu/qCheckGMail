@@ -97,7 +97,7 @@ void qCheckGMail::run()
 	m_checkingMail = false ;
 
 	m_manager = new QNetworkAccessManager( this ) ;
-	connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
+	//connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_timer = new QTimer( this ) ;
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
@@ -166,11 +166,16 @@ void qCheckGMail::timerExpired()
 	this->doneCheckingMail() ;
 }
 
+void qCheckGMail::emailStatusQueryResponce( void )
+{
+	this->emailStatusQueryResponce( m_networkReply ) ;
+}
+
 void qCheckGMail::emailStatusQueryResponce( QNetworkReply * r )
 {
 	QByteArray content = r->readAll() ;
 
-	r->deleteLater();
+	r->deleteLater() ;
 	m_timeOut->stop() ;
 
 	if( content.isEmpty() ){
@@ -617,6 +622,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	QNetworkRequest rqt( url ) ;
 
 	m_networkReply = m_manager->get( rqt ) ;
+	connect( m_networkReply,SIGNAL( finished() ),this,SLOT( emailStatusQueryResponce() ) ) ;
 
 	/*
 	 * set network time out to 2 minutes
