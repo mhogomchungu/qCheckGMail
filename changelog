@@ -40,3 +40,7 @@ version 1.2.4
 - Add an option to show number of unread emails in the application icon,the option can be switched off in the config file.
 - Add an option to change around application icons colors,the changes can be made through the config file.
 - With KWallet storage backend,add an option to use KDE default wallet(kdewallet) or qCheckGMail wallet.
+
+version 1.2.5
+- Properly recover and continue checking for email on a shaky network connection.
+- Set KDE wallet to use KDE's default wallet instead of qCheckGMail wallet.
