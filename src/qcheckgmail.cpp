@@ -159,8 +159,8 @@ void qCheckGMail::noInternet( void )
 void qCheckGMail::timerExpired()
 {
 	m_timeOut->stop() ;
-	m_networkReply->abort() ;
 	m_networkReply->close() ;
+	m_networkReply->abort() ;
 	m_networkReply->deleteLater() ;
 	this->failedToCheckForNewEmail() ;
 	this->doneCheckingMail() ;

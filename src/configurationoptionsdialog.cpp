@@ -167,7 +167,7 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 		}
 	}else{
 		if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-			settings.setValue( opt,QString( qCheckGMail_KDE_wALLET ) ) ;
+			settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
 			settings.sync() ;
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 		}else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
