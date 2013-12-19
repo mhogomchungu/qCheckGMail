@@ -165,6 +165,10 @@ void qCheckGMail::timerExpired()
 	m_networkReply->deleteLater() ;
 	this->failedToCheckForNewEmail() ;
 	this->doneCheckingMail() ;
+	/*
+	 * network time out occured,retry
+	 */
+	this->checkMail() ;
 }
 
 void qCheckGMail::emailStatusQueryResponce( void )
