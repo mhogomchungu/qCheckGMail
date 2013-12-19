@@ -80,6 +80,7 @@ void qCheckGMail::run()
 	m_errorIcon           = configurationoptionsdialog::errorIcon() ;
 	m_noEmailIcon         = configurationoptionsdialog::noEmailIcon() ;
 	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
+	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
@@ -624,10 +625,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 	m_networkReply = m_manager->get( rqt ) ;
 	connect( m_networkReply,SIGNAL( finished() ),this,SLOT( emailStatusQueryResponce() ) ) ;
 
-	/*
-	 * set network time out to 2 minutes
-	 */
-	m_timeOut->start( 1000 * 2 * 60 ) ;
+	m_timeOut->start( m_networkTimeOut ) ;
 }
 
 void qCheckGMail::objectGone( QObject * obj )

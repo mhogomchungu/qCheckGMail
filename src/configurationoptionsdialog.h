@@ -65,6 +65,7 @@ public:
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;
+	static int networkTimeOut( void ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 signals:

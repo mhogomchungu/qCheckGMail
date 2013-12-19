@@ -131,6 +131,7 @@ private:
 	QString m_accountNameColumnWidth ;
 	QTimer * m_timeOut ;
 	bool m_timeExpired ;
+	int m_networkTimeOut ;
 	QNetworkReply * m_networkReply ;
 };
 

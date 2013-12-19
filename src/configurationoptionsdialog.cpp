@@ -324,6 +324,22 @@ bool configurationoptionsdialog::displayEmailCount()
 	}
 }
 
+int configurationoptionsdialog::networkTimeOut()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "networkTimeOut" ) ;
+
+	if( settings.contains( opt ) ){
+		return 1000 * 60 * settings.value( opt ).toInt() ;
+	}else{
+		settings.setValue( opt,2 ) ;
+		settings.sync() ;
+		return 1000 * 60 * 2 ;
+	}
+}
+
 void configurationoptionsdialog::setAudioNotify( bool audioNotify )
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
