@@ -25,17 +25,17 @@ ADD_SUBDIRECTORY( lxqt_wallet )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-add_definitions( -Wextra -Wall -pedantic -std=c++0x -I${PROJECT_BINARY_DIR}) 
+add_definitions( -Wextra -Wall -pedantic -std=c++0x -I${PROJECT_BINARY_DIR})
 
 if( QT5 )
 	set( NOKDESUPPORT "true" )
-	
+
 	find_package( Qt5Widgets REQUIRED )
 	find_package( Qt5Core REQUIRED )
 
 	set( CMAKE_INCLUDE_CURRENT_DIR ON )
 	include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
-	
+
 	add_definitions( ${Qt5Widgets_DEFINITIONS} )
 else()
 	find_package( Qt4 REQUIRED )
@@ -47,10 +47,6 @@ endif()
 if( NOT "${DATA_INSTALL_DIR}" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" )
 endif()
-
-file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
-"\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\""
-)
 
 #install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 #install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
@@ -103,7 +99,7 @@ if( LXQTSUPPORT )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 		endif()
-		
+
 		add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp src/task.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
@@ -111,10 +107,8 @@ if( LXQTSUPPORT )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon ${LXQT_LIBRARIES})
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork ${LXQT_LIBRARIES})
 
-		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
-		
 		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/lxqt-panel/ )
 
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/lxqt/lxqt-panel/
@@ -147,10 +141,8 @@ elseif( NOKDESUPPORT )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork -lphonon )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
 
-	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
-	
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
 	install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
@@ -193,7 +185,7 @@ else()
 			SET( KDE_SUPPORT "false" )
 			message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
 		endif()
-		
+
 		if( QT5 )
 			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
@@ -238,23 +230,23 @@ else()
 		endif()
 		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
-		
+
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
 		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
-		
+
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet -lQtNetwork )
-		
+
 		install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-		
+
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
-		
+
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
-		
+
 		message( STATUS "\n-------------------------------------------------------------------------------------------" )
 		message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 		message( STATUS "------------------------------------------------------------------------------------------" )

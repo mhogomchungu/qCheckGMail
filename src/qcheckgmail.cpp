@@ -277,7 +277,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 	if( m_currentLabel < m_numberOfLabels ){
 		/*
-		 * account has more labels and are we are at the next one and are about to go through it
+		 * account has more labels and we are at the next one and are about to go through it
 		 */
 		const accounts& acc = m_accounts.at( m_currentAccount ) ;
 		this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;

@@ -51,6 +51,12 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 		m_ui->comboBoxBackEndSystem->addItem( QString( "gnome wallet" ) ) ;
 	}
 
+	#if USE_KDE_STATUS_NOTIFIER
+		m_ui->checkBoxAudioNotify->setEnabled( true ) ;
+	#else
+		m_ui->checkBoxAudioNotify->setEnabled( false ) ;
+	#endif
+
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
 	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
 
