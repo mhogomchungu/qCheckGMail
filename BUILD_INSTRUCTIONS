@@ -3,10 +3,12 @@ The build system in use is cmake
 
 To build make sure you have the following packages installed(packages may be named differently in your distribution):
 
+gcc
 g++
 cmake
 kde-devel
 qt4-devel
+libgcrypt-devel
 
 To build WITH KDE support(kwallet integration and kde tray icon functionality),run the following commands from the source folder
 
@@ -30,7 +32,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DNOKDESUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE
 make
 make install
 
-To build with razor-qt support,ie to build a razor-qt plugin application,run the following commands from the source folder
+To build with lxqt support,ie to build an lxqt plugin application,run the following commands from the source folder
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DLXQTSUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE ..
