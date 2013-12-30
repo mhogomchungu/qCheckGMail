@@ -44,7 +44,7 @@ SOURCES += \
     src/accounts.cpp \
     src/statusicon.cpp \
     src/qcheckgmailplugin.cpp \
-    src/task.cpp
+    src/task.cpp 
 
 FORMS += \
     src/walletmanager.ui \
