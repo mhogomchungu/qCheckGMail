@@ -352,7 +352,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
-		this->changeIcon( m_newEmailIcon,m_mailCount ) ;
+		this->changeIcon( m_newEmailIcon,count ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( m_newEmailIcon,this->displayName(),info ) ;
 		this->audioNotify() ;
