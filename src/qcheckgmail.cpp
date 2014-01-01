@@ -304,7 +304,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 					this->showToolTip( m_newEmailIcon,tr( "found 1 new email" ),m_accountsStatus ) ;
 				}else{
 					QString x = QString::number( m_mailCount ) ;
-					this->showToolTip( m_newEmailIcon,tr( "found %2 new emails" ).arg( x ),m_accountsStatus ) ;
+					this->showToolTip( m_newEmailIcon,tr( "found %1 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
 				this->audioNotify() ;
 			}else{
@@ -349,7 +349,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 			QString x = this->getAtomComponent( msg,QString( "name" ) ) ;
 			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( x ) ;
 		}else{
-			info = tr( "%2 emails are waiting for you" ).arg( mailCount ) ;
+			info = tr( "%1 emails are waiting for you" ).arg( mailCount ) ;
 		}
 
 		this->changeIcon( m_newEmailIcon,count ) ;
