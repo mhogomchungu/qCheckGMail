@@ -158,6 +158,7 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 			}else{
 				settings.setValue( opt,QString( "internal wallet" ) ) ;
+				settings.sync() ;
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
 		}else if( value.contains( QString( "kde" ) ) ){
@@ -165,10 +166,15 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 			}else{
 				settings.setValue( opt,QString( "internal wallet" ) ) ;
+				settings.sync() ;
 				return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
 		}else{
-			settings.setValue( opt,QString( "internal wallet" ) ) ;
+			QString wallet = QString( "internal wallet" ) ;
+			if( value != wallet ){
+				settings.setValue( opt,wallet ) ;
+				settings.sync() ;
+			}
 			return LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 		}
 	}else{
