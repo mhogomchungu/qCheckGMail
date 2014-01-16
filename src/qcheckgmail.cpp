@@ -252,23 +252,24 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	}
 
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
-		return this->wrongAccountNameOrPassword() ;
-	}
-
-	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
-
-	int mailCount_1 = mailCount.toInt() ;
-
-	if( mailCount_1 == 0 ){
-		QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>0</td></tr>" ) ;
+		QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>-1</td></tr>" ) ;
 		m_accountsStatus += r.arg( this->displayName() ) ;
 	}else{
-		m_mailCount += mailCount_1 ;
-		QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
-		m_accountsStatus += r.arg( this->displayName() ).arg( mailCount ) ;
-	}
+		QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
 
-	this->checkAccountLastUpdate( msg,mailCount_1 ) ;
+		int mailCount_1 = mailCount.toInt() ;
+
+		if( mailCount_1 == 0 ){
+			QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>0</td></tr>" ) ;
+			m_accountsStatus += r.arg( this->displayName() ) ;
+		}else{
+			m_mailCount += mailCount_1 ;
+			QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
+			m_accountsStatus += r.arg( this->displayName() ).arg( mailCount ) ;
+		}
+
+		this->checkAccountLastUpdate( msg,mailCount_1 ) ;
+	}
 
 	/*
 	 * done processing a label in an account,go to the next label if present
@@ -331,15 +332,16 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 		qDebug() << "\n" << msg ;
 	}
 
+	int count = 0 ;
+	QString mailCount ;
+
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
-		return this->wrongAccountNameOrPassword() ;
+		m_accountFailed = true ;
+	}else{
+		mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
+		count = mailCount.toInt() ;
+		this->checkAccountLastUpdate( msg,count ) ;
 	}
-
-	QString mailCount = this->getAtomComponent( msg,QString( "fullcount" ) ) ;
-
-	int count = mailCount.toInt() ;
-
-	this->checkAccountLastUpdate( msg,count ) ;
 
 	if( count > 0 ){
 
@@ -385,7 +387,11 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				 * there are no more accounts to go through
 				 */
 				this->showToolTip( m_noEmailIcon,tr( "status" ),tr( "no new email found" ) ) ;
-				this->changeIcon( m_noEmailIcon ) ;
+				if( m_accountFailed ){
+					this->changeIcon( m_noEmailIcon,-1 ) ;
+				}else{
+					this->changeIcon( m_noEmailIcon ) ;
+				}
 				this->setTrayIconToVisible( false ) ;
 				this->doneCheckingMail() ;
 			}
@@ -612,6 +618,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
+	m_accountFailed = false ;
 	m_currentLabel = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;

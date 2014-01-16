@@ -133,6 +133,7 @@ private:
 	bool m_timeExpired ;
 	int m_networkTimeOut ;
 	QNetworkReply * m_networkReply ;
+	bool m_accountFailed ;
 };
 
 #endif // QCHECKGMAIL_H

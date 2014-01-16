@@ -45,3 +45,6 @@ version 1.2.5
 - Properly recover and continue checking for email on a shaky network connection.
 - Set KDE wallet to use KDE's default wallet instead of qCheckGMail wallet.
 - Fix a bug that show incorrect number of new emails when the application is set to only show one account activity
+
+version 1.2.6
+- continue to check email in other accounts when one of them fail to login.
