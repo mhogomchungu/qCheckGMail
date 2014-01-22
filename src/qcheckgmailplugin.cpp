@@ -21,7 +21,7 @@
 
 Q_EXPORT_PLUGIN2( qChechGMailPlugIn,qCheckGMailPluginLibrary )
 
-qChechGMailPlugIn::qChechGMailPlugIn( const IRazorPanelPluginStartupInfo& startupInfo ) : IRazorPanelPlugin( startupInfo )
+qChechGMailPlugIn::qChechGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) : ILxQtPanelPlugin( startupInfo )
 {
 	m_gmail = new qCheckGMail() ;
 	m_gmail->start() ;
@@ -42,9 +42,9 @@ QString qChechGMailPlugIn::themeId() const
 	return "qCheckGMail" ;
 }
 
-void qChechGMailPlugIn::activated( IRazorPanelPlugin::ActivationReason reason )
+void qChechGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
 {
-	if( reason == IRazorPanelPlugin::MiddleClick ){
+	if( reason == ILxQtPanelPlugin::MiddleClick ){
 		const QVector<accounts>& acc = m_gmail->configuredAccounts() ;
 		if( acc.size() > 0 ){
 			QString url = acc.at( 0 ).defaultLabelUrl() ;
@@ -59,7 +59,7 @@ void qChechGMailPlugIn::activated( IRazorPanelPlugin::ActivationReason reason )
 	}
 }
 
-IRazorPanelPlugin::Flags qChechGMailPlugIn::flags() const
+ILxQtPanelPlugin::Flags qChechGMailPlugIn::flags() const
 {
-	return IRazorPanelPlugin::PreferRightAlignment ;
+	return ILxQtPanelPlugin::PreferRightAlignment ;
 }

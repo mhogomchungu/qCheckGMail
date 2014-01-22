@@ -120,7 +120,7 @@ if( LXQTSUPPORT )
 		message( STATUS "------------------------------------------------------------------------------------------" )
 		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_LXQT_PLUGIN 1\n#define USE_KDE_STATUS_NOTIFIER 0\n" )
 	else()
-		message( FATAL_ERROR "razor-qt/lxqt libraries not found" )
+		message( FATAL_ERROR "lxqt libraries not found" )
 	endif()
 elseif( NOKDESUPPORT )
 
@@ -261,7 +261,7 @@ if( LXQTSUPPORT )
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "[Desktop Entry]
 Type=Service
-ServiceTypes=RazorPanel/Plugin
+ServiceTypes=LxQtPanel/Plugin
 Name=qChechGMailPlugIn
 Comment=a plugin to check for mail in gmail accounts\n")
 

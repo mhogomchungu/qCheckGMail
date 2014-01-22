@@ -20,8 +20,8 @@
 #ifndef QCHECKGMAILPLUGIN_H
 #define QCHECKGMAILPLUGIN_H
 #include <QObject>
-#include "lxqt/irazorpanel.h"
-#include "lxqt/irazorpanelplugin.h"
+#include <lxqt/ilxqtpanel.h>
+#include <lxqt/ilxqtpanelplugin.h>
 
 #include <QToolButton>
 #include <QVector>
@@ -29,26 +29,26 @@
 #include "qcheckgmail.h"
 #include "accounts.h"
 
-class qChechGMailPlugIn : public QObject,public IRazorPanelPlugin
+class qChechGMailPlugIn : public QObject,public ILxQtPanelPlugin
 {
 	Q_OBJECT
 public:
-	qChechGMailPlugIn( const IRazorPanelPluginStartupInfo& startupInfo ) ;
+	qChechGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) ;
 	~qChechGMailPlugIn() ;
 	QWidget * widget() ;
 	QString themeId() const ;
-	void activated( IRazorPanelPlugin::ActivationReason reason ) ;
-	IRazorPanelPlugin::Flags flags() const ;
+	void activated( ILxQtPanelPlugin::ActivationReason reason ) ;
+	ILxQtPanelPlugin::Flags flags() const ;
 private:
 	qCheckGMail * m_gmail ;
 };
 
-class qCheckGMailPluginLibrary: public QObject,public IRazorPanelPluginLibrary
+class qCheckGMailPluginLibrary: public QObject,public ILxQtPanelPluginLibrary
 {
 	Q_OBJECT
-	Q_INTERFACES( IRazorPanelPluginLibrary )
+	Q_INTERFACES( ILxQtPanelPluginLibrary )
 public:
-	IRazorPanelPlugin * instance( const IRazorPanelPluginStartupInfo& startupInfo )
+	ILxQtPanelPlugin * instance( const ILxQtPanelPluginStartupInfo& startupInfo )
 	{
 		return new qChechGMailPlugIn( startupInfo ) ;
 	}
