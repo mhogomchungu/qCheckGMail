@@ -48,3 +48,4 @@ version 1.2.5
 
 version 1.2.6
 - continue to check email in other accounts when one of them fail to login.
+- minimum update interval is now 1 minute.
