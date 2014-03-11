@@ -489,8 +489,6 @@ void configurationoptionsdialog::ShowUI()
 
 void configurationoptionsdialog::HideUI()
 {
-	this->hide() ;
-
 	configurationoptionsdialog::enableAutoStart( m_ui->checkBoxAutoStartEnabled->isChecked() ) ;
 
 	QString x = m_ui->lineEditUpdateCheckInterval->text() ;
@@ -504,9 +502,9 @@ void configurationoptionsdialog::HideUI()
 		return ;
 	}
 
-	if( z < 5 ){
+	if( z < 1 ){
 		QMessageBox msg( this ) ;
-		msg.setText( tr( "\n\nERROR: minimum time interval is 5 minutes\n\n" ) ) ;
+		msg.setText( tr( "\n\nERROR: minimum time interval is 1 minute\n\n" ) ) ;
 		msg.exec() ;
 		return ;
 	}
@@ -528,6 +526,8 @@ void configurationoptionsdialog::HideUI()
 	this->saveStorageSystem( s ) ;
 
 	emit enablePassWordChange( s == QString( "internal wallet" ) ) ;
+
+	this->hide() ;
 
 	this->deleteLater() ;
 }
