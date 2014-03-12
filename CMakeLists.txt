@@ -25,7 +25,7 @@ ADD_SUBDIRECTORY( lxqt_wallet )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
-add_definitions( -Wextra -Wall -pedantic -std=c++0x -I${PROJECT_BINARY_DIR})
+add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
 
 if( QT5 )
 	set( NOKDESUPPORT "true" )
