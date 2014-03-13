@@ -114,7 +114,16 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 
 void statusicon::addAction( QAction * ac )
 {
+	ac->setParent( m_menu ) ;
 	m_menu->addAction( ac ) ;
+}
+
+QAction * statusicon::getAction( const QString& title )
+{
+	QAction * ac = new QAction( m_menu ) ;
+	ac->setText( title ) ;
+	m_menu->addAction( ac ) ;
+	return ac ;
 }
 
 QObject * statusicon::statusQObject()
@@ -222,7 +231,8 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 {
 	Q_UNUSED( iconName ) ;
 	Q_UNUSED( title ) ;
-	m_toolButton.setToolTip( subTitle ) ;
+	QString r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title ).arg( subTitle ) ;
+	m_toolButton.setToolTip( r ) ;
 }
 
 QList<QAction *> statusicon::getMenuActions()
@@ -330,7 +340,8 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 {
 	Q_UNUSED( iconName ) ;
 	Q_UNUSED( title ) ;
-	m_trayIcon->setToolTip( subTitle ) ;
+	QString r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title ).arg( subTitle ) ;
+	m_trayIcon->setToolTip( r ) ;
 }
 
 QList<QAction *> statusicon::getMenuActions()
@@ -358,7 +369,16 @@ bool statusicon::enableDebug()
 
 void statusicon::addAction( QAction * ac )
 {
+	ac->setParent( m_menu ) ;
 	m_menu->addAction( ac ) ;
+}
+
+QAction * statusicon::getAction( const QString& title )
+{
+	QAction * ac = new QAction( m_menu ) ;
+	ac->setText( title ) ;
+	m_menu->addAction( ac ) ;
+	return ac ;
 }
 
 void statusicon::activateRequested_1( bool x,const QPoint& y )

@@ -79,6 +79,7 @@ public:
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
+	QAction * getAction( const QString& title = QString() ) ;
 	void addAction( QAction * ) ;
 	QWidget * widget( void ) ;
 	QObject * statusQObject( void ) ;

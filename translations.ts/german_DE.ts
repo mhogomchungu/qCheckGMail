@@ -109,7 +109,7 @@ Gehostete Domainadressen  müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werd
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="496"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="500"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -118,130 +118,138 @@ ERROR: illegal characters detected in the the update interval field
         <translation>FEHLER: falsches Zeichen in Feld für das Aktualisierungsintervall entdeckt</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="503"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="507"/>
+        <source>
+
+ERROR: minimum time interval is 1 minute
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>
 
 ERROR: minimum time interval is 5 minutes
 
 </source>
-        <translation>FEHELR: das minimale Aktualisierungsintervall muss 5 Mintuen betragen</translation>
+        <translation type="obsolete">FEHELR: das minimale Aktualisierungsintervall muss 5 Mintuen betragen</translation>
     </message>
 </context>
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="109"/>
-        <location filename="../src/qcheckgmail.cpp" line="387"/>
+        <location filename="../src/qcheckgmail.cpp" line="108"/>
+        <location filename="../src/qcheckgmail.cpp" line="377"/>
         <source>status</source>
         <translation>Status</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="109"/>
+        <location filename="../src/qcheckgmail.cpp" line="108"/>
         <source>opening wallet</source>
         <translation>Brieftasche öffnen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="118"/>
+        <location filename="../src/qcheckgmail.cpp" line="115"/>
         <source>check mail now</source>
         <translation>Jetzt EMail überprüfen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="123"/>
+        <location filename="../src/qcheckgmail.cpp" line="118"/>
         <source>pause checking mail</source>
         <translation>Überprüfung der EMails pausieren</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="131"/>
+        <location filename="../src/qcheckgmail.cpp" line="124"/>
         <source>configure accounts</source>
         <translation>Konto konfigurieren</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="143"/>
+        <location filename="../src/qcheckgmail.cpp" line="132"/>
         <source>configure options</source>
         <translation>Kontooptionen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="238"/>
+        <location filename="../src/qcheckgmail.cpp" line="226"/>
         <source>%1 account has wrong username/password combination</source>
         <translation>Das %1 Konto hat eine falsche Kombination von Benutzername und Passwort</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="307"/>
+        <location filename="../src/qcheckgmail.cpp" line="296"/>
         <source>found %1 new emails</source>
         <translation>%1 neue EMails gefunden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="350"/>
+        <location filename="../src/qcheckgmail.cpp" line="340"/>
         <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
         <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 EMail von &lt;b&gt;%1&lt;/b&gt; wartet auf Sie&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="352"/>
+        <location filename="../src/qcheckgmail.cpp" line="342"/>
         <source>%1 emails are waiting for you</source>
         <translation>%1 EMails warten auf Sie</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="313"/>
-        <location filename="../src/qcheckgmail.cpp" line="387"/>
+        <location filename="../src/qcheckgmail.cpp" line="302"/>
+        <location filename="../src/qcheckgmail.cpp" line="377"/>
         <source>no new email found</source>
         <translation>Keine neuen EMails gefunden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="136"/>
+        <location filename="../src/qcheckgmail.cpp" line="127"/>
         <source>configure password</source>
         <translation>Passwort konfigurieren</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="152"/>
-        <location filename="../src/qcheckgmail.cpp" line="566"/>
+        <location filename="../src/qcheckgmail.cpp" line="140"/>
+        <location filename="../src/qcheckgmail.cpp" line="560"/>
         <source>network problem detected</source>
         <translation>Netzwerkprobleme entdeckt</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="153"/>
+        <location filename="../src/qcheckgmail.cpp" line="141"/>
         <source>could not connect to the internet</source>
         <translation>Es konnte keine Verbindung zum Internet hergestellt werden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="241"/>
-        <location filename="../src/qcheckgmail.cpp" line="679"/>
+        <location filename="../src/qcheckgmail.cpp" line="229"/>
+        <location filename="../src/qcheckgmail.cpp" line="674"/>
         <source>account related error was detected</source>
         <translation>Ein Kontobezogener Fehler ist aufgetreten</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="304"/>
+        <location filename="../src/qcheckgmail.cpp" line="293"/>
         <source>found 1 new email</source>
         <translation>Eine neue EMail gefunden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="567"/>
+        <location filename="../src/qcheckgmail.cpp" line="561"/>
         <source>email checking is taking longer than expected.</source>
         <translation>Die Überprüfung auf neue E-Mails dauert länger als erwartet.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="568"/>
+        <location filename="../src/qcheckgmail.cpp" line="562"/>
         <source>Recommending restarting qCheckGMail if the problem persists</source>
         <translation>Es wird empfohlen qCheckGMail neu zu starten, wenn die Probleme weiterhin bestehen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="608"/>
+        <location filename="../src/qcheckgmail.cpp" line="602"/>
         <source>dont have credentials,(re)trying to open wallet</source>
         <translation>Keine Anmeldedaten gefunden, es wird versucht die Brieftasche (erneut) zu öffnen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="679"/>
+        <location filename="../src/qcheckgmail.cpp" line="674"/>
         <source>no account appear to be configured in the wallet</source>
         <translation>Es scheint kein Konto in der Brieftasche konfiguriert zu sein</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="778"/>
-        <location filename="../src/qcheckgmail.cpp" line="791"/>
+        <location filename="../src/qcheckgmail.cpp" line="773"/>
+        <location filename="../src/qcheckgmail.cpp" line="786"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Es läuft bereits eine Instanz, diese wird nun beendet</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="807"/>
-        <location filename="../src/qcheckgmail.cpp" line="820"/>
+        <location filename="../src/qcheckgmail.cpp" line="802"/>
+        <location filename="../src/qcheckgmail.cpp" line="815"/>
         <source>autostart disabled,exiting this one</source>
         <translation>Autostart deaktiviert, die Instanz wird beendet</translation>
     </message>
@@ -249,8 +257,8 @@ ERROR: minimum time interval is 5 minutes
 <context>
     <name>statusicon</name>
     <message>
-        <location filename="../src/statusicon.cpp" line="169"/>
-        <location filename="../src/statusicon.cpp" line="344"/>
+        <location filename="../src/statusicon.cpp" line="178"/>
+        <location filename="../src/statusicon.cpp" line="355"/>
         <source>quit</source>
         <translation>Verlassen</translation>
     </message>

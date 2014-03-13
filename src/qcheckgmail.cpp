@@ -98,7 +98,6 @@ void qCheckGMail::run()
 	m_checkingMail = false ;
 
 	m_manager = new QNetworkAccessManager( this ) ;
-	//connect( m_manager,SIGNAL( finished( QNetworkReply * ) ),this,SLOT( emailStatusQueryResponce( QNetworkReply * ) ) ) ;
 
 	m_timer = new QTimer( this ) ;
 	connect( m_timer,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
@@ -112,37 +111,26 @@ void qCheckGMail::run()
 
 void qCheckGMail::addActionsToMenu()
 {
-	QObject * parent = statusicon::statusQObject() ;
-
-	QAction * ac = new QAction( parent ) ;
-	ac->setText( tr( "check mail now" ) ) ;
+	QAction * ac ;
+	ac = statusicon::getAction( tr( "check mail now" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( checkMail() ) ) ;
-	statusicon::addAction( ac ) ;
 
-	ac = new QAction( parent ) ;
-	ac->setText( tr( "pause checking mail" ) ) ;
+	ac = statusicon::getAction( tr( "pause checking mail" ) ) ;
 	ac->setObjectName( QString( "pauseCheckingMail" ) ) ;
 	ac->setCheckable( true ) ;
 	ac->setChecked( false ) ;
 	connect( ac,SIGNAL( toggled( bool ) ),this,SLOT( pauseCheckingMail( bool ) ) ) ;
-	statusicon::addAction( ac ) ;
 
-	ac = new QAction( parent ) ;
-	ac->setText( tr( "configure accounts" ) ) ;
+	ac = statusicon::getAction( tr( "configure accounts" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configureAccounts() ) ) ;
-	statusicon::addAction( ac ) ;
 
-	ac = new QAction( parent ) ;
-	ac->setText( tr( "configure password" ) ) ;
+	ac = statusicon::getAction( tr( "configure password" ) ) ;
 	ac->setObjectName( QString( "configurePassword" ) ) ;
 	ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurePassWord() ) ) ;
-	statusicon::addAction( ac ) ;
 
-	ac = new QAction( parent ) ;
-	ac->setText( tr( "configure options" ) ) ;
+	ac = statusicon::getAction( tr( "configure options" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( configurationoptionWindow() ) ) ;
-	statusicon::addAction( ac ) ;
 
 	statusicon::addQuitAction() ;
 }
