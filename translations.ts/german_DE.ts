@@ -13,7 +13,7 @@
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation>Normale GMail-Konten können ohne den &quot;@gmail.com&quot; Teil hinzugefügt werden.
-Gehostete Domainadressen  müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werden.</translation>
+Gehostete Domainadressen müssen mit dem &quot;@ABC.XYZ&quot; hinzugefügt werden.</translation>
     </message>
     <message>
         <location filename="../src/addaccount.ui" line="55"/>
@@ -124,7 +124,7 @@ ERROR: illegal characters detected in the the update interval field
 ERROR: minimum time interval is 1 minute
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>FEHLER: Das minimale Zeitintervall beträgt eine Minute.</translation>
     </message>
     <message>
         <source>
