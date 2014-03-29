@@ -91,7 +91,7 @@ void qCheckGMail::run()
 	m_function = [&](){
 		if( m_defaultApplication == QString( "browser" ) ){
 			if( m_accounts.size() > 0 ){
-				QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+				QString url = m_accounts.first().defaultLabelUrl() ;
 
 				int index = url.size() - QString( "/feed/atom/" ).size() ;
 				url.truncate( index ) ;

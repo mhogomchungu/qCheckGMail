@@ -74,7 +74,7 @@ const QString& accounts::labels() const
 
 const QString& accounts::defaultLabelUrl() const
 {
-	return m_labelUrls.at( 0 ).labelUrl() ;
+	return m_labelUrls.first().labelUrl() ;
 }
 
 int accounts::numberOfLabels() const
