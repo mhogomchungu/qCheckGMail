@@ -331,10 +331,10 @@ int configurationoptionsdialog::fontSize()
 	if( settings.contains( opt ) ){
 		return settings.value( opt ).toInt() ;
 	}else{
-		QString value = QString( "60" ) ;
+		QString value = QString( "80" ) ;
 		settings.setValue( opt,value ) ;
 		settings.sync() ;
-		return 60 ;
+		return 80 ;
 	}
 }
 
