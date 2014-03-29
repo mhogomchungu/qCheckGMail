@@ -58,6 +58,7 @@ public:
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 	QWidget * widget( void ) ;
 	const QVector<accounts>& configuredAccounts( void ) ;
+	QString defaultApplication( void ) ;
 private slots:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;
@@ -127,6 +128,7 @@ private:
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
 	QString m_applicationIcon ;
+	QString m_defaultApplication ;
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 	QTimer * m_timeOut ;

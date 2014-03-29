@@ -49,7 +49,7 @@ class statusicon : public KStatusNotifierItem
 class statusicon : public QObject
 {
 #else
-
+#include <QProcess>
 #include <QMenu>
 class statusicon : public QObject
 {
@@ -79,6 +79,7 @@ public:
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
+	void setDefaultApplication( const QString& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
 	void addAction( QAction * ) ;
 	QWidget * widget( void ) ;
@@ -90,6 +91,7 @@ private slots:
 	void activateRequested_1( bool,const QPoint & ) ;
 	void trayIconClicked( QSystemTrayIcon::ActivationReason reason ) ;
 private:
+	QString m_defaultApplication ;
 #if USE_KDE_STATUS_NOTIFIER
 	KMenu * m_menu ;
 	const QVector<accounts>& m_accounts ;

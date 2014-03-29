@@ -62,6 +62,7 @@ public:
 	static QString errorIcon( void ) ;
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
+	static QString defaultApplication( void ) ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;

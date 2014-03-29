@@ -52,6 +52,11 @@ static QPixmap _icon( const QString& name,int count )
 	return pixmap ;
 }
 
+void statusicon::setDefaultApplication( const QString& application )
+{
+	m_defaultApplication = application ;
+}
+
 #if USE_KDE_STATUS_NOTIFIER
 
 statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
@@ -157,13 +162,17 @@ void statusicon::activateRequested_1( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
-	if( m_accounts.size() > 0 ){
-		QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-		int index = url.size() - QString( "/feed/atom/" ).size() ;
-		url.truncate( index ) ;
-		KToolInvocation::invokeBrowser( url ) ;
+	if( m_defaultApplication == QString( "browser" ) ){
+		if( m_accounts.size() > 0 ){
+			QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+			int index = url.size() - QString( "/feed/atom/" ).size() ;
+			url.truncate( index ) ;
+			KToolInvocation::invokeBrowser( url ) ;
+		}else{
+			KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
+		}
 	}else{
-		KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
+		KToolInvocation::kdeinitExec( m_defaultApplication ) ;
 	}
 }
 
@@ -395,13 +404,17 @@ QObject * statusicon::statusQObject()
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
 	if( reason != QSystemTrayIcon::Context ){
-		if( m_accounts.size() > 0 ){
-			QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-			int index = url.size() - QString( "/feed/atom/" ).size() ;
-			url.truncate( index ) ;
-			QDesktopServices::openUrl( QUrl( url ) ) ;
+		if( m_defaultApplication == QString( "browser" ) ){
+			if( m_accounts.size() > 0 ){
+				QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+				int index = url.size() - QString( "/feed/atom/" ).size() ;
+				url.truncate( index ) ;
+				QDesktopServices::openUrl( QUrl( url ) ) ;
+			}else{
+				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
+			}
 		}else{
-			QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
+			QProcess::startDetached( m_defaultApplication ) ;
 		}
 	}
 }

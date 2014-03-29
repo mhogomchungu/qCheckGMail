@@ -55,6 +55,7 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 		m_ui->checkBoxAudioNotify->setEnabled( true ) ;
 	#else
 		m_ui->checkBoxAudioNotify->setEnabled( false ) ;
+		m_ui->checkBoxAudioNotify->setChecked( false ) ;
 	#endif
 
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
@@ -288,6 +289,23 @@ QString configurationoptionsdialog::fontColor()
 		return settings.value( opt ).toString() ;
 	}else{
 		QString value = QString( "black" ) ;
+		settings.setValue( opt,value ) ;
+		settings.sync() ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::defaultApplication()
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	QString opt = QString( "defaultApplication" ) ;
+
+	if( settings.contains( opt ) ){
+		return settings.value( opt ).toString() ;
+	}else{
+		QString value = QString( "browser" ) ;
 		settings.setValue( opt,value ) ;
 		settings.sync() ;
 		return value ;

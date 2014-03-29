@@ -81,11 +81,14 @@ void qCheckGMail::run()
 	m_noEmailIcon         = configurationoptionsdialog::noEmailIcon() ;
 	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
 	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
+	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
+
+	statusicon::setDefaultApplication( m_defaultApplication ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
@@ -653,6 +656,11 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 const QVector<accounts>& qCheckGMail::configuredAccounts()
 {
 	return m_accounts ;
+}
+
+QString qCheckGMail::defaultApplication()
+{
+	return m_defaultApplication ;
 }
 
 void qCheckGMail::configurePassWord()

@@ -26,6 +26,8 @@
 #include <QToolButton>
 #include <QVector>
 #include <QDebug>
+#include <QProcess>
+#include <QString>
 #include "qcheckgmail.h"
 #include "accounts.h"
 
