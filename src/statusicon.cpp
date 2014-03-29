@@ -52,14 +52,14 @@ static QPixmap _icon( const QString& name,int count )
 	return pixmap ;
 }
 
-void statusicon::setDefaultApplication( const QString& application )
+void statusicon::setIconClickedAction( std::function< void( void ) > function )
 {
-	m_defaultApplication = application ;
+	m_function = function ;
 }
 
 #if USE_KDE_STATUS_NOTIFIER
 
-statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
+statusicon::statusicon()
 {
 	m_menu = new KMenu() ;
 	m_menu->clear() ;
@@ -162,18 +162,7 @@ void statusicon::activateRequested_1( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
-	if( m_defaultApplication == QString( "browser" ) ){
-		if( m_accounts.size() > 0 ){
-			QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-			int index = url.size() - QString( "/feed/atom/" ).size() ;
-			url.truncate( index ) ;
-			KToolInvocation::invokeBrowser( url ) ;
-		}else{
-			KToolInvocation::invokeBrowser( "https://mail.google.com/" ) ;
-		}
-	}else{
-		KToolInvocation::kdeinitExec( m_defaultApplication ) ;
-	}
+	m_function() ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
@@ -191,7 +180,7 @@ void statusicon::addQuitAction()
 
 #elif USE_LXQT_PLUGIN
 
-statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
+statusicon::statusicon()
 {
 	m_toolButton.setPopupMode( QToolButton::InstantPopup ) ;
 }
@@ -249,6 +238,14 @@ QList<QAction *> statusicon::getMenuActions()
 	return m_toolButton.actions() ;
 }
 
+QAction * statusicon::getAction( const QString& title )
+{
+	QAction * ac = new QAction( &m_toolButton ) ;
+	ac->setText( title ) ;
+	m_toolButton.addAction( ac ) ;
+	return ac ;
+}
+
 void statusicon::addQuitAction()
 {
 }
@@ -290,7 +287,7 @@ QObject * statusicon::statusQObject()
 
 #else
 
-statusicon::statusicon( const QVector<accounts>& acc ) : m_accounts( acc )
+statusicon::statusicon()
 {
 	m_trayIcon = new QSystemTrayIcon( this ) ;
 	m_menu = new QMenu() ;
@@ -404,18 +401,7 @@ QObject * statusicon::statusQObject()
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
 	if( reason != QSystemTrayIcon::Context ){
-		if( m_defaultApplication == QString( "browser" ) ){
-			if( m_accounts.size() > 0 ){
-				QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
-				int index = url.size() - QString( "/feed/atom/" ).size() ;
-				url.truncate( index ) ;
-				QDesktopServices::openUrl( QUrl( url ) ) ;
-			}else{
-				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
-			}
-		}else{
-			QProcess::startDetached( m_defaultApplication ) ;
-		}
+		m_function() ;
 	}
 }
 

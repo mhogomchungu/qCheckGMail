@@ -37,6 +37,8 @@
 #include <QtNetwork/QNetworkReply>
 #include <QFile>
 #include <QTimer>
+#include <QProcess>
+#include <functional>
 
 #include "statusicon.h"
 #include "accounts.h"
@@ -57,7 +59,7 @@ public:
 	static bool autoStartEnabled( void ) ;
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 	QWidget * widget( void ) ;
-	const QVector<accounts>& configuredAccounts( void ) ;
+	std::function< void( void ) > iconClickedAction( void ) ;
 	QString defaultApplication( void ) ;
 private slots:
 	void run( void ) ;
@@ -136,6 +138,7 @@ private:
 	int m_networkTimeOut ;
 	QNetworkReply * m_networkReply ;
 	bool m_accountFailed ;
+	std::function< void( void ) > m_function ;
 };
 
 #endif // QCHECKGMAIL_H

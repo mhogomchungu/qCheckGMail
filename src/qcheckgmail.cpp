@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail() : statusicon( m_accounts )
+qCheckGMail::qCheckGMail()
 {
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
@@ -88,7 +88,24 @@ void qCheckGMail::run()
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
-	statusicon::setDefaultApplication( m_defaultApplication ) ;
+	m_function = [&](){
+		if( m_defaultApplication == QString( "browser" ) ){
+			if( m_accounts.size() > 0 ){
+				QString url = m_accounts.at( 0 ).defaultLabelUrl() ;
+
+				int index = url.size() - QString( "/feed/atom/" ).size() ;
+				url.truncate( index ) ;
+
+				QDesktopServices::openUrl( QUrl( url ) ) ;
+			}else{
+				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
+			}
+		}else{
+			QProcess::startDetached( m_defaultApplication ) ;
+		}
+	} ;
+
+	statusicon::setIconClickedAction( m_function ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
@@ -110,6 +127,11 @@ void qCheckGMail::run()
 	this->addActionsToMenu() ;
 	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
 	this->getAccountsInfo() ;
+}
+
+std::function< void() > qCheckGMail::iconClickedAction()
+{
+	return m_function ;
 }
 
 void qCheckGMail::addActionsToMenu()
@@ -651,11 +673,6 @@ void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 		 */
 		this->noAccountConfigured() ;
 	}
-}
-
-const QVector<accounts>& qCheckGMail::configuredAccounts()
-{
-	return m_accounts ;
 }
 
 QString qCheckGMail::defaultApplication()

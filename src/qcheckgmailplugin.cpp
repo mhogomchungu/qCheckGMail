@@ -45,22 +45,8 @@ QString qChechGMailPlugIn::themeId() const
 void qChechGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
 {
 	if( reason == ILxQtPanelPlugin::MiddleClick ){
-		QString app = m_gmail->defaultApplication() ;
-		if( app == QString( "browser" ) ){
-			const QVector<accounts>& acc = m_gmail->configuredAccounts() ;
-			if( acc.size() > 0 ){
-				QString url = acc.at( 0 ).defaultLabelUrl() ;
-				int index = url.size() - QString( "/feed/atom/" ).size() ;
-				url.truncate( index ) ;
-				QDesktopServices::openUrl( QUrl( url ) ) ;
-			}else{
-				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
-			}
-		}else{
-			QProcess::startDetached( app ) ;
-		}
-	}else{
-		;
+		auto function = m_gmail->iconClickedAction() ;
+		function() ;
 	}
 }
 
