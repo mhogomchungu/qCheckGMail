@@ -134,6 +134,11 @@ std::function< void() > qCheckGMail::iconClickedAction()
 	return m_function ;
 }
 
+void qCheckGMail::iconClicked()
+{
+	m_function() ;
+}
+
 void qCheckGMail::addActionsToMenu()
 {
 	QAction * ac ;

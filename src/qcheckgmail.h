@@ -60,6 +60,7 @@ public:
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 	QWidget * widget( void ) ;
 	std::function< void( void ) > iconClickedAction( void ) ;
+	void iconClicked( void ) ;
 	QString defaultApplication( void ) ;
 private slots:
 	void run( void ) ;

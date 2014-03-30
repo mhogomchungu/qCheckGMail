@@ -45,8 +45,7 @@ QString qChechGMailPlugIn::themeId() const
 void qChechGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
 {
 	if( reason == ILxQtPanelPlugin::MiddleClick ){
-		auto function = m_gmail->iconClickedAction() ;
-		function() ;
+		m_gmail->iconClicked() ;
 	}
 }
 
