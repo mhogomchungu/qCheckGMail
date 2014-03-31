@@ -21,7 +21,7 @@
 #include "accounts.h"
 #include <QStringList>
 
-accounts::accounts( QString accountName,QString password,QString displayName,QString labels ) :
+accounts::accounts( const QString& accountName,const QString& password,const QString& displayName,const QString& labels ) :
 	m_accountName( accountName ),m_passWord( password ),m_displayName( displayName ),m_labels( labels )
 {
 	QString baseLabel ;

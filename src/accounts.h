@@ -42,8 +42,8 @@ private:
 class accounts
 {
 public:
-	accounts( QString userName = QString(),QString password = QString(),
-		  QString displayName = QString(),QString labels = QString() ) ;
+	accounts( const QString& userName = QString(),const QString& password = QString(),
+		  const QString& displayName = QString(),const QString& labels = QString() ) ;
 
 	const QString& accountName( void )      const ;
 	const QString& passWord( void )         const ;
