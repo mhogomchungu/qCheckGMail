@@ -85,8 +85,6 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	bool eventFilter ( QObject * watched,QEvent * event ) ;
 
-	const QString& getPassWordFromAccount( const QString& ) ;
-
 	Ui::walletmanager * m_ui ;
 
 	QVector<accounts> m_accounts ;

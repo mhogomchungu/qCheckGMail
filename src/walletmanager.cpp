@@ -245,8 +245,18 @@ void walletmanager::editEntry()
 {
 	int row = m_table->currentRow() ;
 
+	auto _getPassWord = [&]( const QString& accName ){
+		for( const auto& it : m_accounts ){
+			if( it.accountName() == accName ){
+				return it.passWord() ;
+			}
+		}
+		static QString shouldNotGetHere ;
+		return shouldNotGetHere ;
+	} ;
+
 	QString accName        = m_table->item( row,0 )->text() ;
-	QString accPassword    = this->getPassWordFromAccount( accName ) ;
+	QString accPassword    = _getPassWord( accName ) ;
 	QString accDisplayName = m_table->item( row,1 )->text() ;
 	QString accLabels      = m_table->item( row,2 )->text() ;
 
@@ -389,19 +399,6 @@ void walletmanager::selectRow( int row,bool highlight )
 			m_table->setCurrentCell( row,j - 1 ) ;
 		}
 	}
-}
-
-const QString& walletmanager::getPassWordFromAccount( const QString& accName )
-{
-	int j = m_accounts.size() ;
-	for( int i = 0 ; i < j ; i++ ){
-		if( m_accounts.at( i ).accountName() == accName ){
-			return m_accounts.at( i ).passWord() ;
-		}
-	}
-
-	static QString shouldNotGetHere ;
-	return shouldNotGetHere ;
 }
 
 void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )

@@ -60,9 +60,6 @@ public:
 signals:
 	void taskFinished( int ) ;
 private:
-	const QByteArray& getAccInfo( const QVector<LxQt::Wallet::walletKeyValues>&,const QString& acc ) ;
-	void addKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
-	void deleteKey( const QString& accName,const QString& accDisplayName,const QString& accLabels ) ;
 	void run( void ) ;
 	Task::action m_action ;
 	LxQt::Wallet::Wallet * m_wallet ;
@@ -71,7 +68,6 @@ private:
 	QString m_accLabels ;
 	QString m_accDisplayName ;
 	QVector<accounts> * m_acc ;
-	QByteArray m_emptyEntry ;
 };
 
 #endif // TASK_H
