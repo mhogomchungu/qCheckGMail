@@ -85,10 +85,12 @@ void Task::run()
 		display_id = QString( DISPLAY_NAME_IDENTIFIER ) ;
 
 		for( const auto& it : entries ){
+
 			const QString& accName = it.getKey() ;
-			if( accName.endsWith( labels_id ) || accName.endsWith( display_id ) ){
-				;
-			}else{
+			bool r = accName.endsWith( labels_id ) || accName.endsWith( display_id ) ;
+
+			if( r == false ){
+
 				const QByteArray& passWord    = _getAccEntry( accName ) ;
 				const QByteArray& labels      = _getAccEntry( accName + labels_id ) ;
 				const QByteArray& displayName = _getAccEntry( accName + display_id ) ;
@@ -117,6 +119,9 @@ void Task::run()
 		break ;
 	case Task::showAccountInfo :
 	case Task::getAccountInfo  :
+
 		_getAccInfo() ;
+
+		break ;
 	}
 }
