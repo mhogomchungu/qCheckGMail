@@ -30,18 +30,6 @@
 #include <QDebug>
 #include "qcheckgmail.h"
 
-int startApp( void )
-{
-	if( KUniqueApplication::start() ){
-		KUniqueApplication a ;
-		qCheckGMail w ;
-		w.start() ;
-		return a.exec() ;
-	}else{
-		return qCheckGMail::instanceAlreadyRunning() ;
-	}
-}
-
 int main( int argc,char * argv[] )
 {
 	KAboutData aboutData( 	"qCheckGMail",
@@ -60,9 +48,28 @@ int main( int argc,char * argv[] )
 	KCmdLineOptions options ;
 	options.add( "a",ki18n( "auto start application" ) ) ;
 	options.add( "d",ki18n( "show debug output on the terminal" ) ) ;
+	options.add( "i",ki18n( "allow multiple instances" ) ) ;
 
 	KCmdLineArgs::addCmdLineOptions( options ) ;
 	KUniqueApplication::addCmdLineOptions() ;
+
+	auto startApp = [](){
+		if( KCmdLineArgs::allArguments().contains( "-i" ) ){
+			KApplication a ;
+			qCheckGMail w ;
+			w.start() ;
+			return a.exec() ;
+		}else{
+			if( KUniqueApplication::start() ){
+				KUniqueApplication a ;
+				qCheckGMail w ;
+				w.start() ;
+				return a.exec() ;
+			}else{
+				return qCheckGMail::instanceAlreadyRunning() ;
+			}
+		}
+	} ;
 
 	if( KCmdLineArgs::allArguments().contains( "-a" ) ){
 		if( configurationoptionsdialog::autoStartEnabled() ){
