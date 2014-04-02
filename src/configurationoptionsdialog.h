@@ -63,6 +63,7 @@ public:
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
 	static QString defaultApplication( void ) ;
+	static QStringList profileEmailList( const QString& profile ) ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;

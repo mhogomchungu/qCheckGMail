@@ -49,20 +49,39 @@ int main( int argc,char * argv[] )
 	options.add( "a",ki18n( "auto start application" ) ) ;
 	options.add( "d",ki18n( "show debug output on the terminal" ) ) ;
 	options.add( "i",ki18n( "allow multiple instances" ) ) ;
+	options.add( "p <profile>",ki18n( "select profile" ) ) ;
 
 	KCmdLineArgs::addCmdLineOptions( options ) ;
 	KUniqueApplication::addCmdLineOptions() ;
 
-	auto startApp = [](){
-		if( KCmdLineArgs::allArguments().contains( "-i" ) ){
+	QStringList l = KCmdLineArgs::allArguments() ;
+
+	auto _setProfile = [&](){
+		QString arg( "-p" ) ;
+		int j = l.size() ;
+		for( int i = 0 ; i < j ; i++ ){
+			if( l.at( i ) == arg ){
+				if( i + 1 < j ){
+					return l.at( i + 1 ) ;
+				}else{
+					return QString() ;
+				}
+			}
+		}
+
+		return QString() ;
+	} ;
+
+	auto _startApp = [&](){
+		if( l.contains( "-i" ) ){
 			KApplication a ;
-			qCheckGMail w ;
+			qCheckGMail w( _setProfile() ) ;
 			w.start() ;
 			return a.exec() ;
 		}else{
 			if( KUniqueApplication::start() ){
 				KUniqueApplication a ;
-				qCheckGMail w ;
+				qCheckGMail w( _setProfile() ) ;
 				w.start() ;
 				return a.exec() ;
 			}else{
@@ -71,14 +90,14 @@ int main( int argc,char * argv[] )
 		}
 	} ;
 
-	if( KCmdLineArgs::allArguments().contains( "-a" ) ){
+	if( l.contains( "-a" ) ){
 		if( configurationoptionsdialog::autoStartEnabled() ){
-			return startApp() ;
+			return _startApp() ;
 		}else{
 			return qCheckGMail::autoStartDisabled() ;
 		}
 	}else{
-		return startApp() ;
+		return _startApp() ;
 	}
 }
 #elif USE_LXQT_PLUGIN
@@ -96,17 +115,34 @@ int main( void )
 int main( int argc,char * argv[] )
 {
 	QApplication a( argc,argv ) ;
-	QStringList v = QCoreApplication::arguments() ;
-	if( v.contains( "-a" ) ){
+	QStringList l = QCoreApplication::arguments() ;
+
+	auto _setProfile = [&](){
+		QString arg( "-p" ) ;
+		int j = l.size() ;
+		for( int i = 0 ; i < j ; i++ ){
+			if( l.at( i ) == arg ){
+				if( i + 1 < j ){
+					return l.at( i + 1 ) ;
+				}else{
+					return QString() ;
+				}
+			}
+		}
+
+		return QString() ;
+	} ;
+
+	if( l.contains( "-a" ) ){
 		if( configurationoptionsdialog::autoStartEnabled() ){
-			qCheckGMail w ;
+			qCheckGMail w( _setProfile() ) ;
 			w.start() ;
 			return a.exec() ;
 		}else{
 			return qCheckGMail::autoStartDisabled() ;
 		}
 	}else{
-		qCheckGMail w ;
+		qCheckGMail w( _setProfile() ) ;
 		w.start() ;
 		return a.exec() ;
 	}

@@ -312,6 +312,23 @@ QString configurationoptionsdialog::defaultApplication()
 	}
 }
 
+QStringList configurationoptionsdialog::profileEmailList( const QString& profile )
+{
+	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;
+	configurationoptionsdialog::setDefaultQSettingOptions( settings ) ;
+
+	if( profile.isEmpty() ){
+		return QStringList() ;
+	}else{
+		if( settings.contains( profile ) ){
+			QString z = settings.value( profile ).toString() ;
+			return z.split( "," ) ;
+		}else{
+			return QStringList() ;
+		}
+	}
+}
+
 bool configurationoptionsdialog::usingInternalStorageSystem()
 {
 	QSettings settings( QString( ORGANIZATION_NAME ),QString( PROGRAM_NAME ) ) ;

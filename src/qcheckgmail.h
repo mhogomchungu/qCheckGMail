@@ -50,7 +50,7 @@ class qCheckGMail : public statusicon
 {
 	Q_OBJECT
 public:
-	qCheckGMail() ;
+	explicit qCheckGMail( const QString& profile = QString() ) ;
 	~qCheckGMail();
 	void start( void ) ;
 	void earlyExit( void ) ;
@@ -132,6 +132,9 @@ private:
 	QString m_noEmailIcon ;
 	QString m_applicationIcon ;
 	QString m_defaultApplication ;
+	QString m_profile ;
+	QStringList m_profileEmailList ;
+
 	QMutex * m_mutex ;
 	QString m_accountNameColumnWidth ;
 	QTimer * m_timeOut ;

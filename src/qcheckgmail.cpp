@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail()
+qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile )
 {
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
@@ -82,6 +82,7 @@ void qCheckGMail::run()
 	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
 	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
 	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
+	m_profileEmailList    = configurationoptionsdialog::profileEmailList( m_profile ) ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
@@ -666,7 +667,17 @@ void qCheckGMail::objectGone( QObject * obj )
 
 void qCheckGMail::getAccountsInfo( QVector<accounts> acc )
 {
-	m_accounts = acc ;
+	m_accounts.clear() ;
+
+	if( m_profileEmailList.isEmpty() ){
+		m_accounts = acc ;
+	}else{
+		for( const auto& it : acc ){
+			if( m_profileEmailList.contains( it.accountName() ) ){
+				m_accounts.append( it ) ;
+			}
+		}
+	}
 
 	m_numberOfAccounts = m_accounts.size() ;
 

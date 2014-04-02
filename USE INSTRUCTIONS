@@ -1,0 +1,50 @@
+
+qCheckGMail is tray application that checks for status information of gmail accounts.
+
+The GUI should be easy enough to figure out.
+
+Some options are set through the GUI and others can only be set manually in the configuration file.
+
+The configuration file is located at "~/.config/qCheckGMail/qCheckGMail.conf" and it looks like below
+with all options set.
+
+[General]
+reportOnAllAccounts=true
+audioNotify=false
+interval=10
+newEmailIconColor=blue
+errorIconColor=red
+noEmailIconColor=grey
+displayEmailCount=true
+language=english_US
+storageSystem=internal wallet
+displayEmailCountFontSize=60
+displayEmailCountFontFamily=Helvetica
+displayEmailCountFontColor=black
+autostart=true
+networkTimeOut=1
+defaultApplication=browser
+profile1=emailAccount1,emailAccount2
+profile2=emailAccount3
+
+
+Behaviors that must be set manually in the configuration file.
+
+1. Different colors of the icons.The application can display icons in three colors,"red","blue" and "grey".
+   What color to be displayed when conveying what information is set through options that start with "displayEmail".
+
+2. When the application is set to display the number of unread emails discovered,the properties of the number can be
+   set through settings with "Font" word in them.
+
+3. networkTimeOut hold a value in minutes to wait before assuming a network timed out and an email check retry is performed.
+
+4. It is possible to have multiple instances of qCheckGMail started with each instance reporting only a subset of
+   total configured accounts.If for example 3 emails accounts are configured(emailAccount1,emailAccount2,emailAccount3),
+   it is possible to have one instance of qCheckGMail only report emailAccount1 and emailAccount2 by starting it with [1]
+   and another instance of qCheckGMail to only report emailAccount3 status by starting it with [2]
+
+   [1] qCheckGMail -i -p profile1
+   [2] qCheckGMail -i -p profile2
+
+5. When the icon is clicked,the default Behaviors is start a configured prefered web browser opening.If a user prefer for
+   a different application to be started,the different application is set by replacing "defaul" in the defaultApplication field.

@@ -51,4 +51,6 @@ version 1.2.6
 - minimum update interval is now 1 minute.
 - add an option to select what application to start when the tray icon is clicked.The changes is to be made through the config file.
 - add an argument option to allow for more than once instance to be started even with KDE build
-
+- add profile support.This allows multiple instances of qCheckGMail to be started with each instance reporting only a subset of total configured accounts.
+  read "USE INSTRUCTIONS" for more information on how to set this up.
+  
