@@ -41,13 +41,10 @@ accounts::accounts( const QString& accountName,const QString& password,const QSt
 		m_labels.truncate( m_labels.size() - 1 ) ;
 	}
 
-	if( m_labels.isEmpty() ){
-		;
-	}else{
+	if( !m_labels.isEmpty() ){
 		QStringList l = m_labels.split( "," ) ;
-		int j = l.size() ;
-		for( int i = 0 ; i < j ; i++ ){
-			m_labelUrls.append( accountLabel( baseLabel + l.at( i ) ) ) ;
+		for( const auto& it : l ){
+			m_labelUrls.append( accountLabel( baseLabel + it ) ) ;
 		}
 	}
 }
@@ -84,11 +81,16 @@ int accounts::numberOfLabels() const
 
 accountLabel& accounts::getAccountLabel( int i )
 {
-	accountLabel * acc = m_labelUrls.data() + i ;
-	return *acc ;
+	if( i < m_labelUrls.size() ){
+		accountLabel * acc = m_labelUrls.data() + i ;
+		return *acc ;
+	}else{
+		static accountLabel ShouldNotGetHere ;
+		return ShouldNotGetHere ;
+	}
 }
 
-const QString &accounts::labelUrlAt( int i ) const
+const QString& accounts::labelUrlAt( int i ) const
 {
 	if( i < m_labelUrls.size() ){
 		return m_labelUrls.at( i ).labelUrl() ;
