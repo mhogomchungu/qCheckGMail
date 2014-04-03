@@ -72,6 +72,8 @@ void qCheckGMail::start()
 
 void qCheckGMail::run()
 {
+	configurationoptionsdialog::setProfile( m_profile ) ;
+
 	m_enableDebug         = statusicon::enableDebug() ;
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
@@ -82,7 +84,7 @@ void qCheckGMail::run()
 	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
 	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
 	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
-	m_profileEmailList    = configurationoptionsdialog::profileEmailList( m_profile ) ;
+	m_profileEmailList    = configurationoptionsdialog::profileEmailList() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 

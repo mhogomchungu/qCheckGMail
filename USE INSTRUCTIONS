@@ -10,7 +10,7 @@ with all options set.
 
 [General]
 reportOnAllAccounts=true
-audioNotify=false
+audioNotify=true
 interval=10
 newEmailIconColor=blue
 errorIconColor=red
@@ -26,6 +26,33 @@ networkTimeOut=1
 defaultApplication=browser
 profile1=emailAccount1,emailAccount2
 profile2=emailAccount3
+
+[profile1]
+reportOnAllAccounts=true
+audioNotify=true
+interval=30
+newEmailIconColor=blue
+errorIconColor=red
+noEmailIconColor=grey
+displayEmailCount=true
+networkTimeOut=2
+defaultApplication=browser
+language=english_US
+storageSystem=internal wallet
+autostart=true
+
+[profile2]
+reportOnAllAccounts=true
+audioNotify=true
+interval=30
+newEmailIconColor=blue
+errorIconColor=red
+noEmailIconColor=grey
+displayEmailCount=true
+networkTimeOut=2
+defaultApplication=browser
+language=english_US
+storageSystem=default kde wallet
 
 
 Behaviors that must be set manually in the configuration file.

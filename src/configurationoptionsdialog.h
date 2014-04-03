@@ -52,7 +52,6 @@ public:
 	static QString localLanguage( void ) ;
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
-	static void setDefaultQSettingOptions( QSettings& ) ;
 	static QString walletName( LxQt::Wallet::walletBackEnd ) ;
 	static QString logFile( void ) ;
 	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
@@ -63,11 +62,12 @@ public:
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
 	static QString defaultApplication( void ) ;
-	static QStringList profileEmailList( const QString& profile ) ;
+	static QStringList profileEmailList() ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;
 	static int networkTimeOut( void ) ;
+	static void setProfile( const QString& profile ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 signals:
