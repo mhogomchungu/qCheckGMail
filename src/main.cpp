@@ -56,23 +56,24 @@ int main( int argc,char * argv[] )
 
 	QStringList l = KCmdLineArgs::allArguments() ;
 
-	auto _setProfile = [&](){
-		QString arg( "-p" ) ;
-		int j = l.size() ;
-		for( int i = 0 ; i < j ; i++ ){
-			if( l.at( i ) == arg ){
-				if( i + 1 < j ){
-					return l.at( i + 1 ) ;
-				}else{
-					return QString() ;
+	auto _startApp = [&](){
+
+		auto _setProfile = [&](){
+			QString arg( "-p" ) ;
+			int j = l.size() ;
+			for( int i = 0 ; i < j ; i++ ){
+				if( l.at( i ) == arg ){
+					if( i + 1 < j ){
+						return l.at( i + 1 ) ;
+					}else{
+						return QString() ;
+					}
 				}
 			}
-		}
 
-		return QString() ;
-	} ;
-
-	auto _startApp = [&](){
+			return QString() ;
+		} ;
+		
 		if( l.contains( "-i" ) ){
 			KApplication a ;
 			qCheckGMail w( _setProfile() ) ;
