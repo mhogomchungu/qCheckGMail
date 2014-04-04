@@ -88,7 +88,7 @@ void addaccount::add()
 
 	if( accName.isEmpty() || password.isEmpty() ){
 		QMessageBox msg( this ) ;
-		msg.setText( tr( "ERROR: one or more reguired field is empty" ) ) ;
+		msg.setText( tr( "ERROR: one or more required field is empty" ) ) ;
 		msg.exec() ;
 	}else{
 		if( m_row == -1 ){
