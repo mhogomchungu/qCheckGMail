@@ -39,6 +39,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <functional>
+#include <memory>
 
 #include "statusicon.h"
 #include "accounts.h"
@@ -134,8 +135,7 @@ private:
 	QString m_defaultApplication ;
 	QString m_profile ;
 	QStringList m_profileEmailList ;
-
-	QMutex * m_mutex ;
+	std::unique_ptr<QMutex> m_mutex ;
 	QString m_accountNameColumnWidth ;
 	QTimer * m_timeOut ;
 	bool m_timeExpired ;

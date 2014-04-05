@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile )
+qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
 {
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( QString( "qCheckGMail" ) ) ;
@@ -27,7 +27,6 @@ qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile )
 
 qCheckGMail::~qCheckGMail()
 {
-	delete m_mutex ;
 }
 
 void qCheckGMail::setTrayIconToVisible( bool showIcon )
@@ -115,8 +114,6 @@ void qCheckGMail::run()
 
 	m_timeOut = new QTimer( this ) ;
 	connect( m_timeOut,SIGNAL( timeout() ),this,SLOT( timerExpired() ) ) ;
-
-	m_mutex = new QMutex() ;
 
 	m_checkingMail = false ;
 
