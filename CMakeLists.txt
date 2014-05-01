@@ -6,6 +6,8 @@ SET( QT_USE_QTNETWORK TRUE )
 SET( QT_USE_QTCORE TRUE )
 SET( QT_USE_QTGUI TRUE )
 
+add_definitions( -Wno-unused-result )
+
 if( LXQTSUPPORT )
 	set( NOKDESUPPORT "true" )
 endif()
