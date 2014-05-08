@@ -83,7 +83,7 @@ private:
 	void selectRow( int row,bool highlight ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
-	bool eventFilter ( QObject * watched,QEvent * event ) ;
+	bool eventFilter( QObject * watched,QEvent * event ) ;
 
 	Ui::walletmanager * m_ui ;
 
