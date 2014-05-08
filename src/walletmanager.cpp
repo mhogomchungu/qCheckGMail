@@ -260,6 +260,8 @@ void walletmanager::editEntry()
 	QString accDisplayName = m_table->item( row,1 )->text() ;
 	QString accLabels      = m_table->item( row,2 )->text() ;
 
+	this->disableAll() ;
+
 	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
 	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),
 		 this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
@@ -375,7 +377,7 @@ void walletmanager::taskComplete( int r )
 			m_table->setItem( row,2,item ) ;
 		}
 
-		this->selectRow( row,true ) ;
+		this->selectRow( row ) ;
 		this->enableAll() ;
 
 		break ;

@@ -80,7 +80,7 @@ private:
 	void disableAll( void ) ;
 	void changePassword( bool ) ;
 	void buildGUI( void ) ;
-	void selectRow( int row,bool highlight ) ;
+	void selectRow( int row,bool highlight = true ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 	bool eventFilter( QObject * watched,QEvent * event ) ;
