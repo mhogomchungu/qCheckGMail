@@ -19,6 +19,23 @@
 
 #include "qcheckgmail.h"
 
+template< typename T >
+class QObject_raii
+{
+public:
+	explicit QObject_raii( T t ) : m_qObject( t )
+	{
+	}
+	~QObject_raii()
+	{
+		m_qObject->deleteLater() ;
+	}
+private:
+	T m_qObject ;
+};
+
+#define qObject_raii( x ) QObject_raii< decltype( x ) > QObject_raii_x( x ) ; Q_UNUSED( QObject_raii_x )
+
 qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
 {
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
@@ -90,8 +107,8 @@ void qCheckGMail::run()
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
-	m_function = [&](){
-		if( m_defaultApplication == QString( "browser" ) ){
+	m_clickActions.onLeftClick = [&](){
+		if( m_defaultApplication == "browser" ){
 			if( m_accounts.size() > 0 ){
 				QString url = m_accounts.first().defaultLabelUrl() ;
 
@@ -107,7 +124,7 @@ void qCheckGMail::run()
 		}
 	} ;
 
-	statusicon::setIconClickedAction( m_function ) ;
+	statusicon::setIconClickedActions( m_clickActions ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
@@ -129,14 +146,9 @@ void qCheckGMail::run()
 	this->getAccountsInfo() ;
 }
 
-std::function< void() > qCheckGMail::iconClickedAction()
-{
-	return m_function ;
-}
-
 void qCheckGMail::iconClicked()
 {
-	m_function() ;
+	m_clickActions.onLeftClick() ;
 }
 
 void qCheckGMail::addActionsToMenu()
@@ -196,9 +208,10 @@ void qCheckGMail::emailStatusQueryResponce( void )
 
 void qCheckGMail::emailStatusQueryResponce( QNetworkReply * r )
 {
+	qObject_raii( r ) ;
+
 	QByteArray content = r->readAll() ;
 
-	r->deleteLater() ;
 	m_timeOut->stop() ;
 
 	if( content.isEmpty() ){

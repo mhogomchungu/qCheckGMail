@@ -57,6 +57,12 @@ class statusicon : public QObject
 #endif
 	Q_OBJECT
 public:
+	typedef struct{
+		std::function< void( void ) > onLeftClick   = [](){} ;
+		std::function< void( void ) > onRightClick  = [](){} ;
+		std::function< void( void ) > onMiddleClick = [](){} ;
+	}clickActions;
+
 	enum ItemCategory {
 		ApplicationStatus = 1,
 		Communications = 2,
@@ -80,7 +86,7 @@ public:
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
-	void setIconClickedAction( std::function< void( void ) > ) ;
+	void setIconClickedActions( const statusicon::clickActions& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
 	void addAction( QAction * ) ;
 	QWidget * widget( void ) ;
@@ -89,11 +95,11 @@ public:
 	void addQuitAction( void ) ;
 private slots:
 	void quit( void ) ;
-	void activateRequested_1( bool,const QPoint & ) ;
+	void activateRequested( bool,const QPoint& ) ;
 	void trayIconClicked( QSystemTrayIcon::ActivationReason reason ) ;
 private:
 	QString m_defaultApplication ;
-	std::function< void( void ) > m_function ;
+	statusicon::clickActions m_clickActions ;
 #if USE_KDE_STATUS_NOTIFIER
 	KMenu * m_menu ;
 #elif USE_LXQT_PLUGIN

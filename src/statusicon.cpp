@@ -52,9 +52,9 @@ static QPixmap _icon( const QString& name,int count )
 	return pixmap ;
 }
 
-void statusicon::setIconClickedAction( std::function< void( void ) > function )
+void statusicon::setIconClickedActions( const statusicon::clickActions& actions )
 {
-	m_function = function ;
+	m_clickActions = actions ;
 }
 
 #if USE_KDE_STATUS_NOTIFIER
@@ -65,7 +65,7 @@ statusicon::statusicon()
 	m_menu->clear() ;
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
 	KStatusNotifierItem::setStandardActionsEnabled( false ) ;
-	connect( this,SIGNAL( activateRequested( bool,QPoint ) ),this,SLOT( activateRequested_1( bool,QPoint ) ) ) ;
+	connect( this,SIGNAL( activateRequested( bool,const QPoint& ) ),this,SLOT( activateRequested( bool,const QPoint& ) ) ) ;
 }
 
 statusicon::~statusicon()
@@ -139,7 +139,7 @@ QObject * statusicon::statusQObject()
 void statusicon::newEmailNotify()
 {
 	QByteArray r( "qCheckGMail" ) ;
-	KNotification::event( QString( "qCheckGMail-NewMail" ),QString( "" ),QPixmap(),0,0,
+	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,
 			      KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
 }
 
@@ -158,11 +158,11 @@ void statusicon::quit()
 	QCoreApplication::exit() ;
 }
 
-void statusicon::activateRequested_1( bool x,const QPoint& y )
+void statusicon::activateRequested( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
-	m_function() ;
+	m_clickActions.onLeftClick() ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
@@ -274,7 +274,7 @@ QWidget * statusicon::widget()
 	return &m_toolButton ;
 }
 
-void statusicon::activateRequested_1( bool x,const QPoint& y )
+void statusicon::activateRequested( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
@@ -387,7 +387,7 @@ QAction * statusicon::getAction( const QString& title )
 	return ac ;
 }
 
-void statusicon::activateRequested_1( bool x,const QPoint& y )
+void statusicon::activateRequested( bool x,const QPoint& y )
 {
 	Q_UNUSED( x ) ;
 	Q_UNUSED( y ) ;
@@ -400,8 +400,14 @@ QObject * statusicon::statusQObject()
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
-	if( reason != QSystemTrayIcon::Context ){
-		m_function() ;
+	if( reason == QSystemTrayIcon::Context ){
+		m_clickActions.onRightClick() ;
+	}else if( reason == QSystemTrayIcon::Trigger ){
+		m_clickActions.onLeftClick() ;
+	}else if( reason == QSystemTrayIcon::MiddleClick ){
+		m_clickActions.onMiddleClick() ;
+	}else{
+		m_clickActions.onRightClick() ;
 	}
 }
 

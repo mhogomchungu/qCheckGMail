@@ -60,7 +60,6 @@ public:
 	static bool autoStartEnabled( void ) ;
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 	QWidget * widget( void ) ;
-	std::function< void( void ) > iconClickedAction( void ) ;
 	void iconClicked( void ) ;
 	QString defaultApplication( void ) ;
 private slots:
@@ -142,7 +141,7 @@ private:
 	int m_networkTimeOut ;
 	QNetworkReply * m_networkReply ;
 	bool m_accountFailed ;
-	std::function< void( void ) > m_function ;
+	statusicon::clickActions m_clickActions ;
 };
 
 #endif // QCHECKGMAIL_H
