@@ -9,9 +9,6 @@ INCLUDE(FindPkgConfig)
 #
 set(BUILD_SHARED "false")
 
-SET(QT_USE_QTCORE TRUE)
-SET(QT_USE_QTGUI TRUE)
-
 set(LIBRARY_VERSION "2.0.0")
 
 add_definitions(-I${PROJECT_BINARY_DIR}/frontend)
@@ -33,6 +30,9 @@ if(QT5)
 	add_definitions(${Qt5Widgets_DEFINITIONS})
 else()
 	find_package(Qt4 REQUIRED)
+
+	SET(QT_USE_QTCORE TRUE)
+	SET(QT_USE_QTGUI TRUE)
 
 	add_definitions(-I${Qt4_INCLUDE_DIR})
 	add_definitions(-I${QT_HEADERS_DIR})
@@ -80,7 +80,7 @@ else()
 			SET(KWALLET_SUPPORT "false")
 			file(APPEND  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 0\n")
 		else()
-			find_library(LIBKWALLETBACKEND libkwalletbackend.so PATHS ${KDE_LIBRARY_PATH})
+			find_library(LIBKWALLETBACKEND libkwalletbackend.so)
 			if(NOT LIBKWALLETBACKEND)
 				# some distributions do not have libkwalletbackend.so for reasons i currently do not know
 				# look for libkwalletbackend.sp.4 when the above happen
@@ -98,7 +98,7 @@ else()
 			endif()
 		endif()
 
-		find_library(LIBKDEUI libkdeui.so PATHS ${KDE_LIBRARY_PATH})
+		find_library(LIBKDEUI libkdeui.so)
 		if(NOT LIBKDEUI)
 			# adding this one just in case the same case as above happen
 			find_library(LIBKDEUI libkdeui.so.5)
@@ -109,7 +109,7 @@ else()
 			message(STATUS "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again")
 		endif()
 
-		find_library(LIBKDECORE libkdecore.so PATHS ${KDE_LIBRARY_PATH})
+		find_library(LIBKDECORE libkdecore.so)
 		if(NOT LIBKDECORE)
 			# adding this one just in case the same case as above happen
 			find_library(LIBKDECORE libkdecore.so.5)
@@ -266,7 +266,7 @@ endif()
 
 set_target_properties(lxqtwallet PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIC -pedantic ")
 set_target_properties(lxqtwallet PROPERTIES SOVERSION "${LIBRARY_VERSION}")
-TARGET_LINK_LIBRARIES(lxqtwallet "${link_libraries}" lxqtwallet-backend -lQtCore -lQtGui)
+TARGET_LINK_LIBRARIES(lxqtwallet "${link_libraries}" lxqtwallet-backend)
 
 if(LIB_SUFFIX)
 	set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUFFIX}")
