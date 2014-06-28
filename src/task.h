@@ -24,14 +24,50 @@
 
 typedef std::function< void( void ) > function_t ;
 
+class continuation
+{
+public:
+	explicit continuation( function_t ) ;
+	continuation& then( function_t function = [](){} ) ;
+	void start( void ) ;
+	void run( void ) ;
+private:
+	function_t m_function = [](){} ;
+	function_t m_start ;
+};
+
 namespace Task
 {
 	/*
-	 * This function takes two tasks.
-	 * The first task is executed on a separate thread.
-	 * The second task is executed on the original thread after the first task completes.
+	 * This API runs two tasks,the first one will be run in a different thread and
+	 * the second one will be run on the original thread after the completion of the
+	 * first one.
+	 *
+	 * Sample use case below
 	 */
-	void exec( function_t,function_t ) ;
+	continuation& run( function_t ) ;
 }
+
+#if 0
+
+auto _a = [](){
+	/*
+	 * task _a does what task _a does here.
+	 *
+	 * This function body will run on a different thread
+	 */
+}
+
+auto _b = [](){
+	/*
+	 * task _b does what task _b does here.
+	 *
+	 * This function body will run on the original thread
+	 */
+}
+
+Task::run( _a ).then( _b ).start() ;
+
+#endif
 
 #endif // TASK_H

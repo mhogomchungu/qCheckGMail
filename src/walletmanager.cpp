@@ -191,12 +191,12 @@ void walletmanager::walletIsOpen( bool walletOpened )
 			this->disableAll() ;
 			this->show() ;
 
-			Task::exec( _task,_showAccInfo ) ;
+			Task::run( _task ).then( _showAccInfo ).start() ;
 
 			break ;
 		case walletmanager::getAccountInfo :
 
-			Task::exec( _task,_getAccInfo ) ;
+			Task::run( _task ).then( _getAccInfo ).start() ;
 
 			break ;
 		default:
@@ -300,7 +300,7 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 		this->enableAll() ;
 	} ;
 
-	Task::exec( _a,_b ) ;
+	Task::run( _a ).then( _b ).start() ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -361,7 +361,7 @@ void walletmanager::deleteAccount()
 				this->enableAll() ;
 			} ;
 
-			Task::exec( _a,_b ) ;
+			Task::run( _a ).then( _b ).start() ;
 		}else{
 			this->enableAll() ;
 		}
@@ -434,7 +434,7 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 		this->enableAll() ;
 	} ;
 
-	Task::exec( _a,_b ) ;
+	Task::run( _a ).then( _b ).start() ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )

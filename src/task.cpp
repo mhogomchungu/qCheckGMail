@@ -21,32 +21,55 @@
 
 #include "task.h"
 
+continuation::continuation( function_t function ) : m_start( function )
+{
+}
+
+continuation& continuation::then( function_t function )
+{
+	m_function = function ;
+	return *this ;
+}
+
+void continuation::start()
+{
+	m_start() ;
+}
+
+void continuation::run()
+{
+	m_function() ;
+}
+
 class thread : public QThread
 {
 public:
-	thread( function_t function_0,function_t function_1 ) :
-		m_function_0( function_0 ),m_function_1( function_1 )
+	thread( function_t function ) :	m_function( function ),m_continuation( [&](){ this->start() ; } )
 	{
 		connect( this,SIGNAL( finished() ),this,SLOT( deleteLater() ) ) ;
-		this->start() ;
+	}
+	continuation& taskContinuation( void )
+	{
+		return m_continuation ;
 	}
 	~thread()
 	{
-		m_function_1() ;
+		m_continuation.run() ;
 	}
 private:
 	void run( void )
 	{
-		m_function_0() ;
+		m_function() ;
 	}
-	function_t m_function_0 ;
-	function_t m_function_1 ;
+	function_t m_function ;
+	continuation m_continuation ;
 };
 
 namespace Task
 {
-	void exec( function_t function_0,function_t function_1 )
+	continuation& run( function_t function )
 	{
-		new thread( function_0,function_1 ) ;
+		thread * t = new thread( function ) ;
+		return t->taskContinuation() ;
 	}
 }
