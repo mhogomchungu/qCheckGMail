@@ -20,54 +20,18 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <QRunnable>
-#include <QObject>
-#include <QString>
-#include <QVector>
+#include <functional>
 
-#include "accounts.h"
-#include "../lxqt_wallet/frontend/lxqt_wallet.h"
+typedef std::function< void( void ) > function_t ;
 
-#define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
-#define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
-
-namespace lxqt{
-namespace Wallet{
-class Wallet ;
-}
-}
-
-class Task : public QObject,public QRunnable
+namespace Task
 {
-	Q_OBJECT
-public:
-	typedef enum{
-		addAccount,
-		deleteAccount,
-		editAccount,
-		getAccountInfo,
-		showAccountInfo
-	}action ;
-
-	Task( LxQt::Wallet::Wallet * wallet,const QString& accName,const QString& accPassWord,
-	      const QString& accLabels,const QString& accDisplayName ) ;
-	Task( LxQt::Wallet::Wallet * wallet,const QString& accName ) ;
-	Task( LxQt::Wallet::Wallet * wallet,QVector<accounts> * ) ;
-
-	~Task() ;
-
-	void start( Task::action ) ;
-signals:
-	void taskFinished( int ) ;
-private:
-	void run( void ) ;
-	Task::action m_action ;
-	LxQt::Wallet::Wallet * m_wallet ;
-	QString m_accName ;
-	QString m_accPassWord ;
-	QString m_accLabels ;
-	QString m_accDisplayName ;
-	QVector<accounts> * m_acc ;
-};
+	/*
+	 * This function takes two tasks.
+	 * The first task is executed on a separate thread.
+	 * The second task is executed on the original thread after the first task completes.
+	 */
+	void exec( function_t,function_t ) ;
+}
 
 #endif // TASK_H

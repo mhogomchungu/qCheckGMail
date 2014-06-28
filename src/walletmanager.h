@@ -50,8 +50,8 @@ class walletmanager : public QDialog
 {
 	typedef enum{
 		getAccountInfo,
-		showAccountInfo
-	}openOperation ;
+		showAccountInfo,
+	}accountOperation ;
 
 	Q_OBJECT
 public:
@@ -66,15 +66,14 @@ signals:
 private slots:
 	void walletpassWordChanged( bool ) ;
 	void walletIsOpen( bool ) ;
-	void deleteRow() ;
+	void deleteAccount() ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void editEntry( void ) ;
+	void editAccount( void ) ;
 	void addAccount( QString,QString,QString,QString ) ;
 	void editAccount( int,QString,QString,QString,QString ) ;
-	void taskComplete( int ) ;
 	void enableAll( void ) ;
 private:
 	void disableAll( void ) ;
@@ -93,7 +92,7 @@ private:
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	bool m_getAccInfo ;
-	openOperation m_action ;
+	accountOperation m_action ;
 	QString m_accName ;
 	QString m_accPassWord ;
 	QString m_accLabels ;

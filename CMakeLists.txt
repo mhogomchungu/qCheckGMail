@@ -93,7 +93,7 @@ if( LXQTSUPPORT )
 		include_directories( ${LXQT_INCLUDE_DIRS} )
 
 		if( QT5 )
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h src/task.h )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -102,7 +102,7 @@ if( LXQTSUPPORT )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
 		else()
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h src/task.h )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -132,7 +132,7 @@ if( LXQTSUPPORT )
 elseif( NOKDESUPPORT )
 
 	if( QT5 )
-		QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+		QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -141,7 +141,7 @@ elseif( NOKDESUPPORT )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 	else()
-		QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+		QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -199,7 +199,7 @@ else()
 		endif()
 
 		if( QT5 )
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -208,7 +208,7 @@ else()
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 		else()
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -238,7 +238,7 @@ else()
 		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
 	else()
 		if( QT5 )
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h  )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -247,7 +247,7 @@ else()
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 		else()
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/task.h )
+			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h  )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
