@@ -172,11 +172,9 @@ void walletmanager::walletIsOpen( bool walletOpened )
 
 	auto _showAccInfo = [&](){
 
-		int j = m_accounts.size() ;
+		for( const auto& it : m_accounts ){
 
-		for( int i = 0 ; i < j ; i++ ){
-
-			this->addEntry( m_accounts.at( i ) ) ;
+			this->addEntry( it ) ;
 		}
 
 		this->selectLastRow() ;
