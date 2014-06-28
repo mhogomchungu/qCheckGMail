@@ -76,10 +76,12 @@ private slots:
 	void editAccount( int,QString,QString,QString,QString ) ;
 	void enableAll( void ) ;
 private:
+	void addEntry( const accounts& ) ;
 	void disableAll( void ) ;
 	void changePassword( bool ) ;
 	void buildGUI( void ) ;
 	void selectRow( int row,bool highlight = true ) ;
+	void selectLastRow( void ) ;
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 	bool eventFilter( QObject * watched,QEvent * event ) ;

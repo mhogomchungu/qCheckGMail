@@ -103,6 +103,30 @@ void walletmanager::walletpassWordChanged( bool passwordChanged )
 	this->deleteLater() ;
 }
 
+void walletmanager::addEntry( const accounts& acc )
+{
+	QTableWidgetItem * item ;
+
+	int row = m_table->rowCount() ;
+
+	m_table->insertRow( row ) ;
+
+	item = new QTableWidgetItem() ;
+	item->setText( acc.accountName() ) ;
+	item->setTextAlignment( Qt::AlignCenter ) ;
+	m_table->setItem( row,0,item ) ;
+
+	item = new QTableWidgetItem() ;
+	item->setText( acc.displayName() ) ;
+	item->setTextAlignment( Qt::AlignCenter ) ;
+	m_table->setItem( row,1,item ) ;
+
+	item = new QTableWidgetItem() ;
+	item->setText( acc.labels() ) ;
+	item->setTextAlignment( Qt::AlignCenter ) ;
+	m_table->setItem( row,2,item ) ;
+}
+
 void walletmanager::walletIsOpen( bool walletOpened )
 {
 	auto _task = [&](){
@@ -148,33 +172,14 @@ void walletmanager::walletIsOpen( bool walletOpened )
 
 	auto _showAccInfo = [&](){
 
-		QTableWidgetItem * item ;
-
 		int j = m_accounts.size() ;
-		int row = -1 ;
 
 		for( int i = 0 ; i < j ; i++ ){
-			row = m_table->rowCount() ;
 
-			m_table->insertRow( row ) ;
-
-			item = new QTableWidgetItem() ;
-			item->setText( m_accounts.at( i ).accountName() ) ;
-			item->setTextAlignment( Qt::AlignCenter ) ;
-			m_table->setItem( row,0,item ) ;
-
-			item = new QTableWidgetItem() ;
-			item->setText( m_accounts.at( i ).displayName() ) ;
-			item->setTextAlignment( Qt::AlignCenter ) ;
-			m_table->setItem( row,1,item ) ;
-
-			item = new QTableWidgetItem() ;
-			item->setText( m_accounts.at( i ).labels() ) ;
-			item->setTextAlignment( Qt::AlignCenter ) ;
-			m_table->setItem( row,2,item ) ;
+			this->addEntry( m_accounts.at( i ) ) ;
 		}
 
-		this->selectRow( row ) ;
+		this->selectLastRow() ;
 		this->enableAll() ;
 	} ;
 
@@ -232,6 +237,7 @@ void walletmanager::enableAll()
 	m_ui->pushButtonAccountAdd->setEnabled( true ) ;
 	m_ui->pushButtonClose->setEnabled( true ) ;
 	m_ui->tableWidget->setEnabled( true ) ;
+	m_table->setFocus() ;
 }
 
 void walletmanager::disableAll()
@@ -284,29 +290,13 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 
 	auto _b = [&](){
 
-		m_accounts.append( accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
+		accounts acc( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ;
 
-		int row = m_table->rowCount() ;
-		QTableWidgetItem * item ;
+		m_accounts.append( acc ) ;
 
-		m_table->insertRow( row ) ;
+		this->addEntry( acc ) ;
 
-		item = new QTableWidgetItem() ;
-		item->setText( m_accName ) ;
-		item->setTextAlignment( Qt::AlignCenter ) ;
-		m_table->setItem( row,0,item ) ;
-
-		item = new QTableWidgetItem() ;
-		item->setText( m_accDisplayName ) ;
-		item->setTextAlignment( Qt::AlignCenter ) ;
-		m_table->setItem( row,1,item ) ;
-
-		item = new QTableWidgetItem() ;
-		item->setText( m_accLabels ) ;
-		item->setTextAlignment( Qt::AlignCenter ) ;
-		m_table->setItem( row,2,item ) ;
-
-		this->selectRow( row,true ) ;
+		this->selectLastRow() ;
 		this->enableAll() ;
 	} ;
 
@@ -433,10 +423,14 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 
 	auto _b = [&](){
 
-		m_accounts.replace( m_row,accounts( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ) ;
+		accounts acc( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ;
+
+		m_accounts.replace( m_row,acc ) ;
+
 		m_table->item( m_row,0 )->setText( m_accName ) ;
 		m_table->item( m_row,1 )->setText( m_accDisplayName ) ;
 		m_table->item( m_row,2 )->setText( m_accLabels ) ;
+
 		this->enableAll() ;
 	} ;
 
@@ -455,6 +449,11 @@ void walletmanager::selectRow( int row,bool highlight )
 			m_table->setCurrentCell( row,j - 1 ) ;
 		}
 	}
+}
+
+void walletmanager::selectLastRow()
+{
+	this->selectRow( m_table->rowCount() - 1,true ) ;
 }
 
 void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
