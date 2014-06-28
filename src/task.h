@@ -28,7 +28,7 @@ class continuation
 {
 public:
 	explicit continuation( function_t ) ;
-	continuation& then( function_t function = [](){} ) ;
+	void then( function_t ) ;
 	void start( void ) ;
 	void run( void ) ;
 private:
@@ -46,6 +46,11 @@ namespace Task
 	 * Sample use case below
 	 */
 	continuation& run( function_t ) ;
+
+	/*
+	 * if no continuation,run only one task on a separate thread.
+	 */
+	void exec( function_t ) ;
 }
 
 #if 0
@@ -66,7 +71,12 @@ auto _b = [](){
 	 */
 }
 
-Task::run( _a ).then( _b ).start() ;
+Task::run( _a ).then( _b ) ;
+
+/*
+ * if no continuation
+ */
+Task::exec( _a ) ;
 
 #endif
 

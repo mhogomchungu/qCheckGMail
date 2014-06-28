@@ -25,10 +25,10 @@ continuation::continuation( function_t function ) : m_start( function )
 {
 }
 
-continuation& continuation::then( function_t function )
+void continuation::then( function_t function )
 {
 	m_function = function ;
-	return *this ;
+	m_start() ;
 }
 
 void continuation::start()
@@ -69,7 +69,12 @@ namespace Task
 {
 	continuation& run( function_t function )
 	{
-		thread * t = new thread( function ) ;
+		auto t = new thread( function ) ;
 		return t->taskContinuation() ;
+	}
+
+	void exec( function_t function )
+	{
+		Task::run( function ).start() ;
 	}
 }
