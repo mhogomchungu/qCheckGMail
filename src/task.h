@@ -21,19 +21,111 @@
 #define TASK_H
 
 #include <functional>
+#include <QThread>
 
-typedef std::function< void( void ) > function_t ;
-
+template< typename T >
 class continuation
 {
 public:
-	explicit continuation( function_t ) ;
-	void then( function_t ) ;
-	void start( void ) ;
-	void run( void ) ;
+	explicit continuation( std::function< void( void ) > function ) :
+		m_function( []( const T& t ){ Q_UNUSED( t ) ; } ),m_start( function )
+	{
+	}
+	void then( std::function< void( const T& ) > function )
+	{
+		m_function = function ;
+		m_start() ;
+	}
+	void start()
+	{
+		m_start() ;
+	}
+	void run( const T& arg )
+	{
+		m_function( arg ) ;
+	}
 private:
-	function_t m_function = [](){} ;
-	function_t m_start ;
+	std::function< void( const T& ) > m_function ;
+	std::function< void( void ) > m_start ;
+};
+
+template< typename T >
+class thread : public QThread
+{
+public:
+	thread( std::function< T ( void ) > function ) :
+		m_function( function ),
+		m_continuation( [&](){ this->start() ; } )
+	{
+		connect( this,SIGNAL( finished() ),this,SLOT( deleteLater() ) ) ;
+	}
+	continuation<T>& taskContinuation( void )
+	{
+		return m_continuation ;
+	}
+private:
+	~thread()
+	{
+		m_continuation.run( m_cargo ) ;
+	}
+	void run( void )
+	{
+		m_cargo =  m_function() ;
+	}
+	std::function< T ( void ) > m_function ;
+	continuation<T> m_continuation ;
+	T m_cargo ;
+};
+
+class continuation_1
+{
+public:
+	explicit continuation_1( std::function< void( void ) > function ) :
+		m_function( [](){} ),m_start( function )
+	{
+	}
+	void then( std::function< void( void ) > function )
+	{
+		m_function = function ;
+		m_start() ;
+	}
+	void start()
+	{
+		m_start() ;
+	}
+	void run()
+	{
+		m_function() ;
+	}
+private:
+	std::function< void( void ) > m_function ;
+	std::function< void( void ) > m_start ;
+};
+
+class thread_1 : public QThread
+{
+public:
+	thread_1( std::function< void ( void ) > function ) :
+		m_function( function ),
+		m_continuation( [&](){ this->start() ; } )
+	{
+		connect( this,SIGNAL( finished() ),this,SLOT( deleteLater() ) ) ;
+	}
+	continuation_1& taskContinuation( void )
+	{
+		return m_continuation ;
+	}
+private:
+	~thread_1()
+	{
+		m_continuation.run() ;
+	}
+	void run( void )
+	{
+		m_function() ;
+	}
+	std::function< void ( void ) > m_function ;
+	continuation_1 m_continuation ;
 };
 
 namespace Task
@@ -43,18 +135,49 @@ namespace Task
 	 * the second one will be run on the original thread after the completion of the
 	 * first one.
 	 *
-	 * Sample use case below
+	 * See example at the end of this header file for a sample use case
 	 */
-	continuation& run( function_t ) ;
+	template< typename T >
+	continuation<T>& run( std::function< T ( void ) > function )
+	{
+		auto t = new thread<T>( function ) ;
+		return t->taskContinuation() ;
+	}
 
-	/*
-	 * if no continuation,run only one task on a separate thread.
-	 */
-	void exec( function_t ) ;
+	continuation_1& run( std::function< void( void ) > function ) ;
+
+	void exec( std::function< void( void ) > function ) ;
 }
 
 #if 0
 
+/*
+ * templated version that passes a return value of one function to another function
+ */
+auto _a = [](){
+	/*
+	 * task _a does what task _a does here.
+	 *
+	 * This function body will run on a different thread
+	 */
+	return 0 ;
+}
+
+auto _b = []( const int& r ){
+	/*
+	 * task _b does what task _b does here.
+	 *
+	 * r is a const reference to a value returned by _a
+	 *
+	 * This function body will run on the original thread
+	 */
+}
+
+Task::run<int>( _a ).then( _b ) ;
+
+/*
+ * Non templated version that does not pass around return value
+ */
 auto _a = [](){
 	/*
 	 * task _a does what task _a does here.
@@ -66,6 +189,8 @@ auto _a = [](){
 auto _b = [](){
 	/*
 	 * task _b does what task _b does here.
+	 *
+	 * r is a const reference to a value returned by _a
 	 *
 	 * This function body will run on the original thread
 	 */
