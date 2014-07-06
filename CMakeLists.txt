@@ -97,7 +97,7 @@ if( LXQTSUPPORT )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp src/task.cpp
+			add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
@@ -106,7 +106,7 @@ if( LXQTSUPPORT )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp src/task.cpp
+			add_library( qCheckGMail MODULE src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork ${LXQT_LIBRARIES})
@@ -136,7 +136,7 @@ elseif( NOKDESUPPORT )
 		QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
@@ -145,7 +145,7 @@ elseif( NOKDESUPPORT )
 		QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+		add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
@@ -203,7 +203,7 @@ else()
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
@@ -212,7 +212,7 @@ else()
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
@@ -242,7 +242,7 @@ else()
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
@@ -251,7 +251,7 @@ else()
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/task.cpp
+			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
 			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
