@@ -24,6 +24,8 @@
 #include "../lxqt_wallet/frontend/lxqt_wallet.h"
 #include "../lxqt_wallet/frontend/task.h"
 
+namespace Task = LxQt::Wallet::Task ;
+
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
@@ -189,12 +191,12 @@ void walletmanager::walletIsOpen( bool walletOpened )
 			this->disableAll() ;
 			this->show() ;
 
-			LxQt::Wallet::Task::run( _task ).then( _showAccInfo ) ;
+			Task::run( _task ).then( _showAccInfo ) ;
 
 			break ;
 		case walletmanager::getAccountInfo :
 
-			LxQt::Wallet::Task::run( _task ).then( _getAccInfo ) ;
+			Task::run( _task ).then( _getAccInfo ) ;
 
 			break ;
 		default:
@@ -298,7 +300,7 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 		this->enableAll() ;
 	} ;
 
-	LxQt::Wallet::Task::run( _a ).then( _b ) ;
+	Task::run( _a ).then( _b ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -359,7 +361,7 @@ void walletmanager::deleteAccount()
 				this->enableAll() ;
 			} ;
 
-			LxQt::Wallet::Task::run( _a ).then( _b ) ;
+			Task::run( _a ).then( _b ) ;
 		}else{
 			this->enableAll() ;
 		}
@@ -432,7 +434,7 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 		this->enableAll() ;
 	} ;
 
-	LxQt::Wallet::Task::run( _a ).then( _b ) ;
+	Task::run( _a ).then( _b ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )
