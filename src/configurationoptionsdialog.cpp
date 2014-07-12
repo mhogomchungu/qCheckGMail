@@ -88,7 +88,7 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 
 void configurationoptionsdialog::setProfile( const QString& profile )
 {
-	if( _settings.contains( profile ) ){
+	if( !profile.isEmpty() && _settings.contains( profile ) ){
 		_profile = profile ;
 	}
 	#if USE_KDE_STATUS_NOTIFIER
@@ -294,7 +294,7 @@ QString configurationoptionsdialog::defaultApplication()
 
 QStringList configurationoptionsdialog::profileEmailList()
 {
-	if( _settings.contains( _profile ) ){
+	if( !_profile.isEmpty() && _settings.contains( _profile ) ){
 		QString z = _settings.value( _profile ).toString() ;
 		return z.split( "," ) ;
 	}else{
