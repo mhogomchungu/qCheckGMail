@@ -24,7 +24,11 @@
 #define ORGANIZATION_NAME "qCheckGMail"
 
 #if USE_KDE_STATUS_NOTIFIER
-#include <kstandarddirs.h>
+        #if KF5
+                #include <QStandardPaths>
+        #else
+                #include <kstandarddirs.h>
+        #endif
 #endif
 
 #define DEFAULT_KDE_WALLET     "default kde wallet"
@@ -41,6 +45,28 @@ static QString _getOption( const char * opt )
 		return QString( "%1/%2").arg( _profile ).arg( opt ) ;
 	}
 }
+
+#if USE_KDE_STATUS_NOTIFIER
+        #if KF5
+                #include <QStandardPaths>
+                static QString _configPath( void )
+                {
+                        return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
+                }
+        #else
+                #include <kstandarddirs.h>
+                static QString _configPath( void )
+                {
+                        KStandardDirs k ;
+                        return k.localxdgconfdir() ;
+                }
+        #endif
+#else
+        static QString _configPath( void )
+        {
+                  return QDir::homePath() + "/.config" ;
+        }
+#endif
 
 configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
@@ -91,12 +117,8 @@ void configurationoptionsdialog::setProfile( const QString& profile )
 	if( !profile.isEmpty() && _settings.contains( profile ) ){
 		_profile = profile ;
 	}
-	#if USE_KDE_STATUS_NOTIFIER
-		KStandardDirs k ;
-		_settings.setPath( QSettings::IniFormat,QSettings::UserScope,k.localxdgconfdir() ) ;
-	#else
-		_settings.setPath( QSettings::IniFormat,QSettings::UserScope,QDir::homePath() + QString( "/.config" ) ) ;
-	#endif
+
+        _settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
 }
 
 bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
@@ -143,12 +165,7 @@ void configurationoptionsdialog::saveStorageSystem( const QString& system )
 
 QString configurationoptionsdialog::logFile()
 {
-	#if USE_KDE_STATUS_NOTIFIER
-		KStandardDirs k ;
-		return k.localxdgconfdir() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
-	#else
-		return QString( "%1/.config/%2/%1.log" ).arg( QDir::homePath() ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
-	#endif
+        return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
 }
 
 LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()

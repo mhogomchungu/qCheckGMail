@@ -40,6 +40,7 @@ qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mute
 {
 	statusicon::setCategory( statusicon::ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
+        //QCoreApplication::setApplicationDisplayName( "qCheckGMail" ) ;
 }
 
 qCheckGMail::~qCheckGMail()

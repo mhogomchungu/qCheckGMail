@@ -61,7 +61,11 @@ void statusicon::setIconClickedActions( const statusicon::clickActions& actions 
 
 statusicon::statusicon()
 {
+#if KF5
+	m_menu = new QMenu() ;
+#else
 	m_menu = new KMenu() ;
+#endif
 	m_menu->clear() ;
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
 	KStatusNotifierItem::setStandardActionsEnabled( false ) ;
@@ -139,13 +143,21 @@ QObject * statusicon::statusQObject()
 void statusicon::newEmailNotify()
 {
 	QByteArray r( "qCheckGMail" ) ;
+#if KF5
+	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,r ) ;
+#else
 	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,
 			      KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
+#endif
 }
 
 bool statusicon::enableDebug()
 {
+#if KF5
+        return QCoreApplication::arguments().contains( "-d" ) ;
+#else
 	return KCmdLineArgs::allArguments().contains( "-d" ) ;
+#endif
 }
 
 QList<QAction *> statusicon::getMenuActions()

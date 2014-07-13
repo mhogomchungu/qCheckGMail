@@ -23,28 +23,15 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 add_definitions( -I"${PROJECT_BINARY_DIR}/lxqt_wallet/frontend" )
 
+if(KDE5)
+set( QT5 "true" )
+endif()
+
 ADD_SUBDIRECTORY( lxqt_wallet )
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
 add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
-
-if( QT5 )
-	set( NOKDESUPPORT "true" )
-
-	find_package( Qt5Widgets REQUIRED )
-	find_package( Qt5Core REQUIRED )
-
-	set( CMAKE_INCLUDE_CURRENT_DIR ON )
-	include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
-
-	add_definitions( ${Qt5Widgets_DEFINITIONS} )
-else()
-	find_package( Qt4 REQUIRED )
-	add_definitions( -I${Qt4_INCLUDE_DIR} )
-	add_definitions( -I${QT_HEADERS_DIR} )
-	INCLUDE( ${QT_USE_FILE} )
-endif()
 
 if( NOT "${DATA_INSTALL_DIR}" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" )
@@ -83,6 +70,26 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
 )
 
+if(QT5)
+        find_package(Qt5Widgets REQUIRED)
+        find_package(Qt5Core REQUIRED)
+        if(KDE5)
+
+        else()
+                set( NOKDESUPPORT "true" )
+        endif()
+else()
+	SET(QT_USE_QTCORE TRUE)
+	SET(QT_USE_QTGUI TRUE)
+
+	add_definitions(-I${Qt4_INCLUDE_DIR})
+	add_definitions(-I${QT_HEADERS_DIR})
+
+	INCLUDE(${QT_USE_FILE})
+
+	INCLUDE(${QT_USE_FILE})
+endif()
+
 if( LXQTSUPPORT )
 	INCLUDE(FindPkgConfig)
 
@@ -93,6 +100,7 @@ if( LXQTSUPPORT )
 		include_directories( ${LXQT_INCLUDE_DIRS} )
 
 		if( QT5 )
+
 			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
@@ -102,6 +110,7 @@ if( LXQTSUPPORT )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
 		else()
+
 			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
@@ -125,14 +134,15 @@ if( LXQTSUPPORT )
 		message( STATUS "\n------------------------------------------------------------------------------------------" )
 		message( STATUS "lxqt support found,will build lxqt panel plugin based application" )
 		message( STATUS "------------------------------------------------------------------------------------------" )
-		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_LXQT_PLUGIN 1\n#define USE_KDE_STATUS_NOTIFIER 0\n" )
+                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define KF5 0\n#define USE_LXQT_PLUGIN 1\n#define KDE4 0\n" )
+
 	else()
 		message( FATAL_ERROR "lxqt libraries not found" )
 	endif()
 elseif( NOKDESUPPORT )
 
 	if( QT5 )
-		QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+                QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -141,7 +151,7 @@ elseif( NOKDESUPPORT )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 	else()
-		QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+                QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -168,114 +178,95 @@ elseif( NOKDESUPPORT )
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 	message( STATUS "----------------------------------------------------------------------------------------" )
-	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define USE_LXQT_PLUGIN 0\n" )
+        file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
+
 else()
-	find_package( KDE4 QUIET )
-	if( KDE4_FOUND )
-		include (KDE4Defaults)
-		include_directories(${KDE4_INCLUDES})
-		add_definitions( -I${KDE4_INCLUDE_DIR} )
+	if(KDE5)
+                find_package( KF5Config REQUIRED )
+                find_package(ECM REQUIRED NO_MODULE)
+                set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-		find_library( LIBKDEUI_ libkdeui.so PATHS ${KDE_LIBRARY_PATH} )
-		if( NOT LIBKDEUI_ )
-			# adding this one just in case the same case as above happen
-			find_library( LIBKDEUI_ libkdeui.so.5 )
-		endif()
+                include(KDEInstallDirs)
+                #include(KDECompilerSettings)
+                #include(KDECMakeSettings)
+                #include(FeatureSummary)
 
-		if( NOT LIBKDEUI_ )
-			SET( KDE_SUPPORT "false" )
-			message( FATAL_ERROR "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
-		endif()
+                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5" )
+                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5/KNotifications" )
+                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5/KService/" )
 
-		find_library( LIBKDECORE_ libkdecore.so PATHS ${KDE_LIBRARY_PATH} )
-		if( NOT LIBKDECORE_ )
-			# adding this one just in case the same case as above happen
-			find_library( LIBKDECORE_ libkdecore.so.5 )
-		endif()
+                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 1\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
-		if( NOT LIBKDECORE_ )
-			SET( KDE_SUPPORT "false" )
-			message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
-		endif()
+                QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+                QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+                QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-		if( QT5 )
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+                add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
+                src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+                find_library( qqqq libKF5Notifications.so )
+                find_library( zzzz libKF5Notifications.so )
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
-		else()
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
-
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
-		endif()
-
-		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
-
-		install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
-
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
-
-		message( STATUS "\n------------------------------------------------------------------------------------------" )
-		message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
-		message( STATUS "---------------------------------------------------------------------------------------" )
-		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define USE_LXQT_PLUGIN 0\n" )
+                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network "${qqqq}" "${zzzz}" )
 	else()
-		if( QT5 )
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h  )
-			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+                find_package(KDE4 REQUIRED)
+                find_package(Qt4 REQUIRED)
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+                include(KDE4Defaults)
+                include_directories(${KDE4_INCLUDES})
+                add_definitions( -I${KDE4_INCLUDE_DIR} )
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
-		else()
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h  )
-			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+                find_library( LIBKDEUI_ libkdeui.so PATHS ${KDE_LIBRARY_PATH} )
+                if( NOT LIBKDEUI_ )
+                        # adding this one just in case the same case as above happen
+                        find_library( LIBKDEUI_ libkdeui.so.5 )
+                endif()
 
-			add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+                if( NOT LIBKDEUI_ )
+                        SET( KDE_SUPPORT "false" )
+                        message( FATAL_ERROR "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
+                endif()
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
-		endif()
+                find_library( LIBKDECORE_ libkdecore.so PATHS ${KDE_LIBRARY_PATH} )
+                if( NOT LIBKDECORE_ )
+                        # adding this one just in case the same case as above happen
+                        find_library( LIBKDECORE_ libkdecore.so.5 )
+                endif()
 
-		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
+                if( NOT LIBKDECORE_ )
+                        SET( KDE_SUPPORT "false" )
+                        message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
+                endif()
 
-		install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
+                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 1\n" )
 
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
+                QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+                QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
+                QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
+                add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
+                src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-		message( STATUS "\n-------------------------------------------------------------------------------------------" )
-		message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
-		message( STATUS "------------------------------------------------------------------------------------------" )
-		file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define USE_LXQT_PLUGIN 0\n" )
-	endif()
+                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
+        endif()
+
+        set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+        set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
+
+        install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
+
+        install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        )
+
+        install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        )
+
+        message( STATUS "\n------------------------------------------------------------------------------------------" )
+        message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
+        message( STATUS "---------------------------------------------------------------------------------------" )
 endif()
 
 #Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg

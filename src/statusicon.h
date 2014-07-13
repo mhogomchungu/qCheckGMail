@@ -36,12 +36,19 @@
 #include "configurationoptionsdialog.h"
 
 #if USE_KDE_STATUS_NOTIFIER
+#if KF5
+#include <QMenu>
+#include <kstatusnotifieritem.h>
+#include <knotification.h>
+#include <ktoolinvocation.h>
+#else
 #include <knotification.h>
 #include <kstatusnotifieritem.h>
 #include <knotification.h>
 #include <kmenu.h>
 #include <ktoolinvocation.h>
 #include <kcmdlineargs.h>
+#endif
 
 class statusicon : public KStatusNotifierItem
 {
@@ -101,7 +108,11 @@ private:
 	QString m_defaultApplication ;
 	statusicon::clickActions m_clickActions ;
 #if USE_KDE_STATUS_NOTIFIER
+#if KF5
+        QMenu * m_menu ;
+#else
 	KMenu * m_menu ;
+#endif
 #elif USE_LXQT_PLUGIN
 	QToolButton m_toolButton ;
 #else

@@ -20,15 +20,24 @@
 #include "tray_application_type.h"
 
 #if USE_KDE_STATUS_NOTIFIER
-#include <QApplication>
+
+#if KDE4
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+
 #include <klocalizedstring.h>
 #include <kuniqueapplication.h>
+
+#endif
+
 #include <QDebug>
 #include "qcheckgmail.h"
+
+#endif
+
+#if KDE4
 
 int main( int argc,char * argv[] )
 {
@@ -73,7 +82,7 @@ int main( int argc,char * argv[] )
 
 			return QString() ;
 		} ;
-		
+
 		if( l.contains( "-i" ) ){
 			KApplication a ;
 			qCheckGMail w( _setProfile() ) ;
