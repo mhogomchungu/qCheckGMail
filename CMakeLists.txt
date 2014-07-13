@@ -79,6 +79,7 @@ if(QT5)
                 set( NOKDESUPPORT "true" )
         endif()
 else()
+	find_package(Qt4 REQUIRED)
 	SET(QT_USE_QTCORE TRUE)
 	SET(QT_USE_QTGUI TRUE)
 
