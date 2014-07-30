@@ -40,6 +40,7 @@
 #include <QProcess>
 #include <functional>
 #include <memory>
+#include <utility>
 
 #include "statusicon.h"
 #include "accounts.h"
