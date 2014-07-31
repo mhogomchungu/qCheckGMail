@@ -85,6 +85,7 @@ private:
 	void HideUI( void ) ;
 	void closeEvent( QCloseEvent * ) ;
 	bool eventFilter( QObject * watched,QEvent * event ) ;
+	void readAccountInfo() ;
 
 	Ui::walletmanager * m_ui ;
 

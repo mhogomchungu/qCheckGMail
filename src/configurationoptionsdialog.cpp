@@ -24,11 +24,11 @@
 #define ORGANIZATION_NAME "qCheckGMail"
 
 #if USE_KDE_STATUS_NOTIFIER
-        #if KF5
-                #include <QStandardPaths>
-        #else
-                #include <kstandarddirs.h>
-        #endif
+	#if KF5
+		#include <QStandardPaths>
+	#else
+		#include <kstandarddirs.h>
+	#endif
 #endif
 
 #define DEFAULT_KDE_WALLET     "default kde wallet"
@@ -47,25 +47,25 @@ static QString _getOption( const char * opt )
 }
 
 #if USE_KDE_STATUS_NOTIFIER
-        #if KF5
-                #include <QStandardPaths>
-                static QString _configPath( void )
-                {
-                        return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
-                }
-        #else
-                #include <kstandarddirs.h>
-                static QString _configPath( void )
-                {
-                        KStandardDirs k ;
-                        return k.localxdgconfdir() ;
-                }
-        #endif
+	#if KF5
+		#include <QStandardPaths>
+		static QString _configPath( void )
+		{
+			return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
+		}
+	#else
+		#include <kstandarddirs.h>
+		static QString _configPath( void )
+		{
+			KStandardDirs k ;
+			return k.localxdgconfdir() ;
+		}
+	#endif
 #else
-        static QString _configPath( void )
-        {
-                  return QDir::homePath() + "/.config" ;
-        }
+	static QString _configPath( void )
+	{
+		  return QDir::homePath() + "/.config" ;
+	}
 #endif
 
 configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
@@ -118,7 +118,7 @@ void configurationoptionsdialog::setProfile( const QString& profile )
 		_profile = profile ;
 	}
 
-        _settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
+	_settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
 }
 
 bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
@@ -165,7 +165,7 @@ void configurationoptionsdialog::saveStorageSystem( const QString& system )
 
 QString configurationoptionsdialog::logFile()
 {
-        return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
+	return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME ).arg( PROGRAM_NAME ) ;
 }
 
 LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()

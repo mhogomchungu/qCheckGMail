@@ -21,7 +21,6 @@
 #include "walletmanager.h"
 #include "ui_walletmanager.h"
 
-#include "../lxqt_wallet/frontend/lxqt_wallet.h"
 #include "../lxqt_wallet/frontend/task.h"
 
 namespace Task = LxQt::Wallet::Task ;
@@ -129,74 +128,71 @@ void walletmanager::addEntry( const accounts& acc )
 	m_table->setItem( row,2,item ) ;
 }
 
+void walletmanager::readAccountInfo()
+{
+	using wallet = QVector<LxQt::Wallet::walletKeyValues> ;
+	auto entries = Task::await<wallet>( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
+
+	m_accounts.clear() ;
+
+	auto _getAccEntry = [&]( const QString& acc ){
+		for( const auto& it : entries ){
+			if( it.getKey() == acc ){
+				return it.getValue() ;
+			}
+		}
+		static QByteArray shouldNotGetHere ;
+		return shouldNotGetHere ;
+	} ;
+
+	QString labels_id  = LABEL_IDENTIFIER ;
+	QString display_id = DISPLAY_NAME_IDENTIFIER ;
+
+	for( const auto& it : entries ){
+
+		const QString& accName = it.getKey() ;
+		bool r = accName.endsWith( labels_id ) || accName.endsWith( display_id ) ;
+
+		if( r == false ){
+
+			const QByteArray& passWord    = _getAccEntry( accName ) ;
+			const QByteArray& labels      = _getAccEntry( accName + labels_id ) ;
+			const QByteArray& displayName = _getAccEntry( accName + display_id ) ;
+
+			m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
+		}
+	}
+}
+
 void walletmanager::walletIsOpen( bool walletOpened )
 {
-	auto _task = [&](){
-
-		QVector<LxQt::Wallet::walletKeyValues> entries = m_wallet->readAllKeyValues() ;
-
-		m_accounts.clear() ;
-
-		auto _getAccEntry = [&]( const QString& acc ){
-			for( const auto& it : entries ){
-				if( it.getKey() == acc ){
-					return it.getValue() ;
-				}
-			}
-			static QByteArray shouldNotGetHere ;
-			return shouldNotGetHere ;
-		} ;
-
-		QString labels_id  = LABEL_IDENTIFIER ;
-		QString display_id = DISPLAY_NAME_IDENTIFIER ;
-
-		for( const auto& it : entries ){
-
-			const QString& accName = it.getKey() ;
-			bool r = accName.endsWith( labels_id ) || accName.endsWith( display_id ) ;
-
-			if( r == false ){
-
-				const QByteArray& passWord    = _getAccEntry( accName ) ;
-				const QByteArray& labels      = _getAccEntry( accName + labels_id ) ;
-				const QByteArray& displayName = _getAccEntry( accName + display_id ) ;
-
-				m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
-			}
-		}
-	} ;
-
-	auto _getAccInfo = [&](){
-
-		emit getAccountsInfo( m_accounts ) ;
-		this->deleteLater() ;
-	} ;
-
-	auto _showAccInfo = [&](){
-
-		for( const auto& it : m_accounts ){
-
-			this->addEntry( it ) ;
-		}
-
-		this->selectLastRow() ;
-		this->enableAll() ;
-	} ;
-
 	if( walletOpened ){
+
 		switch( m_action ){
+
 		case walletmanager::showAccountInfo :
 
 			this->buildGUI() ;
 			this->disableAll() ;
 			this->show() ;
 
-			Task::run( _task ).then( _showAccInfo ) ;
+			this->readAccountInfo() ;
+
+			for( const auto& it : m_accounts ){
+
+				this->addEntry( it ) ;
+			}
+
+			this->selectLastRow() ;
+			this->enableAll() ;
 
 			break ;
 		case walletmanager::getAccountInfo :
 
-			Task::run( _task ).then( _getAccInfo ) ;
+			this->readAccountInfo() ;
+
+			emit getAccountsInfo( m_accounts ) ;
+			this->deleteLater() ;
 
 			break ;
 		default:
@@ -278,7 +274,7 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 	m_accLabels      = accLabels ;
 	m_accDisplayName = accDisplayName ;
 
-	auto _a = [&](){
+	Task::run( [ this ](){
 
 		QString labels_id  = m_accName + LABEL_IDENTIFIER ;
 		QString display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
@@ -286,9 +282,8 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 		m_wallet->addKey( m_accName,m_accPassWord.toLatin1() ) ;
 		m_wallet->addKey( labels_id,m_accLabels.toLatin1() ) ;
 		m_wallet->addKey( display_id,m_accDisplayName.toLatin1() ) ;
-	} ;
 
-	auto _b = [&](){
+	} ).then( [ this ](){
 
 		accounts acc( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ;
 
@@ -298,9 +293,7 @@ void walletmanager::addAccount( QString accName,QString accPassword,
 
 		this->selectLastRow() ;
 		this->enableAll() ;
-	} ;
-
-	Task::run( _a ).then( _b ) ;
+	} ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -344,7 +337,7 @@ void walletmanager::deleteAccount()
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-			auto _a = [&](){
+			Task::run( [ this ](){
 
 				QString labels_id  = m_accName + LABEL_IDENTIFIER ;
 				QString display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
@@ -352,16 +345,14 @@ void walletmanager::deleteAccount()
 				m_wallet->deleteKey( m_accName ) ;
 				m_wallet->deleteKey( labels_id ) ;
 				m_wallet->deleteKey( display_id ) ;
-			} ;
 
-			auto _b = [&](){
+			} ).then( [ this ](){
 
 				m_accounts.remove( m_row ) ;
 				m_table->removeRow( m_row ) ;
 				this->enableAll() ;
-			} ;
+			} ) ;
 
-			Task::run( _a ).then( _b ) ;
 		}else{
 			this->enableAll() ;
 		}
@@ -407,7 +398,7 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 	m_accLabels      = accLabels ;
 	m_accDisplayName = accDisplayName ;
 
-	auto _a = [&](){
+	Task::run( [ this ](){
 
 		QString labels_id  = m_accName + LABEL_IDENTIFIER ;
 		QString display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
@@ -419,9 +410,8 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 		m_wallet->addKey( m_accName,m_accPassWord.toLatin1() ) ;
 		m_wallet->addKey( labels_id,m_accLabels.toLatin1() ) ;
 		m_wallet->addKey( display_id,m_accDisplayName.toLatin1() ) ;
-	} ;
 
-	auto _b = [&](){
+	} ).then( [ this ](){
 
 		accounts acc( m_accName,m_accPassWord,m_accDisplayName,m_accLabels ) ;
 
@@ -432,9 +422,7 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 		m_table->item( m_row,2 )->setText( m_accLabels ) ;
 
 		this->enableAll() ;
-	} ;
-
-	Task::run( _a ).then( _b ) ;
+	} ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )
