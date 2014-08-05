@@ -21,7 +21,7 @@
 #include "addaccount.h"
 #include "ui_addaccount.h"
 
-addaccount::addaccount( QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
+addaccount::addaccount( QWidget * parent ) : QDialog( parent ),m_ui( new Ui::addaccount )
 {
 	m_ui->setupUi( this ) ;
 	this->setFixedSize( this->size() ) ;

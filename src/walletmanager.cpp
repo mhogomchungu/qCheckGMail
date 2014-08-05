@@ -25,6 +25,8 @@
 
 namespace Task = LxQt::Wallet::Task ;
 
+#include <utility>
+
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
 
@@ -131,11 +133,11 @@ void walletmanager::addEntry( const accounts& acc )
 void walletmanager::readAccountInfo()
 {
 	using wallet = QVector<LxQt::Wallet::walletKeyValues> ;
-	auto entries = Task::await<wallet>( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
 
 	m_accounts.clear() ;
 
-	auto _getAccEntry = [&]( const QString& acc ){
+	auto _getAccEntry = []( const QString& acc,const wallet& entries ){
+
 		for( const auto& it : entries ){
 			if( it.getKey() == acc ){
 				return it.getValue() ;
@@ -148,6 +150,8 @@ void walletmanager::readAccountInfo()
 	QString labels_id  = LABEL_IDENTIFIER ;
 	QString display_id = DISPLAY_NAME_IDENTIFIER ;
 
+	auto entries = Task::await<wallet>( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
+
 	for( const auto& it : entries ){
 
 		const QString& accName = it.getKey() ;
@@ -155,9 +159,9 @@ void walletmanager::readAccountInfo()
 
 		if( r == false ){
 
-			const QByteArray& passWord    = _getAccEntry( accName ) ;
-			const QByteArray& labels      = _getAccEntry( accName + labels_id ) ;
-			const QByteArray& displayName = _getAccEntry( accName + display_id ) ;
+			const auto& passWord    = _getAccEntry( accName,entries ) ;
+			const auto& labels      = _getAccEntry( accName + labels_id,entries ) ;
+			const auto& displayName = _getAccEntry( accName + display_id,entries ) ;
 
 			m_accounts.append( accounts( accName,passWord,displayName,labels ) ) ;
 		}
@@ -259,7 +263,7 @@ void walletmanager::HideUI()
 void walletmanager::pushButtonAdd()
 {
 	this->disableAll() ;
-	addaccount * ac = new addaccount( this ) ;
+	auto ac = new addaccount( this ) ;
 	connect( ac,SIGNAL( addAccount( QString,QString,QString,QString ) ),
 		 this,SLOT( addAccount( QString,QString,QString,QString ) ) ) ;
 	connect( ac,SIGNAL( cancelSignal() ),this,SLOT( enableAll() ) ) ;
@@ -269,10 +273,10 @@ void walletmanager::pushButtonAdd()
 void walletmanager::addAccount( QString accName,QString accPassword,
 				QString accDisplayName,QString accLabels )
 {
-	m_accName        = accName ;
-	m_accPassWord    = accPassword ;
-	m_accLabels      = accLabels ;
-	m_accDisplayName = accDisplayName ;
+	m_accName        = std::move( accName ) ;
+	m_accPassWord    = std::move( accPassword ) ;
+	m_accLabels      = std::move( accLabels ) ;
+	m_accDisplayName = std::move( accDisplayName ) ;
 
 	Task::run( [ this ](){
 
@@ -302,7 +306,7 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 
 	QMenu m ;
 
-	QAction * ac = new QAction( &m ) ;
+	auto ac = new QAction( &m ) ;
 	ac->setText( tr( "delete entry" ) ) ;
 	connect( ac,SIGNAL( triggered() ),this,SLOT( deleteAccount() ) ) ;
 
@@ -319,7 +323,7 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 
 void walletmanager::deleteAccount()
 {
-	QTableWidgetItem * item = m_table->currentItem() ;
+	auto item = m_table->currentItem() ;
 	m_row = item->row() ;
 	m_accName = m_table->item( m_row,0 )->text() ;
 
@@ -365,7 +369,8 @@ void walletmanager::editAccount()
 {
 	int row = m_table->currentRow() ;
 
-	auto _getPassWord = [&]( const QString& accName ){
+	auto _getPassWord = [ this ]( const QString& accName ){
+
 		for( const auto& it : m_accounts ){
 			if( it.accountName() == accName ){
 				return it.passWord() ;
@@ -382,7 +387,7 @@ void walletmanager::editAccount()
 
 	this->disableAll() ;
 
-	addaccount * ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
+	auto ac = new addaccount( row,accName,accPassword,accDisplayName,accLabels,this ) ;
 	connect( ac,SIGNAL( editAccount( int,QString,QString,QString,QString ) ),
 		 this,SLOT( editAccount( int,QString,QString,QString,QString ) ) ) ;
 	connect( ac,SIGNAL( cancelSignal() ),this,SLOT( enableAll() ) ) ;
@@ -392,11 +397,11 @@ void walletmanager::editAccount()
 void walletmanager::editAccount( int row,QString accName,QString accPassword,
 				  QString accDisplayName,QString accLabels )
 {
-	m_row            = row ;
-	m_accName        = accName ;
-	m_accPassWord    = accPassword ;
-	m_accLabels      = accLabels ;
-	m_accDisplayName = accDisplayName ;
+	m_row            = std::move( row ) ;
+	m_accName        = std::move( accName ) ;
+	m_accPassWord    = std::move( accPassword ) ;
+	m_accLabels      = std::move( accLabels ) ;
+	m_accDisplayName = std::move( accDisplayName ) ;
 
 	Task::run( [ this ](){
 
