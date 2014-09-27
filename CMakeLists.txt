@@ -94,7 +94,12 @@ endif()
 if( LXQTSUPPORT )
 	INCLUDE(FindPkgConfig)
 
-	pkg_check_modules( LXQT lxqt )
+	if(QT5)
+		pkg_check_modules( LXQT lxqt-qt5 )
+	else()
+		pkg_check_modules( LXQT lxqt )
+	endif()
+
 	if( LXQT_FOUND )
 
 		add_definitions( -I${LXQT_INCLUDE_DIR})
