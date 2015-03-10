@@ -44,10 +44,10 @@ int main( int argc,char * argv[] )
 	KAboutData aboutData( 	"qCheckGMail",
 				0,
 				ki18n( "qCheckGMail" ),
-				"1.2.6",
+				"1.2.7",
 				ki18n( "a qt based gmail checker" ),
 				KAboutData::License_GPL_V2,
-				ki18n( "(c)2013,ink Francis\nemail:mhogomchungu@gmail.com" ),
+				ki18n( "(c)2013-2015,ink Francis\nemail:mhogomchungu@gmail.com" ),
 				ki18n( "mhogomchungu@gmail.com" ),
 				"(c)2013,ink Francis\nemail:mhogomchungu@gmail.com",
 				"https://github.com/mhogomchungu/qCheckGMail/issues" );
@@ -127,7 +127,7 @@ int main( int argc,char * argv[] )
 	QApplication a( argc,argv ) ;
 	QStringList l = QCoreApplication::arguments() ;
 
-	auto _setProfile = [&](){
+	auto _setProfile = [&]()->QString{
 		QString arg( "-p" ) ;
 		int j = l.size() ;
 		for( int i = 0 ; i < j ; i++ ){
