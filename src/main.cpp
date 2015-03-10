@@ -67,7 +67,7 @@ int main( int argc,char * argv[] )
 
 	auto _startApp = [&](){
 
-		auto _setProfile = [&](){
+		auto _setProfile = [&]()->QString{
 			QString arg( "-p" ) ;
 			int j = l.size() ;
 			for( int i = 0 ; i < j ; i++ ){

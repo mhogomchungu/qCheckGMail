@@ -136,7 +136,7 @@ void walletmanager::readAccountInfo()
 
 	m_accounts.clear() ;
 
-	auto _getAccEntry = []( const QString& acc,const wallet& entries ){
+	auto _getAccEntry = []( const QString& acc,const wallet& entries )->const QByteArray&{
 
 		for( const auto& it : entries ){
 			if( it.getKey() == acc ){
@@ -369,7 +369,7 @@ void walletmanager::editAccount()
 {
 	int row = m_table->currentRow() ;
 
-	auto _getPassWord = [ this ]( const QString& accName ){
+	auto _getPassWord = [ this ]( const QString& accName )->const QString&{
 
 		for( const auto& it : m_accounts ){
 			if( it.accountName() == accName ){
