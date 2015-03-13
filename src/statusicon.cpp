@@ -192,11 +192,7 @@ void statusicon::addQuitAction()
 
 #elif USE_LXQT_PLUGIN
 
-#include <phonon/mediaobject.h>
-#include <phonon/audiooutput.h>
-
 statusicon::statusicon()
-
 {
 	m_toolButton.setPopupMode( QToolButton::InstantPopup ) ;
 }
@@ -268,12 +264,6 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
-	Phonon::MediaObject * media = new Phonon::MediaObject() ;
-	Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
-	Phonon::createPath( media,output ) ;
-	media->setCurrentSource( QUrl::fromLocalFile( AUDIO_NOTIFY_FILE ) ) ;
-	media->play() ;
-	connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
@@ -308,9 +298,6 @@ QObject * statusicon::statusQObject()
 }
 
 #else
-
-#include <phonon/mediaobject.h>
-#include <phonon/audiooutput.h>
 
 statusicon::statusicon()
 {
@@ -391,12 +378,6 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
-	Phonon::MediaObject * media = new Phonon::MediaObject() ;
-	Phonon::AudioOutput * output = new Phonon::AudioOutput( Phonon::MusicCategory,media ) ;
-	Phonon::createPath( media,output ) ;
-	media->setCurrentSource( QUrl::fromLocalFile( AUDIO_NOTIFY_FILE ) ) ;
-	media->play() ;
-	connect( media,SIGNAL( finished() ),media,SLOT( deleteLater() ) ) ;
 }
 
 bool statusicon::enableDebug()
