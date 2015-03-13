@@ -32,7 +32,6 @@
 #include <functional>
 
 #include "tray_application_type.h"
-#include "audio_file_path.h"
 #include "accounts.h"
 #include "configurationoptionsdialog.h"
 
