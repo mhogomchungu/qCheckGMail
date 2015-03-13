@@ -60,3 +60,7 @@ File a bug report with your distribution and ask for developments files to be in
 
 Solution1:
 Find the location of the library that could not be found and add its full path to CMakeLists.txt file in the "TARGET_LINK_LIBRARIES" line
+
+To build WITHOUT KDE support on Debian Jessie, do:
+apt-get install cmake build-essential libsecret-1-dev libgcrypt20-dev kdelibs5-dev phonon-backend-vlc
+
