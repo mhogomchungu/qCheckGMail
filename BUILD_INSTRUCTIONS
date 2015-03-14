@@ -46,7 +46,7 @@ sudo make install
 
 To build a Qt5 port,add "-DQT5=true" to the cmake argument list
 
-A none KDE build will require presence of phonon library and its development files
+A none KDE build will require presence of mplayer in order to use audio notification
 
 Possible build issues:
 Problem:
@@ -60,3 +60,6 @@ File a bug report with your distribution and ask for developments files to be in
 
 Solution1:
 Find the location of the library that could not be found and add its full path to CMakeLists.txt file in the "TARGET_LINK_LIBRARIES" line
+
+Doing a non KDE build on Debian Jessie, you need to:
+apt-get install build-essential cmake libgcrypt20-dev libsecret-1-dev mplayer

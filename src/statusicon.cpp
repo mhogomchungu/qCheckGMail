@@ -29,13 +29,10 @@ namespace Task = LxQt::Wallet::Task ;
 static void _playAudioFile()
 {
 	QProcess exe ;
-
 	QString program = "mplayer";
 	QStringList arguments;
 	arguments << "-slave" << AUDIO_NOTIFY_FILE;
-	QProcess *myProcess = new QProcess;
-	myProcess->start(program, arguments);
-
+	exe.start(program, arguments);
 	exe.waitForFinished() ;
 }
 
