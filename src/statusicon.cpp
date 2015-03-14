@@ -19,7 +19,23 @@
 
 #include "statusicon.h"
 
+#include "../lxqt_wallet/frontend/task.h"
+
+namespace Task = LxQt::Wallet::Task ;
+
 #include <QDebug>
+#include <QProcess>
+
+static void _playAudioFile()
+{
+	QProcess exe ;
+
+	/*
+	 * Add Qprocess code here that plays an audio file.
+	 *
+	 */
+	exe.waitForFinished() ;
+}
 
 static QPixmap _icon( const QString& name,int count )
 {
@@ -264,6 +280,7 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
+	Task::exec( [](){ _playAudioFile() ; } ) ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
@@ -378,6 +395,7 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
+	Task::exec( [](){ _playAudioFile() ; } ) ;
 }
 
 bool statusicon::enableDebug()
