@@ -30,10 +30,12 @@ static void _playAudioFile()
 {
 	QProcess exe ;
 
-	/*
-	 * Add Qprocess code here that plays an audio file.
-	 *
-	 */
+	QString program = "mplayer";
+	QStringList arguments;
+	arguments << "-slave" << AUDIO_NOTIFY_FILE;
+	QProcess *myProcess = new QProcess;
+	myProcess->start(program, arguments);
+
 	exe.waitForFinished() ;
 }
 
