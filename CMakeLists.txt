@@ -37,6 +37,11 @@ if( NOT "${DATA_INSTALL_DIR}" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" )
 endif()
 
+
+file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
+"\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\""
+)
+
 #install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 #install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}/pixmaps" )
@@ -132,7 +137,7 @@ if( LXQTSUPPORT )
 		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
 		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/lxqt-panel/ )
-
+		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/lxqt/lxqt-panel/
 			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 		)
@@ -172,7 +177,7 @@ elseif( NOKDESUPPORT )
 	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-
+	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
 	install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 	)
