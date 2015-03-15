@@ -62,4 +62,4 @@ Solution1:
 Find the location of the library that could not be found and add its full path to CMakeLists.txt file in the "TARGET_LINK_LIBRARIES" line
 
 Doing a non KDE build on Debian Jessie, you need to:
-apt-get install build-essential cmake libgcrypt20-dev libsecret-1-dev mplayer
+apt-get install build-essential cmake libgcrypt20-dev libsecret-1-dev mplayer qt4-dev
