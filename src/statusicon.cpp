@@ -23,8 +23,9 @@
 
 namespace Task = LxQt::Wallet::Task ;
 
-#include <QDebug>
 #include <QProcess>
+
+#if !USE_KDE_STATUS_NOTIFIER
 
 static void _playAudioFile()
 {
@@ -35,6 +36,8 @@ static void _playAudioFile()
 	exe.start(program, arguments);
 	exe.waitForFinished() ;
 }
+
+#endif
 
 static QPixmap _icon( const QString& name,int count )
 {
