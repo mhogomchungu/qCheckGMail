@@ -220,6 +220,19 @@ bool configurationoptionsdialog::audioNotify()
 	}
 }
 
+QString configurationoptionsdialog::audioPlayer()
+{
+	QString opt = _getOption( "audioPlayer" ) ;
+
+	if( _settings.contains( opt ) ){
+		return _settings.value( opt ).toString() ;
+	}else{
+		QString e = "mplayer" ;
+		_settings.setValue( opt,e ) ;
+		return e ;
+	}
+}
+
 QString configurationoptionsdialog::noEmailIcon()
 {
 	QString opt = _getOption( "noEmailIconColor" ) ;

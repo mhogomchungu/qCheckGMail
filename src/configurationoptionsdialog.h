@@ -56,6 +56,7 @@ public:
 	static QString logFile( void ) ;
 	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
+	static QString audioPlayer( void ) ;
 	static QString noEmailIcon( void ) ;
 	static QString newEmailIcon( void ) ;
 	static QString errorIcon( void ) ;
