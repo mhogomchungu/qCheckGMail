@@ -33,8 +33,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 
 add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
 
-if( NOT "${DATA_INSTALL_DIR}" )
-	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" )
+if( "${DATA_INSTALL_DIR}" STREQUAL "" )
+	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
 endif()
 
 
@@ -69,6 +69,7 @@ install( FILES lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qChe
 install( FILES lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
+install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/kde4/apps/qCheckGMail/" )
 #install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
