@@ -68,7 +68,7 @@ install( FILES lxqt_wallet/translations.qm/dutch_NL.qm    DESTINATION share/qChe
 install( FILES lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 install( FILES lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 
-install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/" )
+install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
 #install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
