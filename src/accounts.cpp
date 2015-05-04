@@ -26,9 +26,9 @@ accounts::accounts( const QString& accountName,const QString& password,const QSt
 {
 	QString baseLabel ;
 
-	int index = accountName.indexOf( QString( "@" ) ) ;
+	int index = accountName.indexOf( "@" ) ;
 	if( index == -1 ){
-		baseLabel = QString( "https://mail.google.com/mail/feed/atom/" ) ;
+		baseLabel = "https://mail.google.com/mail/feed/atom/" ;
 	}else{
 		index++ ;
 		QString domain = QString( accountName.mid( index ) ) ;

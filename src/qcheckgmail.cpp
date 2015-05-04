@@ -18,6 +18,7 @@
  */
 
 #include "qcheckgmail.h"
+#include <string.h>
 
 template< typename T >
 class QObject_raii
@@ -66,7 +67,7 @@ void qCheckGMail::showPausedIcon( bool paused )
 	if( paused ){
 		statusicon::setOverlayIcon( m_newEmailIcon ) ;
 	}else{
-		statusicon::setOverlayIcon( QString( "" ) ) ;
+		statusicon::setOverlayIcon( QString() ) ;
 	}
 }
 
@@ -113,7 +114,7 @@ void qCheckGMail::run()
 			if( m_accounts.size() > 0 ){
 				QString url = m_accounts.first().defaultLabelUrl() ;
 
-				int index = url.size() - QString( "/feed/atom/" ).size() ;
+				int index = url.size() - strlen( "/feed/atom/" ) ;
 				url.truncate( index ) ;
 
 				QDesktopServices::openUrl( QUrl( url ) ) ;
@@ -241,9 +242,9 @@ QString qCheckGMail::displayName()
 		}
 	}else{
 		if( displayName.isEmpty() ){
-			return QString( "%1/%2" ).arg( accountName ).arg( label ) ;
+			return QString( "%1/%2" ).arg( accountName,label ) ;
 		}else{
-			return QString( "%1/%2" ).arg( displayName ).arg( label ) ;
+			return QString( "%1/%2" ).arg( displayName,label ) ;
 		}
 	}
 }
@@ -297,7 +298,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 		}else{
 			m_mailCount += mailCount_1 ;
 			QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
-			m_accountsStatus += r.arg( this->displayName() ).arg( mailCount ) ;
+			m_accountsStatus += r.arg( this->displayName(),mailCount ) ;
 		}
 
 		this->checkAccountLastUpdate( msg,mailCount_1 ) ;
@@ -737,8 +738,7 @@ void qCheckGMail::setLocalLanguage()
 
 	QByteArray r = lang.toLatin1() ;
 
-	QByteArray e( "english_US" ) ;
-	if( e == r ){
+	if( r == "english_US" ){
 		/*
 		 *english_US language,its the default and hence dont load anything
 		 */
@@ -766,8 +766,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 
 	QByteArray r = lang.toLatin1() ;
 
-	QByteArray e( "english_US" ) ;
-	if( e == r ){
+	if( r == "english_US" ){
 		/*
 		 *english_US language,its the default and hence dont load anything
 		 */
@@ -821,23 +820,17 @@ int qCheckGMail::instanceAlreadyRunning()
 	QString lang = configurationoptionsdialog::localLanguage() ;
 	QByteArray r = lang.toLatin1() ;
 
-	QByteArray e( "english_US" ) ;
-	if( e == r ){
+	if( r == "english_US" ){
 		/*
 		 *english_US language,its the default and hence dont load anything
 		 */
 		qDebug() << tr( "another instance is already running,exiting this one" ) ;
 	}else{
-		int argc = 1 ;
+		const char * x[ 2 ] = { "qCheckGMail",nullptr } ;
 
-		const char * x[ 2 ] ;
+		int e = 1 ;
 
-		*( x + 0 ) = "qCheckGMail" ;
-		*( x + 1 ) =  nullptr ;
-
-		auto z = const_cast< char ** >( x ) ;
-
-		QCoreApplication qapp( argc,z ) ;
+		QCoreApplication qapp( e,const_cast< char ** >( x ) ) ;
 
 		QString langPath = configurationoptionsdialog::localLanguagePath() ;
 		QTranslator translator ;
@@ -854,23 +847,17 @@ int qCheckGMail::autoStartDisabled()
 	QString lang = configurationoptionsdialog::localLanguage() ;
 	QByteArray r = lang.toLatin1() ;
 
-	QByteArray e( "english_US" ) ;
-	if( e == r ){
+	if( r == "english_US" ){
 		/*
 		 *english_US language,its the default and hence dont load anything
 		 */
 		qDebug() << tr( "autostart disabled,exiting this one" ) ;
 	}else{
-		int argc = 1 ;
+		const char * x[ 2 ] = { "qCheckGMail",nullptr } ;
 
-		const char * x[ 2 ] ;
+		int e = 1 ;
 
-		*( x + 0 ) = "qCheckGMail" ;
-		*( x + 1 ) =  nullptr ;
-
-		auto z = const_cast< char ** >( x ) ;
-
-		QCoreApplication qapp( argc,z ) ;
+		QCoreApplication qapp( e,const_cast< char ** >( x ) ) ;
 
 		QString langPath = configurationoptionsdialog::localLanguagePath() ;
 		QTranslator translator ;
