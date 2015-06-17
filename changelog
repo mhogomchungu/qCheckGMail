@@ -53,4 +53,6 @@ version 1.2.6
 - add an argument option to allow for more than once instance to be started even with KDE build
 - add profile support.This allows multiple instances of qCheckGMail to be started with each instance reporting only a subset of total configured accounts.
   read "USE INSTRUCTIONS" for more information on how to set this up.
-  
+
+version 1.2.7
+- enable audio notification on non kde build using mplayer.
