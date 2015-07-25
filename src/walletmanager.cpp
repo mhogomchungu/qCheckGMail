@@ -108,26 +108,23 @@ void walletmanager::walletpassWordChanged( bool passwordChanged )
 
 void walletmanager::addEntry( const accounts& acc )
 {
-	QTableWidgetItem * item ;
-
 	int row = m_table->rowCount() ;
 
 	m_table->insertRow( row ) ;
 
-	item = new QTableWidgetItem() ;
-	item->setText( acc.accountName() ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,0,item ) ;
+	auto _add_item = []( const QString& e ){
 
-	item = new QTableWidgetItem() ;
-	item->setText( acc.displayName() ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,1,item ) ;
+		auto item = new QTableWidgetItem() ;
 
-	item = new QTableWidgetItem() ;
-	item->setText( acc.labels() ) ;
-	item->setTextAlignment( Qt::AlignCenter ) ;
-	m_table->setItem( row,2,item ) ;
+		item->setText( e ) ;
+		item->setTextAlignment( Qt::AlignCenter ) ;
+
+		return item ;
+	} ;
+
+	m_table->setItem( row,0,_add_item( acc.accountName() ) ) ;
+	m_table->setItem( row,1,_add_item( acc.displayName() ) ) ;
+	m_table->setItem( row,2,_add_item( acc.labels() ) ) ;
 }
 
 void walletmanager::readAccountInfo()
@@ -139,10 +136,13 @@ void walletmanager::readAccountInfo()
 	auto _getAccEntry = []( const QString& acc,const wallet& entries )->const QByteArray&{
 
 		for( const auto& it : entries ){
+
 			if( it.getKey() == acc ){
+
 				return it.getValue() ;
 			}
 		}
+
 		static QByteArray shouldNotGetHere ;
 		return shouldNotGetHere ;
 	} ;
@@ -219,10 +219,15 @@ void walletmanager::closeEvent( QCloseEvent * e )
 bool walletmanager::eventFilter( QObject * watched,QEvent * event )
 {
 	if( watched == this ){
+
 		if( event->type() == QEvent::KeyPress ){
+
 			QKeyEvent * keyEvent = static_cast< QKeyEvent* >( event ) ;
+
 			if( keyEvent->key() == Qt::Key_Escape ){
+
 				this->HideUI() ;
+
 				return true ;
 			}
 		}
@@ -372,10 +377,13 @@ void walletmanager::editAccount()
 	auto _getPassWord = [ this ]( const QString& accName )->const QString&{
 
 		for( const auto& it : m_accounts ){
+
 			if( it.accountName() == accName ){
+
 				return it.passWord() ;
 			}
 		}
+
 		static QString shouldNotGetHere ;
 		return shouldNotGetHere ;
 	} ;
@@ -433,12 +441,16 @@ void walletmanager::editAccount( int row,QString accName,QString accPassword,
 void walletmanager::selectRow( int row,bool highlight )
 {
 	if( row >= 0 ){
+
 		int j = m_table->columnCount() ;
+
 		for( int i = 0 ; i < j ; i++ ){
+
 			m_table->item( row,i )->setSelected( highlight ) ;
 		}
 
 		if( highlight && j > 0 ){
+
 			m_table->setCurrentCell( row,j - 1 ) ;
 		}
 	}
@@ -451,16 +463,18 @@ void walletmanager::selectLastRow()
 
 void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetItem * previous )
 {
-	if( current && previous ){
-		if( current->row() == previous->row() ){
-			this->selectRow( current->row(),true ) ;
-			return ;
-		}
-	}
-	if( current ){
+	if( current && previous && current->row() == previous->row() ){
+
 		this->selectRow( current->row(),true ) ;
-	}
-	if( previous ){
-		this->selectRow( previous->row(),false ) ;
+	}else{
+		if( current ){
+
+			this->selectRow( current->row(),true ) ;
+		}
+
+		if( previous ){
+
+			this->selectRow( previous->row(),false ) ;
+		}
 	}
 }
