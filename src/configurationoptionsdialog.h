@@ -20,6 +20,7 @@
 #ifndef CONFIGURATIONOPTIONSDIALOG_H
 #define CONFIGURATIONOPTIONSDIALOG_H
 
+#include <QObject>
 #include <QString>
 #include <QFile>
 #include <QDir>

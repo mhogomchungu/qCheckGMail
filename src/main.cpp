@@ -19,7 +19,64 @@
 
 #include "tray_application_type.h"
 
+#include <QDebug>
+#include "qcheckgmail.h"
+
 #if USE_KDE_STATUS_NOTIFIER
+
+#if KF5
+#include <QStringList>
+#include <QApplication>
+#include <kaboutdata.h>
+#include <iostream>
+
+int main( int argc,char * argv[] )
+{
+	KAboutData aboutData( 	"qCheckGMail",
+				"qCheckGMail",
+				"1.2.7",
+				"a qt based gmail checker",
+				KAboutLicense::GPL,
+				"(c)2013-2015,ink Francis\nemail:mhogomchungu@gmail.com" ) ;
+
+	QApplication a( argc,argv ) ;
+
+	QStringList l = QCoreApplication::arguments() ;
+
+	auto _startApp = [&](){
+
+		auto _setProfile = [&]()->QString{
+			QString arg( "-p" ) ;
+			int j = l.size() ;
+			for( int i = 0 ; i < j ; i++ ){
+				if( l.at( i ) == arg ){
+					if( i + 1 < j ){
+						return l.at( i + 1 ) ;
+					}else{
+						return QString() ;
+					}
+				}
+			}
+
+			return QString() ;
+		} ;
+
+		qCheckGMail w( _setProfile() ) ;
+		w.start() ;
+		return a.exec() ;
+	} ;
+
+	if( l.contains( "-a" ) ){
+		if( configurationoptionsdialog::autoStartEnabled() ){
+			return _startApp() ;
+		}else{
+			return qCheckGMail::autoStartDisabled() ;
+		}
+	}else{
+		return _startApp() ;
+	}
+}
+#endif //end if KF5
 
 #if KDE4
 
@@ -29,15 +86,6 @@
 
 #include <klocalizedstring.h>
 #include <kuniqueapplication.h>
-
-#endif
-
-#include <QDebug>
-#include "qcheckgmail.h"
-
-#endif
-
-#if KDE4
 
 int main( int argc,char * argv[] )
 {
@@ -110,6 +158,9 @@ int main( int argc,char * argv[] )
 		return _startApp() ;
 	}
 }
+
+#endif //end if KDE4
+
 #elif USE_LXQT_PLUGIN
 /*
  * we dont get here
@@ -121,6 +172,7 @@ int main( void )
 #else
 #include <QApplication>
 #include "qcheckgmail.h"
+#include <QStringList>
 
 int main( int argc,char * argv[] )
 {

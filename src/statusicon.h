@@ -41,7 +41,6 @@
 #include <QMenu>
 #include <kstatusnotifieritem.h>
 #include <knotification.h>
-#include <ktoolinvocation.h>
 #else
 #include <knotification.h>
 #include <kstatusnotifieritem.h>

@@ -23,7 +23,7 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 add_definitions( -I"${PROJECT_BINARY_DIR}/lxqt_wallet/frontend" )
 
-if(KDE5)
+if(KF5)
 set( QT5 "true" )
 endif()
 
@@ -79,11 +79,6 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 if(QT5)
         find_package(Qt5Widgets REQUIRED)
         find_package(Qt5Core REQUIRED)
-        if(KDE5)
-
-        else()
-                set( NOKDESUPPORT "true" )
-        endif()
 else()
 	find_package(Qt4 REQUIRED)
 	SET(QT_USE_QTCORE TRUE)
@@ -193,19 +188,28 @@ elseif( NOKDESUPPORT )
         file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
 else()
-	if(KDE5)
+	if(KF5)
+		find_package(Qt5Widgets REQUIRED)
+		find_package(Qt5Core REQUIRED)
+
                 find_package( KF5Config REQUIRED )
-                find_package(ECM REQUIRED NO_MODULE)
+                find_package( ECM REQUIRED NO_MODULE)
                 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-                include(KDEInstallDirs)
-                #include(KDECompilerSettings)
-                #include(KDECMakeSettings)
-                #include(FeatureSummary)
+		set( CMAKE_INCLUDE_CURRENT_DIR ON )
+		include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
 
-                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5" )
-                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5/KNotifications" )
-                add_definitions( -I"${CMAKE_INSTALL_PREFIX}/include/KF5/KService/" )
+		add_definitions( ${Qt5Widgets_DEFINITIONS} )
+
+		find_package(KF5Notifications)
+		find_package(KF5CoreAddons)
+		find_package(KF5I18n NO_MODULE)
+
+		#include(KDEInstallDirs)
+		#include(KDECMakeSettings)
+		#include(FeatureSummary)
+		#include(ECMInstallIcons)
+		#include(KDEFrameworkCompilerSettings)
 
                 file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 1\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
@@ -216,10 +220,7 @@ else()
                 add_executable( qCheckGMail src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
                 src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-                find_library( qqqq libKF5Notifications.so )
-                find_library( zzzz libKF5Notifications.so )
-
-                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network "${qqqq}" "${zzzz}" )
+                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
 	else()
                 find_package(KDE4 REQUIRED)
                 find_package(Qt4 REQUIRED)
