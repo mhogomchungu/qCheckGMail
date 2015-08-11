@@ -1,5 +1,5 @@
 /*
- * copyright: 2013
+ * copyright: 2013-2015
  * name : Francis Banyikwa
  * email: mhogomchungu@gmail.com
  *
@@ -71,7 +71,6 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	bool eventFilter ( QObject * watched,QEvent * event ) ;
 	Ui::changePassWordDialog * m_ui ;
-	lxqt_wallet_t m_wallet ;
 	QString m_walletName ;
 	QString m_applicationName ;
 	QString m_banner ;

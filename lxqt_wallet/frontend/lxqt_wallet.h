@@ -1,5 +1,5 @@
 /*
- * copyright: 2013
+ * copyright: 2013-2015
  * name : Francis Banyikwa
  * email: mhogomchungu@gmail.com
  *
@@ -187,6 +187,9 @@ public:
 	 * Calling this open() method without a password will generate a GUI prompt for a password
 	 */
 	virtual void open( const QString& walletName,const QString& applicationName = QString(),
+			   const QString& password = QString(),const QString& displayApplicationName = QString() ) = 0 ;
+
+	virtual bool await_open( const QString& walletName,const QString& applicationName = QString(),
 			   const QString& password = QString(),const QString& displayApplicationName = QString() ) = 0 ;
 
 	/*

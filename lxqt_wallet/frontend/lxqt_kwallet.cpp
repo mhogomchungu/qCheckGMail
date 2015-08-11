@@ -1,5 +1,5 @@
 /*
- * copyright: 2013
+ * copyright: 2013-2015
  * name : Francis Banyikwa
  * email: mhogomchungu@gmail.com
  *
@@ -29,10 +29,10 @@
  */
 
 #include "lxqt_kwallet.h"
+#include "task.h"
 
 LxQt::Wallet::kwallet::kwallet() : m_kwallet( 0 )
 {
-
 }
 
 LxQt::Wallet::kwallet::~kwallet()
@@ -50,19 +50,56 @@ void LxQt::Wallet::kwallet::setImage( const QString& image )
 
 bool LxQt::Wallet::kwallet::addKey( const QString& key,const QByteArray& value )
 {
-	m_kwallet->writePassword( key,value ) ;
-	return true ;
+	return m_kwallet->writePassword( key,value ) == 0 ;
+}
+
+bool LxQt::Wallet::kwallet::await_open( const QString& walletName,const QString& applicationName,
+					const QString& password,const QString& displayApplicationName )
+{
+	if( walletName == "default" ){
+		m_walletName = KWallet::Wallet::LocalWallet() ;
+	}else{
+		m_walletName = walletName ;
+	}
+	m_applicationName   = applicationName ;
+	m_password          = password ;
+
+	Q_UNUSED( displayApplicationName ) ;
+
+	#define _task LxQt::Wallet::Task::await<KWallet::Wallet*>
+
+	m_kwallet = _task( [ this ](){ return KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Synchronous ) ; } ) ;
+
+	if( m_kwallet != nullptr ){
+
+		if( m_applicationName.isEmpty() ){
+
+			m_kwallet->createFolder( m_kwallet->PasswordFolder() ) ;
+			m_kwallet->setFolder( m_kwallet->PasswordFolder() ) ;
+		}else{
+			m_kwallet->createFolder( m_applicationName ) ;
+			m_kwallet->setFolder( m_applicationName ) ;
+		}
+
+		return true ;
+	}else{
+		return false ;
+	}
 }
 
 void LxQt::Wallet::kwallet::open( const QString& walletName,const QString& applicationName,
 				  const QString& password,const QString& displayApplicationName )
 {
-	m_walletName        = walletName ;
+	if( walletName == "default" ){
+		m_walletName = KWallet::Wallet::LocalWallet() ;
+	}else{
+		m_walletName = walletName ;
+	}
 	m_applicationName   = applicationName ;
 	m_password          = password ;
 
 	Q_UNUSED( displayApplicationName ) ;
-	
+
 	m_kwallet = KWallet::Wallet::openWallet( m_walletName,0,KWallet::Wallet::Asynchronous ) ;
 
 	connect( m_kwallet,SIGNAL( walletOpened( bool ) ),this,SLOT( walletOpened( bool ) ) ) ;
@@ -71,7 +108,9 @@ void LxQt::Wallet::kwallet::open( const QString& walletName,const QString& appli
 void LxQt::Wallet::kwallet::walletOpened( bool opened )
 {
 	if( opened ){
+
 		if( m_applicationName.isEmpty() ){
+
 			m_kwallet->createFolder( m_kwallet->PasswordFolder() ) ;
 			m_kwallet->setFolder( m_kwallet->PasswordFolder() ) ;
 		}else{
@@ -99,9 +138,10 @@ QVector<LxQt::Wallet::walletKeyValues> LxQt::Wallet::kwallet::readAllKeyValues( 
 	int j = l.size() ;
 
 	for( int i = 0 ; i < j ; i++ ){
-		m_kwallet->readPassword( l.at( i ),value ) ;
-		LxQt::Wallet::walletKeyValues q( l.at( i ),value.toLatin1() ) ;
-		p.append( q ) ;
+
+		auto& e = l.at( i ) ;
+		m_kwallet->readPassword( e,value ) ;
+		p.append( LxQt::Wallet::walletKeyValues( e,value.toLatin1() ) ) ;
 	}
 	return p ;
 }
@@ -144,7 +184,7 @@ void LxQt::Wallet::kwallet::setInterfaceObject( QWidget * interfaceObject )
 
 QObject * LxQt::Wallet::kwallet::qObject( void )
 {
-	return static_cast< QObject * >( this ) ;
+	return this ;
 }
 
 QString LxQt::Wallet::kwallet::storagePath()
