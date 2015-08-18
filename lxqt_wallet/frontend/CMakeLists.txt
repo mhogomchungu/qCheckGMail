@@ -67,9 +67,10 @@ else()
 		find_package(Qt5Widgets REQUIRED)
 		find_package(Qt5Core REQUIRED)
 
-		find_package( KF5Wallet QUIET)
+		find_package(KF5Wallet QUIET)
+		find_package(KF5Notifications QUIET)
 
-		if(KF5Wallet_FOUND)
+		if(KF5Wallet_FOUND AND KF5Notifications_FOUND )
 			file(APPEND  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_KWALLET_SUPPORT 1\n")
 			SET(KDE_SUPPORT "true")
 			SET(KWALLET_SUPPORT "true")
