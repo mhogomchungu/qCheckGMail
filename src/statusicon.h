@@ -83,6 +83,7 @@ public:
 		NeedsAttention = 3
 	};
 	statusicon() ;
+	static bool KF5StatusIcon( void ) ;
 	virtual ~statusicon() ;
 	static void newEmailNotify( void ) ;
 	static bool enableDebug( void ) ;

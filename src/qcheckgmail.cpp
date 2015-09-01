@@ -275,6 +275,51 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	this->doneCheckingMail() ;
 }
 
+static QString _account_status( const QString& displayName,const QString& mailCount )
+{
+	QString r ;
+
+	if( statusicon::KF5StatusIcon() ){
+
+		/*
+		 * KF5 status icon does not seem to support html tags we have come to depend on
+		 * in KDE4 and hence we will have to be creative here on how to show info in KF5
+		 * as they appear in KDE4. More investigation needed.
+		 *
+		 * Alternative is to use Qt5 tooltip since it does support html tags we want.
+		 */
+		QString d_name = displayName ;
+
+		if( d_name.size() >= 32 ){
+
+			d_name.truncate( 29 ) ;
+			d_name += "..." ;
+		}else{
+			while( d_name.size() < 32 ){
+
+				d_name += " " ;
+			}			
+		}
+		
+		if( mailCount.toInt() > 0 ){
+
+			r = "<b>%1        %2</b><br>" ;
+		}else{
+			r = "%1        %2<br>" ;
+		}
+
+		return r.arg( d_name,mailCount ) ;
+	}else{
+		if( mailCount.toInt() > 0 ){
+			r = "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ;
+		}else{
+			r = "<tr valign=middle><td>%1</td><td width=50 align=right>%2</td></tr>" ;
+		}
+
+		return r.arg( displayName,mailCount ) ;
+	}
+}
+
 /*
  * This function goes through all accounts and give reports of all of their states
  */
@@ -285,20 +330,17 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 	}
 
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
-		QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>-1</td></tr>" ) ;
-		m_accountsStatus += r.arg( this->displayName() ) ;
+		m_accountsStatus = _account_status( this->displayName(),"-1" ) ;
 	}else{
 		QString mailCount = this->getAtomComponent( msg,"fullcount" ) ;
 
 		int mailCount_1 = mailCount.toInt() ;
 
 		if( mailCount_1 == 0 ){
-			QString r = QString( "<tr valign=middle><td>%1</td><td width=50 align=right>0</td></tr>" ) ;
-			m_accountsStatus += r.arg( this->displayName() ) ;
+			m_accountsStatus += _account_status( this->displayName(),"0" ) ;
 		}else{
 			m_mailCount += mailCount_1 ;
-			QString r = QString( "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ) ;
-			m_accountsStatus += r.arg( this->displayName(),mailCount ) ;
+			m_accountsStatus += _account_status( this->displayName(),mailCount ) ;
 		}
 
 		this->checkAccountLastUpdate( msg,mailCount_1 ) ;

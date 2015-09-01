@@ -70,7 +70,7 @@ void addaccount::HideUI()
 
 addaccount::~addaccount()
 {
-	delete m_ui;
+	delete m_ui ;
 }
 
 void addaccount::closeEvent( QCloseEvent * e )

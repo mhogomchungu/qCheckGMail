@@ -74,6 +74,11 @@ void statusicon::setIconClickedActions( const statusicon::clickActions& actions 
 
 #if USE_KDE_STATUS_NOTIFIER
 
+bool statusicon::KF5StatusIcon()
+{
+	return KF5 ;
+}
+
 statusicon::statusicon()
 {
 #if KF5
@@ -313,6 +318,11 @@ QObject * statusicon::statusQObject()
 	return this ;
 }
 
+bool statusicon::KF5StatusIcon()
+{
+	return false ;
+}
+
 #else
 
 statusicon::statusicon()
@@ -322,6 +332,11 @@ statusicon::statusicon()
 	connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
 	m_trayIcon->setContextMenu( m_menu ) ;
+}
+
+bool statusicon::KF5StatusIcon()
+{
+	return false ;
 }
 
 QWidget * statusicon::widget()
