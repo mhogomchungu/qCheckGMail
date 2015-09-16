@@ -44,7 +44,7 @@ The last command must be run from root's account and depending on your distribut
 su -c "make install"
 sudo make install
 
-To build a Qt5 port,add "-DQT5=true" to the cmake argument list
+To build a Qt5 port with KF5 support,add "-DQT5=true" "-DKF5=true" to the cmake argument list
 
 A none KDE build will require presence of mplayer in order to use audio notification
 

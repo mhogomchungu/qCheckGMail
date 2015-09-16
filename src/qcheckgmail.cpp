@@ -298,9 +298,9 @@ static QString _account_status( const QString& displayName,const QString& mailCo
 			while( d_name.size() < 32 ){
 
 				d_name += " " ;
-			}			
+			}
 		}
-		
+
 		if( mailCount.toInt() > 0 ){
 
 			r = "<b>%1        %2</b><br>" ;
@@ -647,7 +647,7 @@ void qCheckGMail::failedToCheckForNewEmail()
 	QString x = tr( "network problem detected" ) ;
 	QString msg_1 = tr( "email checking is taking longer than expected." ) ;
 	QString msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
-	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1 ).arg( msg_2 ) ;
+	QString z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1,msg_2 ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->showToolTip( m_errorIcon,x,z ) ;

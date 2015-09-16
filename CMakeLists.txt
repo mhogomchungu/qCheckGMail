@@ -70,7 +70,7 @@ install( FILES lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCh
 
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/kde4/apps/qCheckGMail/" )
-#install( FILES qCheckGMail.notifyrc DESTINATION "/usr/share/apps/qCheckGMail/" )
+install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/knotifications5/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
