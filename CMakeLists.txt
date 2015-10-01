@@ -2,6 +2,8 @@
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0017 OLD)
 
+project(qCheckGMail)
+
 SET( QT_USE_QTNETWORK TRUE )
 SET( QT_USE_QTCORE TRUE )
 SET( QT_USE_QTGUI TRUE )
@@ -97,6 +99,10 @@ if( LXQTSUPPORT )
 
 	if(QT5)
 		pkg_check_modules( LXQT lxqt-qt5 )
+
+		if( NOT LXQT_FOUND )
+			pkg_check_modules( LXQT lxqt )
+		endif()
 	else()
 		pkg_check_modules( LXQT lxqt )
 	endif()
