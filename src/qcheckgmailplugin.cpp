@@ -19,9 +19,12 @@
 
 #include "qcheckgmailplugin.h"
 
+#if NEW_LXQT_API
+qChechGMailPlugIn::qChechGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) : ILXQtPanelPlugin( startupInfo )
+#else
 Q_EXPORT_PLUGIN2( qChechGMailPlugIn,qCheckGMailPluginLibrary )
-
 qChechGMailPlugIn::qChechGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) : ILxQtPanelPlugin( startupInfo )
+#endif
 {
 	m_gmail = new qCheckGMail() ;
 	m_gmail->start() ;
@@ -42,6 +45,22 @@ QString qChechGMailPlugIn::themeId() const
 	return "qCheckGMail" ;
 }
 
+#if NEW_LXQT_API
+
+void qChechGMailPlugIn::activated( ILXQtPanelPlugin::ActivationReason reason )
+{
+	if( reason == ILXQtPanelPlugin::MiddleClick ){
+		m_gmail->iconClicked() ;
+	}
+}
+
+ILXQtPanelPlugin::Flags qChechGMailPlugIn::flags() const
+{
+	return ILXQtPanelPlugin::PreferRightAlignment ;
+}
+
+#else
+
 void qChechGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
 {
 	if( reason == ILxQtPanelPlugin::MiddleClick ){
@@ -53,3 +72,5 @@ ILxQtPanelPlugin::Flags qChechGMailPlugIn::flags() const
 {
 	return ILxQtPanelPlugin::PreferRightAlignment ;
 }
+
+#endif

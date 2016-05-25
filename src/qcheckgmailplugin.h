@@ -19,10 +19,8 @@
 
 #ifndef QCHECKGMAILPLUGIN_H
 #define QCHECKGMAILPLUGIN_H
-#include <QObject>
-#include <lxqt/ilxqtpanel.h>
-#include <lxqt/ilxqtpanelplugin.h>
 
+#include <QObject>
 #include <QToolButton>
 #include <QVector>
 #include <QDebug>
@@ -30,6 +28,42 @@
 #include <QString>
 #include "qcheckgmail.h"
 #include "accounts.h"
+#include "lxqt_api.h"
+
+#if NEW_LXQT_API
+
+#include <lxqt/LXQt/ilxqtpanel.h>
+#include <lxqt/LXQt/ilxqtpanelplugin.h>
+
+class qChechGMailPlugIn : public QObject,public ILXQtPanelPlugin
+{
+	Q_OBJECT
+public:
+	qChechGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) ;
+	~qChechGMailPlugIn() ;
+	QWidget * widget() ;
+	QString themeId() const ;
+	void activated( ILXQtPanelPlugin::ActivationReason reason ) ;
+	ILXQtPanelPlugin::Flags flags() const ;
+private:
+	qCheckGMail * m_gmail ;
+};
+
+class qCheckGMailPluginLibrary: public QObject,public ILXQtPanelPluginLibrary
+{
+	Q_OBJECT
+	Q_INTERFACES( ILXQtPanelPluginLibrary )
+public:
+	ILXQtPanelPlugin * instance( const ILXQtPanelPluginStartupInfo& startupInfo )
+	{
+		return new qChechGMailPlugIn( startupInfo ) ;
+	}
+};
+
+#else
+
+#include <lxqt/ilxqtpanel.h>
+#include <lxqt/ilxqtpanelplugin.h>
 
 class qChechGMailPlugIn : public QObject,public ILxQtPanelPlugin
 {
@@ -55,5 +89,7 @@ public:
 		return new qChechGMailPlugIn( startupInfo ) ;
 	}
 };
+
+#endif
 
 #endif // QCHECKGMAILPLUGIN_H

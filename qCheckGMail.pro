@@ -54,7 +54,7 @@ FORMS += \
 RESOURCES += \
     icons/icon.qrc
 
-INCLUDEPATH += /home/local/KDE4/include /usr/include /home/ink/projects/build/build-qCheckGMail-Desktop-Debug
+INCLUDEPATH += /home/local/KDE4/include /usr/include /home/mtz/qCheckGMail
 
 LIBS += -lkdeui -lkwalletbackend -L/home/local/KDE4/lib -L/usr/lib -lgcrypt -llxqtwallet
 

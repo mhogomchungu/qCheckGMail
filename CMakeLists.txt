@@ -115,6 +115,12 @@ if( LXQTSUPPORT )
 
 	if( LXQT_FOUND )
 
+		if( LXQT_VERSION VERSION_GREATER "0.9.0" )
+			file( WRITE ${PROJECT_BINARY_DIR}/lxqt_api.h "#define NEW_LXQT_API 1\n" )
+		else()
+			file( WRITE ${PROJECT_BINARY_DIR}/lxqt_api.h "#define NEW_LXQT_API 0\n" )
+		endif()
+
 		add_definitions( -I${LXQT_INCLUDE_DIR})
 		include_directories( ${LXQT_INCLUDE_DIRS} )
 
