@@ -39,6 +39,24 @@ if( "${DATA_INSTALL_DIR}" STREQUAL "" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
 endif()
 
+if( LIB_SUFFIX )
+	if("${LIB_SUFFIX}" STREQUAL "default")
+
+		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+			set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib64")
+		else()
+			set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+		endif()
+	else()
+		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUFFIX}")
+	endif()
+else()
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib64")
+	else()
+		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+	endif()
+endif()
 
 file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
 "\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\"\n"
@@ -148,9 +166,15 @@ if( LXQTSUPPORT )
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
+		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
 
-		install( TARGETS qCheckGMail LIBRARY DESTINATION lib/lxqt-panel/ )
+
+		if( LXQT_VERSION VERSION_GREATER "0.9.0" )
+			install( TARGETS qCheckGMail LIBRARY DESTINATION "${LIB_PATH}/lxqt-panel/" )
+		else()
+			install( TARGETS qCheckGMail LIBRARY DESTINATION "${LIB_PATH}/lxpanel/plugins/" )
+		endif()
+
 		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
 		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/lxqt/lxqt-panel/
 			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
@@ -188,7 +212,7 @@ elseif( NOKDESUPPORT )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
+	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}/" )
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
@@ -283,7 +307,7 @@ else()
 
         set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
         set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/" )
+        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUFFIX}/" )
 
         install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 
@@ -304,12 +328,21 @@ endif()
 
 if( LXQTSUPPORT )
 # desktop file section
+if( LXQT_VERSION VERSION_GREATER "0.9.0" )
+file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
+"[Desktop Entry]
+Type=Service
+ServiceTypes=LXQtPanel/Plugin
+Name=qCheckGMailPlugIn
+Comment=a plugin to check for mail in gmail accounts\n")
+else()
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "[Desktop Entry]
 Type=Service
 ServiceTypes=LxQtPanel/Plugin
-Name=qChechGMailPlugIn
+Name=qCheckGMailPlugIn
 Comment=a plugin to check for mail in gmail accounts\n")
+endif()
 
 else()
 # desktop file section

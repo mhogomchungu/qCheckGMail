@@ -35,12 +35,12 @@
 #include <lxqt/LXQt/ilxqtpanel.h>
 #include <lxqt/LXQt/ilxqtpanelplugin.h>
 
-class qChechGMailPlugIn : public QObject,public ILXQtPanelPlugin
+class qCheckGMailPlugIn : public QObject,public ILXQtPanelPlugin
 {
 	Q_OBJECT
 public:
-	qChechGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) ;
-	~qChechGMailPlugIn() ;
+	qCheckGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) ;
+	~qCheckGMailPlugIn() ;
 	QWidget * widget() ;
 	QString themeId() const ;
 	void activated( ILXQtPanelPlugin::ActivationReason reason ) ;
@@ -56,7 +56,7 @@ class qCheckGMailPluginLibrary: public QObject,public ILXQtPanelPluginLibrary
 public:
 	ILXQtPanelPlugin * instance( const ILXQtPanelPluginStartupInfo& startupInfo )
 	{
-		return new qChechGMailPlugIn( startupInfo ) ;
+		return new qCheckGMailPlugIn( startupInfo ) ;
 	}
 };
 
@@ -65,12 +65,12 @@ public:
 #include <lxqt/ilxqtpanel.h>
 #include <lxqt/ilxqtpanelplugin.h>
 
-class qChechGMailPlugIn : public QObject,public ILxQtPanelPlugin
+class qCheckGMailPlugIn : public QObject,public ILxQtPanelPlugin
 {
 	Q_OBJECT
 public:
-	qChechGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) ;
-	~qChechGMailPlugIn() ;
+	qCheckGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) ;
+	~qCheckGMailPlugIn() ;
 	QWidget * widget() ;
 	QString themeId() const ;
 	void activated( ILxQtPanelPlugin::ActivationReason reason ) ;
@@ -86,7 +86,7 @@ class qCheckGMailPluginLibrary: public QObject,public ILxQtPanelPluginLibrary
 public:
 	ILxQtPanelPlugin * instance( const ILxQtPanelPluginStartupInfo& startupInfo )
 	{
-		return new qChechGMailPlugIn( startupInfo ) ;
+		return new qCheckGMailPlugIn( startupInfo ) ;
 	}
 };
 

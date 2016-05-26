@@ -20,55 +20,55 @@
 #include "qcheckgmailplugin.h"
 
 #if NEW_LXQT_API
-qChechGMailPlugIn::qChechGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) : ILXQtPanelPlugin( startupInfo )
+qCheckGMailPlugIn::qCheckGMailPlugIn( const ILXQtPanelPluginStartupInfo& startupInfo ) : ILXQtPanelPlugin( startupInfo )
 #else
-Q_EXPORT_PLUGIN2( qChechGMailPlugIn,qCheckGMailPluginLibrary )
-qChechGMailPlugIn::qChechGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) : ILxQtPanelPlugin( startupInfo )
+Q_EXPORT_PLUGIN2( qCheckGMailPlugIn,qCheckGMailPluginLibrary )
+qCheckGMailPlugIn::qCheckGMailPlugIn( const ILxQtPanelPluginStartupInfo& startupInfo ) : ILxQtPanelPlugin( startupInfo )
 #endif
 {
 	m_gmail = new qCheckGMail() ;
 	m_gmail->start() ;
 }
 
-qChechGMailPlugIn::~qChechGMailPlugIn()
+qCheckGMailPlugIn::~qCheckGMailPlugIn()
 {
 	delete m_gmail ;
 }
 
-QWidget * qChechGMailPlugIn::widget()
+QWidget * qCheckGMailPlugIn::widget()
 {
 	return m_gmail->widget() ;
 }
 
-QString qChechGMailPlugIn::themeId() const
+QString qCheckGMailPlugIn::themeId() const
 {
 	return "qCheckGMail" ;
 }
 
 #if NEW_LXQT_API
 
-void qChechGMailPlugIn::activated( ILXQtPanelPlugin::ActivationReason reason )
+void qCheckGMailPlugIn::activated( ILXQtPanelPlugin::ActivationReason reason )
 {
 	if( reason == ILXQtPanelPlugin::MiddleClick ){
 		m_gmail->iconClicked() ;
 	}
 }
 
-ILXQtPanelPlugin::Flags qChechGMailPlugIn::flags() const
+ILXQtPanelPlugin::Flags qCheckGMailPlugIn::flags() const
 {
 	return ILXQtPanelPlugin::PreferRightAlignment ;
 }
 
 #else
 
-void qChechGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
+void qCheckGMailPlugIn::activated( ILxQtPanelPlugin::ActivationReason reason )
 {
 	if( reason == ILxQtPanelPlugin::MiddleClick ){
 		m_gmail->iconClicked() ;
 	}
 }
 
-ILxQtPanelPlugin::Flags qChechGMailPlugIn::flags() const
+ILxQtPanelPlugin::Flags qCheckGMailPlugIn::flags() const
 {
 	return ILxQtPanelPlugin::PreferRightAlignment ;
 }
