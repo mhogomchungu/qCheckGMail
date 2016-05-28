@@ -29,6 +29,8 @@
 
 #include "accounts.h"
 
+#include <functional>
+
 namespace Ui {
 class addaccount;
 }
@@ -37,24 +39,44 @@ class addaccount : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit addaccount( QWidget * parent = 0 );
-	addaccount( int row = -1,QString accName = QString(),QString accPassword = QString(),
-		    QString accDisplayName = QString(),QString accLabels = QString(),QWidget * parent = 0 ) ;
 
-	void ShowUI( void ) ;
-	void HideUI( void ) ;
-	~addaccount();
-signals:
-	void addAccount( QString,QString,QString,QString ) ;
-	void editAccount( int,QString,QString,QString,QString ) ;
-	void cancelSignal( void ) ;
+        static addaccount& instance( QWidget * parent,
+                                     const accounts::entry& e,
+                                     std::function< void() >&& r,
+                                     std::function< void( const accounts::entry& e ) > && f )
+        {
+                return *( new addaccount( parent,e,std::move( r ),std::move( f ) ) ) ;
+        }
+
+        static addaccount& instance( QWidget * parent,
+                                     std::function< void() >&& e,
+                                     std::function< void( const accounts::entry& e ) > && f )
+        {
+                return *( new addaccount( parent,std::move( e ),std::move( f ) ) ) ;
+        }
+
+        addaccount( QWidget *,
+                    const accounts::entry&,
+                    std::function< void() >&&,
+                    std::function< void( const accounts::entry& e ) > && ) ;
+
+        addaccount( QWidget *,
+                    std::function< void() >&&,
+                    std::function< void( const accounts::entry& e ) > && ) ;
+
+        ~addaccount();
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;
-private:
+private:        
+        void ShowUI( void ) ;
+        void HideUI( void ) ;
+
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
-	int m_row ;
+        bool m_edit ;
+        std::function< void() > m_cancel ;
+        std::function< void( const accounts::entry& e ) > m_result ;
 };
 
 #endif // ADDACCOUNT_H

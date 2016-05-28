@@ -45,7 +45,12 @@ class configurationoptionsdialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit configurationoptionsdialog( QWidget * parent = 0 ) ;
+        static void instance( QObject * parent )
+        {
+                new configurationoptionsdialog( parent ) ;
+        }
+
+        explicit configurationoptionsdialog( QObject * parent = 0 ) ;
 	~configurationoptionsdialog() ;
 	static bool autoStartEnabled( void ) ;
 	static void enableAutoStart( bool ) ;
@@ -88,7 +93,7 @@ private:
 	void setSupportedLanguages( void ) ;
 	void saveLocalLanguage( void ) ;
 	void closeEvent( QCloseEvent * ) ;
-	Ui::configurationoptionsdialog * m_ui;
+        Ui::configurationoptionsdialog * m_ui ;
 };
 
 #endif // CONFIGURATIONOPTIONSDIALOG_H

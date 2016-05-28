@@ -28,7 +28,7 @@
    <property name="title">
     <string/>
    </property>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QFrame" name="frame_2">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -36,9 +36,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QLabel" name="label">
      <property name="geometry">
@@ -70,7 +67,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_3">
+   <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -78,9 +75,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QCheckBox" name="checkBoxAutoStartEnabled">
      <property name="geometry">
@@ -115,7 +109,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
+   <widget class="QFrame" name="frame_4">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -123,9 +117,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QComboBox" name="comboBoxLocalLanguage">
      <property name="geometry">
@@ -162,7 +153,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_6">
+   <widget class="QFrame" name="frame_6">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -170,9 +161,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
@@ -204,7 +192,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_5">
+   <widget class="QFrame" name="frame_5">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -212,9 +200,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QCheckBox" name="checkBoxReportOnAllAccounts">
      <property name="geometry">
@@ -249,7 +234,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_7">
+   <widget class="QFrame" name="frame_7">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -257,9 +242,6 @@
       <width>471</width>
       <height>51</height>
      </rect>
-    </property>
-    <property name="title">
-     <string/>
     </property>
     <widget class="QLabel" name="label_6">
      <property name="geometry">

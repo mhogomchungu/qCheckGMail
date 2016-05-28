@@ -32,9 +32,6 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include <QMutex>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include <QFile>
 #include <QTimer>
 #include <QProcess>
@@ -47,6 +44,10 @@
 #include "walletmanager.h"
 #include "configurationoptionsdialog.h"
 #include "tray_application_type.h"
+#include "networkAccessManager.h"
+
+#include <functional>
+#include <utility>
 
 class qCheckGMail : public statusicon
 {
@@ -54,39 +55,44 @@ class qCheckGMail : public statusicon
 public:
 	explicit qCheckGMail( const QString& profile = QString() ) ;
 	~qCheckGMail();
-	void start( void ) ;
+
+        void start( void ) ;
 	void earlyExit( void ) ;
-	static int instanceAlreadyRunning( void ) ;
+
+        static int instanceAlreadyRunning( void ) ;
 	static int autoStartDisabled( void ) ;
-	static bool autoStartEnabled( void ) ;
-	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
-	QWidget * widget( void ) ;
-	void iconClicked( void ) ;
+
+        static bool autoStartEnabled( void ) ;
+
+        static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
+
+        QWidget * widget( void ) ;
 	QString defaultApplication( void ) ;
+        void iconClicked( void ) ;
+
 private slots:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;
-	void emailStatusQueryResponce( QNetworkReply * ) ;
-	void emailStatusQueryResponce( void ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
-	void walletmanagerClosed( void ) ;
 	void setTimer( int ) ;
 	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
 	void objectGone( QObject * ) ;
-	void getAccountsInfo( QVector<accounts> ) ;
 	void configurePassWord( void ) ;
 	void audioNotify( bool ) ;
 	void enablePassWordChange( bool ) ;
 	void timerExpired( void  ) ;
 private:
+        void getAccountsInfo( QVector< accounts >&& ) ;
+
 	QString displayName( void ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
-	void setTrayIconToVisible( bool ) ;
+
+        void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
 	void noInternet( void ) ;
@@ -110,39 +116,49 @@ private:
 	void audioNotify( void ) ;
 	void checkAccountLastUpdate( const QByteArray&,int ) ;
 	void addActionsToMenu( void ) ;
-	QTimer * m_timer ;
-	int m_interval ;
-	QNetworkAccessManager * m_manager ;
-	QVector<accounts> m_accounts ;
-	QString m_accountsStatus ;
-	bool m_newMailFound ;
-	bool m_checkingMail ;
-	bool m_reportOnAllAccounts ;
-	bool m_enableDebug ;
-	bool m_redoMailCheck ;
-	bool m_accountUpdated ;
+
+        int m_interval ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
-	bool m_audioNotify ;
+        int m_networkTimeOut ;
+
+        bool m_audioNotify ;
 	bool m_displayEmailCount ;
+        bool m_newMailFound ;
+        bool m_checkingMail ;
+        bool m_reportOnAllAccounts ;
+        bool m_enableDebug ;
+        bool m_redoMailCheck ;
+        bool m_accountUpdated ;
+        bool m_timeExpired ;
+        bool m_accountFailed ;
+
+        QString m_accountsStatus ;
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
 	QString m_applicationIcon ;
 	QString m_defaultApplication ;
 	QString m_profile ;
+        QString m_accountNameColumnWidth ;
+
 	QStringList m_profileEmailList ;
-	std::unique_ptr<QMutex> m_mutex ;
-	QString m_accountNameColumnWidth ;
+
+        std::unique_ptr< QMutex > m_mutex ;
+
 	QTimer * m_timeOut ;
-	bool m_timeExpired ;
-	int m_networkTimeOut ;
-	QNetworkReply * m_networkReply ;
-	bool m_accountFailed ;
-	statusicon::clickActions m_clickActions ;
+        QTimer * m_timer ;
+
+        statusicon::clickActions m_clickActions ;
+
+        QNetworkReply * m_networkReply ;
+
+        NetworkAccessManager m_manager ;
+
+        QVector< accounts > m_accounts ;
 };
 
 #endif // QCHECKGMAIL_H

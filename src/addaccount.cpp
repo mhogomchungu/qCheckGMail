@@ -21,40 +21,59 @@
 #include "addaccount.h"
 #include "ui_addaccount.h"
 
-addaccount::addaccount( QWidget * parent ) : QDialog( parent ),m_ui( new Ui::addaccount )
+addaccount::addaccount( QWidget * parent,
+                        std::function< void() >&& e,
+                        std::function< void( const accounts::entry& e ) > && f ) :
+        QDialog( parent ),
+        m_ui( new Ui::addaccount ),
+        m_cancel( std::move( e ) ),
+        m_result( std::move( f ) )
 {
 	m_ui->setupUi( this ) ;
-	this->setFixedSize( this->size() ) ;
+
+        this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
-	m_row = -1 ;
-	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
+        m_edit = false ;
+
+        connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
+
+        this->ShowUI() ;
 }
 
-addaccount::addaccount( int row,QString accName,QString accPassword,QString accDisplayName,
-			QString accLabels,QWidget * parent ) :QDialog( parent ),m_ui( new Ui::addaccount )
+addaccount::addaccount( QWidget * parent,
+                        const accounts::entry& e,
+                        std::function< void() >&& r,
+                        std::function< void( const accounts::entry& e ) > && f ) :
+        QDialog( parent ),
+        m_ui( new Ui::addaccount ),
+        m_cancel( std::move( r ) ),
+        m_result( std::move( f ) )
 {
 	m_ui->setupUi( this );
 	this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
-	m_row = row ;
+        m_edit = true ;
 
-	m_ui->lineEditName->setText( accName ) ;
+        m_ui->lineEditName->setText( e.accName ) ;
 	m_ui->lineEditName->setEnabled( false ) ;
 	m_ui->lineEditName->setToolTip( QString() ) ;
-	m_ui->lineEditPassword->setText( accPassword ) ;
-	m_ui->lineEditLabel->setText( accLabels ) ;
-	m_ui->lineEditOptionalName->setText( accDisplayName ) ;
+        m_ui->lineEditPassword->setText( e.accPassword ) ;
+        m_ui->lineEditLabel->setText( e.accLabels ) ;
+        m_ui->lineEditOptionalName->setText( e.accDisplayName ) ;
 
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
+
+        this->ShowUI() ;
 }
 
 void addaccount::ShowUI()
 {
-	if( m_row != -1 ){
+        if( m_edit ){
+
 		m_ui->pushButtonAdd->setText( tr( "edit" ) ) ;
 		this->setWindowTitle( tr( "edit account" ) ) ;
 	}
@@ -81,27 +100,25 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
-	QString accName  = m_ui->lineEditName->text() ;
-	QString password = m_ui->lineEditPassword->text() ;
-	QString labels   = m_ui->lineEditLabel->text() ;
-	QString displayN = m_ui->lineEditOptionalName->text() ;
+        auto accName  = m_ui->lineEditName->text() ;
+        auto accPassword = m_ui->lineEditPassword->text() ;
+        auto accDisplayName = m_ui->lineEditOptionalName->text() ;
+        auto accLabels   = m_ui->lineEditLabel->text() ;
 
-	if( accName.isEmpty() || password.isEmpty() ){
+        if( accName.isEmpty() || accPassword.isEmpty() ){
+
 		QMessageBox msg( this ) ;
 		msg.setText( tr( "ERROR: one or more required field is empty" ) ) ;
 		msg.exec() ;
 	}else{
-		if( m_row == -1 ){
-			emit addAccount( accName,password,displayN,labels ) ;
-		}else{
-			emit editAccount( m_row,accName,password,displayN,labels ) ;
-		}
+                m_result( { accName,accPassword,accDisplayName,accLabels } ) ;
+
 		this->HideUI() ;
 	}
 }
 
 void addaccount::cancel()
 {
-	emit cancelSignal() ;
+        m_cancel() ;
 	this->HideUI() ;
 }

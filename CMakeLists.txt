@@ -1,6 +1,9 @@
 
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0017 OLD)
+cmake_policy(SET CMP0002 OLD)
+
+set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS ON)
 
 project(qCheckGMail)
 
@@ -25,20 +28,6 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 add_definitions( -I"${PROJECT_BINARY_DIR}/lxqt_wallet/frontend" )
 
-if(KF5)
-set( QT5 "true" )
-endif()
-
-ADD_SUBDIRECTORY( lxqt_wallet )
-
-INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
-
-add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
-
-if( "${DATA_INSTALL_DIR}" STREQUAL "" )
-	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
-endif()
-
 if( LIB_SUFFIX )
 	if("${LIB_SUFFIX}" STREQUAL "default")
 
@@ -56,6 +45,20 @@ else()
 	else()
 		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
 	endif()
+endif()
+
+if(KF5)
+set( QT5 "true" )
+endif()
+
+ADD_SUBDIRECTORY( lxqt_wallet )
+
+INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
+
+add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
+
+if( "${DATA_INSTALL_DIR}" STREQUAL "" )
+	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
 endif()
 
 file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
@@ -144,7 +147,7 @@ if( LXQTSUPPORT )
 
 		if( QT5 )
 
-			QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
+			QT5_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -154,7 +157,7 @@ if( LXQTSUPPORT )
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
 		else()
 
-			QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
+			QT4_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
 			QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -191,7 +194,7 @@ if( LXQTSUPPORT )
 elseif( NOKDESUPPORT )
 
 	if( QT5 )
-                QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+		QT5_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -200,7 +203,7 @@ elseif( NOKDESUPPORT )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 	else()
-                QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+		QT4_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
 		QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
 		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -212,7 +215,7 @@ elseif( NOKDESUPPORT )
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
 	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}/" )
+	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
 
 	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
@@ -255,7 +258,7 @@ else()
 
                 file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 1\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
-                QT5_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+		QT5_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
                 QT5_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
                 QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -295,7 +298,7 @@ else()
 
                 file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 1\n" )
 
-                QT4_WRAP_CPP( MOC src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
+		QT4_WRAP_CPP( MOC src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
                 QT4_WRAP_UI( UI src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
                 QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
 
@@ -307,7 +310,7 @@ else()
 
         set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
         set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUFFIX}/" )
+        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
 
         install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
 

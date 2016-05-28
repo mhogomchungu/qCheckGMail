@@ -68,8 +68,8 @@ static QString _getOption( const char * opt )
 	}
 #endif
 
-configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
-	QDialog( parent ),m_ui( new Ui::configurationoptionsdialog )
+configurationoptionsdialog::configurationoptionsdialog( QObject * parent ) :
+        m_ui( new Ui::configurationoptionsdialog )
 {
 	m_ui->setupUi( this ) ;
 
@@ -79,38 +79,54 @@ configurationoptionsdialog::configurationoptionsdialog( QWidget * parent ) :
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
 
 	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::internalBackEnd ) ){
+
 		m_ui->comboBoxBackEndSystem->addItem( "internal wallet" ) ;
 	}
 	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
+
 		m_ui->comboBoxBackEndSystem->addItem( DEFAULT_KDE_WALLET ) ;
 		m_ui->comboBoxBackEndSystem->addItem( qCheckGMail_KDE_wALLET ) ;
 	}
 	if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
+
 		m_ui->comboBoxBackEndSystem->addItem( "gnome wallet" ) ;
 	}
 
 	m_ui->checkBoxAudioNotify->setEnabled( true ) ;
 
-	QString opt = _getOption( "storageSystem" ) ;
+        auto opt = _getOption( "storageSystem" ) ;
 
-	QString value = _settings.value( opt ).toString() ;
+        auto value = _settings.value( opt ).toString() ;
 
-	int j = m_ui->comboBoxBackEndSystem->count() ;
+        auto j = m_ui->comboBoxBackEndSystem->count() ;
 
-	for( int i = 0 ; i < j ; i++ ){
+        for( decltype( j ) i = 0 ; i < j ; i++ ){
+
 		m_ui->comboBoxBackEndSystem->setCurrentIndex( i ) ;
+
 		if( m_ui->comboBoxBackEndSystem->currentText() == value ){
+
 			break ;
 		}
 	}
 
+        connect( this,SIGNAL( setTimer( int ) ),parent,SLOT( configurationWindowClosed( int ) ) ) ;
+        connect( this,SIGNAL( enablePassWordChange( bool ) ),parent,SLOT( enablePassWordChange( bool ) ) ) ;
+        connect( this,SIGNAL( reportOnAllAccounts( bool ) ),parent,SLOT( reportOnAllAccounts( bool ) ) ) ;
+        connect( this,SIGNAL( audioNotify( bool ) ),parent,SLOT( audioNotify( bool ) ) ) ;
+
 	this->installEventFilter( this ) ;
+
+        this->setWindowIcon( QIcon( ":/" + configurationoptionsdialog::noEmailIcon() ) ) ;
+
+        this->ShowUI() ;
 }
 
 void configurationoptionsdialog::setProfile( const QString& profile )
 {
 	if( !profile.isEmpty() && _settings.contains( profile ) ){
-		_profile = profile ;
+
+                _profile = profile ;
 	}
 
 	_settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
@@ -119,11 +135,16 @@ void configurationoptionsdialog::setProfile( const QString& profile )
 bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 {
 	if( watched == this ){
+
 		if( event->type() == QEvent::KeyPress ){
-			QKeyEvent * keyEvent = static_cast< QKeyEvent* >( event ) ;
-			if( keyEvent->key() == Qt::Key_Escape ){
-				this->HideUI() ;
-				return true ;
+
+                        auto keyEvent = static_cast< QKeyEvent* >( event ) ;
+
+                        if( keyEvent->key() == Qt::Key_Escape ){
+
+                                this->HideUI() ;
+
+                                return true ;
 			}
 		}
 	}
@@ -133,13 +154,19 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 QString configurationoptionsdialog::walletName( LxQt::Wallet::walletBackEnd backEnd )
 {
 	if( backEnd == LxQt::Wallet::kwalletBackEnd ){
-		QString opt = _getOption( "storageSystem" ) ;
-		if( _settings.value( opt ).toString() == qCheckGMail_KDE_wALLET ){
-			return "qCheckGMail" ;
+
+                auto opt = _getOption( "storageSystem" ) ;
+
+                if( _settings.value( opt ).toString() == qCheckGMail_KDE_wALLET ){
+
+                        return "qCheckGMail" ;
 		}else{
-			LxQt::Wallet::Wallet * w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
-			if( w ){
-				QString value = w->localDefaultWalletName() ;
+
+                        auto w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
+
+                        if( w ){
+
+                                auto value = w->localDefaultWalletName() ;
 				w->deleteLater() ;
 				return value ;
 			}else{
@@ -153,7 +180,7 @@ QString configurationoptionsdialog::walletName( LxQt::Wallet::walletBackEnd back
 
 void configurationoptionsdialog::saveStorageSystem( const QString& system )
 {
-	QString opt = _getOption( "storageSystem" ) ;
+        auto opt = _getOption( "storageSystem" ) ;
 	_settings.setValue( opt,system ) ;
 	_settings.sync() ;
 }
@@ -165,38 +192,51 @@ QString configurationoptionsdialog::logFile()
 
 LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 {
-	QString opt = _getOption( "storageSystem" ) ;
+        auto opt = _getOption( "storageSystem" ) ;
 	LxQt::Wallet::Wallet * w ;
 
 	if( _settings.contains( opt ) ){
-		QString value = _settings.value( opt ).toString() ;
-		if( value == QString( "gnome wallet" ) ){
-			if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
-				w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
+
+                auto value = _settings.value( opt ).toString() ;
+
+                if( value == QString( "gnome wallet" ) ){
+
+                        if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
+
+                                w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 			}else{
 				_settings.setValue( opt,QString( "internal wallet" ) ) ;
 				w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
+
 		}else if( value.contains( "kde" ) ){
-			if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-				w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
+
+                        if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
+
+                                w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
 			}else{
 				_settings.setValue( opt,"internal wallet" ) ;
 				w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 			}
 		}else{
 			QString wallet( "internal wallet" ) ;
-			if( value != wallet ){
-				_settings.setValue( opt,wallet ) ;
+
+                        if( value != wallet ){
+
+                                _settings.setValue( opt,wallet ) ;
 			}
+
 			w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::internalBackEnd ) ;
 		}
 	}else{
 		if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::kwalletBackEnd ) ){
-			_settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
+
+                        _settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
 			w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::kwalletBackEnd ) ;
-		}else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
-			_settings.setValue( opt,QString( "gnome wallet" ) ) ;
+
+                }else if( LxQt::Wallet::backEndIsSupported( LxQt::Wallet::secretServiceBackEnd ) ){
+
+                        _settings.setValue( opt,QString( "gnome wallet" ) ) ;
 			w = LxQt::Wallet::getWalletBackend( LxQt::Wallet::secretServiceBackEnd ) ;
 		}else{
 			_settings.setValue( opt,QString( "internal wallet" ) ) ;
@@ -205,7 +245,8 @@ LxQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 	}
 
 	_settings.sync() ;
-	return w ;
+
+        return w ;
 }
 
 bool configurationoptionsdialog::audioNotify()
@@ -213,7 +254,8 @@ bool configurationoptionsdialog::audioNotify()
 	QString opt = _getOption( "audioNotify" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toBool() ;
+
+                return _settings.value( opt ).toBool() ;
 	}else{
 		_settings.setValue( opt,true ) ;
 		return true ;
@@ -222,10 +264,11 @@ bool configurationoptionsdialog::audioNotify()
 
 QString configurationoptionsdialog::audioPlayer()
 {
-	QString opt = _getOption( "audioPlayer" ) ;
+        auto opt = _getOption( "audioPlayer" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString e( "mplayer" ) ;
 		_settings.setValue( opt,e ) ;
@@ -238,7 +281,8 @@ QString configurationoptionsdialog::noEmailIcon()
 	QString opt = _getOption( "noEmailIconColor" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "grey" ) ;
 		_settings.setValue( opt,value ) ;
@@ -249,10 +293,11 @@ QString configurationoptionsdialog::noEmailIcon()
 
 QString configurationoptionsdialog::newEmailIcon()
 {
-	QString opt = _getOption( "newEmailIconColor" ) ;
+        auto opt = _getOption( "newEmailIconColor" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "blue" ) ;
 		_settings.setValue( opt,value ) ;
@@ -263,10 +308,11 @@ QString configurationoptionsdialog::newEmailIcon()
 
 QString configurationoptionsdialog::errorIcon()
 {
-	QString opt = _getOption( "errorIconColor" ) ;
+        auto opt = _getOption( "errorIconColor" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "red" ) ;
 		_settings.setValue( opt,value ) ;
@@ -277,10 +323,11 @@ QString configurationoptionsdialog::errorIcon()
 
 QString configurationoptionsdialog::fontFamily()
 {
-	QString opt = _getOption( "displayEmailCountFontFamily" ) ;
+        auto opt = _getOption( "displayEmailCountFontFamily" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "Helvetica" ) ;
 		_settings.setValue( opt,value ) ;
@@ -291,10 +338,11 @@ QString configurationoptionsdialog::fontFamily()
 
 QString configurationoptionsdialog::fontColor()
 {
-	QString opt = _getOption( "displayEmailCountFontColor" ) ;
+        auto opt = _getOption( "displayEmailCountFontColor" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "black" ) ;
 		_settings.setValue( opt,value ) ;
@@ -305,10 +353,11 @@ QString configurationoptionsdialog::fontColor()
 
 QString configurationoptionsdialog::defaultApplication()
 {
-	QString opt = _getOption( "defaultApplication" ) ;
+        auto opt = _getOption( "defaultApplication" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "browser" ) ;
 		_settings.setValue( opt,value ) ;
@@ -320,8 +369,10 @@ QString configurationoptionsdialog::defaultApplication()
 QStringList configurationoptionsdialog::profileEmailList()
 {
 	if( !_profile.isEmpty() && _settings.contains( _profile ) ){
-		QString z = _settings.value( _profile ).toString() ;
-		return z.split( "," ) ;
+
+                auto z = _settings.value( _profile ).toString() ;
+
+                return z.split( ",",QString::SkipEmptyParts ) ;
 	}else{
 		return QStringList() ;
 	}
@@ -329,16 +380,17 @@ QStringList configurationoptionsdialog::profileEmailList()
 
 bool configurationoptionsdialog::usingInternalStorageSystem()
 {
-	QString opt = _getOption( "storageSystem" ) ;
+        auto opt = _getOption( "storageSystem" ) ;
 	return _settings.value( opt ).toString() == "internal wallet" ;
 }
 
 int configurationoptionsdialog::fontSize()
 {
-	QString opt = _getOption( "displayEmailCountFontSize" ) ;
+        auto opt = _getOption( "displayEmailCountFontSize" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toInt() ;
+
+                return _settings.value( opt ).toInt() ;
 	}else{
 		QString value( "80" ) ;
 		_settings.setValue( opt,value ) ;
@@ -349,10 +401,11 @@ int configurationoptionsdialog::fontSize()
 
 bool configurationoptionsdialog::displayEmailCount()
 {
-	QString opt = _getOption( "displayEmailCount" ) ;
+        auto opt = _getOption( "displayEmailCount" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toBool() ;
+
+                return _settings.value( opt ).toBool() ;
 	}else{
 		_settings.setValue( opt,true ) ;
 		_settings.sync() ;
@@ -362,10 +415,11 @@ bool configurationoptionsdialog::displayEmailCount()
 
 int configurationoptionsdialog::networkTimeOut()
 {
-	QString opt = _getOption( "networkTimeOut" ) ;
+        auto opt = _getOption( "networkTimeOut" ) ;
 
 	if( _settings.contains( opt ) ){
-		return 1000 * 60 * _settings.value( opt ).toInt() ;
+
+                return 1000 * 60 * _settings.value( opt ).toInt() ;
 	}else{
 		_settings.setValue( opt,2 ) ;
 		_settings.sync() ;
@@ -381,10 +435,11 @@ void configurationoptionsdialog::setAudioNotify( bool audioNotify )
 
 bool configurationoptionsdialog::autoStartEnabled()
 {
-	QString opt = _getOption( "autostart" ) ;
+        auto opt = _getOption( "autostart" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toBool() ;
+
+                return _settings.value( opt ).toBool() ;
 	}else{
 		_settings.setValue( opt,true ) ;
 		_settings.sync() ;
@@ -400,10 +455,11 @@ void configurationoptionsdialog::enableAutoStart( bool b )
 
 bool configurationoptionsdialog::reportOnAllAccounts()
 {
-	QString opt = _getOption( "reportOnAllAccounts" ) ;
+        auto opt = _getOption( "reportOnAllAccounts" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toBool() ;
+
+                return _settings.value( opt ).toBool() ;
 	}else{
 		_settings.setValue( opt,true ) ;
 		_settings.sync() ;
@@ -420,10 +476,11 @@ void configurationoptionsdialog::saveReportOnAllAccounts( bool b )
 
 QString configurationoptionsdialog::localLanguage()
 {
-	QString opt = _getOption( "language" ) ;
+        auto opt = _getOption( "language" ) ;
 
 	if( _settings.contains( opt ) ){
-		return _settings.value( opt ).toString() ;
+
+                return _settings.value( opt ).toString() ;
 	}else{
 		QString lang( "english_US" ) ;
 		_settings.setValue( opt,lang ) ;
@@ -443,41 +500,45 @@ QString configurationoptionsdialog::localLanguagePath()
 
 void configurationoptionsdialog::saveLocalLanguage()
 {
-	QString opt = _getOption( "language" ) ;
-	QString language = m_ui->comboBoxLocalLanguage->currentText() ;
+        auto opt = _getOption( "language" ) ;
+        auto language = m_ui->comboBoxLocalLanguage->currentText() ;
 	_settings.setValue( opt,language ) ;
 }
 
 void configurationoptionsdialog::saveTimeToConfigFile()
 {
-	QString opt = _getOption( "interval" ) ;
-	QString time = m_ui->lineEditUpdateCheckInterval->text() ;
+        auto opt = _getOption( "interval" ) ;
+        auto time = m_ui->lineEditUpdateCheckInterval->text() ;
 	_settings.setValue( opt,time ) ;
 	_settings.sync() ;
 }
 
 int configurationoptionsdialog::getTimeFromConfigFile()
 {
-	QString opt = _getOption( "interval" ) ;
+        auto opt = _getOption( "interval" ) ;
 
 	if( _settings.contains( opt ) ){
-		bool ok ;
-		int time = _settings.value( opt ).toInt( &ok ) ;
-		if( ok ){
-			return time * 60 * 1000 ;
+
+                bool ok ;
+                auto time = _settings.value( opt ).toInt( &ok ) ;
+
+                if( ok ){
+
+                        return time * 60 * 1000 ;
 		}else{
 			return 30 * 60 * 1000 ;
 		}
 	}else{
 		_settings.setValue( opt,QString( "30" ) ) ;
 		_settings.sync() ;
-		return 30 * 60 * 1000 ;
+
+                return 30 * 60 * 1000 ;
 	}
 }
 
 void configurationoptionsdialog::ShowUI()
 {
-	int time = configurationoptionsdialog::getTimeFromConfigFile() / ( 60 * 1000 ) ;
+        auto time = configurationoptionsdialog::getTimeFromConfigFile() / ( 60 * 1000 ) ;
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
 	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
@@ -491,9 +552,9 @@ void configurationoptionsdialog::HideUI()
 {
 	configurationoptionsdialog::enableAutoStart( m_ui->checkBoxAutoStartEnabled->isChecked() ) ;
 
-	QString x = m_ui->lineEditUpdateCheckInterval->text() ;
+        auto x = m_ui->lineEditUpdateCheckInterval->text() ;
 	bool y ;
-	int z = x.toInt( &y ) ;
+        auto z = x.toInt( &y ) ;
 
 	if( !y ){
 		QMessageBox msg( this ) ;
@@ -521,7 +582,7 @@ void configurationoptionsdialog::HideUI()
 
 	this->setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
-	QString s = m_ui->comboBoxBackEndSystem->currentText() ;
+        auto s = m_ui->comboBoxBackEndSystem->currentText() ;
 
 	this->saveStorageSystem( s ) ;
 
@@ -554,15 +615,19 @@ void configurationoptionsdialog::setSupportedLanguages()
 	QDir d( configurationoptionsdialog::localLanguagePath() + "/translations.qm/" ) ;
 
 	QStringList l = d.entryList() ;
-	l.removeOne( "." ) ;
+
+        l.removeOne( "." ) ;
 	l.removeOne( ".." ) ;
 
-	int j = l.size() ;
+        auto j = l.size() ;
 
-	QComboBox * cbox = m_ui->comboBoxLocalLanguage ;
-	QString x ;
-	for( int i = 0 ; i < j ; i++ ){
-		x = l.at( i ) ;
+        auto cbox = m_ui->comboBoxLocalLanguage ;
+
+        QString x ;
+
+        for( decltype( j ) i = 0 ; i < j ; i++ ){
+
+                x = l.at( i ) ;
 		x.truncate( x.size() - 3 ) ; //remove the .qm extension
 		cbox->addItem( x ) ;
 	}
@@ -570,13 +635,18 @@ void configurationoptionsdialog::setSupportedLanguages()
 	x = configurationoptionsdialog::localLanguage() ;
 
 	j = cbox->count() ;
-	/*
+
+        /*
 	 * have the user's preferred language highlighted
 	 */
-	for( int i = 0 ; i < j ; i++ ){
-		cbox->setCurrentIndex( i ) ;
-		if( cbox->currentText() == x ){
-			break ;
+
+        for( decltype( j ) i = 0 ; i < j ; i++ ){
+
+                cbox->setCurrentIndex( i ) ;
+
+                if( cbox->currentText() == x ){
+
+                        break ;
 		}
 	}
 }

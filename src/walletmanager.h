@@ -42,6 +42,8 @@
 
 #include "../lxqt_wallet/frontend/lxqt_wallet.h"
 
+#include <functional>
+
 namespace Ui {
 class walletmanager;
 }
@@ -55,7 +57,18 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	explicit walletmanager( const QString& icon = QString(),QDialog * parent = 0 ) ;
+        static walletmanager& instance( const QString& icon = QString(),
+                                        std::function< void() >&& e = [](){},
+                                        std::function< void( QVector< accounts > && ) >&& f
+                                        = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } )
+        {
+                return *( new walletmanager( icon,std::move( e ),std::move( f ) ) ) ;
+        }
+
+        walletmanager( const QString& icon,
+                       std::function< void() >&&,
+                       std::function< void( QVector< accounts > && ) >&& ) ;
+
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;
@@ -72,8 +85,6 @@ private slots:
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void editAccount( void ) ;
-	void addAccount( QString,QString,QString,QString ) ;
-	void editAccount( int,QString,QString,QString,QString ) ;
 	void enableAll( void ) ;
 private:
 	void addEntry( const accounts& ) ;
@@ -102,6 +113,9 @@ private:
 	QString m_accDisplayName ;
 	QString m_icon ;
 	int m_row ;
+
+        std::function< void() > m_walletClosed ;
+        std::function< void( QVector< accounts > && ) > m_getAccountInfo ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

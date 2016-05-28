@@ -99,7 +99,7 @@ statusicon::~statusicon()
 
 QWidget * statusicon::widget()
 {
-	return 0 ;
+        return nullptr ;
 }
 
 void statusicon::setAttentionIcon( const QString& name )
@@ -149,7 +149,7 @@ void statusicon::addAction( QAction * ac )
 
 QAction * statusicon::getAction( const QString& title )
 {
-	QAction * ac = new QAction( m_menu ) ;
+        auto ac = new QAction( m_menu ) ;
 	ac->setText( title ) ;
 	m_menu->addAction( ac ) ;
 	return ac ;
@@ -180,7 +180,7 @@ bool statusicon::enableDebug()
 #endif
 }
 
-QList<QAction *> statusicon::getMenuActions()
+QList< QAction * > statusicon::getMenuActions()
 {
 	return m_menu->actions() ;
 }
@@ -204,10 +204,15 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 
 void statusicon::addQuitAction()
 {
-	QAction * ac = new QAction( m_menu ) ;
-	ac->setText( tr( "quit" ) ) ;
-	connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
-	m_menu->addAction( ac ) ;
+        m_menu->addAction( [ this ](){
+
+                auto ac = new QAction( m_menu ) ;
+
+                ac->setText( tr( "quit" ) ) ;
+                connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+
+                return ac ;
+        }() ) ;
 }
 
 #elif USE_LXQT_PLUGIN
@@ -243,7 +248,7 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	QPixmap pixmap = _icon( name,count ) ;
+        auto pixmap = _icon( name,count ) ;
 	m_toolButton.setIcon( pixmap ) ;
 }
 
@@ -261,18 +266,18 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 {
 	Q_UNUSED( iconName ) ;
 	Q_UNUSED( title ) ;
-	QString r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
+        auto r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
 	m_toolButton.setToolTip( r ) ;
 }
 
-QList<QAction *> statusicon::getMenuActions()
+QList< QAction * > statusicon::getMenuActions()
 {
 	return m_toolButton.actions() ;
 }
 
 QAction * statusicon::getAction( const QString& title )
 {
-	QAction * ac = new QAction( &m_toolButton ) ;
+        auto ac = new QAction( &m_toolButton ) ;
 	ac->setText( title ) ;
 	m_toolButton.addAction( ac ) ;
 	return ac ;
@@ -328,10 +333,13 @@ bool statusicon::KF5StatusIcon()
 statusicon::statusicon()
 {
 	m_trayIcon = new QSystemTrayIcon( this ) ;
-	m_menu = new QMenu() ;
-	connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
+
+        m_menu = new QMenu() ;
+
+        connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
-	m_trayIcon->setContextMenu( m_menu ) ;
+
+        m_trayIcon->setContextMenu( m_menu ) ;
 }
 
 bool statusicon::KF5StatusIcon()
@@ -371,7 +379,7 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	QPixmap pixmap = _icon( name,count ) ;
+        auto pixmap = _icon( name,count ) ;
 	m_trayIcon->setIcon( pixmap ) ;
 }
 
@@ -389,7 +397,7 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 {
 	Q_UNUSED( iconName ) ;
 	Q_UNUSED( title ) ;
-	QString r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
+        auto r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
 	m_trayIcon->setToolTip( r ) ;
 }
 
@@ -400,10 +408,15 @@ QList<QAction *> statusicon::getMenuActions()
 
 void statusicon::addQuitAction()
 {
-	QAction * ac = new QAction( m_menu ) ;
-	ac->setText( tr( "quit" ) ) ;
-	connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
-	m_menu->addAction( ac ) ;
+        m_menu->addAction( [ this ](){
+
+                auto ac = new QAction( m_menu ) ;
+                ac->setText( tr( "quit" ) ) ;
+                connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+
+                return ac ;
+        }() ) ;
+
 	m_trayIcon->show() ;
 }
 
@@ -425,7 +438,7 @@ void statusicon::addAction( QAction * ac )
 
 QAction * statusicon::getAction( const QString& title )
 {
-	QAction * ac = new QAction( m_menu ) ;
+        auto ac = new QAction( m_menu ) ;
 	ac->setText( title ) ;
 	m_menu->addAction( ac ) ;
 	return ac ;
@@ -445,10 +458,14 @@ QObject * statusicon::statusQObject()
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
 	if( reason == QSystemTrayIcon::Context ){
+
 		m_clickActions.onRightClick() ;
 	}else if( reason == QSystemTrayIcon::Trigger ){
+
 		m_clickActions.onLeftClick() ;
+
 	}else if( reason == QSystemTrayIcon::MiddleClick ){
+
 		m_clickActions.onMiddleClick() ;
 	}else{
 		m_clickActions.onRightClick() ;
