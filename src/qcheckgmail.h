@@ -49,7 +49,7 @@
 #include <functional>
 #include <utility>
 
-class qCheckGMail : public statusicon
+class qCheckGMail : public QObject
 {
 	Q_OBJECT
 public:
@@ -68,6 +68,7 @@ public:
 
         QWidget * widget( void ) ;
 	QString defaultApplication( void ) ;
+
         void iconClicked( void ) ;
 
 private slots:
@@ -149,9 +150,7 @@ private:
 	QString m_profile ;
         QString m_accountNameColumnWidth ;
 
-        QByteArray m_token ;
-
-	QStringList m_profileEmailList ;
+        QStringList m_profileEmailList ;
 
         std::unique_ptr< QMutex > m_mutex ;
 
@@ -165,6 +164,8 @@ private:
         NetworkAccessManager m_manager ;
 
         QVector< accounts > m_accounts ;
+
+        std::unique_ptr< statusicon > m_statusicon ;
 };
 
 #endif // QCHECKGMAIL_H

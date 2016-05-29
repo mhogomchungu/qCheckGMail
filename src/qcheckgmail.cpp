@@ -24,7 +24,7 @@
 
 qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
 {
-	statusicon::setCategory( statusicon::ApplicationStatus ) ;
+        m_statusicon->setCategory( m_statusicon->ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
         //QCoreApplication::setApplicationDisplayName( "qCheckGMail" ) ;
 }
@@ -37,37 +37,37 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 {
 	if( showIcon ){
 
-		statusicon::setStatus( statusicon::NeedsAttention ) ;
+                m_statusicon->setStatus( m_statusicon->NeedsAttention ) ;
 	}else{
-		statusicon::setStatus( statusicon::Passive ) ;
+                m_statusicon->setStatus( m_statusicon->Passive ) ;
 	}
 }
 
 void qCheckGMail::showToolTip( const QString& x,const QString& y,const QString& z )
 {
-	statusicon::setToolTip( x,y,z ) ;
+        m_statusicon->setToolTip( x,y,z ) ;
 }
 
 void qCheckGMail::showPausedIcon( bool paused )
 {
 	if( paused ){
 
-		statusicon::setOverlayIcon( m_newEmailIcon ) ;
+                m_statusicon->setOverlayIcon( m_newEmailIcon ) ;
 	}else{
-		statusicon::setOverlayIcon( QString() ) ;
+                m_statusicon->setOverlayIcon( QString() ) ;
 	}
 }
 
 void qCheckGMail::changeIcon( const QString& icon )
 {
-	statusicon::setIcon( icon ) ;
+        m_statusicon->setIcon( icon ) ;
 }
 
 void qCheckGMail::changeIcon( const QString& icon,int count )
 {
 	if( m_displayEmailCount ){
 
-		statusicon::setIcon( icon,count ) ;
+                m_statusicon->setIcon( icon,count ) ;
 	}
 }
 
@@ -80,7 +80,9 @@ void qCheckGMail::run()
 {
 	configurationoptionsdialog::setProfile( m_profile ) ;
 
-	m_enableDebug         = statusicon::enableDebug() ;
+        m_statusicon.reset( new statusicon() ) ;
+
+        m_enableDebug         = m_statusicon->enableDebug() ;
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
 	m_interval            = configurationoptionsdialog::getTimeFromConfigFile() ;
@@ -117,7 +119,7 @@ void qCheckGMail::run()
 		}
 	} ;
 
-	statusicon::setIconClickedActions( m_clickActions ) ;
+        m_statusicon->setIconClickedActions( m_clickActions ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
@@ -164,12 +166,12 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( checkMail() ),[ this ](){
 
-               return statusicon::getAction( tr( "check mail now" ) ) ;
+               return m_statusicon->getAction( tr( "check mail now" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( toggled( bool ) ),SLOT( pauseCheckingMail( bool ) ),[ this ](){
 
-                auto ac = statusicon::getAction( tr( "pause checking mail" ) ) ;
+                auto ac = m_statusicon->getAction( tr( "pause checking mail" ) ) ;
 
                 ac->setObjectName( "pauseCheckingMail" ) ;
                 ac->setCheckable( true ) ;
@@ -180,12 +182,12 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( configureAccounts() ),[ this ](){
 
-                return statusicon::getAction( tr( "configure accounts" ) ) ;
+                return m_statusicon->getAction( tr( "configure accounts" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( triggered() ),SLOT( configurePassWord() ),[ this ](){
 
-                auto ac = statusicon::getAction( tr( "configure password" ) ) ;
+                auto ac = m_statusicon->getAction( tr( "configure password" ) ) ;
 
 		ac->setObjectName( "configurePassword" ) ;
                 ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
@@ -195,10 +197,10 @@ void qCheckGMail::addActionsToMenu()
 
          _connect( SIGNAL( triggered() ),SLOT( configurationoptionWindow() ),[ this ](){
 
-                return statusicon::getAction( tr( "configure options" ) ) ;
+                return m_statusicon->getAction( tr( "configure options" ) ) ;
         }() ) ;
 
-        statusicon::addQuitAction() ;
+        m_statusicon->addQuitAction() ;
 }
 
 void qCheckGMail::noInternet( void )
@@ -280,11 +282,11 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	this->doneCheckingMail() ;
 }
 
-static QString _account_status( const QString& displayName,const QString& mailCount )
+static QString _account_status( statusicon * s,const QString& displayName,const QString& mailCount )
 {
 	QString r ;
 
-	if( statusicon::KF5StatusIcon() ){
+        if( s->KF5StatusIcon() ){
 
 		/*
 		 * KF5 status icon does not seem to support html tags we have come to depend on
@@ -338,7 +340,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
 
-		m_accountsStatus = _account_status( this->displayName(),"-1" ) ;
+                m_accountsStatus = _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
 	}else{
                 auto mailCount = this->getAtomComponent( msg,"fullcount" ) ;
 
@@ -346,10 +348,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
 
 		if( mailCount_1 == 0 ){
 
-			m_accountsStatus += _account_status( this->displayName(),"0" ) ;
+                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"0" ) ;
 		}else{
 			m_mailCount += mailCount_1 ;
-			m_accountsStatus += _account_status( this->displayName(),mailCount ) ;
+                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),mailCount ) ;
 		}
 
 		this->checkAccountLastUpdate( msg,mailCount_1 ) ;
@@ -574,15 +576,13 @@ void qCheckGMail::audioNotify()
 {
 	if( m_accountUpdated && m_audioNotify ){
 
-		statusicon::newEmailNotify() ;
+                m_statusicon->newEmailNotify() ;
 	}
 }
 
 void qCheckGMail::doneCheckingMail()
 {
 	m_mutex->lock();
-
-        m_token.clear() ;
 
         m_checkingMail = false ;
 
@@ -649,7 +649,7 @@ void qCheckGMail::configurationoptionWindow()
 
 void qCheckGMail::enablePassWordChange( bool changeable )
 {
-        auto e = statusicon::getMenuActions() ;
+        auto e = m_statusicon->getMenuActions() ;
 
         auto j = e.size() ;
 
@@ -792,12 +792,12 @@ void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& 
 
                                 if( !m.isEmpty() ){
 
-                                        m_token = "Bearer " + m[ "access_token" ].toString().toLatin1() ;
+                                        auto e = "Bearer " + m[ "access_token" ].toString().toLatin1() ;
 
                                         QUrl url( UrlLabel ) ;
                                         QNetworkRequest request( url ) ;
 
-                                        request.setRawHeader( "Authorization",m_token ) ;
+                                        request.setRawHeader( "Authorization",e ) ;
 
                                         return request ;
                                 }
@@ -826,19 +826,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                         return QNetworkRequest( url ) ;
                 }() ) ;
         }else{
-                if( m_token.isEmpty() ){
-
-                        this->getAuthorization( token,UrlLabel ) ;
-                }else{
-                        this->networkAccess( [ this ](){
-
-                                QNetworkRequest request ;
-
-                                request.setRawHeader( "Authorization",m_token ) ;
-
-                                return request ;
-                        }() ) ;
-                }
+                this->getAuthorization( token,UrlLabel ) ;
         }
 }
 
@@ -851,8 +839,6 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                 m_timeOut->stop() ;
 
                 if( content.isEmpty() ){
-
-                        m_token.clear() ;
 
                         if( e->error() == QNetworkReply::AuthenticationRequiredError ){
 
@@ -999,7 +985,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 
 QWidget * qCheckGMail::widget()
 {
-	return statusicon::widget() ;
+        return m_statusicon->widget() ;
 }
 
 void qCheckGMail::setTimer()
@@ -1015,7 +1001,7 @@ void qCheckGMail::setTimer( int time )
 
 void qCheckGMail::startTimer()
 {
-        auto ac = statusicon::getMenuActions() ;
+        auto ac = m_statusicon->getMenuActions() ;
 
         auto j = ac.size() ;
 
