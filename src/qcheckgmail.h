@@ -92,6 +92,10 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 
+        void getAuthorization( const QString&,const QString& ) ;
+
+        void networkAccess( const QNetworkRequest& ) ;
+
         void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
@@ -144,6 +148,8 @@ private:
 	QString m_defaultApplication ;
 	QString m_profile ;
         QString m_accountNameColumnWidth ;
+
+        QByteArray m_token ;
 
 	QStringList m_profileEmailList ;
 

@@ -81,7 +81,12 @@ const QString& accounts::defaultLabelUrl() const
 
 int accounts::numberOfLabels() const
 {
-	return m_labelUrls.size() ;
+        return m_labelUrls.size() ;
+}
+
+const QString& accounts::accessToken() const
+{
+        return m_entry.accAccessToken ;
 }
 
 accountLabel& accounts::getAccountLabel( int i )

@@ -29,6 +29,7 @@ namespace Task = LxQt::Wallet::Task ;
 
 #define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
 #define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
+#define TOKEN_IDENTIFIER        "-qCheckGMail-TOKEN_KEY_ID"
 
 walletmanager::walletmanager( const QString& icon,
                               std::function< void() >&& e,
@@ -151,23 +152,28 @@ void walletmanager::readAccountInfo()
 		return shouldNotGetHere ;
 	} ;
 
-	QString labels_id  = LABEL_IDENTIFIER ;
-	QString display_id = DISPLAY_NAME_IDENTIFIER ;
+        auto labels_id  = LABEL_IDENTIFIER ;
+        auto display_id = DISPLAY_NAME_IDENTIFIER ;
+        auto token_id   = TOKEN_IDENTIFIER ;
 
         auto entries = Task::await< wallet >( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
 
 	for( const auto& it : entries ){
 
                 const auto& accName = it.getKey() ;
-		bool r = accName.endsWith( labels_id ) || accName.endsWith( display_id ) ;
+
+                bool r = accName.endsWith( labels_id ) ||
+                                accName.endsWith( display_id ) ||
+                                accName.endsWith( token_id ) ;
 
 		if( r == false ){
 
 			const auto& passWord    = _getAccEntry( accName,entries ) ;
 			const auto& labels      = _getAccEntry( accName + labels_id,entries ) ;
 			const auto& displayName = _getAccEntry( accName + display_id,entries ) ;
+                        const auto& tokenKey    = _getAccEntry( accName + token_id,entries ) ;
 
-                        m_accounts.append( accounts( { accName,passWord,displayName,labels } ) ) ;
+                        m_accounts.append( accounts( { accName,passWord,displayName,labels,tokenKey } ) ) ;
 		}
 	}
 }
@@ -277,25 +283,24 @@ void walletmanager::pushButtonAdd()
 
                 this->enableAll() ;
 
-        },[ this ]( const accounts::entry& e ){
+        },[ this ]( accounts::entry&& e ){
 
-                m_accName        = e.accName ;
-                m_accPassWord    = e.accPassword ;
-                m_accLabels      = e.accLabels ;
-                m_accDisplayName = e.accDisplayName ;
+                m_accountEntry = std::move( e ) ;
 
                 Task::run( [ this ](){
 
-                        QString labels_id  = m_accName + LABEL_IDENTIFIER ;
-                        QString display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
+                        auto labels_id  = m_accountEntry.accName + LABEL_IDENTIFIER ;
+                        auto display_id = m_accountEntry.accName + DISPLAY_NAME_IDENTIFIER ;
+                        auto token_id   = m_accountEntry.accName + TOKEN_IDENTIFIER ;
 
-                        m_wallet->addKey( m_accName,m_accPassWord.toLatin1() ) ;
-                        m_wallet->addKey( labels_id,m_accLabels.toLatin1() ) ;
-                        m_wallet->addKey( display_id,m_accDisplayName.toLatin1() ) ;
+                        m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
+                        m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
+                        m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
+                        m_wallet->addKey( token_id,m_accountEntry.accAccessToken.toLatin1() ) ;
 
                 } ).then( [ this ](){
 
-                        accounts acc( { m_accName,m_accPassWord,m_accDisplayName,m_accLabels } ) ;
+                        accounts acc( m_accountEntry ) ;
 
                         m_accounts.append( acc ) ;
 
@@ -338,10 +343,10 @@ void walletmanager::deleteAccount()
 {
 	auto item = m_table->currentItem() ;
 	m_row = item->row() ;
-	m_accName = m_table->item( m_row,0 )->text() ;
+        auto accName = m_table->item( m_row,0 )->text() ;
 
 	QMessageBox msg( this ) ;
-	msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( m_accName ) ) ;
+        msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( accName ) ) ;
 	msg.addButton( tr( "yes" ),QMessageBox::YesRole ) ;
         auto no_button = msg.addButton( tr( "no" ),QMessageBox::NoRole ) ;
 	msg.setDefaultButton( no_button ) ;
@@ -354,14 +359,16 @@ void walletmanager::deleteAccount()
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-			Task::run( [ this ](){
+                        Task::run( [ & ](){
 
-				QString labels_id  = m_accName + LABEL_IDENTIFIER ;
-				QString display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
+                                auto labels_id  = accName + LABEL_IDENTIFIER ;
+                                auto display_id = accName + DISPLAY_NAME_IDENTIFIER ;
+                                auto token_id   = accName + TOKEN_IDENTIFIER ;
 
-				m_wallet->deleteKey( m_accName ) ;
+                                m_wallet->deleteKey( accName ) ;
 				m_wallet->deleteKey( labels_id ) ;
 				m_wallet->deleteKey( display_id ) ;
+                                m_wallet->deleteKey( token_id ) ;
 
 			} ).then( [ this ](){
 
@@ -382,60 +389,62 @@ void walletmanager::editAccount()
 {
         m_row = m_table->currentRow() ;
 
-	auto _getPassWord = [ this ]( const QString& accName )->const QString&{
+        auto _getPassWord = [ this ]( const QString& accName,QString& p,QString& t ){
 
 		for( const auto& it : m_accounts ){
 
 			if( it.accountName() == accName ){
 
-				return it.passWord() ;
-			}
-		}
+                                p = it.passWord() ;
+                                t = it.accessToken() ;
 
-		static QString shouldNotGetHere ;
-		return shouldNotGetHere ;
+                                break ;
+			}
+                }
 	} ;
 
         auto accName        = m_table->item( m_row,0 )->text() ;
-        auto accPassword    = _getPassWord( accName ) ;
         auto accDisplayName = m_table->item( m_row,1 )->text() ;
         auto accLabels      = m_table->item( m_row,2 )->text() ;
 
+        QString accPassword ;
+        QString accToken ;
+
+        _getPassWord( accName,accPassword,accToken ) ;
+
 	this->disableAll() ;
 
-        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels },[ this ](){
+        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,accToken },[ this ](){
 
                 this->enableAll() ;
 
-        },[ this ]( const accounts::entry& e ){
+        },[ this ]( accounts::entry&& e ){
 
-                m_accName        = e.accName ;
-                m_accPassWord    = e.accPassword ;
-                m_accLabels      = e.accLabels ;
-                m_accDisplayName = e.accDisplayName ;
+                m_accountEntry = std::move( e ) ;
 
                 Task::run( [ this ](){
 
-                        auto labels_id  = m_accName + LABEL_IDENTIFIER ;
-                        auto display_id = m_accName + DISPLAY_NAME_IDENTIFIER ;
+                        auto labels_id  = m_accountEntry.accName + LABEL_IDENTIFIER ;
+                        auto display_id = m_accountEntry.accName + DISPLAY_NAME_IDENTIFIER ;
+                        auto token_id   = m_accountEntry.accName + TOKEN_IDENTIFIER ;
 
-                        m_wallet->deleteKey( m_accName ) ;
+                        m_wallet->deleteKey( m_accountEntry.accName ) ;
                         m_wallet->deleteKey( labels_id ) ;
                         m_wallet->deleteKey( display_id ) ;
+                        m_wallet->deleteKey( token_id ) ;
 
-                        m_wallet->addKey( m_accName,m_accPassWord.toLatin1() ) ;
-                        m_wallet->addKey( labels_id,m_accLabels.toLatin1() ) ;
-                        m_wallet->addKey( display_id,m_accDisplayName.toLatin1() ) ;
+                        m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
+                        m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
+                        m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
+                        m_wallet->addKey( token_id,m_accountEntry.accAccessToken.toLatin1() ) ;
 
                 } ).then( [ this ](){
 
-                        accounts acc( { m_accName,m_accPassWord,m_accDisplayName,m_accLabels } ) ;
+                        m_accounts.replace( m_row,accounts( m_accountEntry ) ) ;
 
-                        m_accounts.replace( m_row,acc ) ;
-
-                        m_table->item( m_row,0 )->setText( m_accName ) ;
-                        m_table->item( m_row,1 )->setText( m_accDisplayName ) ;
-                        m_table->item( m_row,2 )->setText( m_accLabels ) ;
+                        m_table->item( m_row,0 )->setText( m_accountEntry.accName ) ;
+                        m_table->item( m_row,1 )->setText( m_accountEntry.accDisplayName ) ;
+                        m_table->item( m_row,2 )->setText( m_accountEntry.accLabels ) ;
 
                         this->enableAll() ;
                 } ) ;

@@ -52,7 +52,45 @@ public:
 
 		m_entries.append( { z,std::move( f ) } ) ;
 	}
+	void post( const QNetworkRequest& r,const QByteArray& e,std::function< void( QNetworkReply * ) >&& f )
+	{
+		m_entries.append( { m_manager.post( r,e ),std::move( f ) } ) ;
+	}
+	QNetworkReply * post( const QNetworkRequest& r,const QByteArray& e )
+	{
+		QNetworkReply * reply ;
+
+		QEventLoop l ;
+
+		this->post( r,e,[ & ]( QNetworkReply * e ){
+
+			reply = e ;
+
+			l.quit() ;
+		} ) ;
+
+		l.exec() ;
+
+		return reply ;
+	}
 	QNetworkReply * get( const QNetworkRequest& r )
+	{
+		QNetworkReply * reply ;
+
+		QEventLoop l ;
+
+		this->get( r,[ & ]( QNetworkReply * e ){
+
+			reply = e ;
+
+			l.quit() ;
+		} ) ;
+
+		l.exec() ;
+
+		return reply ;
+	}
+	QNetworkReply * post( const QNetworkRequest& r )
 	{
 		QNetworkReply * reply ;
 

@@ -43,14 +43,14 @@ public:
         static addaccount& instance( QWidget * parent,
                                      const accounts::entry& e,
                                      std::function< void() >&& r,
-                                     std::function< void( const accounts::entry& e ) > && f )
+                                     std::function< void( accounts::entry&& e ) > && f )
         {
                 return *( new addaccount( parent,e,std::move( r ),std::move( f ) ) ) ;
         }
 
         static addaccount& instance( QWidget * parent,
                                      std::function< void() >&& e,
-                                     std::function< void( const accounts::entry& e ) > && f )
+                                     std::function< void( accounts::entry&& e ) > && f )
         {
                 return *( new addaccount( parent,std::move( e ),std::move( f ) ) ) ;
         }
@@ -58,11 +58,11 @@ public:
         addaccount( QWidget *,
                     const accounts::entry&,
                     std::function< void() >&&,
-                    std::function< void( const accounts::entry& e ) > && ) ;
+                    std::function< void( accounts::entry&& ) > && ) ;
 
         addaccount( QWidget *,
                     std::function< void() >&&,
-                    std::function< void( const accounts::entry& e ) > && ) ;
+                    std::function< void( accounts::entry&& ) > && ) ;
 
         ~addaccount();
 private slots:
@@ -76,7 +76,7 @@ private:
 	Ui::addaccount * m_ui ;
         bool m_edit ;
         std::function< void() > m_cancel ;
-        std::function< void( const accounts::entry& e ) > m_result ;
+        std::function< void( accounts::entry&& ) > m_result ;
 };
 
 #endif // ADDACCOUNT_H

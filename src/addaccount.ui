@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>503</width>
-    <height>205</height>
+    <height>231</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -159,7 +159,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>170</y>
+     <y>200</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -172,13 +172,26 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>170</y>
+     <y>200</y>
      <width>91</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>cancel</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cbToken">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>160</y>
+     <width>301</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>password is google's OAuth2 refresh token</string>
    </property>
   </widget>
  </widget>

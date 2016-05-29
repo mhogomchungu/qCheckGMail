@@ -52,11 +52,13 @@ public:
                 QString accPassword ;
                 QString accDisplayName ;
                 QString accLabels ;
+                QString accAccessToken ;
         };
 
         accounts( const accounts::entry& ) ;
         accounts() ;
 
+        const QString& accessToken( void )      const ;
 	const QString& accountName( void )      const ;
 	const QString& passWord( void )         const ;
 	const QString& defaultLabelUrl( void )  const ;
@@ -64,6 +66,7 @@ public:
 	const QString& labels( void )           const ;
 	const QString& labelUrlAt( int )        const ;
 	int   numberOfLabels( void )            const ;
+
 	accountLabel& getAccountLabel( int ) ;
 private:
         accounts::entry m_entry ;

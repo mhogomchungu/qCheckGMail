@@ -23,7 +23,7 @@
 
 addaccount::addaccount( QWidget * parent,
                         std::function< void() >&& e,
-                        std::function< void( const accounts::entry& e ) > && f ) :
+                        std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
         m_cancel( std::move( e ) ),
@@ -45,7 +45,7 @@ addaccount::addaccount( QWidget * parent,
 addaccount::addaccount( QWidget * parent,
                         const accounts::entry& e,
                         std::function< void() >&& r,
-                        std::function< void( const accounts::entry& e ) > && f ) :
+                        std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
         m_cancel( std::move( r ) ),
@@ -60,25 +60,39 @@ addaccount::addaccount( QWidget * parent,
         m_ui->lineEditName->setText( e.accName ) ;
 	m_ui->lineEditName->setEnabled( false ) ;
 	m_ui->lineEditName->setToolTip( QString() ) ;
-        m_ui->lineEditPassword->setText( e.accPassword ) ;
         m_ui->lineEditLabel->setText( e.accLabels ) ;
         m_ui->lineEditOptionalName->setText( e.accDisplayName ) ;
 
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
 
+        if( m_edit ){
+
+                m_ui->pushButtonAdd->setText( tr( "edit" ) ) ;
+                this->setWindowTitle( tr( "edit account" ) ) ;
+        }
+
+        m_ui->cbToken->setChecked( !e.accAccessToken.isEmpty() ) ;
+
+        if( e.accAccessToken.isEmpty() ){
+
+                m_ui->lineEditPassword->setText( e.accPassword ) ;
+        }else{
+                m_ui->lineEditPassword->setText( e.accAccessToken ) ;
+        }
+
         this->ShowUI() ;
 }
 
 void addaccount::ShowUI()
 {
-        if( m_edit ){
-
-		m_ui->pushButtonAdd->setText( tr( "edit" ) ) ;
-		this->setWindowTitle( tr( "edit account" ) ) ;
-	}
-
-	this->show();
+#if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
+        m_ui->cbToken->setEnabled( false ) ;
+        m_ui->cbToken->setChecked( false ) ;
+#else
+        m_ui->cbToken->setEnabled( true ) ;
+#endif
+        this->show() ;
 }
 
 void addaccount::HideUI()
@@ -101,17 +115,29 @@ void addaccount::closeEvent( QCloseEvent * e )
 void addaccount::add()
 {
         auto accName  = m_ui->lineEditName->text() ;
-        auto accPassword = m_ui->lineEditPassword->text() ;
         auto accDisplayName = m_ui->lineEditOptionalName->text() ;
         auto accLabels   = m_ui->lineEditLabel->text() ;
 
-        if( accName.isEmpty() || accPassword.isEmpty() ){
+        auto key = m_ui->lineEditPassword->text() ;
+
+        if( accName.isEmpty() || key.isEmpty() ){
 
 		QMessageBox msg( this ) ;
-		msg.setText( tr( "ERROR: one or more required field is empty" ) ) ;
+
+                msg.setText( tr( "ERROR: one or more required field is empty" ) ) ;
 		msg.exec() ;
 	}else{
-                m_result( { accName,accPassword,accDisplayName,accLabels } ) ;
+                QString accPassword ;
+                QString accToken ;
+
+                if( m_ui->cbToken->isChecked() ){
+
+                        accToken = key ;
+                }else{
+                        accPassword = key ;
+                }
+
+                m_result( { accName,accPassword,accDisplayName,accLabels,accToken } ) ;
 
 		this->HideUI() ;
 	}

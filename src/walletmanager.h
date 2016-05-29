@@ -100,22 +100,19 @@ private:
 
 	Ui::walletmanager * m_ui ;
 
-	QVector<accounts> m_accounts ;
+        QVector< accounts > m_accounts ;
 	LxQt::Wallet::Wallet * m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	bool m_getAccInfo ;
 	accountOperation m_action ;
-	QString m_accName ;
-	QString m_accPassWord ;
-	QString m_accLabels ;
-	QString m_accDisplayName ;
+        accounts::entry m_accountEntry ;
 	QString m_icon ;
 	int m_row ;
 
         std::function< void() > m_walletClosed ;
-        std::function< void( QVector< accounts > && ) > m_getAccountInfo ;
+        std::function< void( QVector< accounts >&& ) > m_getAccountInfo ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

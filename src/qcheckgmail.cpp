@@ -492,7 +492,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 				}
 
 				this->setTrayIconToVisible( false ) ;
-				this->doneCheckingMail() ;
+                                this->doneCheckingMail() ;
 			}
 		}
 	}
@@ -582,6 +582,8 @@ void qCheckGMail::doneCheckingMail()
 {
 	m_mutex->lock();
 
+        m_token.clear() ;
+
         m_checkingMail = false ;
 
         auto redoMailCheck = m_redoMailCheck ;
@@ -633,7 +635,7 @@ void qCheckGMail::configureAccounts()
                 m_redoMailCheck = true ;
                 m_mutex->unlock() ;
 
-        },[ this ]( QVector< accounts > && e ){
+        },[ this ]( QVector< accounts >&& e ){
 
                  this->getAccountsInfo( std::move( e ) ) ;
 
@@ -729,9 +731,7 @@ void qCheckGMail::checkMail()
 			m_accountUpdated  = false ;
 
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
-		}else{
-			;
-		}
+                }
 	}else{
 		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
 		this->getAccountsInfo() ;
@@ -747,15 +747,100 @@ void qCheckGMail::checkMail( const accounts& acc )
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
+
+QByteArray qCheckGMail::getAuthorization( const QString& token )
+{
+        Q_UNUSED( token ) ;
+        return QByteArray() ;
+}
+
+#else
+
+#include <QJsonDocument>
+
+void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& UrlLabel )
+{
+        QNetworkRequest request( QUrl( "https://accounts.google.com/o/oauth2/token" ) ) ;
+
+        request.setRawHeader( "Host","accounts.google.com" ) ;
+        request.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
+
+        m_manager.post( request,[ & ](){
+
+                auto id = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
+                auto s  = "LRfPCp9m4PLK-WTo3jHMAQ4i" ;
+                auto e  = "client_id=%1&client_secret=%2&refresh_token=%3&grant_type=refresh_token" ;
+
+                return QString( e ).arg( id,s,refresh_token ).toLatin1() ;
+
+        }(),[ UrlLabel,this ]( QNetworkReply * e ){
+
+                this->networkAccess( [ & ](){
+
+                        auto data = e->readAll() ;
+
+                        e->deleteLater() ;
+
+                        QJsonParseError error ;
+
+                        auto r = QJsonDocument::fromJson( data,&error ) ;
+
+                        if( error.error == QJsonParseError::NoError ){
+
+                                auto m = r.toVariant().toMap() ;
+
+                                if( !m.isEmpty() ){
+
+                                        m_token = "Bearer " + m[ "access_token" ].toString().toLatin1() ;
+
+                                        QUrl url( UrlLabel ) ;
+                                        QNetworkRequest request( url ) ;
+
+                                        request.setRawHeader( "Authorization",m_token ) ;
+
+                                        return request ;
+                                }
+                        }
+
+                        return QNetworkRequest() ;
+                }() ) ;
+        } ) ;
+}
+
+#endif
+
 void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 {
-	QUrl url( UrlLabel ) ;
+        const auto& token = acc.accessToken() ;
 
-	url.setUserName( acc.accountName() ) ;
-	url.setPassword( acc.passWord() ) ;
+        if( token.isEmpty() ){
 
-        QNetworkRequest request( url ) ;
+                this->networkAccess( [ & ](){
 
+                        QUrl url( UrlLabel ) ;
+
+                        url.setUserName( acc.accountName() ) ;
+                        url.setPassword( acc.passWord() ) ;
+
+                        return QNetworkRequest( url ) ;
+                }() ) ;
+        }else{
+                if( m_token.isEmpty() ){
+
+                        this->getAuthorization( token,UrlLabel ) ;
+                }else{
+                        QNetworkRequest request ;
+
+                        request.setRawHeader( "Authorization",m_token ) ;
+
+                        this->networkAccess( request ) ;
+                }
+        }
+}
+
+void qCheckGMail::networkAccess( const QNetworkRequest& request )
+{
         m_manager.get( request,&m_networkReply,[ this ]( QNetworkReply * e ){
 
                 auto content = e->readAll() ;
@@ -764,7 +849,14 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
                 if( content.isEmpty() ){
 
-                        this->noInternet() ;
+                        m_token.clear() ;
+
+                        if( e->error() == QNetworkReply::AuthenticationRequiredError ){
+
+                                qDebug() << e->errorString() ;
+                        }else{
+                                this->noInternet() ;
+                        }
                 }else{
                         if( m_reportOnAllAccounts ){
 
@@ -777,7 +869,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                 e->deleteLater() ;
         } ) ;
 
-	m_timeOut->start( m_networkTimeOut ) ;
+        m_timeOut->start( m_networkTimeOut ) ;
 }
 
 void qCheckGMail::objectGone( QObject * obj )
