@@ -749,10 +749,10 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 #if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
 
-QByteArray qCheckGMail::getAuthorization( const QString& token )
+void qCheckGMail::getAuthorization( const QString& e,const QString& f )
 {
-        Q_UNUSED( token ) ;
-        return QByteArray() ;
+	Q_UNUSED( e ) ;
+	Q_UNUSED( f ) ;
 }
 
 #else
@@ -830,11 +830,14 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
                         this->getAuthorization( token,UrlLabel ) ;
                 }else{
-                        QNetworkRequest request ;
+                        this->networkAccess( [ this ](){
 
-                        request.setRawHeader( "Authorization",m_token ) ;
+                                QNetworkRequest request ;
 
-                        this->networkAccess( request ) ;
+                                request.setRawHeader( "Authorization",m_token ) ;
+
+                                return request ;
+                        }() ) ;
                 }
         }
 }
