@@ -90,23 +90,6 @@ public:
 
 		return reply ;
 	}
-	QNetworkReply * post( const QNetworkRequest& r )
-	{
-		QNetworkReply * reply ;
-
-		QEventLoop l ;
-
-		this->get( r,[ & ]( QNetworkReply * e ){
-
-			reply = e ;
-
-			l.quit() ;
-		} ) ;
-
-		l.exec() ;
-
-		return reply ;
-	}
 private slots:
 	void networkReply( QNetworkReply * r )
 	{
