@@ -635,6 +635,10 @@ void qCheckGMail::configureAccounts()
                 m_redoMailCheck = true ;
                 m_mutex->unlock() ;
 
+        },[ this ](){
+
+                return this->tokenGenerator() ;
+
         },[ this ]( QVector< accounts >&& e ){
 
                  this->getAccountsInfo( std::move( e ) ) ;
@@ -861,6 +865,11 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
         m_timeOut->start( m_networkTimeOut ) ;
 }
 
+QByteArray qCheckGMail::tokenGenerator()
+{
+        return QByteArray() ;
+}
+
 void qCheckGMail::objectGone( QObject * obj )
 {
 	if( m_enableDebug ){
@@ -912,7 +921,11 @@ void qCheckGMail::configurePassWord()
 
 void qCheckGMail::getAccountsInfo()
 {
-        walletmanager::instance( m_applicationIcon,[](){},[ this ]( QVector< accounts >&& e ){
+        walletmanager::instance( m_applicationIcon,[](){},[ this ](){
+
+                return this->tokenGenerator() ;
+
+        },[ this ]( QVector< accounts >&& e ){
 
                 this->getAccountsInfo( std::move( e ) ) ;
 

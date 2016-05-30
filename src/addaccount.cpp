@@ -22,10 +22,12 @@
 #include "ui_addaccount.h"
 
 addaccount::addaccount( QWidget * parent,
+                        std::function< QByteArray() >& k,
                         std::function< void() >&& e,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
+        m_tokenGenerator( k ),
         m_cancel( std::move( e ) ),
         m_result( std::move( f ) )
 {
@@ -44,10 +46,12 @@ addaccount::addaccount( QWidget * parent,
 
 addaccount::addaccount( QWidget * parent,
                         const accounts::entry& e,
+                        std::function< QByteArray() >& k,
                         std::function< void() >&& r,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
+        m_tokenGenerator( k ),
         m_cancel( std::move( r ) ),
         m_result( std::move( f ) )
 {
@@ -92,7 +96,23 @@ void addaccount::ShowUI()
 #else
         m_ui->cbToken->setEnabled( true ) ;
 #endif
+
+        connect( m_ui->cbToken,SIGNAL( clicked( bool ) ),this,SLOT( useToken( bool ) ) ) ;
+
         this->show() ;
+}
+
+void addaccount::useToken( bool e )
+{
+        if( e ){
+
+                auto r = m_tokenGenerator() ;
+
+                if( r.isEmpty() ){
+
+                        qDebug() << "ERROR: Failed to generate token" ;
+                }
+        }
 }
 
 void addaccount::HideUI()

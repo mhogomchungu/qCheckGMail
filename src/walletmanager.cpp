@@ -33,8 +33,9 @@ namespace Task = LxQt::Wallet::Task ;
 
 walletmanager::walletmanager( const QString& icon,
                               std::function< void() >&& e,
+                              std::function< QByteArray() >&& k,
                               std::function< void( QVector< accounts > && ) >&& f ) :
-        m_ui( nullptr ),m_wallet( nullptr ),m_walletClosed( e ),m_getAccountInfo( f )
+        m_ui( nullptr ),m_wallet( nullptr ),m_walletClosed( e ),m_tokenGenerator( k ),m_getAccountInfo( f )
 {
 	m_icon = QString( ":/%1" ).arg( icon ) ;
 }
@@ -279,7 +280,7 @@ void walletmanager::pushButtonAdd()
 {
 	this->disableAll() ;
 
-        addaccount::instance( this,[ this ](){
+        addaccount::instance( this,m_tokenGenerator,[ this ](){
 
                 this->enableAll() ;
 
@@ -414,7 +415,8 @@ void walletmanager::editAccount()
 
 	this->disableAll() ;
 
-        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,accToken },[ this ](){
+        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,accToken },
+                             m_tokenGenerator,[ this ](){
 
                 this->enableAll() ;
 
