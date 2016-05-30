@@ -24,9 +24,6 @@
 
 qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
 {
-        m_statusicon->setCategory( m_statusicon->ApplicationStatus ) ;
-	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
-        //QCoreApplication::setApplicationDisplayName( "qCheckGMail" ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -73,7 +70,7 @@ void qCheckGMail::changeIcon( const QString& icon,int count )
 
 void qCheckGMail::start()
 {
-	QMetaObject::invokeMethod( this,"run",Qt::QueuedConnection ) ;
+        QMetaObject::invokeMethod( this,"run",Qt::QueuedConnection ) ;
 }
 
 void qCheckGMail::run()
@@ -81,6 +78,9 @@ void qCheckGMail::run()
 	configurationoptionsdialog::setProfile( m_profile ) ;
 
         m_statusicon.reset( new statusicon() ) ;
+
+        m_statusicon->setCategory( m_statusicon->ApplicationStatus ) ;
+        QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
         m_enableDebug         = m_statusicon->enableDebug() ;
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
@@ -146,7 +146,7 @@ void qCheckGMail::run()
                 return e ;
         }() ;
 
-	this->setLocalLanguage() ;
+        this->setLocalLanguage() ;
 	this->addActionsToMenu() ;
 	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
 	this->getAccountsInfo() ;
