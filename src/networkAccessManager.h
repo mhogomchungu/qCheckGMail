@@ -31,6 +31,8 @@ class NetworkAccessManager : public QObject
 {
 	Q_OBJECT
 public:
+	using function_t = std::function< void( QNetworkReply * ) > ;
+
 	NetworkAccessManager()
 	{
 		connect( &m_manager,SIGNAL( finished( QNetworkReply * ) ),
@@ -40,12 +42,11 @@ public:
 	{
 		return &m_manager ;
 	}
-	void get( const QNetworkRequest& r,std::function< void( QNetworkReply * ) >&& f )
+	void get( const QNetworkRequest& r,function_t&& f )
 	{
 		m_entries.append( { m_manager.get( r ),std::move( f ) } ) ;
 	}
-	void get( const QNetworkRequest& r,QNetworkReply ** e,
-		  std::function< void( QNetworkReply * ) >&& f )
+	void get( const QNetworkRequest& r,QNetworkReply ** e,function_t&& f )
 	{
 		auto q = m_manager.get( r ) ;
 
@@ -70,13 +71,13 @@ public:
 
 		return q ;
 	}
-	void post( const QNetworkRequest& r,const QByteArray& e,
-		   std::function< void( QNetworkReply * ) >&& f )
+	template< typename T >
+	void post( const QNetworkRequest& r,const T& e,function_t&& f )
 	{
 		m_entries.append( { m_manager.post( r,e ),std::move( f ) } ) ;
 	}
-	void post( const QNetworkRequest& r,const QByteArray& e,QNetworkReply ** z,
-		   std::function< void( QNetworkReply * ) >&& f )
+	template< typename T >
+	void post( const QNetworkRequest& r,const T& e,QNetworkReply ** z,function_t&& f )
 	{
 		auto q = m_manager.post( r,e ) ;
 
@@ -84,7 +85,8 @@ public:
 
 		m_entries.append( { q,std::move( f ) } ) ;
 	}
-	QNetworkReply * post( const QNetworkRequest& r,const QByteArray& e )
+	template< typename T >
+	QNetworkReply * post( const QNetworkRequest& r,const T& e )
 	{
 		QNetworkReply * q ;
 
@@ -101,12 +103,11 @@ public:
 
 		return q ;
 	}
-	void head( const QNetworkRequest& r,std::function< void( QNetworkReply * ) >&& f )
+	void head( const QNetworkRequest& r,function_t&& f )
 	{
 		m_entries.append( { m_manager.head( r ),std::move( f ) } ) ;
 	}
-	void head( const QNetworkRequest& r,QNetworkReply ** e,
-		  std::function< void( QNetworkReply * ) >&& f )
+	void head( const QNetworkRequest& r,QNetworkReply ** e,function_t&& f )
 	{
 		auto q = m_manager.head( r ) ;
 
@@ -151,8 +152,6 @@ private slots:
 		}
 	}
 private:
-	using pair_t = std::pair< QNetworkReply *,std::function< void( QNetworkReply * ) > > ;
-
-	QVector< pair_t > m_entries ;
+	QVector< std::pair< QNetworkReply *,function_t > > m_entries ;
 	QNetworkAccessManager m_manager ;
 };
