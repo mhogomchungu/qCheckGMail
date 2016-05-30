@@ -16,184 +16,115 @@
   <property name="windowTitle">
    <string>create a new account</string>
   </property>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>461</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QLineEdit" name="lineEditName">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>20</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>account name</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditName">
+        <property name="toolTip">
+         <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>account password</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>account name</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditPassword">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>80</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditLabel">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>110</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>multiple labels can be entered by separating them with a comma(,)</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>label(s)(optional)</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>display name(optional)</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditOptionalName">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>50</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="pushButtonAdd">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>200</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>add</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButtonCancel">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>200</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>cancel</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="cbToken">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>160</y>
-     <width>301</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>password is google's OAuth2 refresh token</string>
-   </property>
-  </widget>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>display name(optional)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditOptionalName"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>account password</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEditPassword">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>label(s)(optional)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="lineEditLabel">
+        <property name="toolTip">
+         <string>multiple labels can be entered by separating them with a comma(,)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QCheckBox" name="cbToken">
+     <property name="text">
+      <string>password is google's OAuth2 refresh token</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="pushButtonAdd">
+     <property name="text">
+      <string>add</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="pushButtonCancel">
+     <property name="text">
+      <string>cancel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <tabstops>
   <tabstop>lineEditName</tabstop>

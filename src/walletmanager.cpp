@@ -53,7 +53,11 @@ void walletmanager::buildGUI()
 	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
 
-	this->setFixedSize( this->size() ) ;
+        //this->setFixedSize( this->size() ) ;
+
+        m_ui->pushButtonAccountAdd->setMinimumHeight( 31 ) ;
+        m_ui->pushButtonClose->setMaximumHeight( 31 ) ;
+
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 	this->setWindowIcon( QIcon( m_icon ) ) ;
 

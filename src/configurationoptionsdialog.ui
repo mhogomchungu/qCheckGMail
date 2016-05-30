@@ -16,280 +16,174 @@
   <property name="windowTitle">
    <string>option configuration window</string>
   </property>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>511</width>
-     <height>321</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QFrame" name="frame_2">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>update interval(minutes)</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEditUpdateCheckInterval">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_3">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>110</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QCheckBox" name="checkBoxAutoStartEnabled">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string/>
      </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QFrame" name="frame_2">
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>update interval(minutes)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEditUpdateCheckInterval"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QFrame" name="frame_6">
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>account information storage system</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBoxBackEndSystem"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QFrame" name="frame_3">
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>auto start application at log in</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="checkBoxAutoStartEnabled">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QFrame" name="frame_4">
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>localization language</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBoxLocalLanguage">
+           <item>
+            <property name="text">
+             <string notr="true">english_US</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QFrame" name="frame_5">
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>report on all accounts</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="checkBoxReportOnAllAccounts">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QFrame" name="frame_7">
+        <layout class="QGridLayout" name="gridLayout_8">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>audio notify</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="checkBoxAudioNotify">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushButtonClose">
      <property name="text">
-      <string>auto start application at log in</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+      <string>close</string>
      </property>
     </widget>
-   </widget>
-   <widget class="QFrame" name="frame_4">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>160</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QComboBox" name="comboBoxLocalLanguage">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string notr="true">english_US</string>
-      </property>
-     </item>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>localization language</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_6">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>60</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>account information storage system</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBoxBackEndSystem">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_5">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>210</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QCheckBox" name="checkBoxReportOnAllAccounts">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>0</y>
-       <width>171</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>report on all accounts</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_7">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>271</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>audio notify</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBoxAudioNotify">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>0</y>
-       <width>84</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="pushButtonClose">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>330</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>close</string>
-   </property>
-  </widget>
+   </item>
+  </layout>
  </widget>
  <tabstops>
   <tabstop>lineEditUpdateCheckInterval</tabstop>

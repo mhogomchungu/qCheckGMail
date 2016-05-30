@@ -73,7 +73,9 @@ configurationoptionsdialog::configurationoptionsdialog( QObject * parent ) :
 {
 	m_ui->setupUi( this ) ;
 
-	this->setFixedSize( this->size() ) ;
+        //this->setFixedSize( this->size() ) ;
+        m_ui->pushButtonClose->setMinimumHeight( 31 ) ;
+
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
 	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;

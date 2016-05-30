@@ -33,7 +33,7 @@ addaccount::addaccount( QWidget * parent,
 {
 	m_ui->setupUi( this ) ;
 
-        this->setFixedSize( this->size() ) ;
+        //this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
         m_edit = false ;
@@ -56,7 +56,7 @@ addaccount::addaccount( QWidget * parent,
         m_result( std::move( f ) )
 {
 	m_ui->setupUi( this );
-	this->setFixedSize( this->size() ) ;
+        //this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
         m_edit = true ;
@@ -96,6 +96,9 @@ void addaccount::ShowUI()
 #else
         m_ui->cbToken->setEnabled( true ) ;
 #endif
+
+        m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
+        m_ui->pushButtonCancel->setMinimumHeight( 31 ) ;
 
         connect( m_ui->cbToken,SIGNAL( clicked( bool ) ),this,SLOT( useToken( bool ) ) ) ;
 

@@ -16,91 +16,71 @@
   <property name="windowTitle">
    <string>account configuration window</string>
   </property>
-  <widget class="QPushButton" name="pushButtonClose">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>280</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&amp;close</string>
-   </property>
-   <property name="default">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>20</y>
-     <width>561</width>
-     <height>261</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Accounts information</string>
-   </property>
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>541</width>
-      <height>221</height>
-     </rect>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::EditKeyPressed</set>
-    </property>
-    <property name="tabKeyNavigation">
-     <bool>false</bool>
-    </property>
-    <property name="showDropIndicator" stdset="0">
-     <bool>false</bool>
-    </property>
-    <property name="dragDropOverwriteMode">
-     <bool>false</bool>
-    </property>
-    <property name="selectionMode">
-     <enum>QAbstractItemView::NoSelection</enum>
-    </property>
-    <property name="showGrid">
-     <bool>false</bool>
-    </property>
-    <column>
-     <property name="text">
-      <string>account name</string>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Accounts information</string>
      </property>
-    </column>
-    <column>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QTableWidget" name="tableWidget">
+        <property name="editTriggers">
+         <set>QAbstractItemView::EditKeyPressed</set>
+        </property>
+        <property name="tabKeyNavigation">
+         <bool>false</bool>
+        </property>
+        <property name="showDropIndicator" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::NoSelection</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <column>
+         <property name="text">
+          <string>account name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>display name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>account labels</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushButtonAccountAdd">
      <property name="text">
-      <string>display name</string>
+      <string>add</string>
      </property>
-    </column>
-    <column>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushButtonClose">
      <property name="text">
-      <string>account labels</string>
+      <string>&amp;close</string>
      </property>
-    </column>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="pushButtonAccountAdd">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>280</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>add</string>
-   </property>
-  </widget>
+     <property name="default">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <tabstops>
   <tabstop>tableWidget</tabstop>
