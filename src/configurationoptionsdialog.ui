@@ -28,6 +28,12 @@
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
           <widget class="QLabel" name="label">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>update interval(minutes)</string>
            </property>
@@ -40,7 +46,14 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEditUpdateCheckInterval"/>
+          <widget class="QLineEdit" name="lineEditUpdateCheckInterval">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -50,6 +63,12 @@
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
           <widget class="QLabel" name="label_5">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>account information storage system</string>
            </property>
@@ -62,7 +81,14 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="comboBoxBackEndSystem"/>
+          <widget class="QComboBox" name="comboBoxBackEndSystem">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -72,6 +98,12 @@
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>auto start application at log in</string>
            </property>
@@ -85,6 +117,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QCheckBox" name="checkBoxAutoStartEnabled">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -98,6 +136,12 @@
         <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QLabel" name="label_3">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>localization language</string>
            </property>
@@ -111,6 +155,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="comboBoxLocalLanguage">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <item>
             <property name="text">
              <string notr="true">english_US</string>
@@ -126,6 +176,12 @@
         <layout class="QGridLayout" name="gridLayout_7">
          <item row="0" column="0">
           <widget class="QLabel" name="label_4">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>report on all accounts</string>
            </property>
@@ -139,6 +195,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QCheckBox" name="checkBoxReportOnAllAccounts">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -152,6 +214,12 @@
         <layout class="QGridLayout" name="gridLayout_8">
          <item row="0" column="0">
           <widget class="QLabel" name="label_6">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string>audio notify</string>
            </property>
@@ -165,6 +233,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QCheckBox" name="checkBoxAudioNotify">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -178,6 +252,12 @@
    </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="pushButtonClose">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>close</string>
      </property>

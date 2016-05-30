@@ -65,6 +65,12 @@
    </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="pushButtonAccountAdd">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>add</string>
      </property>
@@ -72,6 +78,12 @@
    </item>
    <item row="1" column="1">
     <widget class="QPushButton" name="pushButtonClose">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>&amp;close</string>
      </property>

@@ -25,6 +25,12 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="text">
          <string>account name</string>
         </property>
@@ -38,6 +44,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEditName">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</string>
@@ -46,6 +58,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_4">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="text">
          <string>display name(optional)</string>
         </property>
@@ -58,10 +76,23 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEditOptionalName"/>
+       <widget class="QLineEdit" name="lineEditOptionalName">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="text">
          <string>account password</string>
         </property>
@@ -75,6 +106,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="lineEditPassword">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
         </property>
@@ -82,6 +119,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_3">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="text">
          <string>label(s)(optional)</string>
         </property>
@@ -95,6 +138,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </item>
       <item row="3" column="1">
        <widget class="QLineEdit" name="lineEditLabel">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>multiple labels can be entered by separating them with a comma(,)</string>
         </property>
@@ -105,6 +154,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QCheckBox" name="cbToken">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>password is google's OAuth2 refresh token</string>
      </property>
@@ -112,6 +167,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
    </item>
    <item row="2" column="0">
     <widget class="QPushButton" name="pushButtonAdd">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>add</string>
      </property>
@@ -119,6 +180,12 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
    </item>
    <item row="2" column="1">
     <widget class="QPushButton" name="pushButtonCancel">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
      <property name="text">
       <string>cancel</string>
      </property>
