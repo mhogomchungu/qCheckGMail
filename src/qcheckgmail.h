@@ -102,7 +102,7 @@ private:
         void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
-	void noInternet( void ) ;
+        void noInternet( const QString& = QString() ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;

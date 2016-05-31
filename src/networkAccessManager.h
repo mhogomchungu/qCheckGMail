@@ -26,11 +26,35 @@
 
 #include <functional>
 #include <utility>
+#include <memory>
 
 class NetworkAccessManager : public QObject
 {
 	Q_OBJECT
-public:
+public:	
+	class NetworkReply
+	{
+	public:
+		NetworkReply( QNetworkReply * e ) : m_QNetworkReply( e )
+		{
+		}
+		NetworkReply( NetworkReply&& other )
+		{
+			m_QNetworkReply->deleteLater() ;
+			m_QNetworkReply = other.m_QNetworkReply ;
+		}
+		~NetworkReply()
+		{
+			m_QNetworkReply->deleteLater() ;
+		}
+		QNetworkReply * operator->()
+		{
+			return m_QNetworkReply ;
+		}
+	private:
+		QNetworkReply * m_QNetworkReply = nullptr ;
+	};
+
 	using function_t = std::function< void( QNetworkReply * ) > ;
 
 	NetworkAccessManager()

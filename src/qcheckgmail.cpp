@@ -99,6 +99,8 @@ void qCheckGMail::run()
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
+        m_checkingMail      = false ;
+
         m_clickActions.onLeftClick = [ & ](){
 
 		if( m_defaultApplication == "browser" ){
@@ -132,8 +134,6 @@ void qCheckGMail::run()
 
                 return e ;
         }() ;
-
-	m_checkingMail = false ;
 
         m_timer = [ this ](){
 
@@ -203,12 +203,18 @@ void qCheckGMail::addActionsToMenu()
         m_statusicon->addQuitAction() ;
 }
 
-void qCheckGMail::noInternet( void )
+void qCheckGMail::noInternet( const QString& e )
 {
         auto header = tr( "network problem detected" ) ;
         auto msg    = tr( "could not connect to the internet" ) ;
 
-	this->showToolTip( m_errorIcon,header,msg ) ;
+        if( e.isEmpty() ){
+
+                this->showToolTip( m_errorIcon,header,msg ) ;
+        }else{
+                this->showToolTip( m_errorIcon,header,e ) ;
+        }
+
 	this->changeIcon( m_errorIcon ) ;
 	this->doneCheckingMail() ;
 }
@@ -780,11 +786,11 @@ void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& 
 
         }(),[ UrlLabel,this ]( QNetworkReply * e ){
 
+                NetworkAccessManager::NetworkReply q( e ) ;
+
                 this->networkAccess( [ & ](){
 
-                        auto data = e->readAll() ;
-
-                        e->deleteLater() ;
+                        auto data = q->readAll() ;
 
                         QJsonParseError error ;
 
@@ -822,12 +828,15 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
                 this->networkAccess( [ & ](){
 
-                        QUrl url( UrlLabel ) ;
+                        return QNetworkRequest( [ & ](){
 
-                        url.setUserName( acc.accountName() ) ;
-                        url.setPassword( acc.passWord() ) ;
+                                QUrl url( UrlLabel ) ;
 
-                        return QNetworkRequest( url ) ;
+                                url.setUserName( acc.accountName() ) ;
+                                url.setPassword( acc.passWord() ) ;
+
+                                return url ;
+                        }() ) ;
                 }() ) ;
         }else{
                 this->getAuthorization( token,UrlLabel ) ;
@@ -838,7 +847,9 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
         m_manager.get( request,&m_networkReply,[ this ]( QNetworkReply * e ){
 
-                auto content = e->readAll() ;
+                NetworkAccessManager::NetworkReply q( e ) ;
+
+                auto content = q->readAll() ;
 
                 m_timeOut->stop() ;
 
@@ -846,7 +857,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
                         if( e->error() == QNetworkReply::AuthenticationRequiredError ){
 
-                                qDebug() << e->errorString() ;
+                                this->noInternet( e->errorString() ) ;
                         }else{
                                 this->noInternet() ;
                         }
@@ -858,8 +869,6 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                                 this->reportOnlyFirstAccountWithMail( content ) ;
                         }
                 }
-
-                e->deleteLater() ;
         } ) ;
 
         m_timeOut->start( m_networkTimeOut ) ;
