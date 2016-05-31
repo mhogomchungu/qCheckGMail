@@ -40,12 +40,20 @@ public:
 		}
 		NetworkReply( NetworkReply&& other )
 		{
-			m_QNetworkReply->deleteLater() ;
+			if( m_QNetworkReply ){
+
+				m_QNetworkReply->deleteLater() ;
+			}
+
 			m_QNetworkReply = other.m_QNetworkReply ;
+			other.m_QNetworkReply = nullptr ;
 		}
 		~NetworkReply()
 		{
-			m_QNetworkReply->deleteLater() ;
+			if( m_QNetworkReply ){
+
+				m_QNetworkReply->deleteLater() ;
+			}
 		}
 		QNetworkReply * operator->()
 		{
