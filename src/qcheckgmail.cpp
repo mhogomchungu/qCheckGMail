@@ -784,15 +784,13 @@ void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& 
 
                 return QString( e ).arg( id,s,refresh_token ).toLatin1() ;
 
-        }(),[ UrlLabel,this ]( QNetworkReply * e ){
-
-                NetworkAccessManager::NetworkReply q = e ;
+        }(),[ UrlLabel,this ]( NetworkAccessManager::NetworkReply e ){
 
                 this->networkAccess( [ & ](){
 
                         QJsonParseError error ;
 
-                        auto r = QJsonDocument::fromJson( q->readAll(),&error ) ;
+                        auto r = QJsonDocument::fromJson( e->readAll(),&error ) ;
 
                         if( error.error == QJsonParseError::NoError ){
 
@@ -843,11 +841,9 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-        m_manager.get( request,&m_networkReply,[ this ]( QNetworkReply * e ){
+        m_manager.get( request,&m_networkReply,[ this ]( NetworkAccessManager::NetworkReply e ){
 
-                NetworkAccessManager::NetworkReply q = e ;
-
-                auto content = q->readAll() ;
+                auto content = e->readAll() ;
 
                 m_timeOut->stop() ;
 
