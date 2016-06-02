@@ -816,29 +816,6 @@ void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& 
 
 #endif
 
-void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
-{
-        const auto& token = acc.accessToken() ;
-
-        if( token.isEmpty() ){
-
-                this->networkAccess( [ & ](){
-
-                        return QNetworkRequest( [ & ](){
-
-                                QUrl url( UrlLabel ) ;
-
-                                url.setUserName( acc.accountName() ) ;
-                                url.setPassword( acc.passWord() ) ;
-
-                                return url ;
-                        }() ) ;
-                }() ) ;
-        }else{
-                this->getAuthorization( token,UrlLabel ) ;
-        }
-}
-
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
         m_manager.get( request,&m_networkReply,[ this ]( NetworkAccessManager::NetworkReply e ){
@@ -866,6 +843,29 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
         } ) ;
 
         m_timeOut->start( m_networkTimeOut ) ;
+}
+
+void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
+{
+        const auto& token = acc.accessToken() ;
+
+        if( token.isEmpty() ){
+
+                this->networkAccess( [ & ](){
+
+                        return QNetworkRequest( [ & ](){
+
+                                QUrl url( UrlLabel ) ;
+
+                                url.setUserName( acc.accountName() ) ;
+                                url.setPassword( acc.passWord() ) ;
+
+                                return url ;
+                        }() ) ;
+                }() ) ;
+        }else{
+                this->getAuthorization( token,UrlLabel ) ;
+        }
 }
 
 QByteArray qCheckGMail::tokenGenerator()
