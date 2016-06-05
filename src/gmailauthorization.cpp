@@ -33,10 +33,6 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 {
         m_ui->setupUi( this ) ;
 
-        auto r = "https://accounts.google.com/o/oauth2/auth?client_id=90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=https%3A%2F%2Fmail.google.com%2F" ;
-
-        m_ui->textEdit->setText( r ) ;
-
         connect( m_ui->pbCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
         connect( m_ui->pbSetCode,SIGNAL( clicked() ),this,SLOT( setCode() ) ) ;
 
