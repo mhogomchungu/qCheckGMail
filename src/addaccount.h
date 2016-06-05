@@ -40,31 +40,31 @@ class addaccount : public QDialog
 	Q_OBJECT
 public:
 
-        static addaccount& instance( QWidget * parent,
+        static addaccount& instance( QDialog * parent,
                                      const accounts::entry& e,
-                                     std::function< QByteArray() >& k,
+                                     std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
                                      std::function< void() >&& r,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
                 return *( new addaccount( parent,e,k,std::move( r ),std::move( f ) ) ) ;
         }
 
-        static addaccount& instance( QWidget * parent,
-                                     std::function< QByteArray() >& k,
+        static addaccount& instance( QDialog * parent,
+                                     std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
                                      std::function< void() >&& e,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
                 return *( new addaccount( parent,k,std::move( e ),std::move( f ) ) ) ;
         }
 
-        addaccount( QWidget *,
+        addaccount( QDialog *,
                     const accounts::entry&,
-                    std::function< QByteArray() >&,
+                    std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 
-        addaccount( QWidget *,
-                    std::function< QByteArray() >&,
+        addaccount( QDialog *,
+                    std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 
@@ -80,7 +80,7 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
         bool m_edit ;
-        std::function< QByteArray() >& m_tokenGenerator ;
+        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& m_getAuthorization ;
         std::function< void() > m_cancel ;
         std::function< void( accounts::entry&& ) > m_result ;
 };

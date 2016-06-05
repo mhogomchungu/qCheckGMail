@@ -21,13 +21,15 @@
 #include "addaccount.h"
 #include "ui_addaccount.h"
 
-addaccount::addaccount( QWidget * parent,
-                        std::function< QByteArray() >& k,
+#include "gmailauthorization.h"
+
+addaccount::addaccount( QDialog * parent,
+                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
                         std::function< void() >&& e,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
-        m_tokenGenerator( k ),
+        m_getAuthorization( k ),
         m_cancel( std::move( e ) ),
         m_result( std::move( f ) )
 {
@@ -44,14 +46,14 @@ addaccount::addaccount( QWidget * parent,
         this->ShowUI() ;
 }
 
-addaccount::addaccount( QWidget * parent,
+addaccount::addaccount( QDialog * parent,
                         const accounts::entry& e,
-                        std::function< QByteArray() >& k,
+                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
                         std::function< void() >&& r,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
-        m_tokenGenerator( k ),
+        m_getAuthorization( k ),
         m_cancel( std::move( r ) ),
         m_result( std::move( f ) )
 {
@@ -109,12 +111,20 @@ void addaccount::useToken( bool e )
 {
         if( e ){
 
-                auto r = m_tokenGenerator() ;
+                gmailauthorization::instance( this ,m_getAuthorization,[ this ](){
 
-                if( r.isEmpty() ){
+                        m_ui->cbToken->setChecked( false ) ;
 
-                        qDebug() << "ERROR: Failed to generate token" ;
-                }
+                },[ this ]( const QByteArray& e ){
+
+                        if( e.isEmpty() ){
+
+                                m_ui->lineEditPassword->clear() ;
+                                qDebug() << "ERROR: Failed to generate token" ;
+                        }else{
+                                m_ui->lineEditPassword->setText( e ) ;
+                        }
+                } ) ;
         }
 }
 

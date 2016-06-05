@@ -93,9 +93,9 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 
-        QByteArray tokenGenerator() ;
+        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > getAuthorization() ;
 
-        void getAuthorization( const QString&,const QString& ) ;
+        void getAccessToken( const QString&,const QString& ) ;
 
         void networkAccess( const QNetworkRequest& ) ;
 

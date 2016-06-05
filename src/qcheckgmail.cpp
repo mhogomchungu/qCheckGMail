@@ -641,11 +641,7 @@ void qCheckGMail::configureAccounts()
                 m_redoMailCheck = true ;
                 m_mutex->unlock() ;
 
-        },[ this ](){
-
-                return this->tokenGenerator() ;
-
-        },[ this ]( QVector< accounts >&& e ){
+        },this->getAuthorization(),[ this ]( QVector< accounts >&& e ){
 
                  this->getAccountsInfo( std::move( e ) ) ;
 
@@ -759,24 +755,39 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 #if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
 
-void qCheckGMail::getAuthorization( const QString& e,const QString& f )
+std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > qCheckGMail::getAuthorization()
 {
-	Q_UNUSED( e ) ;
-	Q_UNUSED( f ) ;
+        return [ this ]( const QByteArray& authocode,std::function< void( const QByteArray& ) > function ){
+
+                Q_UNUSED( authocode ) ;
+
+                function( QByteArray() ) ;
+        } ;
+}
+
+void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& UrlLabel )
+{
+        Q_UNUSED( refresh_token ) ;
+        Q_UNUSED( UrlLabel ) ;
 }
 
 #else
 
 #include <QJsonDocument>
 
-void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& UrlLabel )
+QNetworkRequest _networkRequest()
 {
         QNetworkRequest request( QUrl( "https://accounts.google.com/o/oauth2/token" ) ) ;
 
         request.setRawHeader( "Host","accounts.google.com" ) ;
         request.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
 
-        m_manager.post( request,[ & ](){
+        return request ;
+}
+
+void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& UrlLabel )
+{
+        m_manager.post( _networkRequest(),[ & ](){
 
                 auto id = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
                 auto s  = "LRfPCp9m4PLK-WTo3jHMAQ4i" ;
@@ -812,6 +823,41 @@ void qCheckGMail::getAuthorization( const QString& refresh_token,const QString& 
                         return QNetworkRequest() ;
                 }() ) ;
         } ) ;
+}
+
+std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > qCheckGMail::getAuthorization()
+{
+        return [ this ]( const QByteArray& authocode,std::function< void( const QByteArray& ) > function ){
+
+                m_manager.post( _networkRequest(),[ & ](){
+
+                         auto id     = "client_id=90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
+                         auto secret = "client_secret=LRfPCp9m4PLK-WTo3jHMAQ4i" ;
+                         auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
+                         auto grant  = "grant_type=authorization_code" ;
+                         auto code   = "code=" ;
+
+                         return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() + authocode ;
+
+                 }(),[ this,function ]( NetworkAccessManager::NetworkReply e ){
+
+                        QJsonParseError error ;
+
+                        auto r = QJsonDocument::fromJson( e->readAll(),&error ) ;
+
+                        if( error.error == QJsonParseError::NoError ){
+
+                                auto m = r.toVariant().toMap() ;
+
+                                if( !m.isEmpty() ){
+
+                                        return function( m[ "refresh_token" ].toString().toLatin1() ) ;
+                                }
+                        }
+
+                        function( QByteArray() ) ;
+                } ) ;
+        } ;
 }
 
 #endif
@@ -864,13 +910,8 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                         }() ) ;
                 }() ) ;
         }else{
-                this->getAuthorization( token,UrlLabel ) ;
+                this->getAccessToken( token,UrlLabel ) ;
         }
-}
-
-QByteArray qCheckGMail::tokenGenerator()
-{
-        return QByteArray() ;
 }
 
 void qCheckGMail::objectGone( QObject * obj )
@@ -924,15 +965,14 @@ void qCheckGMail::configurePassWord()
 
 void qCheckGMail::getAccountsInfo()
 {
-        walletmanager::instance( m_applicationIcon,[](){},[ this ](){
+        auto e = this->getAuthorization() ;
 
-                return this->tokenGenerator() ;
-
-        },[ this ]( QVector< accounts >&& e ){
+        auto f = [ this ]( QVector< accounts >&& e ){
 
                 this->getAccountsInfo( std::move( e ) ) ;
+        } ;
 
-        } ).getAccounts() ;
+        walletmanager::instance( m_applicationIcon,[](){},std::move( e ),std::move( f ) ).getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()

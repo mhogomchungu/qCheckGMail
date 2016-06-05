@@ -59,7 +59,8 @@ class walletmanager : public QDialog
 public:
         static walletmanager& instance( const QString& icon = QString(),
                                         std::function< void() >&& e = [](){},
-                                        std::function< QByteArray() >&& k = [](){ return QByteArray() ; },
+                                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&& k =
+                                        []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) ; },
                                         std::function< void( QVector< accounts > && ) >&& f
                                         = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } )
         {
@@ -68,7 +69,7 @@ public:
 
         walletmanager( const QString& icon,
                        std::function< void() >&&,
-                       std::function< QByteArray() >&&,
+                       std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&&,
                        std::function< void( QVector< accounts > && ) >&& ) ;
 
 	void changeWalletPassword( void ) ;
@@ -114,7 +115,7 @@ private:
 	int m_row ;
 
         std::function< void() > m_walletClosed ;
-        std::function< QByteArray() > m_tokenGenerator ;
+        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > m_getAuthorization ;
         std::function< void( QVector< accounts >&& ) > m_getAccountInfo ;
 };
 
