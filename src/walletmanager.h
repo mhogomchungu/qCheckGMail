@@ -59,22 +59,24 @@ class walletmanager : public QDialog
 public:
         static walletmanager& instance( const QString& icon )
         {
-                std::function< void() > e = [](){} ;
+                auto k = []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){
 
-                std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > k =
-                []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) } ;
+                        Q_UNUSED( e ) ; Q_UNUSED( f ) ;
+                } ;
 
-                std::function< void( QVector< accounts > && ) > f = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } ;
+                auto f = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } ;
 
-                return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( f ) ) ) ;
+                return *( new walletmanager( icon,[](){},std::move( k ),std::move( f ) ) ) ;
         }
 
         static walletmanager& instance( std::function< void( QVector< accounts > ) >&& f )
         {
-                std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > k =
-                []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) } ;
+                auto k = []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){
 
-                 return *( new walletmanager( QString(),[](){},std::move( k ),std::move( f ) ) ) ;
+                        Q_UNUSED( e ) ; Q_UNUSED( f )
+                } ;
+
+                return *( new walletmanager( QString(),[](){},std::move( k ),std::move( f ) ) ) ;
         }
 
         static walletmanager& instance( const QString& icon,
