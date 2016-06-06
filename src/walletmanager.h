@@ -57,12 +57,30 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-        static walletmanager& instance( const QString& icon = QString(),
-                                        std::function< void() >&& e = [](){},
-                                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&& k =
-                                        []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) ; },
-                                        std::function< void( QVector< accounts > && ) >&& f
-                                        = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } )
+        static walletmanager& instance( const QString& icon )
+        {
+                std::function< void() > e = [](){} ;
+
+                std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > k =
+                []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) } ;
+
+                std::function< void( QVector< accounts > && ) > f = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } ;
+
+                return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( f ) ) ) ;
+        }
+
+        static walletmanager& instance( std::function< void( QVector< accounts > ) >&& f )
+        {
+                std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > k =
+                []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){ Q_UNUSED( e ) ; Q_UNUSED( f ) } ;
+
+                 return *( new walletmanager( QString(),[](){},std::move( k ),std::move( f ) ) ) ;
+        }
+
+        static walletmanager& instance( const QString& icon,
+                                        std::function< void() >&& e,
+                                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&& k,
+                                        std::function< void( QVector< accounts > && ) >&& f )
         {
                 return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( f ) ) ) ;
         }

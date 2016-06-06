@@ -633,21 +633,6 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 	}
 }
 
-void qCheckGMail::configureAccounts()
-{
-        walletmanager::instance( m_applicationIcon,[ this ](){
-
-                m_mutex->lock() ;
-                m_redoMailCheck = true ;
-                m_mutex->unlock() ;
-
-        },this->getAuthorization(),[ this ]( QVector< accounts >&& e ){
-
-                 this->getAccountsInfo( std::move( e ) ) ;
-
-        } ).ShowUI() ;
-}
-
 void qCheckGMail::configurationoptionWindow()
 {
         configurationoptionsdialog::instance( this ) ;
@@ -958,6 +943,21 @@ QString qCheckGMail::defaultApplication()
 	return m_defaultApplication ;
 }
 
+void qCheckGMail::configureAccounts()
+{
+        walletmanager::instance( m_applicationIcon,[ this ](){
+
+                m_mutex->lock() ;
+                m_redoMailCheck = true ;
+                m_mutex->unlock() ;
+
+        },this->getAuthorization(),[ this ]( QVector< accounts >&& e ){
+
+                 this->getAccountsInfo( std::move( e ) ) ;
+
+        } ).ShowUI() ;
+}
+
 void qCheckGMail::configurePassWord()
 {
         walletmanager::instance( m_applicationIcon ).changeWalletPassword() ;
@@ -965,14 +965,11 @@ void qCheckGMail::configurePassWord()
 
 void qCheckGMail::getAccountsInfo()
 {
-        auto e = this->getAuthorization() ;
-
-        auto f = [ this ]( QVector< accounts >&& e ){
+        walletmanager::instance( [ this ]( QVector< accounts >&& e ){
 
                 this->getAccountsInfo( std::move( e ) ) ;
-        } ;
 
-        walletmanager::instance( m_applicationIcon,[](){},std::move( e ),std::move( f ) ).getAccounts() ;
+        } ).getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()

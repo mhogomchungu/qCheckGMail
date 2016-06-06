@@ -111,7 +111,7 @@ void addaccount::useToken( bool e )
 {
         if( e ){
 
-                gmailauthorization::instance( this ,m_getAuthorization,[ this ](){
+                gmailauthorization::instance( this,m_getAuthorization,[ this ](){
 
                         m_ui->cbToken->setChecked( false ) ;
 
