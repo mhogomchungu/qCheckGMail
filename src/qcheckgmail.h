@@ -93,7 +93,7 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 
-        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > getAuthorization() ;
+        std::function< void( const QString&,std::function< void( const QString& ) > ) > getAuthorization() ;
 
         void getAccessToken( const QString&,const QString& ) ;
 

@@ -810,9 +810,9 @@ void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& Ur
         } ) ;
 }
 
-std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > qCheckGMail::getAuthorization()
+std::function< void( const QString&,std::function< void( const QString& ) > ) > qCheckGMail::getAuthorization()
 {
-        return [ this ]( const QByteArray& authocode,std::function< void( const QByteArray& ) > function ){
+        return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
 
                 m_manager.post( _networkRequest(),[ & ](){
 
@@ -820,9 +820,9 @@ std::function< void( const QByteArray&,std::function< void( const QByteArray& ) 
                          auto secret = "client_secret=LRfPCp9m4PLK-WTo3jHMAQ4i" ;
                          auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
                          auto grant  = "grant_type=authorization_code" ;
-                         auto code   = "code=" ;
+                         auto code   = "code=" + authocode ;
 
-                         return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() + authocode ;
+                         return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
 
                  }(),[ this,function ]( NetworkAccessManager::NetworkReply e ){
 
@@ -836,11 +836,11 @@ std::function< void( const QByteArray&,std::function< void( const QByteArray& ) 
 
                                 if( !m.isEmpty() ){
 
-                                        return function( m[ "refresh_token" ].toString().toLatin1() ) ;
+                                        return function( m[ "refresh_token" ].toString() ) ;
                                 }
                         }
 
-                        function( QByteArray() ) ;
+                        function( QString() ) ;
                 } ) ;
         } ;
 }

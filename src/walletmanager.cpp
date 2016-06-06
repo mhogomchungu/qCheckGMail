@@ -33,7 +33,7 @@ namespace Task = LxQt::Wallet::Task ;
 
 walletmanager::walletmanager( const QString& icon,
                               std::function< void() >&& e,
-                              std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&& k,
+                              std::function< void( const QString&,std::function< void( const QString& ) > ) >&& k,
                               std::function< void( QVector< accounts > && ) >&& f ) :
         m_ui( nullptr ),m_wallet( nullptr ),m_walletClosed( e ),m_getAuthorization( k ),m_getAccountInfo( f )
 {

@@ -23,9 +23,9 @@
 #include <QMessageBox>
 
 gmailauthorization::gmailauthorization( QDialog * parent,
-                                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
+                                        std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
                                         std::function< void() >&& e,
-                                        std::function< void( const QByteArray& ) >&& f ) :
+                                        std::function< void( const QString& ) >&& f ) :
         QDialog( parent ),m_ui( new Ui::gmailauthorization ),
         m_getAuthorizationCode( k ),
         m_cancel( std::move( e ) ),
@@ -62,7 +62,7 @@ void gmailauthorization::setCode()
 
                 this->enableAll() ;
         }else{
-                m_getAuthorizationCode( r.toLatin1(),[ this ]( const QByteArray& e ){
+                m_getAuthorizationCode( r,[ this ]( const QString& e ){
 
                         if( e.isEmpty() ){
 

@@ -59,9 +59,10 @@ class walletmanager : public QDialog
 public:
         static walletmanager& instance( const QString& icon )
         {
-                auto k = []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){
+                auto k = []( const QString& e,std::function< void( const QString& ) > f ){
 
-                        Q_UNUSED( e ) ; Q_UNUSED( f ) ;
+                        Q_UNUSED( e ) ;
+                        Q_UNUSED( f ) ;
                 } ;
 
                 auto f = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } ;
@@ -69,11 +70,12 @@ public:
                 return *( new walletmanager( icon,[](){},std::move( k ),std::move( f ) ) ) ;
         }
 
-        static walletmanager& instance( std::function< void( QVector< accounts > ) >&& f )
+        static walletmanager& instance( std::function< void( QVector< accounts >&& ) >&& f )
         {
-                auto k = []( const QByteArray& e,std::function< void( const QByteArray& ) > f ){
+                auto k = []( const QString& e,std::function< void( const QString& ) > f ){
 
-                        Q_UNUSED( e ) ; Q_UNUSED( f )
+                        Q_UNUSED( e ) ;
+                        Q_UNUSED( f ) ;
                 } ;
 
                 return *( new walletmanager( QString(),[](){},std::move( k ),std::move( f ) ) ) ;
@@ -81,16 +83,16 @@ public:
 
         static walletmanager& instance( const QString& icon,
                                         std::function< void() >&& e,
-                                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&& k,
-                                        std::function< void( QVector< accounts > && ) >&& f )
+                                        std::function< void( const QString&,std::function< void( const QString& ) > ) >&& k,
+                                        std::function< void( QVector< accounts >&& ) >&& f )
         {
                 return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( f ) ) ) ;
         }
 
         walletmanager( const QString& icon,
                        std::function< void() >&&,
-                       std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&&,
-                       std::function< void( QVector< accounts > && ) >&& ) ;
+                       std::function< void( const QString&,std::function< void( const QString& ) > ) >&&,
+                       std::function< void( QVector< accounts >&& ) >&& ) ;
 
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
@@ -98,7 +100,6 @@ public:
 	~walletmanager();
 signals:
 	void walletmanagerClosed( void ) ;
-	void getAccountsInfo( QVector<accounts> ) ;
 private slots:
 	void walletpassWordChanged( bool ) ;
 	void walletIsOpen( bool ) ;
@@ -135,7 +136,7 @@ private:
 	int m_row ;
 
         std::function< void() > m_walletClosed ;
-        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > m_getAuthorization ;
+        std::function< void( const QString&,std::function< void( const QString& ) > ) > m_getAuthorization ;
         std::function< void( QVector< accounts >&& ) > m_getAccountInfo ;
 };
 

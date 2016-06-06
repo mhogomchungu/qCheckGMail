@@ -40,17 +40,17 @@ class gmailauthorization : public QDialog
         Q_OBJECT
 public:
         static void instance( QDialog * parent,
-                              std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& r,
+                              std::function< void( const QString&,std::function< void( const QString& ) > ) >& r,
                               std::function< void() >&& e,
-                              std::function< void( const QByteArray& ) >&& f )
+                              std::function< void( const QString& ) >&& f )
         {
                 new gmailauthorization( parent,r,std::move( e ),std::move( f ) ) ;
         }
 
         gmailauthorization( QDialog * parent,
-                            std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&,
+                            std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
                             std::function< void() >&&,
-                            std::function< void( const QByteArray& ) >&& ) ;
+                            std::function< void( const QString& ) >&& ) ;
 private slots:
         void cancel() ;
         void setCode() ;
@@ -64,9 +64,9 @@ private:
 
         Ui::gmailauthorization * m_ui ;
 
-        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& m_getAuthorizationCode ;
+        std::function< void( const QString&,std::function< void( const QString& ) > ) >& m_getAuthorizationCode ;
         std::function< void() > m_cancel ;
-        std::function< void( const QByteArray& ) > m_getAuthorization ;
+        std::function< void( const QString& ) > m_getAuthorization ;
 };
 
 #endif

@@ -42,7 +42,7 @@ public:
 
         static addaccount& instance( QDialog * parent,
                                      const accounts::entry& e,
-                                     std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
+                                     std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
                                      std::function< void() >&& r,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
@@ -50,7 +50,7 @@ public:
         }
 
         static addaccount& instance( QDialog * parent,
-                                     std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
+                                     std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
                                      std::function< void() >&& e,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
@@ -59,12 +59,12 @@ public:
 
         addaccount( QDialog *,
                     const accounts::entry&,
-                    std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&,
+                    std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 
         addaccount( QDialog *,
-                    std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >&,
+                    std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 
@@ -80,7 +80,7 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
         bool m_edit ;
-        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& m_getAuthorization ;
+        std::function< void( const QString&,std::function< void( const QString& ) > ) >& m_getAuthorization ;
         std::function< void() > m_cancel ;
         std::function< void( accounts::entry&& ) > m_result ;
 };

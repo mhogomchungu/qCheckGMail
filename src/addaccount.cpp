@@ -24,7 +24,7 @@
 #include "gmailauthorization.h"
 
 addaccount::addaccount( QDialog * parent,
-                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
+                        std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
                         std::function< void() >&& e,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
@@ -48,7 +48,7 @@ addaccount::addaccount( QDialog * parent,
 
 addaccount::addaccount( QDialog * parent,
                         const accounts::entry& e,
-                        std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) >& k,
+                        std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
                         std::function< void() >&& r,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
@@ -115,7 +115,7 @@ void addaccount::useToken( bool e )
 
                         m_ui->cbToken->setChecked( false ) ;
 
-                },[ this ]( const QByteArray& e ){
+                },[ this ]( const QString& e ){
 
                         if( e.isEmpty() ){
 
