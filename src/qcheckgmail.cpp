@@ -742,13 +742,13 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 #if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
 
-std::function< void( const QByteArray&,std::function< void( const QByteArray& ) > ) > qCheckGMail::getAuthorization()
+std::function< void( const QString&,std::function< void( const QString& ) > ) > qCheckGMail::getAuthorization()
 {
-        return [ this ]( const QByteArray& authocode,std::function< void( const QByteArray& ) > function ){
+        return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
 
                 Q_UNUSED( authocode ) ;
 
-                function( QByteArray() ) ;
+                function( QString() ) ;
         } ;
 }
 

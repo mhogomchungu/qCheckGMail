@@ -20,6 +20,8 @@
 #include "gmailauthorization.h"
 #include "ui_gmailauthorization.h"
 
+#include "configurationoptionsdialog.h"
+
 #include <QMessageBox>
 
 gmailauthorization::gmailauthorization( QDialog * parent,
@@ -35,6 +37,10 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
         connect( m_ui->pbCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
         connect( m_ui->pbSetCode,SIGNAL( clicked() ),this,SLOT( setCode() ) ) ;
+
+        QString id = R"R(https://accounts.google.com/o/oauth2/auth?client_id=%1&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=https%3A%2F%2Fmail.google.com%2F)R" ;
+
+        m_ui->textEdit->setText( id.arg( configurationoptionsdialog::clientID() ) ) ;
 
         this->show() ;
 }
