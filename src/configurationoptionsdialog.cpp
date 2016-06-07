@@ -261,7 +261,35 @@ bool configurationoptionsdialog::audioNotify()
 	}else{
 		_settings.setValue( opt,true ) ;
 		return true ;
-	}
+        }
+}
+
+QString configurationoptionsdialog::clientID()
+{
+        QString opt = _getOption( "clientID" ) ;
+
+        if( _settings.contains( opt ) ){
+
+                return _settings.value( opt ).toString() ;
+        }else{
+                QString e = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
+                _settings.setValue( opt,e ) ;
+                return e ;
+        }
+}
+
+QString configurationoptionsdialog::clientSecret()
+{
+        QString opt = _getOption( "clientSecret" ) ;
+
+        if( _settings.contains( opt ) ){
+
+                return _settings.value( opt ).toString() ;
+        }else{
+                QString e = "LRfPCp9m4PLK-WTo3jHMAQ4i" ;
+                _settings.setValue( opt,e ) ;
+                return e ;
+        }
 }
 
 QString configurationoptionsdialog::audioPlayer()

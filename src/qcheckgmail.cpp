@@ -93,6 +93,8 @@ void qCheckGMail::run()
 	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
 	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
 	m_profileEmailList    = configurationoptionsdialog::profileEmailList() ;
+        m_clientID            = configurationoptionsdialog::clientID() ;
+        m_clientSecret        = configurationoptionsdialog::clientSecret() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
@@ -774,11 +776,12 @@ void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& Ur
 {
         m_manager.post( _networkRequest(),[ & ](){
 
-                auto id = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
-                auto s  = "LRfPCp9m4PLK-WTo3jHMAQ4i" ;
-                auto e  = "client_id=%1&client_secret=%2&refresh_token=%3&grant_type=refresh_token" ;
+                auto id     = "client_id="     + m_clientID ;
+                auto secret = "client_secret=" + m_clientSecret ;
+                auto token  = "refresh_token=" + refresh_token ;
+                auto type   = "grant_type=refresh_token" ;
 
-                return QString( e ).arg( id,s,refresh_token ).toLatin1() ;
+                return QString( "%1&%2&%3&%4" ).arg( id,secret,token,type ).toLatin1() ;
 
         }(),[ UrlLabel,this ]( NetworkAccessManager::NetworkReply e ){
 
@@ -816,8 +819,8 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
 
                 m_manager.post( _networkRequest(),[ & ](){
 
-                         auto id     = "client_id=90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
-                         auto secret = "client_secret=LRfPCp9m4PLK-WTo3jHMAQ4i" ;
+                         auto id     = "client_id=" + m_clientID ;
+                         auto secret = "client_secret=" + m_clientSecret ;
                          auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
                          auto grant  = "grant_type=authorization_code" ;
                          auto code   = "code=" + authocode ;

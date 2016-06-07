@@ -62,6 +62,8 @@ public:
 	static QString logFile( void ) ;
 	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
+        static QString clientID( void ) ;
+        static QString clientSecret( void ) ;
 	static QString audioPlayer( void ) ;
 	static QString noEmailIcon( void ) ;
 	static QString newEmailIcon( void ) ;
@@ -69,7 +71,7 @@ public:
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
 	static QString defaultApplication( void ) ;
-	static QStringList profileEmailList() ;
+        static QStringList profileEmailList( void ) ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static bool displayEmailCount( void ) ;

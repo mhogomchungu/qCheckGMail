@@ -151,6 +151,8 @@ private:
 	QString m_defaultApplication ;
 	QString m_profile ;
         QString m_accountNameColumnWidth ;
+        QString m_clientID ;
+        QString m_clientSecret ;
 
         QStringList m_profileEmailList ;
 
