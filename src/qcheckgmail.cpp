@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  *  Copyright (c) 2013
  *  name : Francis Banyikwa
@@ -339,14 +339,14 @@ static QString _account_status( statusicon * s,const QString& displayName,const 
 /*
  * This function goes through all accounts and give reports of all of their states
  */
-void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,QNetworkReply::NetworkError e )
+void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 {
 	if( m_enableDebug ){
 
 		qDebug() << "\n" << msg ;
 	}
 
-        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || e == QNetworkReply::AuthenticationRequiredError ){
+        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || error ){
 
                 auto acc = m_accounts.data() + m_currentAccount ;
 
@@ -442,7 +442,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,QNetworkReply::Netw
  * This mail checking way is visually more appealing on the tray bubble when only one
  * account is set up
  */
-void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,QNetworkReply::NetworkError e )
+void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool error )
 {
 	if( m_enableDebug ){
 
@@ -452,7 +452,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,QNetwork
 	int count = 0 ;
 	QString mailCount ;
 
-        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || e == QNetworkReply::AuthenticationRequiredError ){
+        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || error ){
 
                 auto acc = m_accounts.data() + m_currentAccount ;
 
@@ -883,15 +883,13 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
                 m_timeOut->stop() ;
 
-                auto s = e->error() ;
-
-                if( s == QNetworkReply::AuthenticationRequiredError ){
+                if( e->error() == QNetworkReply::AuthenticationRequiredError ){
 
                         if( m_reportOnAllAccounts ){
 
-                                this->reportOnAllAccounts( content,s ) ;
+                                this->reportOnAllAccounts( content,true ) ;
                         }else{
-                                this->reportOnlyFirstAccountWithMail( content,s ) ;
+                                this->reportOnlyFirstAccountWithMail( content,true ) ;
                         }
                 }else{
                         if( content.isEmpty() ){
@@ -900,9 +898,9 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                         }else{
                                 if( m_reportOnAllAccounts ){
 
-                                        this->reportOnAllAccounts( content,s ) ;
+                                        this->reportOnAllAccounts( content,false ) ;
                                 }else{
-                                        this->reportOnlyFirstAccountWithMail( content,s ) ;
+                                        this->reportOnlyFirstAccountWithMail( content,false ) ;
                                 }
                         }
                 }

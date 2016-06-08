@@ -115,8 +115,8 @@ private:
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
-        void reportOnAllAccounts( const QByteArray&,QNetworkReply::NetworkError ) ;
-        void reportOnlyFirstAccountWithMail( const QByteArray&,QNetworkReply::NetworkError ) ;
+        void reportOnAllAccounts( const QByteArray&,bool ) ;
+        void reportOnlyFirstAccountWithMail( const QByteArray&,bool ) ;
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void failedToCheckForNewEmail( void ) ;
