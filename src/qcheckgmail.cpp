@@ -454,19 +454,14 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,QNetwork
 
         if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || e == QNetworkReply::AuthenticationRequiredError ){
 
-                /*
-                 * Access token has expored,ask for another one
-                 *
-                 */
                 auto acc = m_accounts.data() + m_currentAccount ;
 
-                if( !acc->refreshToken().isEmpty() ){
+                if( acc->refreshToken().isEmpty() ){
 
-                        acc->setAccessToken( QString() ) ;
-
-                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
-                }else{
                         m_accountFailed = true ;
+                }else{
+                        acc->setAccessToken( QString() ) ;
+                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
                 }
 	}else{
 		mailCount = this->getAtomComponent( msg,"fullcount" ) ;
