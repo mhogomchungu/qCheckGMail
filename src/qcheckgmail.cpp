@@ -775,8 +775,9 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
         } ;
 }
 
-void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& UrlLabel )
+void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
+        Q_UNUSED( acc ) ;
         Q_UNUSED( refresh_token ) ;
         Q_UNUSED( UrlLabel ) ;
 }
@@ -784,6 +785,25 @@ void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& Ur
 #else
 
 #include <QJsonDocument>
+
+static QString _parseJSON( const QByteArray& json,const char * property )
+{
+        QJsonParseError error ;
+
+        auto r = QJsonDocument::fromJson( json,&error ) ;
+
+        if( error.error == QJsonParseError::NoError ){
+
+                auto m = r.toVariant().toMap() ;
+
+                if( !m.isEmpty() ){
+
+                        return m[ property ].toString() ;
+                }
+        }
+
+        return QString() ;
+}
 
 QNetworkRequest _networkRequest()
 {
@@ -806,34 +826,25 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
                 return QString( "%1&%2&%3&%4" ).arg( id,secret,token,type ).toLatin1() ;
 
-        }(),[ UrlLabel,this,&acc ]( NetworkAccessManager::NetworkReply e ){
+        }(),[ UrlLabel,this,&acc ]( NetworkAccessManager::NetworkReply n ){
 
                 this->networkAccess( [ & ](){
 
-                        QJsonParseError error ;
+                        auto e = _parseJSON( n->readAll(),"access_token" ) ;
 
-                        auto r = QJsonDocument::fromJson( e->readAll(),&error ) ;
+                        if( e.isEmpty() ){
 
-                        if( error.error == QJsonParseError::NoError ){
+                                return QNetworkRequest() ;
+                        }else{
+                                const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
-                                auto m = r.toVariant().toMap() ;
+                                QUrl url( UrlLabel ) ;
+                                QNetworkRequest request( url ) ;
 
-                                if( !m.isEmpty() ){
+                                request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
 
-                                        const auto& e = m[ "access_token" ].toString() ;
-
-                                        const_cast< accounts * >( &acc )->setAccessToken( e ) ;
-
-                                        QUrl url( UrlLabel ) ;
-                                        QNetworkRequest request( url ) ;
-
-                                        request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
-
-                                        return request ;
-                                }
+                                return request ;
                         }
-
-                        return QNetworkRequest() ;
                 }() ) ;
         } ) ;
 }
@@ -854,21 +865,7 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
 
                  }(),[ this,function ]( NetworkAccessManager::NetworkReply e ){
 
-                        QJsonParseError error ;
-
-                        auto r = QJsonDocument::fromJson( e->readAll(),&error ) ;
-
-                        if( error.error == QJsonParseError::NoError ){
-
-                                auto m = r.toVariant().toMap() ;
-
-                                if( !m.isEmpty() ){
-
-                                        return function( m[ "refresh_token" ].toString() ) ;
-                                }
-                        }
-
-                        function( QString() ) ;
+                        function( _parseJSON( e->readAll(),"refresh_token" ) ) ;
                 } ) ;
         } ;
 }
