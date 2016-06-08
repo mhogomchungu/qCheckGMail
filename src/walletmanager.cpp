@@ -401,7 +401,7 @@ void walletmanager::editAccount()
 			if( it.accountName() == accName ){
 
                                 p = it.passWord() ;
-                                t = it.accessToken() ;
+                                t = it.refreshToken() ;
 
                                 break ;
 			}
