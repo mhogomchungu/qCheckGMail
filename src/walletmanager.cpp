@@ -413,13 +413,13 @@ void walletmanager::editAccount()
         auto accLabels      = m_table->item( m_row,2 )->text() ;
 
         QString accPassword ;
-        QString accToken ;
+        QString refreshToken ;
 
-        _getPassWord( accName,accPassword,accToken ) ;
+        _getPassWord( accName,accPassword,refreshToken ) ;
 
 	this->disableAll() ;
 
-        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,accToken },
+        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,refreshToken },
                              m_getAuthorization,[ this ](){
 
                 this->enableAll() ;
