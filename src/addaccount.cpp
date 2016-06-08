@@ -78,13 +78,13 @@ addaccount::addaccount( QDialog * parent,
                 this->setWindowTitle( tr( "edit account" ) ) ;
         }
 
-        m_ui->cbToken->setChecked( !e.accAccessToken.isEmpty() ) ;
+        m_ui->cbToken->setChecked( !e.accRefreshToken.isEmpty() ) ;
 
-        if( e.accAccessToken.isEmpty() ){
+        if( e.accRefreshToken.isEmpty() ){
 
                 m_ui->lineEditPassword->setText( e.accPassword ) ;
         }else{
-                m_ui->lineEditPassword->setText( e.accAccessToken ) ;
+                m_ui->lineEditPassword->setText( e.accRefreshToken ) ;
         }
 
         this->ShowUI() ;

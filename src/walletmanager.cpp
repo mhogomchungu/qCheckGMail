@@ -301,7 +301,7 @@ void walletmanager::pushButtonAdd()
                         m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
                         m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
                         m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
-                        m_wallet->addKey( token_id,m_accountEntry.accAccessToken.toLatin1() ) ;
+                        m_wallet->addKey( token_id,m_accountEntry.accRefreshToken.toLatin1() ) ;
 
                 } ).then( [ this ](){
 
@@ -442,7 +442,7 @@ void walletmanager::editAccount()
                         m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
                         m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
                         m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
-                        m_wallet->addKey( token_id,m_accountEntry.accAccessToken.toLatin1() ) ;
+                        m_wallet->addKey( token_id,m_accountEntry.accRefreshToken.toLatin1() ) ;
 
                 } ).then( [ this ](){
 

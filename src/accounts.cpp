@@ -84,9 +84,14 @@ int accounts::numberOfLabels() const
         return m_labelUrls.size() ;
 }
 
-const QString& accounts::accessToken() const
+void accounts::setAccessToken( const QString& e )
 {
-        return m_entry.accAccessToken ;
+        m_accessToken = e ;
+}
+
+const QString& accounts::refreshToken() const
+{
+        return m_entry.accRefreshToken ;
 }
 
 accountLabel& accounts::getAccountLabel( int i )
@@ -108,7 +113,12 @@ const QString& accounts::labelUrlAt( int i ) const
 	}else{
 		static QString ShouldNotGetHere ;
 		return ShouldNotGetHere ;
-	}
+        }
+}
+
+const QString& accounts::accessToken() const
+{
+        return m_accessToken ;
 }
 
 accountLabel::accountLabel( const QString& labelUrl,int emailCount ) :

@@ -339,16 +339,31 @@ static QString _account_status( statusicon * s,const QString& displayName,const 
 /*
  * This function goes through all accounts and give reports of all of their states
  */
-void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
+void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,QNetworkReply::NetworkError e )
 {
 	if( m_enableDebug ){
 
 		qDebug() << "\n" << msg ;
 	}
 
-	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
+        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || e == QNetworkReply::AuthenticationRequiredError ){
 
-                m_accountsStatus = _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
+                auto acc = m_accounts.data() + m_currentAccount ;
+
+                if( acc->refreshToken().isEmpty() ){
+
+                        /*
+                         * Wrong user name or password entered
+                         */
+                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
+                }else{
+                        /*
+                         * access token has expired,clear current one to force a regeneration of another
+                         */
+                        acc->setAccessToken( QString() ) ;
+
+                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
+                }
 	}else{
                 auto mailCount = this->getAtomComponent( msg,"fullcount" ) ;
 
@@ -427,7 +442,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg )
  * This mail checking way is visually more appealing on the tray bubble when only one
  * account is set up
  */
-void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
+void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,QNetworkReply::NetworkError e )
 {
 	if( m_enableDebug ){
 
@@ -437,9 +452,22 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg )
 	int count = 0 ;
 	QString mailCount ;
 
-	if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) ){
+        if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || e == QNetworkReply::AuthenticationRequiredError ){
 
-		m_accountFailed = true ;
+                /*
+                 * Access token has expored,ask for another one
+                 *
+                 */
+                auto acc = m_accounts.data() + m_currentAccount ;
+
+                if( !acc->refreshToken().isEmpty() ){
+
+                        acc->setAccessToken( QString() ) ;
+
+                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
+                }else{
+                        m_accountFailed = true ;
+                }
 	}else{
 		mailCount = this->getAtomComponent( msg,"fullcount" ) ;
 		count = mailCount.toInt() ;
@@ -772,7 +800,7 @@ QNetworkRequest _networkRequest()
         return request ;
 }
 
-void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& UrlLabel )
+void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
         m_manager.post( _networkRequest(),[ & ](){
 
@@ -783,7 +811,7 @@ void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& Ur
 
                 return QString( "%1&%2&%3&%4" ).arg( id,secret,token,type ).toLatin1() ;
 
-        }(),[ UrlLabel,this ]( NetworkAccessManager::NetworkReply e ){
+        }(),[ UrlLabel,this,&acc ]( NetworkAccessManager::NetworkReply e ){
 
                 this->networkAccess( [ & ](){
 
@@ -797,12 +825,14 @@ void qCheckGMail::getAccessToken( const QString& refresh_token,const QString& Ur
 
                                 if( !m.isEmpty() ){
 
-                                        auto e = "Bearer " + m[ "access_token" ].toString() ;
+                                        const auto& e = m[ "access_token" ].toString() ;
+
+                                        const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
                                         QUrl url( UrlLabel ) ;
                                         QNetworkRequest request( url ) ;
 
-                                        request.setRawHeader( "Authorization",e.toLatin1() ) ;
+                                        request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
 
                                         return request ;
                                 }
@@ -819,11 +849,11 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
 
                 m_manager.post( _networkRequest(),[ & ](){
 
-                         auto id     = "client_id=" + m_clientID ;
+                         auto id     = "client_id="     + m_clientID ;
                          auto secret = "client_secret=" + m_clientSecret ;
+                         auto code   = "code="          + authocode ;
                          auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
                          auto grant  = "grant_type=authorization_code" ;
-                         auto code   = "code=" + authocode ;
 
                          return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
 
@@ -858,20 +888,27 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
                 m_timeOut->stop() ;
 
-                if( content.isEmpty() ){
+                auto s = e->error() ;
 
-                        if( e->error() == QNetworkReply::AuthenticationRequiredError ){
+                if( s == QNetworkReply::AuthenticationRequiredError ){
 
-                                this->noInternet( e->errorString() ) ;
-                        }else{
-                                this->noInternet() ;
-                        }
-                }else{
                         if( m_reportOnAllAccounts ){
 
-                                this->reportOnAllAccounts( content ) ;
+                                this->reportOnAllAccounts( content,s ) ;
                         }else{
-                                this->reportOnlyFirstAccountWithMail( content ) ;
+                                this->reportOnlyFirstAccountWithMail( content,s ) ;
+                        }
+                }else{
+                        if( content.isEmpty() ){
+
+                                this->noInternet() ;
+                        }else{
+                                if( m_reportOnAllAccounts ){
+
+                                        this->reportOnAllAccounts( content,s ) ;
+                                }else{
+                                        this->reportOnlyFirstAccountWithMail( content,s ) ;
+                                }
                         }
                 }
         } ) ;
@@ -881,9 +918,9 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 {
-        const auto& token = acc.accessToken() ;
+        const auto& refreshToken = acc.refreshToken() ;
 
-        if( token.isEmpty() ){
+        if( refreshToken.isEmpty() ){
 
                 this->networkAccess( [ & ](){
 
@@ -898,7 +935,26 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                         }() ) ;
                 }() ) ;
         }else{
-                this->getAccessToken( token,UrlLabel ) ;
+                const auto& accessToken = acc.accessToken() ;
+
+                if( accessToken.isEmpty() ){
+
+                        /*
+                         * We will get here when we are running for the first time after startup
+                         * or if an access token has expired.
+                         */
+                        this->getAccessToken( acc,refreshToken,UrlLabel ) ;
+                }else{
+                        this->networkAccess( [ & ](){
+
+                                QUrl url( UrlLabel ) ;
+                                QNetworkRequest request( url ) ;
+
+                                request.setRawHeader( "Authorization","Bearer " + accessToken.toLatin1() ) ;
+
+                                return request ;
+                        }() ) ;
+                }
         }
 }
 

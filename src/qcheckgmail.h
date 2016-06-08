@@ -95,7 +95,7 @@ private:
 
         std::function< void( const QString&,std::function< void( const QString& ) > ) > getAuthorization() ;
 
-        void getAccessToken( const QString&,const QString& ) ;
+        void getAccessToken( const accounts&,const QString&,const QString& ) ;
 
         void networkAccess( const QNetworkRequest& ) ;
 
@@ -107,7 +107,7 @@ private:
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
 	void walletNotOPenedError( void ) ;
-	void checkMail( const accounts& acc,const QString& label ) ;
+        void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
 	void changeIcon( const QString& icon ) ;
 	void changeIcon( const QString& icon,int ) ;
@@ -115,8 +115,8 @@ private:
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
-	void reportOnAllAccounts( const QByteArray& ) ;
-	void reportOnlyFirstAccountWithMail( const QByteArray& ) ;
+        void reportOnAllAccounts( const QByteArray&,QNetworkReply::NetworkError ) ;
+        void reportOnlyFirstAccountWithMail( const QByteArray&,QNetworkReply::NetworkError ) ;
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void failedToCheckForNewEmail( void ) ;
