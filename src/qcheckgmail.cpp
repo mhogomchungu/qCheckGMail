@@ -863,7 +863,7 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
 
                          return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
 
-                 }(),[ this,function ]( NetworkAccessManager::NetworkReply e ){
+                 }(),[ function ]( NetworkAccessManager::NetworkReply e ){
 
                         function( _parseJSON( e->readAll(),"refresh_token" ) ) ;
                 } ) ;
@@ -880,25 +880,25 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
                 m_timeOut->stop() ;
 
-                if( e->error() == QNetworkReply::AuthenticationRequiredError ){
+                auto _report = [ & ]( bool e ){
 
                         if( m_reportOnAllAccounts ){
 
-                                this->reportOnAllAccounts( content,true ) ;
+                                this->reportOnAllAccounts( content,e ) ;
                         }else{
-                                this->reportOnlyFirstAccountWithMail( content,true ) ;
+                                this->reportOnlyFirstAccountWithMail( content,e ) ;
                         }
+                } ;
+
+                if( e->error() == QNetworkReply::AuthenticationRequiredError ){
+
+                        _report( true ) ;
                 }else{
                         if( content.isEmpty() ){
 
                                 this->noInternet() ;
                         }else{
-                                if( m_reportOnAllAccounts ){
-
-                                        this->reportOnAllAccounts( content,false ) ;
-                                }else{
-                                        this->reportOnlyFirstAccountWithMail( content,false ) ;
-                                }
+                                _report( false ) ;
                         }
                 }
         } ) ;

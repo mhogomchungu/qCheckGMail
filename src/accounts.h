@@ -73,7 +73,7 @@ public:
 
         accountLabel& getAccountLabel( int ) ;
 private:
-        mutable QString m_accessToken ;
+        QString m_accessToken ;
         accounts::entry m_entry ;
 	QVector< accountLabel > m_labelUrls ;
 };
