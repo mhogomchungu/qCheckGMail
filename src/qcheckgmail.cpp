@@ -377,7 +377,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
                         m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),mailCount ) ;
 		}
 
-		this->checkAccountLastUpdate( msg,mailCount_1 ) ;
+                auto acc = m_accounts.data() + m_currentAccount ;
+                auto& label = acc->getAccountLabel( m_currentLabel ) ;
+
+                this->checkAccountLastUpdate( label,msg,mailCount_1 ) ;
 	}
 
 	/*
@@ -423,7 +426,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 					this->showToolTip( m_newEmailIcon,tr( "found %1 new emails" ).arg( x ),m_accountsStatus ) ;
 				}
 
-				this->audioNotify() ;
+                                this->audioNotify() ;
 			}else{
 				this->changeIcon( m_noEmailIcon ) ;
 				this->setTrayIconToVisible( false ) ;
@@ -466,7 +469,11 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 	}else{
 		mailCount = this->getAtomComponent( msg,"fullcount" ) ;
 		count = mailCount.toInt() ;
-		this->checkAccountLastUpdate( msg,count ) ;
+
+                auto acc = m_accounts.data() + m_currentAccount ;
+                auto& label = acc->getAccountLabel( m_currentLabel ) ;
+
+                this->checkAccountLastUpdate( label,msg,count ) ;
 	}
 
 	if( count > 0 ){
@@ -484,7 +491,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 		this->changeIcon( m_newEmailIcon,count ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( m_newEmailIcon,this->displayName(),info ) ;
-		this->audioNotify() ;
+                this->audioNotify() ;
 		this->doneCheckingMail() ;
 	}else{
 		/*
@@ -531,11 +538,8 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 	}
 }
 
-void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
+void qCheckGMail::checkAccountLastUpdate( accountLabel& label,const QByteArray& msg,int mailCount )
 {
-        auto acc = m_accounts.data() + m_currentAccount ;
-        auto& label = acc->getAccountLabel( m_currentLabel ) ;
-
 	if( label.emailCount() == -1 ){
 
 		/*
@@ -546,7 +550,7 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 			/*
 			 * This label has new email(s),mark the time the last email was added or read
 			 */
-			m_accountUpdated = true ;
+                        m_accountUpdated = true ;
 			label.setLastModifiedTime( this->getAtomComponent( msg,"modified","entry" ) ) ;
 		}else{
 			/*
@@ -584,7 +588,7 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 					 * emails to remain the same.
 					 */
 
-					m_accountUpdated = true ;
+                                        m_accountUpdated = true ;
 				}else{
 					/*
 					 * Total number of unread emails went down probably because atleast one unread email was read
@@ -600,12 +604,12 @@ void qCheckGMail::checkAccountLastUpdate( const QByteArray& msg,int mailCount )
 		}
 	}
 
-	label.setEmailCount( mailCount ) ;
+        label.setEmailCount( mailCount ) ;
 }
 
 void qCheckGMail::audioNotify()
 {
-	if( m_accountUpdated && m_audioNotify ){
+        if( m_accountUpdated && m_audioNotify ){
 
                 m_statusicon->newEmailNotify() ;
 	}
@@ -744,7 +748,7 @@ void qCheckGMail::checkMail()
 			m_accountsStatus  = "<table>" ;
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
-			m_accountUpdated  = false ;
+                        m_accountUpdated  = false ;
 
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
                 }

@@ -83,8 +83,8 @@ private slots:
 	void reportOnAllAccounts( bool ) ;
 	void objectGone( QObject * ) ;
 	void configurePassWord( void ) ;
-	void audioNotify( bool ) ;
-	void enablePassWordChange( bool ) ;
+        void audioNotify( bool ) ;
+        void enablePassWordChange( bool ) ;
 	void timerExpired( void  ) ;
 private:
         void getAccountsInfo( QVector< accounts >&& ) ;
@@ -120,9 +120,9 @@ private:
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void failedToCheckForNewEmail( void ) ;
-	void audioNotify( void ) ;
-	void checkAccountLastUpdate( const QByteArray&,int ) ;
-	void addActionsToMenu( void ) ;
+        void audioNotify( void ) ;
+        void checkAccountLastUpdate( accountLabel&,const QByteArray&,int ) ;
+        void addActionsToMenu( void ) ;
 
         int m_interval ;
 	int m_numberOfLabels ;
