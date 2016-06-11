@@ -142,6 +142,7 @@ private:
         bool m_accountUpdated ;
         bool m_timeExpired ;
         bool m_accountFailed ;
+        bool m_badAccessToken ;
 
         QString m_accountsStatus ;
 	QString m_newEmailIcon ;

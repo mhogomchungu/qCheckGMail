@@ -348,21 +348,36 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 
         if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || error ){
 
-                auto acc = m_accounts.data() + m_currentAccount ;
+		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
-                if( acc->refreshToken().isEmpty() ){
+		if( acc.refreshToken().isEmpty() ){
 
                         /*
                          * Wrong user name or password entered
                          */
                         m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
                 }else{
-                        /*
-                         * access token has expired,clear current one to force a regeneration of another
-                         */
-                        acc->setAccessToken( QString() ) ;
+			if( m_badAccessToken ){
 
-                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
+				/*
+				 * We had a bad token twice for the same account???
+				 *
+				 * Bail out to prevent an endless loop.
+				 */
+				m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
+			}else{
+				/*
+				 * We will get here if:
+				 * 1. The access token has expired
+				 * 2. User revoked access to the account.
+				 */
+
+				m_badAccessToken = true ;
+
+				acc.setAccessToken( QString() ) ;
+
+				return this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
+			}
                 }
 	}else{
                 auto mailCount = this->getAtomComponent( msg,"fullcount" ) ;
@@ -457,14 +472,20 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 
         if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || error ){
 
-                auto acc = m_accounts.data() + m_currentAccount ;
+		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
-                if( acc->refreshToken().isEmpty() ){
+		if( acc.refreshToken().isEmpty() ){
 
                         m_accountFailed = true ;
                 }else{
-                        acc->setAccessToken( QString() ) ;
-                        return this->checkMail( *acc,acc->labelUrlAt( m_currentLabel ) ) ;
+			if( m_badAccessToken ){
+
+				m_accountFailed = true ;
+			}else{
+				m_badAccessToken = true ;
+				acc.setAccessToken( QString() ) ;
+				return this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
+			}
                 }
 	}else{
 		mailCount = this->getAtomComponent( msg,"fullcount" ) ;
@@ -749,6 +770,7 @@ void qCheckGMail::checkMail()
 			m_mailCount       = 0 ;
 			m_currentAccount  = 0 ;
                         m_accountUpdated  = false ;
+			m_accountFailed   = false ;
 
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
                 }
@@ -760,8 +782,8 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_accountFailed = false ;
-	m_currentLabel = 0 ;
+	m_badAccessToken = false ;
+	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
@@ -840,12 +862,12 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
                                 return QNetworkRequest() ;
                         }else{
-                                const_cast< accounts * >( &acc )->setAccessToken( e ) ;
+				const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
                                 QUrl url( UrlLabel ) ;
                                 QNetworkRequest request( url ) ;
 
-                                request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
+				request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
 
                                 return request ;
                         }
@@ -944,7 +966,7 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                                 QUrl url( UrlLabel ) ;
                                 QNetworkRequest request( url ) ;
 
-                                request.setRawHeader( "Authorization","Bearer " + accessToken.toLatin1() ) ;
+				request.setRawHeader( "Authorization","Bearer " + accessToken.toLatin1() ) ;
 
                                 return request ;
                         }() ) ;
