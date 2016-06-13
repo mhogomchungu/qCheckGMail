@@ -10,11 +10,11 @@
     <x>0</x>
     <y>0</y>
     <width>549</width>
-    <height>367</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>option configuration window</string>
+   <string>Option Configuration Window</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -30,12 +30,12 @@
           <widget class="QLabel" name="label">
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>240</width>
              <height>31</height>
             </size>
            </property>
            <property name="text">
-            <string>update interval(minutes)</string>
+            <string>Update Interval(Minutes)</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -51,6 +51,12 @@
             <size>
              <width>0</width>
              <height>31</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
           </widget>
@@ -70,7 +76,7 @@
             </size>
            </property>
            <property name="text">
-            <string>account information storage system</string>
+            <string>Account Information Storage System</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -105,7 +111,7 @@
             </size>
            </property>
            <property name="text">
-            <string>auto start application at log in</string>
+            <string>Auto Start Application At Log In</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -143,7 +149,7 @@
             </size>
            </property>
            <property name="text">
-            <string>localization language</string>
+            <string>Localization Language</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -183,7 +189,7 @@
             </size>
            </property>
            <property name="text">
-            <string>report on all accounts</string>
+            <string>Report On All Accounts</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -221,7 +227,7 @@
             </size>
            </property>
            <property name="text">
-            <string>audio notify</string>
+            <string>Audio Notify</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -259,7 +265,7 @@
       </size>
      </property>
      <property name="text">
-      <string>close</string>
+      <string>&amp;Close</string>
      </property>
     </widget>
    </item>

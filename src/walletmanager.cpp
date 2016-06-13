@@ -326,7 +326,7 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
         m.addAction( [ & ](){
 
                 auto ac = new QAction( &m ) ;
-                ac->setText( tr( "delete entry" ) ) ;
+		ac->setText( tr( "Delete Entry" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( deleteAccount() ) ) ;
 
                 return ac ;
@@ -335,7 +335,7 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
         m.addAction( [ & ](){
 
                 auto ac = new QAction( &m ) ;
-                ac->setText( tr( "edit entry" ) ) ;
+		ac->setText( tr( "Edit Entry" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( editAccount() ) ) ;
 
                 return ac ;
@@ -351,9 +351,9 @@ void walletmanager::deleteAccount()
         auto accName = m_table->item( m_row,0 )->text() ;
 
 	QMessageBox msg( this ) ;
-        msg.setText( tr( "are you sure you want to delete \"%1\" account?" ).arg( accName ) ) ;
-	msg.addButton( tr( "yes" ),QMessageBox::YesRole ) ;
-        auto no_button = msg.addButton( tr( "no" ),QMessageBox::NoRole ) ;
+	msg.setText( tr( "Are You Sure You Want To Delete \"%1\" Account?" ).arg( accName ) ) ;
+	msg.addButton( tr( "&Yes" ),QMessageBox::YesRole ) ;
+	auto no_button = msg.addButton( tr( "&No" ),QMessageBox::NoRole ) ;
 	msg.setDefaultButton( no_button ) ;
 
 	this->disableAll() ;

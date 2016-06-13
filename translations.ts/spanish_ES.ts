@@ -5,64 +5,69 @@
     <name>addaccount</name>
     <message>
         <location filename="../src/addaccount.ui" line="17"/>
-        <source>create a new account</source>
+        <source>Create A New Account</source>
         <translation>crear una cuenta nueva</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="41"/>
+        <location filename="../src/addaccount.ui" line="35"/>
+        <source>Account Name</source>
+        <translation>nombre de cuenta</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="54"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation>Pueden añadirse las cuentas usuales de gmail sin indicar la parte &quot;@gmail.com&quot;.
 Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="55"/>
-        <source>account password</source>
-        <translation>contraseña de cuenta</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="74"/>
-        <source>account name</source>
-        <translation>nombre de cuenta</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="106"/>
-        <source>multiple labels can be entered by separating them with a comma(,)</source>
-        <translation>se pueden introducir etiquetas múltiples serparándolas con comas(,)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="119"/>
-        <source>label(s)(optional)</source>
-        <translation>etiqueta(s)(opcional)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="138"/>
-        <source>display name(optional)</source>
+        <location filename="../src/addaccount.ui" line="68"/>
+        <source>Display Name(Optional)</source>
         <translation>mostrar nombre(opcional)</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="168"/>
-        <source>add</source>
-        <translation>añadir</translation>
+        <location filename="../src/addaccount.ui" line="97"/>
+        <source>Account Password</source>
+        <translation>contraseña de cuenta</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="181"/>
-        <source>cancel</source>
-        <translation>cancelar</translation>
+        <location filename="../src/addaccount.ui" line="129"/>
+        <source>Label(s)(Optional)</source>
+        <translation>etiqueta(s)(opcional)</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="58"/>
-        <source>edit</source>
+        <location filename="../src/addaccount.ui" line="148"/>
+        <source>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</source>
+        <translation>se pueden introducir etiquetas múltiples serparándolas con comas(,)</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="164"/>
+        <source>Password Is Google&apos;s OAuth2 Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="177"/>
+        <source>&amp;Add</source>
+        <translation>&amp;añadir</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="190"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;cancelar</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.cpp" line="77"/>
+        <source>Edit</source>
         <translation>editar</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="59"/>
-        <source>edit account</source>
+        <location filename="../src/addaccount.cpp" line="78"/>
+        <source>Edit Account</source>
         <translation>editar cuenta</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="91"/>
-        <source>ERROR: one or more required field is empty</source>
+        <location filename="../src/addaccount.cpp" line="160"/>
+        <source>ERROR: One Or More Required Field Is Empty</source>
         <translation>ERROR: uno o más campos obligatorios está vacío</translation>
     </message>
 </context>
@@ -70,46 +75,46 @@ Para direcciones con dominio alojado debe añadirse la parte &quot;@ABC.XYZ&quot
     <name>configurationoptionsdialog</name>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="17"/>
-        <source>option configuration window</source>
-        <translation>ventana opciones de configuración</translation>
+        <source>Option Configuration Window</source>
+        <translation>Ventana opciones de configuración</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="53"/>
-        <source>update interval(minutes)</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="38"/>
+        <source>Update Interval(Minutes)</source>
         <translation>intervalo de actualización(minutos)</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="108"/>
-        <source>auto start application at log in</source>
-        <translation>iniciar aplicación al entrar</translation>
-    </message>
-    <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="155"/>
-        <source>localization language</source>
-        <translation>idioma de localización</translation>
-    </message>
-    <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="187"/>
-        <source>account information storage system</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="73"/>
+        <source>Account Information Storage System</source>
         <translation>sistema de almacenamiento de cuenta</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="242"/>
-        <source>report on all accounts</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="108"/>
+        <source>Auto Start Application At Log In</source>
+        <translation>iniciar aplicación al entrar</translation>
+    </message>
+    <message>
+        <location filename="../src/configurationoptionsdialog.ui" line="146"/>
+        <source>Localization Language</source>
+        <translation>idioma de localización</translation>
+    </message>
+    <message>
+        <location filename="../src/configurationoptionsdialog.ui" line="186"/>
+        <source>Report On All Accounts</source>
         <translation>informar de todas las cuentas</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="274"/>
-        <source>audio notify</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="224"/>
+        <source>Audio Notify</source>
         <translation>sonido de notificación</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="308"/>
-        <source>close</source>
-        <translation>cerrar</translation>
+        <location filename="../src/configurationoptionsdialog.ui" line="262"/>
+        <source>&amp;Close</source>
+        <translation>&amp;cerrar</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="500"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="591"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -122,7 +127,7 @@ ERROR: caracteres no válidos detectados en el campo de intervalo de actualizaci
 </translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="507"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="598"/>
         <source>
 
 ERROR: minimum time interval is 1 minute
@@ -138,129 +143,129 @@ ERROR: el intervalo de tiempo mínimo es 1 minuto
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="147"/>
-        <location filename="../src/qcheckgmail.cpp" line="422"/>
-        <location filename="../src/qcheckgmail.cpp" line="700"/>
-        <source>status</source>
+        <location filename="../src/qcheckgmail.cpp" line="153"/>
+        <location filename="../src/qcheckgmail.cpp" line="546"/>
+        <location filename="../src/qcheckgmail.cpp" line="998"/>
+        <source>Status</source>
         <translation>estado</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="147"/>
-        <source>opening wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="153"/>
+        <source>Opening Wallet</source>
         <translation>abriendo cartera</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="159"/>
-        <source>check mail now</source>
+        <location filename="../src/qcheckgmail.cpp" line="171"/>
+        <source>Check Mail Now</source>
         <translation>comprobar correo ahora</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="162"/>
-        <source>pause checking mail</source>
+        <location filename="../src/qcheckgmail.cpp" line="176"/>
+        <source>Pause Checking Mail</source>
         <translation>pausar comprobación de correo</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="168"/>
-        <source>configure accounts</source>
+        <location filename="../src/qcheckgmail.cpp" line="187"/>
+        <source>Configure Accounts</source>
         <translation>configurar cuentas</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="176"/>
-        <source>configure options</source>
-        <translation>configurar opciones</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="271"/>
-        <source>%1 account has wrong username/password combination</source>
-        <translation>%1 cuenta tiene una combinación usuario/contraseña errónea</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="341"/>
-        <source>found %1 new emails</source>
-        <translation>encontrados %1 correos nuevos</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="385"/>
-        <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
-        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 correo de &lt;b&gt;%1&lt;/b&gt; está esperando&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="387"/>
-        <source>%1 emails are waiting for you</source>
-        <translation>%1 correos están esperando</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="347"/>
-        <location filename="../src/qcheckgmail.cpp" line="422"/>
-        <source>no new email found</source>
-        <translation>no se ha encontrado ningún correo nuevo</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="171"/>
-        <source>configure password</source>
+        <location filename="../src/qcheckgmail.cpp" line="192"/>
+        <source>Configure Password</source>
         <translation>configurar contraseña</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="184"/>
-        <location filename="../src/qcheckgmail.cpp" line="605"/>
-        <source>network problem detected</source>
+        <location filename="../src/qcheckgmail.cpp" line="202"/>
+        <source>Configure Options</source>
+        <translation>configurar opciones</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="210"/>
+        <location filename="../src/qcheckgmail.cpp" line="734"/>
+        <source>Network Problem Detected</source>
         <translation>se ha detectado algún problema de red</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="185"/>
-        <source>could not connect to the internet</source>
+        <location filename="../src/qcheckgmail.cpp" line="211"/>
+        <source>Could Not Connect To The Internet</source>
         <translation>no se pudo conectar a internet</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="274"/>
-        <location filename="../src/qcheckgmail.cpp" line="731"/>
-        <source>account related error was detected</source>
+        <location filename="../src/qcheckgmail.cpp" line="286"/>
+        <source>%1 Account Has Wrong Username/Password Combination</source>
+        <translation>%1 cuenta tiene una combinación usuario/contraseña errónea</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="289"/>
+        <location filename="../src/qcheckgmail.cpp" line="1046"/>
+        <source>Account Related Error Was Detected</source>
         <translation>se ha detectado algún error relacionado con la cuenta</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="338"/>
-        <source>found 1 new email</source>
+        <location filename="../src/qcheckgmail.cpp" line="438"/>
+        <source>Found 1 New Email</source>
         <translation>se ha encontrado 1 correo nuevo</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="606"/>
-        <source>email checking is taking longer than expected.</source>
+        <location filename="../src/qcheckgmail.cpp" line="441"/>
+        <source>Found %1 New Emails</source>
+        <translation>encontrados %1 correos nuevos</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="448"/>
+        <location filename="../src/qcheckgmail.cpp" line="546"/>
+        <source>No New Email Found</source>
+        <translation>no se ha encontrado ningún correo nuevo</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="507"/>
+        <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 Email From &lt;b&gt;%1&lt;/b&gt; Is Waiting For You&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
+        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 correo de &lt;b&gt;%1&lt;/b&gt; está esperando&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="509"/>
+        <source>%1 Emails Are Waiting For You</source>
+        <translation>%1 correos están esperando</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="735"/>
+        <source>Email Checking Is Taking Longer Than Expected.</source>
         <translation>la comprobación del correo tarda más de lo esperado.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="607"/>
-        <source>Recommending restarting qCheckGMail if the problem persists</source>
+        <location filename="../src/qcheckgmail.cpp" line="736"/>
+        <source>Recommending Restarting qCheckGMail If The Problem Persists</source>
         <translation>Si el problema persiste es recomendable reiniciar</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="647"/>
-        <source>dont have credentials,(re)trying to open wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="778"/>
+        <source>Dont Have Credentials,(Re)Trying To Open Wallet</source>
         <translation>no tiene credenciales,(re)intentar abrir cartera</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="731"/>
-        <source>no account appear to be configured in the wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="1047"/>
+        <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>parece no haber ninguna cuenta configurada en la cartera</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="827"/>
-        <location filename="../src/qcheckgmail.cpp" line="839"/>
+        <location filename="../src/qcheckgmail.cpp" line="1154"/>
+        <location filename="../src/qcheckgmail.cpp" line="1170"/>
         <source>another instance is already running,exiting this one</source>
         <translation>ya está ejecutándose otra cartera, saliendo de ésta</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="854"/>
-        <location filename="../src/qcheckgmail.cpp" line="866"/>
-        <source>autostart disabled,exiting this one</source>
+        <location filename="../src/qcheckgmail.cpp" line="1187"/>
+        <location filename="../src/qcheckgmail.cpp" line="1203"/>
+        <source>Autostart Disabled,Exiting This One</source>
         <translation>inicio automático desactivado, saliendo</translation>
     </message>
 </context>
 <context>
     <name>statusicon</name>
     <message>
-        <location filename="../src/statusicon.cpp" line="203"/>
-        <location filename="../src/statusicon.cpp" line="389"/>
-        <source>quit</source>
+        <location filename="../src/statusicon.cpp" line="211"/>
+        <location filename="../src/statusicon.cpp" line="414"/>
+        <source>Quit</source>
         <translation>salir</translation>
     </message>
 </context>
@@ -268,63 +273,63 @@ ERROR: el intervalo de tiempo mínimo es 1 minuto
     <name>walletmanager</name>
     <message>
         <location filename="../src/walletmanager.ui" line="17"/>
-        <source>account configuration window</source>
+        <source>Account Configuration Window</source>
         <translation>ventana configuración de cuenta</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="29"/>
-        <source>&amp;close</source>
-        <translation>&amp;cerrar</translation>
-    </message>
-    <message>
-        <location filename="../src/walletmanager.ui" line="45"/>
-        <source>Accounts information</source>
+        <location filename="../src/walletmanager.ui" line="23"/>
+        <source>Accounts Information</source>
         <translation>Información de cuentas</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="76"/>
-        <source>account name</source>
+        <location filename="../src/walletmanager.ui" line="48"/>
+        <source>Account Name</source>
         <translation>nombre de cuenta</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="81"/>
-        <source>display name</source>
+        <location filename="../src/walletmanager.ui" line="53"/>
+        <source>Display Name</source>
         <translation>mostrar nombre</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="86"/>
-        <source>account labels</source>
+        <location filename="../src/walletmanager.ui" line="58"/>
+        <source>Account Labels</source>
         <translation>etiquetas de cuenta</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="101"/>
-        <source>add</source>
-        <translation>añadir</translation>
+        <location filename="../src/walletmanager.ui" line="75"/>
+        <source>&amp;Add</source>
+        <translation>&amp;añadir</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="310"/>
-        <source>delete entry</source>
+        <location filename="../src/walletmanager.ui" line="88"/>
+        <source>&amp;Close</source>
+        <translation>&amp;cerrar</translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="329"/>
+        <source>Delete Entry</source>
         <translation>borrar entrada</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="316"/>
-        <source>edit entry</source>
+        <location filename="../src/walletmanager.cpp" line="338"/>
+        <source>Edit Entry</source>
         <translation>editar entrada</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="331"/>
-        <source>are you sure you want to delete &quot;%1&quot; account?</source>
+        <location filename="../src/walletmanager.cpp" line="354"/>
+        <source>Are You Sure You Want To Delete &quot;%1&quot; Account?</source>
         <translation>¿Está seguro de que quiere borrar la cuenta &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="332"/>
-        <source>yes</source>
-        <translation>sí</translation>
+        <location filename="../src/walletmanager.cpp" line="355"/>
+        <source>&amp;Yes</source>
+        <translation>&amp;yes</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="333"/>
-        <source>no</source>
-        <translation>no</translation>
+        <location filename="../src/walletmanager.cpp" line="356"/>
+        <source>&amp;No</source>
+        <translation>&amp;no</translation>
     </message>
 </context>
 </TS>

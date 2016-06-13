@@ -74,8 +74,8 @@ addaccount::addaccount( QDialog * parent,
 
         if( m_edit ){
 
-                m_ui->pushButtonAdd->setText( tr( "edit" ) ) ;
-                this->setWindowTitle( tr( "edit account" ) ) ;
+		m_ui->pushButtonAdd->setText( tr( "Edit" ) ) ;
+		this->setWindowTitle( tr( "Edit Account" ) ) ;
         }
 
         m_ui->cbToken->setChecked( !e.accRefreshToken.isEmpty() ) ;
@@ -120,7 +120,7 @@ void addaccount::useToken( bool e )
                         if( e.isEmpty() ){
 
                                 m_ui->lineEditPassword->clear() ;
-                                qDebug() << "ERROR: Failed to generate token" ;
+				qDebug() << "ERROR: Failed To Generate Token" ;
                         }else{
                                 m_ui->lineEditPassword->setText( e ) ;
                         }
@@ -157,7 +157,7 @@ void addaccount::add()
 
 		QMessageBox msg( this ) ;
 
-                msg.setText( tr( "ERROR: one or more required field is empty" ) ) ;
+		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
                 QString accPassword ;

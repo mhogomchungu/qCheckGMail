@@ -150,7 +150,7 @@ void qCheckGMail::run()
 
         this->setLocalLanguage() ;
 	this->addActionsToMenu() ;
-	this->showToolTip( m_errorIcon,tr( "status" ),tr( "opening wallet" ) ) ;
+	this->showToolTip( m_errorIcon,tr( "Status" ),tr( "Opening Wallet" ) ) ;
 	this->getAccountsInfo() ;
 }
 
@@ -168,14 +168,14 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( checkMail() ),[ this ](){
 
-               return m_statusicon->getAction( tr( "check mail now" ) ) ;
+	       return m_statusicon->getAction( tr( "Check Mail Now" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( toggled( bool ) ),SLOT( pauseCheckingMail( bool ) ),[ this ](){
 
-                auto ac = m_statusicon->getAction( tr( "pause checking mail" ) ) ;
+		auto ac = m_statusicon->getAction( tr( "Pause Checking Mail" ) ) ;
 
-                ac->setObjectName( "pauseCheckingMail" ) ;
+		ac->setObjectName( "PauseCheckingMail" ) ;
                 ac->setCheckable( true ) ;
                 ac->setChecked( false ) ;
 
@@ -184,14 +184,14 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( configureAccounts() ),[ this ](){
 
-                return m_statusicon->getAction( tr( "configure accounts" ) ) ;
+		return m_statusicon->getAction( tr( "Configure Accounts" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( triggered() ),SLOT( configurePassWord() ),[ this ](){
 
-                auto ac = m_statusicon->getAction( tr( "configure password" ) ) ;
+		auto ac = m_statusicon->getAction( tr( "Configure Password" ) ) ;
 
-		ac->setObjectName( "configurePassword" ) ;
+		ac->setObjectName( "ConfigurePassword" ) ;
                 ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
 
                 return ac ;
@@ -199,7 +199,7 @@ void qCheckGMail::addActionsToMenu()
 
          _connect( SIGNAL( triggered() ),SLOT( configurationoptionWindow() ),[ this ](){
 
-                return m_statusicon->getAction( tr( "configure options" ) ) ;
+		return m_statusicon->getAction( tr( "Configure Options" ) ) ;
         }() ) ;
 
         m_statusicon->addQuitAction() ;
@@ -207,8 +207,8 @@ void qCheckGMail::addActionsToMenu()
 
 void qCheckGMail::noInternet( const QString& e )
 {
-        auto header = tr( "network problem detected" ) ;
-        auto msg    = tr( "could not connect to the internet" ) ;
+	auto header = tr( "Network Problem Detected" ) ;
+	auto msg    = tr( "Could Not Connect To The Internet" ) ;
 
         if( e.isEmpty() ){
 
@@ -283,10 +283,10 @@ QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,
 void qCheckGMail::wrongAccountNameOrPassword()
 {
         auto x = m_accounts.at( m_currentAccount ).accountName() ;
-        auto e = tr( "%1 account has wrong username/password combination" ).arg( x ) ;
+	auto e = tr( "%1 Account Has Wrong Username/Password Combination" ).arg( x ) ;
 
 	this->changeIcon( m_errorIcon ) ;
-	this->showToolTip( m_errorIcon,tr( "account related error was detected" ),e ) ;
+	this->showToolTip( m_errorIcon,tr( "Account Related Error Was Detected" ),e ) ;
 	this->doneCheckingMail() ;
 }
 
@@ -435,17 +435,17 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 
 				if( m_mailCount == 1 ){
 
-					this->showToolTip( m_newEmailIcon,tr( "found 1 new email" ),m_accountsStatus ) ;
+					this->showToolTip( m_newEmailIcon,tr( "Found 1 New Email" ),m_accountsStatus ) ;
 				}else{
                                         auto x = QString::number( m_mailCount ) ;
-					this->showToolTip( m_newEmailIcon,tr( "found %1 new emails" ).arg( x ),m_accountsStatus ) ;
+					this->showToolTip( m_newEmailIcon,tr( "Found %1 New Emails" ).arg( x ),m_accountsStatus ) ;
 				}
 
                                 this->audioNotify() ;
 			}else{
 				this->changeIcon( m_noEmailIcon ) ;
 				this->setTrayIconToVisible( false ) ;
-				this->showToolTip( m_noEmailIcon,tr( "no new email found" ),m_accountsStatus ) ;
+				this->showToolTip( m_noEmailIcon,tr( "No New Email Found" ),m_accountsStatus ) ;
 			}
 
 			this->doneCheckingMail() ;
@@ -504,9 +504,9 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 		if( count == 1 ){
 
                         auto x = this->getAtomComponent( msg,"name" ) ;
-			info = tr( "<table><tr><td>1 email from <b>%1</b> is waiting for you</td></tr></table>" ).arg( x ) ;
+			info = tr( "<table><tr><td>1 Email From <b>%1</b> Is Waiting For You</td></tr></table>" ).arg( x ) ;
 		}else{
-			info = tr( "%1 emails are waiting for you" ).arg( mailCount ) ;
+			info = tr( "%1 Emails Are Waiting For You" ).arg( mailCount ) ;
 		}
 
 		this->changeIcon( m_newEmailIcon,count ) ;
@@ -543,7 +543,7 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 				/*
 				 * there are no more accounts to go through
 				 */
-				this->showToolTip( m_noEmailIcon,tr( "status" ),tr( "no new email found" ) ) ;
+				this->showToolTip( m_noEmailIcon,tr( "Status" ),tr( "No New Email Found" ) ) ;
 
 				if( m_accountFailed ){
 
@@ -696,7 +696,7 @@ void qCheckGMail::enablePassWordChange( bool changeable )
 
         for( decltype( j ) i = 0 ; i < j ; i++ ){
 
-                if( e.at( i )->objectName() == "configurePassword" ){
+		if( e.at( i )->objectName() == "ConfigurePassword" ){
 
                         e.at( i )->setEnabled( changeable ) ;
 
@@ -731,9 +731,9 @@ void qCheckGMail::failedToCheckForNewEmail()
 	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
 	 */
 
-        auto x = tr( "network problem detected" ) ;
-        auto msg_1 = tr( "email checking is taking longer than expected." ) ;
-        auto msg_2 = tr( "Recommending restarting qCheckGMail if the problem persists" ) ;
+	auto x = tr( "Network Problem Detected" ) ;
+	auto msg_1 = tr( "Email Checking Is Taking Longer Than Expected." ) ;
+	auto msg_2 = tr( "Recommending Restarting qCheckGMail If The Problem Persists" ) ;
         auto z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1,msg_2 ) ;
 
 	this->changeIcon( m_errorIcon ) ;
@@ -775,7 +775,7 @@ void qCheckGMail::checkMail()
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
                 }
 	}else{
-		qDebug() << tr( "dont have credentials,(re)trying to open wallet" ) ;
+		qDebug() << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) ;
 		this->getAccountsInfo() ;
 	}
 }
@@ -974,14 +974,6 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
         }
 }
 
-void qCheckGMail::objectGone( QObject * obj )
-{
-	if( m_enableDebug ){
-
-		qDebug() << "destroyed object:" << obj->objectName() ;
-	}
-}
-
 void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 {
 	m_accounts.clear() ;
@@ -1003,7 +995,7 @@ void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 
 	if( m_numberOfAccounts > 0 ){
 
-		this->showToolTip( m_errorIcon,tr( "status" ),QString() ) ;
+		this->showToolTip( m_errorIcon,tr( "Status" ),QString() ) ;
 		this->checkMail() ;
 	}else{
 		/*
@@ -1051,8 +1043,8 @@ void qCheckGMail::noAccountConfigured()
 {
 	this->changeIcon( m_errorIcon ) ;
         this->showToolTip( m_errorIcon,
-                           tr( "account related error was detected" ),
-                           tr( "no account appear to be configured in the wallet" ) ) ;
+			   tr( "Account Related Error Was Detected" ),
+			   tr( "No Account Appear To Be Configured In The Wallet" ) ) ;
 }
 
 void qCheckGMail::setLocalLanguage()
@@ -1086,11 +1078,6 @@ void qCheckGMail::setLocalLanguage()
                        return e ;
                 }() ) ;
 	}
-}
-
-void qCheckGMail::objectDestroyed()
-{
-	qDebug() << "objectDestryoed" ;
 }
 
 void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * translator )
@@ -1135,7 +1122,7 @@ void qCheckGMail::startTimer()
 
         for( decltype( j ) i = 0 ; i < j ; i++ ){
 
-                if( ac.at( i )->objectName() == "pauseCheckingMail" ){
+		if( ac.at( i )->objectName() == "PauseCheckingMail" ){
 
                         if( !ac.at( i )->isChecked() ){
 
@@ -1197,7 +1184,7 @@ int qCheckGMail::autoStartDisabled()
 		 *english_US language,its the default and hence dont load anything
 		 */
 
-		qDebug() << tr( "autostart disabled,exiting this one" ) ;
+		qDebug() << tr( "Autostart Disabled,Exiting This One" ) ;
 	}else{
 		const char * x[ 2 ] = { "qCheckGMail",nullptr } ;
 
@@ -1213,7 +1200,7 @@ int qCheckGMail::autoStartDisabled()
 
                 qapp.installTranslator( &translator ) ;
 
-                qDebug() << tr( "autostart disabled,exiting this one" ) ;
+		qDebug() << tr( "Autostart Disabled,Exiting This One" ) ;
 	}
 
 	return 1 ;

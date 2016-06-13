@@ -208,7 +208,7 @@ void statusicon::addQuitAction()
 
                 auto ac = new QAction( m_menu ) ;
 
-                ac->setText( tr( "quit" ) ) ;
+		ac->setText( tr( "Quit" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 
                 return ac ;
@@ -411,7 +411,7 @@ void statusicon::addQuitAction()
         m_menu->addAction( [ this ](){
 
                 auto ac = new QAction( m_menu ) ;
-                ac->setText( tr( "quit" ) ) ;
+		ac->setText( tr( "Quit" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 
                 return ac ;

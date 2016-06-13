@@ -79,9 +79,7 @@ private slots:
 	void configurationoptionWindow( void ) ;
 	void checkMail( void ) ;
 	void setTimer( int ) ;
-	void objectDestroyed( void ) ;
 	void reportOnAllAccounts( bool ) ;
-	void objectGone( QObject * ) ;
 	void configurePassWord( void ) ;
         void audioNotify( bool ) ;
         void enablePassWordChange( bool ) ;

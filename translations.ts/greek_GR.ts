@@ -5,64 +5,69 @@
     <name>addaccount</name>
     <message>
         <location filename="../src/addaccount.ui" line="17"/>
-        <source>create a new account</source>
+        <source>Create A New Account</source>
         <translation>Δημιουργία νέου λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="41"/>
+        <location filename="../src/addaccount.ui" line="35"/>
+        <source>Account Name</source>
+        <translation>Όνομα λογαριασμού</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="54"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation>Μπορείτε να προσθέσετε λογαριασμούς gmail χωρίς την κατάληξη &quot;@gmail.com&quot;.
 Λογαριασμοί από hosted domain πρέπει να προστεθούν με κατάληξη &quot;ABC.XYZ&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="55"/>
-        <source>account password</source>
-        <translation>Κωδικός πρόσβασης</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="74"/>
-        <source>account name</source>
-        <translation>Όνομα λογαριασμού</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="106"/>
-        <source>multiple labels can be entered by separating them with a comma(,)</source>
-        <translation>Μπορείτε να εισάγετε πολλαπλές ετικέτες χωρίζοντάς τες με κόμμα(,)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="119"/>
-        <source>label(s)(optional)</source>
-        <translation>Ετικέτα(ες)(προαιρετικό)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="138"/>
-        <source>display name(optional)</source>
+        <location filename="../src/addaccount.ui" line="68"/>
+        <source>Display Name(Optional)</source>
         <translation>Εμφανιζόμενο όνομα (προαιρετικό)</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="168"/>
-        <source>add</source>
-        <translation>Προσθήκη</translation>
+        <location filename="../src/addaccount.ui" line="97"/>
+        <source>Account Password</source>
+        <translation>Κωδικός πρόσβασης</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="181"/>
-        <source>cancel</source>
-        <translation>Ακύρωση</translation>
+        <location filename="../src/addaccount.ui" line="129"/>
+        <source>Label(s)(Optional)</source>
+        <translation>Ετικέτα(ες)(προαιρετικό)</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="58"/>
-        <source>edit</source>
+        <location filename="../src/addaccount.ui" line="148"/>
+        <source>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</source>
+        <translation>Μπορείτε να εισάγετε πολλαπλές ετικέτες χωρίζοντάς τες με κόμμα(,)</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="164"/>
+        <source>Password Is Google&apos;s OAuth2 Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="177"/>
+        <source>&amp;Add</source>
+        <translation>&amp;Προσθήκη</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.ui" line="190"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Ακύρωση</translation>
+    </message>
+    <message>
+        <location filename="../src/addaccount.cpp" line="77"/>
+        <source>Edit</source>
         <translation>Επεξεργασία</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="59"/>
-        <source>edit account</source>
+        <location filename="../src/addaccount.cpp" line="78"/>
+        <source>Edit Account</source>
         <translation>Επεξεργασία λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.cpp" line="91"/>
-        <source>ERROR: one or more required field is empty</source>
+        <location filename="../src/addaccount.cpp" line="160"/>
+        <source>ERROR: One Or More Required Field Is Empty</source>
         <translation>ΣΦΑΛΜΑ: ένα ή περισσότερα απαιτούμενα πεδία είναι κενά</translation>
     </message>
 </context>
@@ -70,46 +75,46 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</sourc
     <name>configurationoptionsdialog</name>
     <message>
         <location filename="../src/configurationoptionsdialog.ui" line="17"/>
-        <source>option configuration window</source>
+        <source>Option Configuration Window</source>
         <translation>Παράθυρο επεξεργασίας ρυθμίσεων</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="53"/>
-        <source>update interval(minutes)</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="38"/>
+        <source>Update Interval(Minutes)</source>
         <translation>Διάστημα ενημέρωσης (λεπτά)</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="108"/>
-        <source>auto start application at log in</source>
-        <translation>Αυτόματη εκκίνηση κατά την είσοδο</translation>
-    </message>
-    <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="187"/>
-        <source>account information storage system</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="73"/>
+        <source>Account Information Storage System</source>
         <translation>Σύστημα αποθήκευσης πληροφοριών λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="155"/>
-        <source>localization language</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="108"/>
+        <source>Auto Start Application At Log In</source>
+        <translation>Αυτόματη εκκίνηση κατά την είσοδο</translation>
+    </message>
+    <message>
+        <location filename="../src/configurationoptionsdialog.ui" line="146"/>
+        <source>Localization Language</source>
         <translation>Γλώσσα</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="242"/>
-        <source>report on all accounts</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="186"/>
+        <source>Report On All Accounts</source>
         <translation>Αναφορά σε όλους τους λογαριασμούς</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="274"/>
-        <source>audio notify</source>
+        <location filename="../src/configurationoptionsdialog.ui" line="224"/>
+        <source>Audio Notify</source>
         <translation>Ηχητική ειδοποίηση</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.ui" line="308"/>
-        <source>close</source>
-        <translation>Κλείσιμο</translation>
+        <location filename="../src/configurationoptionsdialog.ui" line="262"/>
+        <source>&amp;Close</source>
+        <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="500"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="591"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -122,7 +127,7 @@ ERROR: illegal characters detected in the the update interval field
 </translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="507"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="598"/>
         <source>
 
 ERROR: minimum time interval is 1 minute
@@ -138,129 +143,129 @@ ERROR: minimum time interval is 1 minute
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="147"/>
-        <location filename="../src/qcheckgmail.cpp" line="422"/>
-        <location filename="../src/qcheckgmail.cpp" line="700"/>
-        <source>status</source>
+        <location filename="../src/qcheckgmail.cpp" line="153"/>
+        <location filename="../src/qcheckgmail.cpp" line="546"/>
+        <location filename="../src/qcheckgmail.cpp" line="998"/>
+        <source>Status</source>
         <translation>Κατάσταση</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="147"/>
-        <source>opening wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="153"/>
+        <source>Opening Wallet</source>
         <translation>Άνοιγμα πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="159"/>
-        <source>check mail now</source>
+        <location filename="../src/qcheckgmail.cpp" line="171"/>
+        <source>Check Mail Now</source>
         <translation>Έλεγχος για μηνύματα τώρα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="162"/>
-        <source>pause checking mail</source>
+        <location filename="../src/qcheckgmail.cpp" line="176"/>
+        <source>Pause Checking Mail</source>
         <translation>Παύση ελέγχου για νέα μηνύματα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="168"/>
-        <source>configure accounts</source>
+        <location filename="../src/qcheckgmail.cpp" line="187"/>
+        <source>Configure Accounts</source>
         <translation>Επεξεργασία λογαριασμών</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="176"/>
-        <source>configure options</source>
-        <translation>Επεξεργασία ρυθμίσεων</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="271"/>
-        <source>%1 account has wrong username/password combination</source>
-        <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="341"/>
-        <source>found %1 new emails</source>
-        <translation>Βρέθηκαν %1 νέα μηνύματα</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="385"/>
-        <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 email from &lt;b&gt;%1&lt;/b&gt; is waiting for you&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
-        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 μήνυμα από &lt;b&gt;%1&lt;/b&gt; σας περιμένει&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="387"/>
-        <source>%1 emails are waiting for you</source>
-        <translation>%1 μηνύματα σας περιμένουν</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="347"/>
-        <location filename="../src/qcheckgmail.cpp" line="422"/>
-        <source>no new email found</source>
-        <translation>Δεν βρέθηκε νέο μήνυμα</translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="171"/>
-        <source>configure password</source>
+        <location filename="../src/qcheckgmail.cpp" line="192"/>
+        <source>Configure Password</source>
         <translation>Επεξεργασία κωδικού πρόσβασης</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="184"/>
-        <location filename="../src/qcheckgmail.cpp" line="605"/>
-        <source>network problem detected</source>
+        <location filename="../src/qcheckgmail.cpp" line="202"/>
+        <source>Configure Options</source>
+        <translation>Επεξεργασία ρυθμίσεων</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="210"/>
+        <location filename="../src/qcheckgmail.cpp" line="734"/>
+        <source>Network Problem Detected</source>
         <translation>Ανιχνεύθηκε πρόβλημα δικτύου</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="185"/>
-        <source>could not connect to the internet</source>
+        <location filename="../src/qcheckgmail.cpp" line="211"/>
+        <source>Could Not Connect To The Internet</source>
         <translation>Δεν ήταν δυνατή η σύνδεση στο διαδίκτυο</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="274"/>
-        <location filename="../src/qcheckgmail.cpp" line="731"/>
-        <source>account related error was detected</source>
+        <location filename="../src/qcheckgmail.cpp" line="286"/>
+        <source>%1 Account Has Wrong Username/Password Combination</source>
+        <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="289"/>
+        <location filename="../src/qcheckgmail.cpp" line="1046"/>
+        <source>Account Related Error Was Detected</source>
         <translation>Ανιχνεύθηκε σφάλμα λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="338"/>
-        <source>found 1 new email</source>
+        <location filename="../src/qcheckgmail.cpp" line="438"/>
+        <source>Found 1 New Email</source>
         <translation>Βρέθηκε 1 νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="606"/>
-        <source>email checking is taking longer than expected.</source>
+        <location filename="../src/qcheckgmail.cpp" line="441"/>
+        <source>Found %1 New Emails</source>
+        <translation>Βρέθηκαν %1 νέα μηνύματα</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="448"/>
+        <location filename="../src/qcheckgmail.cpp" line="546"/>
+        <source>No New Email Found</source>
+        <translation>Δεν βρέθηκε νέο μήνυμα</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="507"/>
+        <source>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 Email From &lt;b&gt;%1&lt;/b&gt; Is Waiting For You&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</source>
+        <translation>&lt;table&gt;&lt;tr&gt;&lt;td&gt;1 μήνυμα από &lt;b&gt;%1&lt;/b&gt; σας περιμένει&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="509"/>
+        <source>%1 Emails Are Waiting For You</source>
+        <translation>%1 μηνύματα σας περιμένουν</translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="735"/>
+        <source>Email Checking Is Taking Longer Than Expected.</source>
         <translation>Ο έλεγχος για μηνύματα διαρκεί περισσότερο από το κανονικό.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="607"/>
-        <source>Recommending restarting qCheckGMail if the problem persists</source>
+        <location filename="../src/qcheckgmail.cpp" line="736"/>
+        <source>Recommending Restarting qCheckGMail If The Problem Persists</source>
         <translation>Συστήνεται επανεκκίνηση το qCheckGMail αν το πρόβλημα παραμένει</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="647"/>
-        <source>dont have credentials,(re)trying to open wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="778"/>
+        <source>Dont Have Credentials,(Re)Trying To Open Wallet</source>
         <translation>Δεν έχετε προνόμια, νέα προσπάθεια για άνοιγμα του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="731"/>
-        <source>no account appear to be configured in the wallet</source>
+        <location filename="../src/qcheckgmail.cpp" line="1047"/>
+        <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>Δεν έχει ρυθμιστεί κανένας λογαριασμός στο πορτοφόλι</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="827"/>
-        <location filename="../src/qcheckgmail.cpp" line="839"/>
+        <location filename="../src/qcheckgmail.cpp" line="1154"/>
+        <location filename="../src/qcheckgmail.cpp" line="1170"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="854"/>
-        <location filename="../src/qcheckgmail.cpp" line="866"/>
-        <source>autostart disabled,exiting this one</source>
+        <location filename="../src/qcheckgmail.cpp" line="1187"/>
+        <location filename="../src/qcheckgmail.cpp" line="1203"/>
+        <source>Autostart Disabled,Exiting This One</source>
         <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>
 </context>
 <context>
     <name>statusicon</name>
     <message>
-        <location filename="../src/statusicon.cpp" line="203"/>
-        <location filename="../src/statusicon.cpp" line="389"/>
-        <source>quit</source>
+        <location filename="../src/statusicon.cpp" line="211"/>
+        <location filename="../src/statusicon.cpp" line="414"/>
+        <source>Quit</source>
         <translation>Κλείσιμο</translation>
     </message>
 </context>
@@ -268,63 +273,63 @@ ERROR: minimum time interval is 1 minute
     <name>walletmanager</name>
     <message>
         <location filename="../src/walletmanager.ui" line="17"/>
-        <source>account configuration window</source>
+        <source>Account Configuration Window</source>
         <translation>Παράθυρο επεξεργασίας λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="29"/>
-        <source>&amp;close</source>
-        <translation>&amp;Κλείσιμο</translation>
-    </message>
-    <message>
-        <location filename="../src/walletmanager.ui" line="45"/>
-        <source>Accounts information</source>
+        <location filename="../src/walletmanager.ui" line="23"/>
+        <source>Accounts Information</source>
         <translation>Πληροφορίες λογαριασμών</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="76"/>
-        <source>account name</source>
+        <location filename="../src/walletmanager.ui" line="48"/>
+        <source>Account Name</source>
         <translation>Όνομα λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="81"/>
-        <source>display name</source>
+        <location filename="../src/walletmanager.ui" line="53"/>
+        <source>Display Name</source>
         <translation>Εμφανιζόμενο όνομα</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="86"/>
-        <source>account labels</source>
+        <location filename="../src/walletmanager.ui" line="58"/>
+        <source>Account Labels</source>
         <translation>Ετικέτες λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="101"/>
-        <source>add</source>
-        <translation>Προσθήκη</translation>
+        <location filename="../src/walletmanager.ui" line="75"/>
+        <source>&amp;Add</source>
+        <translation>&amp;Προσθήκη</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="310"/>
-        <source>delete entry</source>
+        <location filename="../src/walletmanager.ui" line="88"/>
+        <source>&amp;Close</source>
+        <translation>&amp;Κλείσιμο</translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.cpp" line="329"/>
+        <source>Delete Entry</source>
         <translation>Διαγραφή καταχώρησης</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="316"/>
-        <source>edit entry</source>
+        <location filename="../src/walletmanager.cpp" line="338"/>
+        <source>Edit Entry</source>
         <translation>Επεξεργασία καταχώρησης</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="331"/>
-        <source>are you sure you want to delete &quot;%1&quot; account?</source>
+        <location filename="../src/walletmanager.cpp" line="354"/>
+        <source>Are You Sure You Want To Delete &quot;%1&quot; Account?</source>
         <translation>Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό &quot;%1&quot; ;</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="332"/>
-        <source>yes</source>
-        <translation>Ναι</translation>
+        <location filename="../src/walletmanager.cpp" line="355"/>
+        <source>&amp;Yes</source>
+        <translation>&amp;Ναι</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="333"/>
-        <source>no</source>
-        <translation>Όχι</translation>
+        <location filename="../src/walletmanager.cpp" line="356"/>
+        <source>&amp;No</source>
+        <translation>&amp;Όχι</translation>
     </message>
 </context>
 </TS>

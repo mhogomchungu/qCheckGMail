@@ -10,11 +10,11 @@
     <x>0</x>
     <y>0</y>
     <width>503</width>
-    <height>231</height>
+    <height>275</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>create a new account</string>
+   <string>Create A New Account</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
@@ -32,7 +32,7 @@
          </size>
         </property>
         <property name="text">
-         <string>account name</string>
+         <string>Account Name</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -65,7 +65,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
          </size>
         </property>
         <property name="text">
-         <string>display name(optional)</string>
+         <string>Display Name(Optional)</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -94,7 +94,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
          </size>
         </property>
         <property name="text">
-         <string>account password</string>
+         <string>Account Password</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -126,7 +126,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
          </size>
         </property>
         <property name="text">
-         <string>label(s)(optional)</string>
+         <string>Label(s)(Optional)</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -145,7 +145,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
          </size>
         </property>
         <property name="toolTip">
-         <string>multiple labels can be entered by separating them with a comma(,)</string>
+         <string>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</string>
         </property>
        </widget>
       </item>
@@ -161,7 +161,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </size>
      </property>
      <property name="text">
-      <string>password is google's OAuth2 refresh token</string>
+      <string>Password Is Google's OAuth2 Refresh Token</string>
      </property>
     </widget>
    </item>
@@ -174,7 +174,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </size>
      </property>
      <property name="text">
-      <string>add</string>
+      <string>&amp;Add</string>
      </property>
     </widget>
    </item>
@@ -187,7 +187,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
       </size>
      </property>
      <property name="text">
-      <string>cancel</string>
+      <string>&amp;Cancel</string>
      </property>
     </widget>
    </item>

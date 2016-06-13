@@ -61,7 +61,7 @@ void gmailauthorization::setCode()
 
                 QMessageBox msg( this ) ;
 
-                msg.setText( tr( "authorization code field is empty" ) ) ;
+		msg.setText( tr( "Authorization Code Field Is Empty" ) ) ;
                 msg.addButton( tr( "&OK" ),QMessageBox::YesRole ) ;
 
                 msg.exec() ;
@@ -74,7 +74,7 @@ void gmailauthorization::setCode()
 
                                 QMessageBox msg( this ) ;
 
-                                msg.setText( tr( "failed to obtain authorization code" ) ) ;
+				msg.setText( tr( "Failed To Obtain Authorization Code" ) ) ;
                                 msg.addButton( tr( "&OK" ),QMessageBox::YesRole ) ;
 
                                 msg.exec() ;
