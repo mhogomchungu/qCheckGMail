@@ -772,6 +772,8 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
+	m_manager.getQNetworkAccessManager()->setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
+
 	m_badAccessToken = false ;
 	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
@@ -921,7 +923,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                 }else{
                         if( content.isEmpty() ){
 
-                                this->noInternet() ;
+				this->noInternet() ;
                         }else{
                                 _report( false ) ;
                         }
