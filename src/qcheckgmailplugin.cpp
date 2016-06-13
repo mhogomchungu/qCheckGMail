@@ -17,6 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "tray_application_type.h"
+
+#ifdef USE_LXQT_PLUGIN
+#if USE_LXQT_PLUGIN
+
 #include "qcheckgmailplugin.h"
 
 #if NEW_LXQT_API
@@ -73,4 +78,6 @@ ILxQtPanelPlugin::Flags qCheckGMailPlugIn::flags() const
 	return ILxQtPanelPlugin::PreferRightAlignment ;
 }
 
+#endif
+#endif
 #endif

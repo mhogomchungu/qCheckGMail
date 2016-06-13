@@ -121,6 +121,35 @@ else()
 	INCLUDE(${QT_USE_FILE})
 endif()
 
+set( UI_FILES 	src/gmailauthorization.ui
+		src/gmailauthorization.ui
+		src/walletmanager.ui
+		src/addaccount.ui
+		src/configurationoptionsdialog.ui
+)
+
+set( MOC_FILES	src/gmailauthorization.h
+		src/networkAccessManager.h
+		src/qcheckgmail.h
+		src/walletmanager.h
+		src/addaccount.h
+		src/configurationoptionsdialog.h
+		src/statusicon.h
+		src/qcheckgmailplugin.h
+)
+
+set( CPP_FILES	src/gmailauthorization.cpp
+		src/main.cpp
+		src/qcheckgmail.cpp
+		src/accounts.cpp
+		src/statusicon.cpp
+                src/walletmanager.cpp
+		src/addaccount.cpp
+		src/configurationoptionsdialog.cpp
+)
+
+set( RESOUCES 	icons/icon.qrc )
+
 if( LXQTSUPPORT )
 	INCLUDE(FindPkgConfig)
 
@@ -147,22 +176,20 @@ if( LXQTSUPPORT )
 
 		if( QT5 )
 
-			QT5_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
-			QT5_WRAP_UI( UI src/gmailauthorization.ui src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+			QT5_WRAP_CPP( MOC ${MOC_FILES} )
+			QT5_WRAP_UI( UI ${UI_FILES} )
+			QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-			add_library( qCheckGMail MODULE src/gmailauthorization.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
 		else()
 
-			QT4_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h src/qcheckgmailplugin.h )
-			QT4_WRAP_UI( UI src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+			QT4_WRAP_CPP( MOC ${MOC_FILES} )
+			QT4_WRAP_UI( UI ${UI_FILES} )
+			QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-			add_library( qCheckGMail MODULE src/gmailauthorization.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp src/qcheckgmailplugin.cpp
-			src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork ${LXQT_LIBRARIES})
 		endif()
@@ -194,21 +221,19 @@ if( LXQTSUPPORT )
 elseif( NOKDESUPPORT )
 
 	if( QT5 )
-		QT5_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-		QT5_WRAP_UI( UI src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-		QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+		QT5_WRAP_CPP( MOC ${MOC_FILES} )
+		QT5_WRAP_UI( UI ${UI_FILES} )
+		QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-		add_executable( qCheckGMail src/gmailauthorization.cpp src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 	else()
-		QT4_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-		QT4_WRAP_UI( UI src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-		QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+		QT4_WRAP_CPP( MOC ${MOC_FILES} )
+		QT4_WRAP_UI( UI ${UI_FILES} )
+		QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-		add_executable( qCheckGMail src/gmailauthorization.cpp src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-		src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
 		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
 	endif()
@@ -250,20 +275,13 @@ else()
 		find_package(KF5CoreAddons)
 		find_package(KF5I18n NO_MODULE)
 
-		#include(KDEInstallDirs)
-		#include(KDECMakeSettings)
-		#include(FeatureSummary)
-		#include(ECMInstallIcons)
-		#include(KDEFrameworkCompilerSettings)
-
                 file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 1\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
-		QT5_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-		QT5_WRAP_UI( UI src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-                QT5_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+		QT5_WRAP_CPP( MOC ${MOC_FILES} )
+		QT5_WRAP_UI( UI ${UI_FILES} )
+		QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-		add_executable( qCheckGMail src/gmailauthorization.cpp src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-                src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
                 TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
 	else()
@@ -298,12 +316,11 @@ else()
 
                 file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 1\n" )
 
-		QT4_WRAP_CPP( MOC src/gmailauthorization.h src/networkAccessManager.h src/qcheckgmail.h src/walletmanager.h src/addaccount.h src/configurationoptionsdialog.h src/statusicon.h )
-		QT4_WRAP_UI( UI src/gmailauthorization.ui src/walletmanager.ui src/addaccount.ui src/configurationoptionsdialog.ui )
-                QT4_ADD_RESOURCES( TRAY_RC_SRCS icons/icon.qrc )
+		QT4_WRAP_CPP( MOC ${MOC_FILES} )
+		QT4_WRAP_UI( UI ${UI_FILES} )
+		QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-		add_executable( qCheckGMail src/gmailauthorization.cpp src/main.cpp src/qcheckgmail.cpp src/accounts.cpp src/statusicon.cpp
-                src/walletmanager.cpp src/addaccount.cpp src/configurationoptionsdialog.cpp ${MOC} ${UI} ${TRAY_RC_SRCS} )
+		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
                 TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
         endif()

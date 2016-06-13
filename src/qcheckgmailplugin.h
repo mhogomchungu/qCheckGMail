@@ -21,6 +21,22 @@
 #define QCHECKGMAILPLUGIN_H
 
 #include <QObject>
+
+/*
+ * Bogus class to silence a build warning
+ */
+class foo : public QObject
+{
+	Q_OBJECT
+public:
+	foo()
+	{
+	}
+};
+
+#ifdef USE_LXQT_PLUGIN
+#if USE_LXQT_PLUGIN
+
 #include <QToolButton>
 #include <QVector>
 #include <QDebug>
@@ -29,7 +45,6 @@
 #include "qcheckgmail.h"
 #include "accounts.h"
 #include "lxqt_api.h"
-
 #if NEW_LXQT_API
 
 #include <lxqt/LXQt/ilxqtpanel.h>
@@ -93,3 +108,6 @@ public:
 #endif
 
 #endif // QCHECKGMAILPLUGIN_H
+
+#endif
+#endif
