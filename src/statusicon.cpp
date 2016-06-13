@@ -427,7 +427,7 @@ void statusicon::newEmailNotify()
 
 bool statusicon::enableDebug()
 {
-	return QCoreApplication::arguments().contains( "-a" ) ;
+	return QCoreApplication::arguments().contains( "-d" ) ;
 }
 
 void statusicon::addAction( QAction * ac )

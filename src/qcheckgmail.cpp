@@ -341,11 +341,6 @@ static QString _account_status( statusicon * s,const QString& displayName,const 
  */
 void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 {
-	if( m_enableDebug ){
-
-		qDebug() << "\n" << msg ;
-	}
-
         if( msg.contains( "<TITLE>Unauthorized</TITLE>" ) || error ){
 
 		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
@@ -462,11 +457,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
  */
 void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool error )
 {
-	if( m_enableDebug ){
-
-		qDebug() << "\n" << msg ;
-	}
-
 	int count = 0 ;
 	QString mailCount ;
 
@@ -903,6 +893,15 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
         m_manager.get( request,&m_networkReply,[ this ]( NetworkAccessManager::NetworkReply e ){
 
                 auto content = e->readAll() ;
+
+		if( m_enableDebug ){
+
+			qDebug() << content << "\n" ;
+
+			qDebug() << e->errorString() << "\n" ;
+
+			qDebug() << e->error() << "\n\n" ;
+		}
 
                 m_timeOut->stop() ;
 
