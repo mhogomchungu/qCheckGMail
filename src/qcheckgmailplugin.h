@@ -45,10 +45,11 @@ public:
 #include "qcheckgmail.h"
 #include "accounts.h"
 #include "lxqt_api.h"
+
 #if NEW_LXQT_API
 
-#include <lxqt/LXQt/ilxqtpanel.h>
-#include <lxqt/LXQt/ilxqtpanelplugin.h>
+#include <ilxqtpanel.h>
+#include <ilxqtpanelplugin.h>
 
 class qCheckGMailPlugIn : public QObject,public ILXQtPanelPlugin
 {
@@ -77,8 +78,8 @@ public:
 
 #else
 
-#include <lxqt/ilxqtpanel.h>
-#include <lxqt/ilxqtpanelplugin.h>
+#include <ilxqtpanel.h>
+#include <ilxqtpanelplugin.h>
 
 class qCheckGMailPlugIn : public QObject,public ILxQtPanelPlugin
 {

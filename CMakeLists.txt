@@ -171,7 +171,7 @@ if( LXQTSUPPORT )
 			file( WRITE ${PROJECT_BINARY_DIR}/lxqt_api.h "#define NEW_LXQT_API 0\n" )
 		endif()
 
-		add_definitions( -I${LXQT_INCLUDE_DIR})
+		add_definitions( -I${LXQT_INCLUDE_DIR} )
 		include_directories( ${LXQT_INCLUDE_DIRS} )
 
 		if( QT5 )
