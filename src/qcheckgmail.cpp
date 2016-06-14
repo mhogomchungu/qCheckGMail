@@ -772,7 +772,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_manager.getQNetworkAccessManager()->setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
+	m_manager.QtNAM()->setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
 
 	m_badAccessToken = false ;
 	m_currentLabel   = 0 ;
@@ -783,21 +783,11 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 #if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
 
-std::function< void( const QString&,std::function< void( const QString& ) > ) > qCheckGMail::getAuthorization()
+static QString _parseJSON( const QByteArray& json,const char * property )
 {
-        return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
-
-                Q_UNUSED( authocode ) ;
-
-                function( QString() ) ;
-        } ;
-}
-
-void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
-{
-        Q_UNUSED( acc ) ;
-        Q_UNUSED( refresh_token ) ;
-        Q_UNUSED( UrlLabel ) ;
+	Q_UNUSED( json ) ;
+	Q_UNUSED( property ) ;
+	return QString() ;
 }
 
 #else
@@ -822,6 +812,8 @@ static QString _parseJSON( const QByteArray& json,const char * property )
 
         return QString() ;
 }
+
+#endif
 
 QNetworkRequest _networkRequest()
 {
@@ -887,8 +879,6 @@ std::function< void( const QString&,std::function< void( const QString& ) > ) > 
                 } ) ;
         } ;
 }
-
-#endif
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {

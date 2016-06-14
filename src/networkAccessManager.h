@@ -76,7 +76,7 @@ public:
 		connect( &m_manager,SIGNAL( finished( QNetworkReply * ) ),
 			 this,SLOT( networkReply( QNetworkReply * ) ),Qt::QueuedConnection ) ;
 	}
-	QNetworkAccessManager * getQNetworkAccessManager()
+	QNetworkAccessManager * QtNAM()
 	{
 		return &m_manager ;
 	}
