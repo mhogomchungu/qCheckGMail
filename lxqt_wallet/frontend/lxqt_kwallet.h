@@ -64,14 +64,14 @@ public:
 	void closeWallet( bool ) ;
 	LxQt::Wallet::walletBackEnd backEnd( void ) ;
 	bool walletIsOpened( void ) ;
-	void setInterfaceObject( QWidget * parent ) ;
+	void setInterfaceObject( QWidget * parent,bool = true ) ;
 	QObject * qObject( void ) ;
 	QString storagePath( void ) ;
 	void changeWalletPassWord( const QString& walletName,const QString& applicationName = QString() ) ;
 	QStringList managedWalletList( void ) ;
 	QString localDefaultWalletName( void ) ;
 	QString networkDefaultWalletName( void ) ;
-	void setImage( const QString& ) ;
+	void setImage( const QIcon& ) ;
 signals:
 	void walletpassWordChanged( bool ) ;
 	void walletOpened_1( bool ) ;
@@ -83,6 +83,7 @@ private:
 	QString m_applicationName ;
 	QString m_password ;
 	QWidget * m_interfaceObject ;
+	bool m_announceInterfaceEvents = true ;
 };
 
 }

@@ -87,7 +87,7 @@ void walletmanager::ShowUI()
 	m_action = walletmanager::showAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->setImage( m_icon ) ;
+	m_wallet->setImage( QIcon( m_icon ) ) ;
         auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
         m_wallet->open( s,"qCheckGMail" ) ;
 }
@@ -105,7 +105,7 @@ void walletmanager::changeWalletPassword()
 {
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setInterfaceObject( this ) ;
-	m_wallet->setImage( m_icon ) ;
+	m_wallet->setImage( QIcon( m_icon ) ) ;
         auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
         m_wallet->changeWalletPassWord( s,"qCheckGMail" ) ;
 }

@@ -59,7 +59,7 @@ LxQt::Wallet::secretService::~secretService()
 {
 }
 
-void LxQt::Wallet::secretService::setImage( const QString& image )
+void LxQt::Wallet::secretService::setImage( const QIcon& image )
 {
 	Q_UNUSED( image ) ;
 }
@@ -201,12 +201,9 @@ QStringList LxQt::Wallet::secretService::readAllKeys( void )
 
 void LxQt::Wallet::secretService::deleteKey( const QString& key )
 {
-	if( m_schema && m_schema_1 ){
+	if( m_schema && m_schema_1 && !key.isEmpty() ){
 
-		if( !key.isEmpty() ){
-
-			lxqt_secret_service_clear_sync( key.toLatin1().constData(),m_schema.get(),m_schema_1.get() ) ;
-		}
+		lxqt_secret_service_clear_sync( key.toLatin1().constData(),m_schema.get(),m_schema_1.get() ) ;
 	}
 }
 
@@ -240,10 +237,14 @@ bool LxQt::Wallet::secretService::walletIsOpened( void )
 	}
 }
 
-void LxQt::Wallet::secretService::setInterfaceObject( QWidget * interfaceObject )
+void LxQt::Wallet::secretService::setInterfaceObject( QWidget * interfaceObject,bool e )
 {
 	m_interfaceObject = interfaceObject ;
-	connect( this,SIGNAL( walletIsOpen( bool ) ),m_interfaceObject,SLOT( walletIsOpen( bool ) ) ) ;
+
+	if( e ){
+
+		connect( this,SIGNAL( walletIsOpen( bool ) ),m_interfaceObject,SLOT( walletIsOpen( bool ) ) ) ;
+	}
 }
 
 QObject * LxQt::Wallet::secretService::qObject( void )

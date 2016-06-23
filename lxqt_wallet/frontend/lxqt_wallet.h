@@ -196,14 +196,13 @@ public:
 	 * This method is used as a mean of communication between the backend and the user of the library.see open() method documentation above
 	 * for a use case of this API
 	 */
-	virtual void setInterfaceObject( QWidget * ) = 0 ;
+	virtual void setInterfaceObject( QWidget *,bool = true ) = 0 ;
 
 	/*
 	 * This method is defined only with internal backend.
 	 * This method is used to set an icon image to be used when the backend produces GUI windows.
 	 */
-	virtual void setImage( const QString& ) = 0 ;
-
+	virtual void setImage( const QIcon& ) = 0 ;
 	/*
 	 * this method returns PasswordFolder() in kwallet backend and is undefined in other backends
 	 */

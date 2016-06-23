@@ -41,10 +41,9 @@ LxQt::Wallet::internalWallet::~internalWallet()
 	lxqt_wallet_close( &m_wallet ) ;
 }
 
-void LxQt::Wallet::internalWallet::setImage( const QString& image )
+void LxQt::Wallet::internalWallet::setImage( const QIcon& image )
 {
-	m_image = image ;
-	this->setWindowIcon( QIcon( image ) ) ;
+	this->setWindowIcon( image ) ;
 }
 
 void LxQt::Wallet::internalWallet::openWallet( QString password )
@@ -174,7 +173,7 @@ void LxQt::Wallet::internalWallet::createWallet()
 	const auto& w = m_walletName ;
 	const auto& d = m_displayApplicationName ;
 
-	cbd::instance( this,w,d ).ShowUI( [ this ]( const QString& password,bool create ){
+	cbd::instance( this,w,d,[ this ]( const QString& password,bool create ){
 
 		if( create ){
 
@@ -204,7 +203,7 @@ void LxQt::Wallet::internalWallet::createWallet()
 
 void LxQt::Wallet::internalWallet::changeWalletPassWord( const QString& walletName,const QString& applicationName )
 {
-	LxQt::Wallet::changePassWordDialog::instance( this,walletName,applicationName ).ShowUI( [ this ]( bool c ){
+	LxQt::Wallet::changePassWordDialog::instance_1( this,walletName,applicationName,[ this ]( bool c ){
 
 		QMetaObject::invokeMethod( m_interfaceObject,"walletpassWordChanged",Q_ARG( bool,c ) ) ;
 	} ) ;
@@ -292,11 +291,16 @@ bool LxQt::Wallet::internalWallet::walletIsOpened()
 	return m_wallet != 0 ;
 }
 
-void LxQt::Wallet::internalWallet::setInterfaceObject( QWidget * interfaceObject )
+void LxQt::Wallet::internalWallet::setInterfaceObject( QWidget * interfaceObject,bool w )
 {
 	this->setParent( interfaceObject ) ;
+
 	m_interfaceObject = interfaceObject ;
-	connect( this,SIGNAL( walletIsOpen( bool ) ),m_interfaceObject,SLOT( walletIsOpen( bool ) ) ) ;
+
+	if( w ){
+
+		connect( this,SIGNAL( walletIsOpen( bool ) ),m_interfaceObject,SLOT( walletIsOpen( bool ) ) ) ;
+	}
 }
 
 QObject * LxQt::Wallet::internalWallet::qObject()
