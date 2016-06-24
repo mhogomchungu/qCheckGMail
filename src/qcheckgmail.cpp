@@ -18,8 +18,10 @@
  */
 
 #include "qcheckgmail.h"
-#include <string.h>
 
+#include "3rdParty/json.hpp"
+
+#include <string.h>
 #include <utility>
 
 qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
@@ -781,39 +783,18 @@ void qCheckGMail::checkMail( const accounts& acc )
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
-
 static QString _parseJSON( const QByteArray& json,const char * property )
 {
-	Q_UNUSED( json ) ;
-	Q_UNUSED( property ) ;
-	return QString() ;
+	try{
+		auto e = nlohmann::json::parse( json.constData() ) ;
+
+		return QString::fromStdString( e.find( property ).value() ) ;
+
+	}catch( ... ){
+
+		return QString() ;
+	}
 }
-
-#else
-
-#include <QJsonDocument>
-
-static QString _parseJSON( const QByteArray& json,const char * property )
-{
-        QJsonParseError error ;
-
-        auto r = QJsonDocument::fromJson( json,&error ) ;
-
-        if( error.error == QJsonParseError::NoError ){
-
-                auto m = r.toVariant().toMap() ;
-
-                if( !m.isEmpty() ){
-
-                        return m[ property ].toString() ;
-                }
-        }
-
-        return QString() ;
-}
-
-#endif
 
 QNetworkRequest _networkRequest()
 {

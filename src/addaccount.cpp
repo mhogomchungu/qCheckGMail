@@ -92,14 +92,8 @@ addaccount::addaccount( QDialog * parent,
 
 void addaccount::ShowUI()
 {
-#if QT_VERSION < QT_VERSION_CHECK( 5,0,0 )
-        m_ui->cbToken->setEnabled( false ) ;
-        m_ui->cbToken->setChecked( false ) ;
-#else
         m_ui->cbToken->setEnabled( true ) ;
-#endif
-
-        m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
+	m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
         m_ui->pushButtonCancel->setMinimumHeight( 31 ) ;
 
         connect( m_ui->cbToken,SIGNAL( clicked( bool ) ),this,SLOT( useToken( bool ) ) ) ;
