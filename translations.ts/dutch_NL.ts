@@ -143,7 +143,7 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="155"/>
         <location filename="../src/qcheckgmail.cpp" line="538"/>
-        <location filename="../src/qcheckgmail.cpp" line="971"/>
+        <location filename="../src/qcheckgmail.cpp" line="970"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
@@ -195,7 +195,7 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="291"/>
-        <location filename="../src/qcheckgmail.cpp" line="1019"/>
+        <location filename="../src/qcheckgmail.cpp" line="1018"/>
         <source>Account Related Error Was Detected</source>
         <translation>Probleem met het account gedetecteerd</translation>
     </message>
@@ -241,19 +241,19 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
         <translation>Er is geen toestemming, (opnieuw) proberen portefeuille te openen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1020"/>
+        <location filename="../src/qcheckgmail.cpp" line="1019"/>
         <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>Er is blijkbaar geen account in de portefeuille ingesteld</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1127"/>
-        <location filename="../src/qcheckgmail.cpp" line="1143"/>
+        <location filename="../src/qcheckgmail.cpp" line="1126"/>
+        <location filename="../src/qcheckgmail.cpp" line="1142"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Een ander exemplaar is reeds actief, deze wordt afgesloten</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1160"/>
-        <location filename="../src/qcheckgmail.cpp" line="1176"/>
+        <location filename="../src/qcheckgmail.cpp" line="1159"/>
+        <location filename="../src/qcheckgmail.cpp" line="1175"/>
         <source>Autostart Disabled,Exiting This One</source>
         <translation>Automatisch starten is uitgeschakeld, deze wordt afgesloten</translation>
     </message>

@@ -23,7 +23,7 @@
 
 #include "../lxqt_wallet/frontend/task.h"
 
-namespace Task = LxQt::Wallet::Task ;
+namespace Task = LXQt::Wallet::Task ;
 
 #include <utility>
 
@@ -52,8 +52,6 @@ void walletmanager::buildGUI()
 {
 	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
-
-        //this->setFixedSize( this->size() ) ;
 
         m_ui->pushButtonAccountAdd->setMinimumHeight( 31 ) ;
         m_ui->pushButtonClose->setMaximumHeight( 31 ) ;
@@ -86,34 +84,31 @@ void walletmanager::ShowUI()
 {
 	m_action = walletmanager::showAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
-	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
-        auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
-        m_wallet->open( s,"qCheckGMail" ) ;
+
+	this->openWallet() ;
 }
 
 void walletmanager::getAccounts( void )
 {
 	m_action = walletmanager::getAccountInfo ;
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
-	m_wallet->setInterfaceObject( this ) ;
-        auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
-        m_wallet->open( s,"qCheckGMail" ) ;
+
+	this->openWallet() ;
 }
 
 void walletmanager::changeWalletPassword()
 {
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
-	m_wallet->setInterfaceObject( this ) ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
-        auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
-        m_wallet->changeWalletPassWord( s,"qCheckGMail" ) ;
-}
 
-void walletmanager::walletpassWordChanged( bool passwordChanged )
-{
-	Q_UNUSED( passwordChanged ) ;
-	this->deleteLater() ;
+	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
+
+	m_wallet->changeWalletPassWord( s,"qCheckGMail",[ this ]( bool e ){
+
+		Q_UNUSED( e ) ;
+		this->deleteLater() ;
+	} ) ;
 }
 
 void walletmanager::addEntry( const accounts& acc )
@@ -139,7 +134,7 @@ void walletmanager::addEntry( const accounts& acc )
 
 void walletmanager::readAccountInfo()
 {
-        using wallet = QVector< LxQt::Wallet::walletKeyValues > ;
+	using wallet = decltype( m_wallet->readAllKeyValues() ) ;
 
 	m_accounts.clear() ;
 
@@ -147,9 +142,9 @@ void walletmanager::readAccountInfo()
 
 		for( const auto& it : entries ){
 
-			if( it.getKey() == acc ){
+			if( it.first == acc ){
 
-				return it.getValue() ;
+				return it.second ;
 			}
 		}
 
@@ -165,7 +160,7 @@ void walletmanager::readAccountInfo()
 
 	for( const auto& it : entries ){
 
-                const auto& accName = it.getKey() ;
+		const auto& accName = it.first ;
 
                 bool r = accName.endsWith( labels_id ) ||
                                 accName.endsWith( display_id ) ||
@@ -183,46 +178,51 @@ void walletmanager::readAccountInfo()
 	}
 }
 
-void walletmanager::walletIsOpen( bool walletOpened )
+void walletmanager::openWallet()
 {
-	if( walletOpened ){
+	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
 
-		switch( m_action ){
+	m_wallet->open( s,"qCheckGMail",[ this ]( bool walletOpened ){
 
-		case walletmanager::showAccountInfo :
+		if( walletOpened ){
 
-			this->buildGUI() ;
-			this->disableAll() ;
-			this->show() ;
+			switch( m_action ){
 
-			this->readAccountInfo() ;
+			case walletmanager::showAccountInfo :
 
-			for( const auto& it : m_accounts ){
+				this->buildGUI() ;
+				this->disableAll() ;
+				this->show() ;
 
-				this->addEntry( it ) ;
+				this->readAccountInfo() ;
+
+				for( const auto& it : m_accounts ){
+
+					this->addEntry( it ) ;
+				}
+
+				this->selectLastRow() ;
+				this->enableAll() ;
+
+				break ;
+			case walletmanager::getAccountInfo :
+
+				this->readAccountInfo() ;
+
+				m_getAccountInfo( std::move( m_accounts ) ) ;
+				this->deleteLater() ;
+
+				break ;
+			default:
+				/*
+				 * we dont get here
+				 */
+				this->deleteLater() ;
 			}
-
-			this->selectLastRow() ;
-			this->enableAll() ;
-
-			break ;
-		case walletmanager::getAccountInfo :
-
-			this->readAccountInfo() ;
-
-                        m_getAccountInfo( std::move( m_accounts ) ) ;
-			this->deleteLater() ;
-
-			break ;
-		default:
-			/*
-			 * we dont get here
-			 */
+		}else{
 			this->deleteLater() ;
 		}
-	}else{
-		this->deleteLater() ;
-	}
+	},this ) ;
 }
 
 void walletmanager::closeEvent( QCloseEvent * e )

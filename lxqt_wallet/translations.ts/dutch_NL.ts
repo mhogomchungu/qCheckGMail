@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="nl_NL">
 <context>
-    <name>LxQt::Wallet::changePassWordDialog</name>
+    <name>LXQt::Wallet::changePassWordDialog</name>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="108"/>
         <source>Create a new wallet</source>
@@ -20,11 +20,6 @@
         <translation>wachtwoorden komen niet overeen</translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.cpp" line="236"/>
-        <source>New passwords do not match</source>
-        <translation>nieuwe wachtwoorden komen niet overeen</translation>
-    </message>
-    <message>
         <location filename="../frontend/changepassworddialog.cpp" line="217"/>
         <source>Wallet password could not be changed</source>
         <translation>wachtwoordportefeuille kan niet gewijzigd worden</translation>
@@ -34,9 +29,14 @@
         <source>Wallet could not be opened with the presented key</source>
         <translation>portefeuille kan met de opgegeven sleutel niet geopend worden</translation>
     </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.cpp" line="236"/>
+        <source>New passwords do not match</source>
+        <translation>nieuwe wachtwoorden komen niet overeen</translation>
+    </message>
 </context>
 <context>
-    <name>LxQt::Wallet::password_dialog</name>
+    <name>LXQt::Wallet::password_dialog</name>
     <message>
         <location filename="../frontend/password_dialog.cpp" line="69"/>
         <source>Wallet could not be opened with the presented key</source>
@@ -153,7 +153,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Een toepassing &lt;span style=&quot; font-weight:600;&quot;&gt;&apos;%1&apos;&lt;/span&gt; verzoekt om een portefeuille te openen&lt;span style=&quot; font-weight:600;&quot;&gt; &apos;%2&apos;&lt;/span&gt;.Voer hieronder het wachtwoord voor deze portefeuille in om deze te ontgrendelen&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../frontend/password_dialog.ui" line="125"/>
+        <location filename="../frontend/password_dialog.ui" line="124"/>
         <source>&amp;Unlock</source>
         <translation>&amp;Ontgrendelen</translation>
     </message>

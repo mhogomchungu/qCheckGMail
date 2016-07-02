@@ -384,10 +384,6 @@ StartupNotify=true
 Terminal=false
 TerminalOptions=
 Type=Application
-X-DBUS-ServiceName=
-X-DBUS-StartupType=Unique
-X-KDE-SubstituteUID=false
-X-KDE-Username=
 Categories=Network;X-MandrivaLinux-Internet;\n")
 
 # desktop file section
@@ -409,9 +405,5 @@ StartupNotify=true
 Terminal=false
 TerminalOptions=
 Type=Application
-X-DBUS-ServiceName=
-X-DBUS-StartupType=Unique
-X-KDE-SubstituteUID=false
-X-KDE-Username=
 Categories=Network;X-MandrivaLinux-Internet;\n")
 endif()

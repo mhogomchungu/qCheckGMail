@@ -101,8 +101,6 @@ public:
 signals:
 	void walletmanagerClosed( void ) ;
 private slots:
-	void walletpassWordChanged( bool ) ;
-	void walletIsOpen( bool ) ;
 	void deleteAccount() ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
@@ -111,6 +109,7 @@ private slots:
 	void editAccount( void ) ;
 	void enableAll( void ) ;
 private:
+	void openWallet( void ) ;
 	void addEntry( const accounts& ) ;
 	void disableAll( void ) ;
 	void changePassword( bool ) ;
@@ -125,7 +124,7 @@ private:
 	Ui::walletmanager * m_ui ;
 
         QVector< accounts > m_accounts ;
-	LxQt::Wallet::Wallet * m_wallet ;
+	LXQt::Wallet::Wallet * m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;

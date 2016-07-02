@@ -58,9 +58,9 @@ public:
 	static QString localLanguage( void ) ;
 	static QString localLanguagePath( void ) ;
 	static int getTimeFromConfigFile( void ) ;
-	static QString walletName( LxQt::Wallet::walletBackEnd ) ;
+	static QString walletName( LXQt::Wallet::BackEnd ) ;
 	static QString logFile( void ) ;
-	static LxQt::Wallet::Wallet * secureStorageSystem( void ) ;
+	static LXQt::Wallet::Wallet * secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
         static QString clientID( void ) ;
         static QString clientSecret( void ) ;

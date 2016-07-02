@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0">
 <context>
-    <name>LxQt::Wallet::changePassWordDialog</name>
+    <name>LXQt::Wallet::changePassWordDialog</name>
     <message>
         <location filename="../frontend/changepassworddialog.cpp" line="108"/>
         <source>Create a new wallet</source>
@@ -20,11 +20,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frontend/changepassworddialog.cpp" line="236"/>
-        <source>New passwords do not match</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../frontend/changepassworddialog.cpp" line="217"/>
         <source>Wallet password could not be changed</source>
         <translation type="unfinished"></translation>
@@ -34,9 +29,14 @@
         <source>Wallet could not be opened with the presented key</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../frontend/changepassworddialog.cpp" line="236"/>
+        <source>New passwords do not match</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>LxQt::Wallet::password_dialog</name>
+    <name>LXQt::Wallet::password_dialog</name>
     <message>
         <location filename="../frontend/password_dialog.cpp" line="69"/>
         <source>Wallet could not be opened with the presented key</source>
@@ -136,7 +136,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../frontend/password_dialog.ui" line="125"/>
+        <location filename="../frontend/password_dialog.ui" line="124"/>
         <source>&amp;Unlock</source>
         <translation type="unfinished"></translation>
     </message>
