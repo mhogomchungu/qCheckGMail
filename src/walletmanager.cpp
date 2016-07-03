@@ -101,6 +101,7 @@ void walletmanager::changeWalletPassword()
 {
 	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
+	m_wallet->setParent( this ) ;
 
 	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
 
@@ -182,6 +183,8 @@ void walletmanager::openWallet()
 {
 	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
 
+	m_wallet->setParent( this ) ;
+	
 	m_wallet->open( s,"qCheckGMail",[ this ]( bool walletOpened ){
 
 		if( walletOpened ){
@@ -222,7 +225,7 @@ void walletmanager::openWallet()
 		}else{
 			this->deleteLater() ;
 		}
-	},this ) ;
+	} ) ;
 }
 
 void walletmanager::closeEvent( QCloseEvent * e )
