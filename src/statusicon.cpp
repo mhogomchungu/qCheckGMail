@@ -438,7 +438,7 @@ void statusicon::addAction( QAction * ac )
 
 QAction * statusicon::getAction( const QString& title )
 {
-        auto ac = new QAction( m_menu ) ;
+	auto ac = new QAction( m_menu ) ;
 	ac->setText( title ) ;
 	m_menu->addAction( ac ) ;
 	return ac ;

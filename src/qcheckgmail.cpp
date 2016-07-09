@@ -150,7 +150,7 @@ void qCheckGMail::run()
                 return e ;
         }() ;
 
-        this->setLocalLanguage() ;
+	this->setLocalLanguage() ;
 	this->addActionsToMenu() ;
 	this->showToolTip( m_errorIcon,tr( "Status" ),tr( "Opening Wallet" ) ) ;
 	this->getAccountsInfo() ;
@@ -774,7 +774,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_manager.QtNAM()->setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
+	m_manager.QtNAM().setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
 
 	m_badAccessToken = false ;
 	m_currentLabel   = 0 ;

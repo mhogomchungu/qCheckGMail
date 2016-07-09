@@ -44,7 +44,7 @@
 #include "walletmanager.h"
 #include "configurationoptionsdialog.h"
 #include "tray_application_type.h"
-#include "networkAccessManager.h"
+#include "networkAccessManager.hpp"
 
 #include <functional>
 #include <utility>

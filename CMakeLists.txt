@@ -129,7 +129,7 @@ set( UI_FILES 	src/gmailauthorization.ui
 )
 
 set( MOC_FILES	src/gmailauthorization.h
-		src/networkAccessManager.h
+		src/networkAccessManager.hpp
 		src/qcheckgmail.h
 		src/walletmanager.h
 		src/addaccount.h
