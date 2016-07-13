@@ -56,10 +56,10 @@ public:
 			m_wallet->addKey( e,f.toLatin1() ) ;
 		} ;
 
-		_add( m_name       ,m_accEntry.accPassword ) ;
-		_add( m_labels     ,m_accEntry.accLabels ) ;
-		_add( m_displayName,m_accEntry.accDisplayName ) ;
-		_add( m_token      ,m_accEntry.accRefreshToken ) ;
+		_add( m_name       ,m_acc.accPassword ) ;
+		_add( m_labels     ,m_acc.accLabels ) ;
+		_add( m_displayName,m_acc.accDisplayName ) ;
+		_add( m_token      ,m_acc.accRefreshToken ) ;
 	}
 
 	void remove()
@@ -112,29 +112,33 @@ public:
 	}
 
 	account( LXQt::Wallet::Wallet * w,const accounts::entry& e = accounts::entry() ) :
-		m_accEntry( e ), m_wallet( w )
-	{
-	}
-
-	account( const QString& accName,
-		     LXQt::Wallet::Wallet * w = nullptr,
-		     const accounts::entry& e = accounts::entry() ) :
-		m_name( accName ),
+		m_name( e.accName ),
 		m_labels( m_name + LABEL_IDENTIFIER ),
 		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
 		m_token( m_name + TOKEN_IDENTIFIER ),
-		m_accEntry( e ),
+		m_acc( e ),
 		m_wallet( w )
 	{
 	}
 
+	account( const QString& accName,
+		 LXQt::Wallet::Wallet * w = nullptr,
+		 const accounts::entry& e = accounts::entry() ) :
+		m_name( accName ),
+		m_labels( m_name + LABEL_IDENTIFIER ),
+		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
+		m_token( m_name + TOKEN_IDENTIFIER ),
+		m_acc( e ),
+		m_wallet( w )
+	{
+	}
 private:
 	const QString m_name ;
 	const QString m_labels ;
 	const QString m_displayName ;
 	const QString m_token ;
 
-	const accounts::entry& m_accEntry ;
+	const accounts::entry& m_acc ;
 
 	LXQt::Wallet::Wallet * m_wallet ;
 };
@@ -390,7 +394,7 @@ void walletmanager::pushButtonAdd()
 
                 Task::run( [ this ](){
 
-			account( m_accEntry.accName,m_wallet,m_accEntry ).add() ;
+			account( m_wallet,m_accEntry ).add() ;
 
                 } ).then( [ this ](){
 
@@ -451,7 +455,7 @@ void walletmanager::deleteAccount()
 
                         Task::run( [ & ](){
 
-				account( accName,m_wallet ).remove(); ;
+				account( accName,m_wallet ).remove() ;
 
 			} ).then( [ this ](){
 
@@ -508,7 +512,7 @@ void walletmanager::editAccount()
 
                 Task::run( [ this ](){
 
-			account( m_accEntry.accName,m_wallet,m_accEntry ).replace() ;
+			account( m_wallet,m_accEntry ).replace() ;
 
                 } ).then( [ this ](){
 
