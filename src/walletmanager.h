@@ -39,6 +39,7 @@
 #include "accounts.h"
 #include "addaccount.h"
 #include "configurationoptionsdialog.h"
+#include "gmailauthorization.h"
 
 #include "../lxqt_wallet/frontend/lxqt_wallet.h"
 
@@ -57,42 +58,34 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
+	using function_t = std::function< void( QVector< accounts >&& ) > ;
+
         static walletmanager& instance( const QString& icon )
         {
-                auto k = []( const QString& e,std::function< void( const QString& ) > f ){
-
-                        Q_UNUSED( e ) ;
-                        Q_UNUSED( f ) ;
-                } ;
-
-                auto f = []( QVector< accounts >&& e ){ Q_UNUSED( e ) ; } ;
-
-                return *( new walletmanager( icon,[](){},std::move( k ),std::move( f ) ) ) ;
+		return *( new walletmanager( icon ) ) ;
         }
 
-        static walletmanager& instance( std::function< void( QVector< accounts >&& ) >&& f )
-        {
-                auto k = []( const QString& e,std::function< void( const QString& ) > f ){
-
-                        Q_UNUSED( e ) ;
-                        Q_UNUSED( f ) ;
-                } ;
-
-                return *( new walletmanager( QString(),[](){},std::move( k ),std::move( f ) ) ) ;
+	static walletmanager& instance( walletmanager::function_t&& f )
+	{
+		return *( new walletmanager( std::move( f ) ) ) ;
         }
 
         static walletmanager& instance( const QString& icon,
                                         std::function< void() >&& e,
-                                        std::function< void( const QString&,std::function< void( const QString& ) > ) >&& k,
-                                        std::function< void( QVector< accounts >&& ) >&& f )
+					gmailauthorization::function_t&& k,
+					walletmanager::function_t&& f )
         {
-                return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( f ) ) ) ;
+		return *( new walletmanager( icon,std::move( e ),
+					     std::move( k ),std::move( f ) ) ) ;
         }
+
+	walletmanager( const QString& icon ) ;
+	walletmanager( walletmanager::function_t&& ) ;
 
         walletmanager( const QString& icon,
                        std::function< void() >&&,
-                       std::function< void( const QString&,std::function< void( const QString& ) > ) >&&,
-                       std::function< void( QVector< accounts >&& ) >&& ) ;
+		       gmailauthorization::function_t&&,
+		       walletmanager::function_t&& ) ;
 
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
@@ -121,22 +114,32 @@ private:
 	bool eventFilter( QObject * watched,QEvent * event ) ;
 	void readAccountInfo() ;
 
-	Ui::walletmanager * m_ui ;
+	Ui::walletmanager * m_ui = nullptr ;
 
         QVector< accounts > m_accounts ;
-	LXQt::Wallet::Wallet * m_wallet ;
+	LXQt::Wallet::Wallet * m_wallet = nullptr ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
 	bool m_getAccInfo ;
 	accountOperation m_action ;
-        accounts::entry m_accountEntry ;
+	accounts::entry m_accEntry ;
 	QString m_icon ;
 	int m_row ;
 
-        std::function< void() > m_walletClosed ;
-        std::function< void( const QString&,std::function< void( const QString& ) > ) > m_getAuthorization ;
-        std::function< void( QVector< accounts >&& ) > m_getAccountInfo ;
+	std::function< void() > m_walletClosed = [](){} ;
+
+	gmailauthorization::function_t m_getAuthorization = []( const QString& e,
+			std::function< void( const QString& ) > f ){
+
+		Q_UNUSED( e ) ;
+		Q_UNUSED( f ) ;
+	} ;
+
+	walletmanager::function_t m_getAccountInfo = []( QVector< accounts >&& e ){
+
+		Q_UNUSED( e ) ;
+	} ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

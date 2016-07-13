@@ -39,18 +39,22 @@ class gmailauthorization : public QDialog
 {
         Q_OBJECT
 public:
+	using function_0_t = std::function< void( const QString& ) > ;
+
+	using function_t = std::function< void( const QString&,function_0_t ) > ;
+
         static void instance( QDialog * parent,
-                              std::function< void( const QString&,std::function< void( const QString& ) > ) >& r,
+			      gmailauthorization::function_t& r,
                               std::function< void() >&& e,
-                              std::function< void( const QString& ) >&& f )
+			      function_0_t&& f )
         {
                 new gmailauthorization( parent,r,std::move( e ),std::move( f ) ) ;
         }
 
         gmailauthorization( QDialog * parent,
-                            std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
+			    function_t&,
                             std::function< void() >&&,
-                            std::function< void( const QString& ) >&& ) ;
+			    function_0_t&& ) ;
 private slots:
         void cancel() ;
         void setCode() ;
@@ -64,9 +68,9 @@ private:
 
         Ui::gmailauthorization * m_ui ;
 
-        std::function< void( const QString&,std::function< void( const QString& ) > ) >& m_getAuthorizationCode ;
+	gmailauthorization::function_t& m_getAuthorizationCode ;
         std::function< void() > m_cancel ;
-        std::function< void( const QString& ) > m_getAuthorization ;
+	function_0_t m_getAuthorization ;
 };
 
 #endif

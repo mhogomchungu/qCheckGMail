@@ -28,7 +28,7 @@
 #include <QDebug>
 
 #include "accounts.h"
-
+#include "gmailauthorization.h"
 #include <functional>
 
 namespace Ui {
@@ -42,7 +42,7 @@ public:
 
         static addaccount& instance( QDialog * parent,
                                      const accounts::entry& e,
-                                     std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
+				     gmailauthorization::function_t& k,
                                      std::function< void() >&& r,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
@@ -50,7 +50,7 @@ public:
         }
 
         static addaccount& instance( QDialog * parent,
-                                     std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
+				     gmailauthorization::function_t& k,
                                      std::function< void() >&& e,
                                      std::function< void( accounts::entry&& e ) >&& f )
         {
@@ -59,12 +59,12 @@ public:
 
         addaccount( QDialog *,
                     const accounts::entry&,
-                    std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
+		    gmailauthorization::function_t&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 
         addaccount( QDialog *,
-                    std::function< void( const QString&,std::function< void( const QString& ) > ) >&,
+		    gmailauthorization::function_t&,
                     std::function< void() >&&,
                     std::function< void( accounts::entry&& ) >&& ) ;
 

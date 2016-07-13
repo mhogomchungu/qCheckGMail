@@ -45,6 +45,7 @@
 #include "configurationoptionsdialog.h"
 #include "tray_application_type.h"
 #include "networkAccessManager.hpp"
+#include "gmailauthorization.h"
 
 #include <functional>
 #include <utility>
@@ -91,7 +92,7 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 
-        std::function< void( const QString&,std::function< void( const QString& ) > ) > getAuthorization() ;
+	gmailauthorization::function_t getAuthorization() ;
 
         void getAccessToken( const accounts&,const QString&,const QString& ) ;
 

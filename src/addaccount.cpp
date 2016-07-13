@@ -24,7 +24,7 @@
 #include "gmailauthorization.h"
 
 addaccount::addaccount( QDialog * parent,
-                        std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
+			gmailauthorization::function_t& k,
                         std::function< void() >&& e,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),
@@ -48,7 +48,7 @@ addaccount::addaccount( QDialog * parent,
 
 addaccount::addaccount( QDialog * parent,
                         const accounts::entry& e,
-                        std::function< void( const QString&,std::function< void( const QString& ) > ) >& k,
+			gmailauthorization::function_t& k,
                         std::function< void() >&& r,
                         std::function< void( accounts::entry&& e ) >&& f ) :
         QDialog( parent ),

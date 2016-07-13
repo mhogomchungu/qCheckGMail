@@ -27,17 +27,120 @@ namespace Task = LXQt::Wallet::Task ;
 
 #include <utility>
 
-#define LABEL_IDENTIFIER        "-qCheckGMail-LABEL_ID"
-#define DISPLAY_NAME_IDENTIFIER "-qCheckGMail-DISPLAY_NAME_ID"
-#define TOKEN_IDENTIFIER        "-qCheckGMail-TOKEN_KEY_ID"
+const auto LABEL_IDENTIFIER        = "-qCheckGMail-LABEL_ID" ;
+const auto DISPLAY_NAME_IDENTIFIER = "-qCheckGMail-DISPLAY_NAME_ID" ;
+const auto TOKEN_IDENTIFIER        = "-qCheckGMail-TOKEN_KEY_ID" ;
+
+class accountEntry
+{
+public:
+	static bool mainEntry( const QString& e )
+	{
+		auto r = { LABEL_IDENTIFIER,DISPLAY_NAME_IDENTIFIER,TOKEN_IDENTIFIER } ;
+
+		for( const auto& it : r ){
+
+			if( e.endsWith( it ) ){
+
+				return false ;
+			}
+		}
+
+		return true ;
+	}
+
+	void add()
+	{
+		auto _add = [ this ]( const QString& e,const QString& f ){
+
+			m_wallet->addKey( e,f.toLatin1() ) ;
+		} ;
+
+		_add( m_name       ,m_accEntry.accPassword ) ;
+		_add( m_labels     ,m_accEntry.accLabels ) ;
+		_add( m_displayName,m_accEntry.accDisplayName ) ;
+		_add( m_token      ,m_accEntry.accRefreshToken ) ;
+	}
+
+	void remove()
+	{
+		m_wallet->deleteKey( m_name ) ;
+		m_wallet->deleteKey( m_labels ) ;
+		m_wallet->deleteKey( m_displayName ) ;
+		m_wallet->deleteKey( m_token ) ;
+	}
+
+	void replace()
+	{
+		this->remove() ;
+		this->add() ;
+	}
+
+	template< typename T >
+	accounts::entry entry( const T& e )
+	{
+		auto _entry = [ &e ]( const QString& acc )->const QByteArray&{
+
+			for( const auto& it : e ){
+
+				if( it.first == acc ){
+
+					return it.second ;
+				}
+			}
+
+			static QByteArray shouldNotGetHere ;
+			return shouldNotGetHere ;
+		} ;
+
+		return { m_name,
+			_entry( m_name ),
+			_entry( m_displayName ),
+			_entry( m_labels ),
+			_entry( m_token ) } ;
+	}
+
+	accountEntry( const QString& accName,
+		     LXQt::Wallet::Wallet * w = nullptr,
+		     const accounts::entry& e = accounts::entry() ) :
+		m_name( accName ),
+		m_labels( m_name + LABEL_IDENTIFIER ),
+		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
+		m_token( m_name + TOKEN_IDENTIFIER ),
+		m_wallet( w ),
+		m_accEntry( e )
+	{
+	}
+
+private:
+	const QString m_name ;
+	const QString m_labels ;
+	const QString m_displayName ;
+	const QString m_token ;
+
+	LXQt::Wallet::Wallet * m_wallet ;
+	accounts::entry m_accEntry ;
+};
+
+walletmanager::walletmanager( const QString& icon ) :
+	m_icon( QString( ":/%1" ).arg( icon ) )
+{
+}
+
+walletmanager::walletmanager( std::function< void( QVector< accounts >&& ) >&& f ) :
+	m_getAccountInfo( std::move( f ) )
+{
+}
 
 walletmanager::walletmanager( const QString& icon,
                               std::function< void() >&& e,
-                              std::function< void( const QString&,std::function< void( const QString& ) > ) >&& k,
+			      gmailauthorization::function_t&& k,
                               std::function< void( QVector< accounts > && ) >&& f ) :
-        m_ui( nullptr ),m_wallet( nullptr ),m_walletClosed( e ),m_getAuthorization( k ),m_getAccountInfo( f )
+	m_icon( QString( ":/%1" ).arg( icon ) ),
+	m_walletClosed( e ),
+	m_getAuthorization( k ),
+	m_getAccountInfo( f )
 {
-	m_icon = QString( ":/%1" ).arg( icon ) ;
 }
 
 walletmanager::~walletmanager()
@@ -139,42 +242,15 @@ void walletmanager::readAccountInfo()
 
 	m_accounts.clear() ;
 
-	auto _getAccEntry = []( const QString& acc,const wallet& entries )->const QByteArray&{
+	auto e = Task::await< wallet >( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
 
-		for( const auto& it : entries ){
-
-			if( it.first == acc ){
-
-				return it.second ;
-			}
-		}
-
-		static QByteArray shouldNotGetHere ;
-		return shouldNotGetHere ;
-	} ;
-
-        auto labels_id  = LABEL_IDENTIFIER ;
-        auto display_id = DISPLAY_NAME_IDENTIFIER ;
-        auto token_id   = TOKEN_IDENTIFIER ;
-
-        auto entries = Task::await< wallet >( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
-
-	for( const auto& it : entries ){
+	for( const auto& it : e ){
 
 		const auto& accName = it.first ;
 
-                bool r = accName.endsWith( labels_id ) ||
-                                accName.endsWith( display_id ) ||
-                                accName.endsWith( token_id ) ;
+		if( accountEntry::mainEntry( accName ) ){
 
-		if( r == false ){
-
-			const auto& passWord    = _getAccEntry( accName,entries ) ;
-			const auto& labels      = _getAccEntry( accName + labels_id,entries ) ;
-			const auto& displayName = _getAccEntry( accName + display_id,entries ) ;
-                        const auto& tokenKey    = _getAccEntry( accName + token_id,entries ) ;
-
-                        m_accounts.append( accounts( { accName,passWord,displayName,labels,tokenKey } ) ) ;
+			m_accounts.append( accountEntry( accName ).entry( e ) ) ;
 		}
 	}
 }
@@ -184,7 +260,7 @@ void walletmanager::openWallet()
 	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
 
 	m_wallet->setParent( this ) ;
-	
+
 	m_wallet->open( s,"qCheckGMail",[ this ]( bool walletOpened ){
 
 		if( walletOpened ){
@@ -293,22 +369,15 @@ void walletmanager::pushButtonAdd()
 
         },[ this ]( accounts::entry&& e ){
 
-                m_accountEntry = std::move( e ) ;
+		m_accEntry = std::move( e ) ;
 
                 Task::run( [ this ](){
 
-                        auto labels_id  = m_accountEntry.accName + LABEL_IDENTIFIER ;
-                        auto display_id = m_accountEntry.accName + DISPLAY_NAME_IDENTIFIER ;
-                        auto token_id   = m_accountEntry.accName + TOKEN_IDENTIFIER ;
-
-                        m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
-                        m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
-                        m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
-                        m_wallet->addKey( token_id,m_accountEntry.accRefreshToken.toLatin1() ) ;
+			accountEntry( m_accEntry.accName,m_wallet,m_accEntry ).add() ;
 
                 } ).then( [ this ](){
 
-                        accounts acc( m_accountEntry ) ;
+			accounts acc( m_accEntry ) ;
 
                         m_accounts.append( acc ) ;
 
@@ -369,14 +438,7 @@ void walletmanager::deleteAccount()
 
                         Task::run( [ & ](){
 
-                                auto labels_id  = accName + LABEL_IDENTIFIER ;
-                                auto display_id = accName + DISPLAY_NAME_IDENTIFIER ;
-                                auto token_id   = accName + TOKEN_IDENTIFIER ;
-
-                                m_wallet->deleteKey( accName ) ;
-				m_wallet->deleteKey( labels_id ) ;
-				m_wallet->deleteKey( display_id ) ;
-                                m_wallet->deleteKey( token_id ) ;
+				accountEntry( accName,m_wallet ).remove(); ;
 
 			} ).then( [ this ](){
 
@@ -429,31 +491,19 @@ void walletmanager::editAccount()
 
         },[ this ]( accounts::entry&& e ){
 
-                m_accountEntry = std::move( e ) ;
+		m_accEntry = std::move( e ) ;
 
                 Task::run( [ this ](){
 
-                        auto labels_id  = m_accountEntry.accName + LABEL_IDENTIFIER ;
-                        auto display_id = m_accountEntry.accName + DISPLAY_NAME_IDENTIFIER ;
-                        auto token_id   = m_accountEntry.accName + TOKEN_IDENTIFIER ;
-
-                        m_wallet->deleteKey( m_accountEntry.accName ) ;
-                        m_wallet->deleteKey( labels_id ) ;
-                        m_wallet->deleteKey( display_id ) ;
-                        m_wallet->deleteKey( token_id ) ;
-
-                        m_wallet->addKey( m_accountEntry.accName,m_accountEntry.accPassword.toLatin1() ) ;
-                        m_wallet->addKey( labels_id,m_accountEntry.accLabels.toLatin1() ) ;
-                        m_wallet->addKey( display_id,m_accountEntry.accDisplayName.toLatin1() ) ;
-                        m_wallet->addKey( token_id,m_accountEntry.accRefreshToken.toLatin1() ) ;
+			accountEntry( m_accEntry.accName,m_wallet,m_accEntry ).replace() ;
 
                 } ).then( [ this ](){
 
-                        m_accounts.replace( m_row,accounts( m_accountEntry ) ) ;
+			m_accounts.replace( m_row,m_accEntry ) ;
 
-                        m_table->item( m_row,0 )->setText( m_accountEntry.accName ) ;
-                        m_table->item( m_row,1 )->setText( m_accountEntry.accDisplayName ) ;
-                        m_table->item( m_row,2 )->setText( m_accountEntry.accLabels ) ;
+			m_table->item( m_row,0 )->setText( m_accEntry.accName ) ;
+			m_table->item( m_row,1 )->setText( m_accEntry.accDisplayName ) ;
+			m_table->item( m_row,2 )->setText( m_accEntry.accLabels ) ;
 
                         this->enableAll() ;
                 } ) ;

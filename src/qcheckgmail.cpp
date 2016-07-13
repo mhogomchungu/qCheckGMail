@@ -840,7 +840,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
         } ) ;
 }
 
-std::function< void( const QString&,std::function< void( const QString& ) > ) > qCheckGMail::getAuthorization()
+gmailauthorization::function_t qCheckGMail::getAuthorization()
 {
         return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
 
