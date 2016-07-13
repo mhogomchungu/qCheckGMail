@@ -27,18 +27,18 @@ namespace Task = LXQt::Wallet::Task ;
 
 #include <utility>
 
-const auto LABEL_IDENTIFIER        = "-qCheckGMail-LABEL_ID" ;
-const auto DISPLAY_NAME_IDENTIFIER = "-qCheckGMail-DISPLAY_NAME_ID" ;
-const auto TOKEN_IDENTIFIER        = "-qCheckGMail-TOKEN_KEY_ID" ;
+static const auto LABEL_IDENTIFIER        = "-qCheckGMail-LABEL_ID" ;
+static const auto DISPLAY_NAME_IDENTIFIER = "-qCheckGMail-DISPLAY_NAME_ID" ;
+static const auto TOKEN_IDENTIFIER        = "-qCheckGMail-TOKEN_KEY_ID" ;
 
-class accountEntry
+static const auto IDENTIFIERS = { LABEL_IDENTIFIER,DISPLAY_NAME_IDENTIFIER,TOKEN_IDENTIFIER } ;
+
+class account
 {
 public:
-	static bool mainEntry( const QString& e )
+	static bool main( const QString& e )
 	{
-		auto r = { LABEL_IDENTIFIER,DISPLAY_NAME_IDENTIFIER,TOKEN_IDENTIFIER } ;
-
-		for( const auto& it : r ){
+		for( const auto& it : IDENTIFIERS ){
 
 			if( e.endsWith( it ) ){
 
@@ -100,15 +100,31 @@ public:
 			_entry( m_token ) } ;
 	}
 
-	accountEntry( const QString& accName,
+	template< typename T >
+	T readAll( const T& e )
+	{
+		Q_UNUSED( e ) ;
+
+		return Task::await< T >( [ this ](){
+
+			return m_wallet->readAllKeyValues() ;
+		} ) ;
+	}
+
+	account( LXQt::Wallet::Wallet * w,const accounts::entry& e = accounts::entry() ) :
+		m_accEntry( e ), m_wallet( w )
+	{
+	}
+
+	account( const QString& accName,
 		     LXQt::Wallet::Wallet * w = nullptr,
 		     const accounts::entry& e = accounts::entry() ) :
 		m_name( accName ),
 		m_labels( m_name + LABEL_IDENTIFIER ),
 		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
 		m_token( m_name + TOKEN_IDENTIFIER ),
-		m_wallet( w ),
-		m_accEntry( e )
+		m_accEntry( e ),
+		m_wallet( w )
 	{
 	}
 
@@ -118,8 +134,9 @@ private:
 	const QString m_displayName ;
 	const QString m_token ;
 
+	const accounts::entry& m_accEntry ;
+
 	LXQt::Wallet::Wallet * m_wallet ;
-	accounts::entry m_accEntry ;
 };
 
 walletmanager::walletmanager( const QString& icon ) :
@@ -215,7 +232,7 @@ void walletmanager::changeWalletPassword()
 	} ) ;
 }
 
-void walletmanager::addEntry( const accounts& acc )
+const accounts& walletmanager::addEntry( const accounts& acc )
 {
         auto row = m_table->rowCount() ;
 
@@ -234,23 +251,23 @@ void walletmanager::addEntry( const accounts& acc )
 	m_table->setItem( row,0,_add_item( acc.accountName() ) ) ;
 	m_table->setItem( row,1,_add_item( acc.displayName() ) ) ;
 	m_table->setItem( row,2,_add_item( acc.labels() ) ) ;
+
+	return acc ;
 }
 
 void walletmanager::readAccountInfo()
 {
-	using wallet = decltype( m_wallet->readAllKeyValues() ) ;
-
 	m_accounts.clear() ;
 
-	auto e = Task::await< wallet >( [ this ](){ return m_wallet->readAllKeyValues() ; } ) ;
+	auto e = account( m_wallet ).readAll( decltype( m_wallet->readAllKeyValues() )() ) ;
 
 	for( const auto& it : e ){
 
-		const auto& accName = it.first ;
+		const auto& r = it.first ;
 
-		if( accountEntry::mainEntry( accName ) ){
+		if( account::main( r ) ){
 
-			m_accounts.append( accountEntry( accName ).entry( e ) ) ;
+			m_accounts.append( account( r ).entry( e ) ) ;
 		}
 	}
 }
@@ -373,15 +390,11 @@ void walletmanager::pushButtonAdd()
 
                 Task::run( [ this ](){
 
-			accountEntry( m_accEntry.accName,m_wallet,m_accEntry ).add() ;
+			account( m_accEntry.accName,m_wallet,m_accEntry ).add() ;
 
                 } ).then( [ this ](){
 
-			accounts acc( m_accEntry ) ;
-
-                        m_accounts.append( acc ) ;
-
-                        this->addEntry( acc ) ;
+			m_accounts.append( this->addEntry( m_accEntry ) ) ;
 
                         this->selectLastRow() ;
                         this->enableAll() ;
@@ -438,7 +451,7 @@ void walletmanager::deleteAccount()
 
                         Task::run( [ & ](){
 
-				accountEntry( accName,m_wallet ).remove(); ;
+				account( accName,m_wallet ).remove(); ;
 
 			} ).then( [ this ](){
 
@@ -495,7 +508,7 @@ void walletmanager::editAccount()
 
                 Task::run( [ this ](){
 
-			accountEntry( m_accEntry.accName,m_wallet,m_accEntry ).replace() ;
+			account( m_accEntry.accName,m_wallet,m_accEntry ).replace() ;
 
                 } ).then( [ this ](){
 

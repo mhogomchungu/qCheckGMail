@@ -103,7 +103,7 @@ private slots:
 	void enableAll( void ) ;
 private:
 	void openWallet( void ) ;
-	void addEntry( const accounts& ) ;
+	const accounts& addEntry( const accounts& ) ;
 	void disableAll( void ) ;
 	void changePassword( bool ) ;
 	void buildGUI( void ) ;
