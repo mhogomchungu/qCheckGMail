@@ -51,15 +51,10 @@ public:
 
 	void add()
 	{
-		auto _add = [ this ]( const QString& e,const QString& f ){
-
-			m_wallet->addKey( e,f.toLatin1() ) ;
-		} ;
-
-		_add( m_name       ,m_acc.accPassword ) ;
-		_add( m_labels     ,m_acc.accLabels ) ;
-		_add( m_displayName,m_acc.accDisplayName ) ;
-		_add( m_token      ,m_acc.accRefreshToken ) ;
+		m_wallet->addKey( m_name       ,m_acc.accPassword ) ;
+		m_wallet->addKey( m_labels     ,m_acc.accLabels ) ;
+		m_wallet->addKey( m_displayName,m_acc.accDisplayName ) ;
+		m_wallet->addKey( m_token      ,m_acc.accRefreshToken ) ;
 	}
 
 	void remove()
