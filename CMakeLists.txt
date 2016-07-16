@@ -13,6 +13,9 @@ SET( QT_USE_QTGUI TRUE )
 
 add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
 
+INCLUDE(CMakeDependentOption)
+INCLUDE(FindPkgConfig)
+
 if( LXQTSUPPORT )
 	set( NOKDESUPPORT "true" )
 endif()
@@ -51,7 +54,53 @@ if(KF5)
 set( QT5 "true" )
 endif()
 
-ADD_SUBDIRECTORY( lxqt_wallet )
+if( NOT DEFINED INTERNAL_LXQT_WALLET )
+	set( INTERNAL_LXQT_WALLET "false" )
+endif()
+
+if( INTERNAL_LXQT_WALLET )
+
+		message ( STATUS "---------------------------------------------------------------------------" )
+		message ( STATUS "lxqt wallet support will be provided by an internal library" )
+		message ( STATUS "---------------------------------------------------------------------------" )
+
+		ADD_SUBDIRECTORY( lxqt_wallet )
+		add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+else()
+	pkg_check_modules( LXQT_WALLET lxqtwallet )
+
+	if( NOT LXQT_WALLET_FOUND )
+
+		message ( STATUS "ERROR: could not find lxqt_wallet package" )
+		message ( STATUS "---------------------------------------------------------------------------" )
+		message ( STATUS "lxqt wallet support will be provided by an internal library" )
+		message ( STATUS "---------------------------------------------------------------------------" )
+
+		ADD_SUBDIRECTORY( lxqt_wallet )
+		add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+	else()
+		if( LXQT_WALLET_VERSION VERSION_GREATER "2.0.0" )
+
+			include_directories( ${LXQT_WALLET_INCLUDEDIR} )
+			link_directories( ${LXQT_WALLET_LIBDIR} )
+
+			set( lxqt_wallet "-llxqtwallet" )
+
+			message ( STATUS "---------------------------------------------------------------------------" )
+			message ( STATUS "lxqt wallet support will be provided by an external libary" )
+			message ( STATUS "---------------------------------------------------------------------------" )
+		else()
+			message ( STATUS "---------------------------------------------------------------------------" )
+			message ( STATUS "lxqt wallet support will be provided by an internal library" )
+			message ( STATUS "because external library is too old(<= 2.0.0)" )
+
+			message ( STATUS "---------------------------------------------------------------------------" )
+
+			ADD_SUBDIRECTORY( lxqt_wallet )
+			add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+		endif()
+	endif()
+endif()
 
 INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
 

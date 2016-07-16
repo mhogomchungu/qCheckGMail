@@ -46,6 +46,8 @@ sudo make install
 
 To build a Qt5 port with KF5 support,add "-DQT5=true" "-DKF5=true" to the cmake argument list
 
+To build using a system provided lxqtwallet,add "-DINTERNAL_LXQT_WALLET=false"
+
 A none KDE build will require presence of mplayer in order to use audio notification
 
 Possible build issues:
