@@ -67,7 +67,7 @@ if( INTERNAL_LXQT_WALLET )
 		ADD_SUBDIRECTORY( lxqt_wallet )
 		add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
 else()
-	pkg_check_modules( LXQT_WALLET lxqtwallet )
+	pkg_check_modules( LXQT_WALLET lxqt-wallet )
 
 	if( NOT LXQT_WALLET_FOUND )
 
@@ -83,8 +83,6 @@ else()
 
 			include_directories( ${LXQT_WALLET_INCLUDEDIR} )
 			link_directories( ${LXQT_WALLET_LIBDIR} )
-
-			set( lxqt_wallet "-llxqtwallet" )
 
 			message ( STATUS "---------------------------------------------------------------------------" )
 			message ( STATUS "lxqt wallet support will be provided by an external libary" )
@@ -231,7 +229,7 @@ if( LXQTSUPPORT )
 
 			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
+			TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
 		else()
 
 			QT4_WRAP_CPP( MOC ${MOC_FILES} )
@@ -240,7 +238,7 @@ if( LXQTSUPPORT )
 
 			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork ${LXQT_LIBRARIES})
+			TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork ${LXQT_LIBRARIES})
 		endif()
 
 		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -276,7 +274,7 @@ elseif( NOKDESUPPORT )
 
 		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 	else()
 		QT4_WRAP_CPP( MOC ${MOC_FILES} )
 		QT4_WRAP_UI( UI ${UI_FILES} )
@@ -284,7 +282,7 @@ elseif( NOKDESUPPORT )
 
 		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
+		TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork )
 	endif()
 
 	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
@@ -332,7 +330,7 @@ else()
 
 		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
+                TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
 	else()
                 find_package(KDE4 REQUIRED)
                 find_package(Qt4 REQUIRED)
@@ -371,7 +369,7 @@ else()
 
 		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-                TARGET_LINK_LIBRARIES( qCheckGMail lxqtwallet ${QT_LIBRARIES} -lQtNetwork )
+                TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork )
         endif()
 
         set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
