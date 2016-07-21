@@ -858,7 +858,7 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-        m_manager.get( request,&m_networkReply,[ this ]( NetworkAccessManager::NetworkReply e ){
+	m_networkReply = m_manager.get( request,[ this ]( NetworkAccessManager::NetworkReply e ){
 
                 auto content = e->readAll() ;
 
