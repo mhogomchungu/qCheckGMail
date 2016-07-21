@@ -823,19 +823,14 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
                         auto e = _parseJSON( n->readAll(),"access_token" ) ;
 
-                        if( e.isEmpty() ){
+			const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
-                                return QNetworkRequest() ;
-                        }else{
-				const_cast< accounts * >( &acc )->setAccessToken( e ) ;
+			QUrl url( UrlLabel ) ;
+			QNetworkRequest request( url ) ;
 
-                                QUrl url( UrlLabel ) ;
-                                QNetworkRequest request( url ) ;
+			request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
 
-				request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
-
-                                return request ;
-                        }
+			return request ;
                 }() ) ;
         } ) ;
 }
