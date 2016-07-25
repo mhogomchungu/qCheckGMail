@@ -41,7 +41,7 @@
 #include "configurationoptionsdialog.h"
 #include "gmailauthorization.h"
 
-#include "../lxqt_wallet/frontend/lxqt_wallet.h"
+#include "lxqt_wallet.h"
 
 #include <functional>
 

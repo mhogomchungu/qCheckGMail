@@ -7,6 +7,8 @@ set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS ON)
 
 project(qCheckGMail)
 
+INCLUDE(GNUInstallDirs)
+
 SET( QT_USE_QTNETWORK TRUE )
 SET( QT_USE_QTCORE TRUE )
 SET( QT_USE_QTGUI TRUE )
@@ -28,8 +30,6 @@ configure_file(
 
 add_custom_target( uninstall
 COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
-
-add_definitions( -I"${PROJECT_BINARY_DIR}/lxqt_wallet/frontend" )
 
 if( LIB_SUFFIX )
 	if("${LIB_SUFFIX}" STREQUAL "default")
@@ -60,47 +60,47 @@ endif()
 
 if( INTERNAL_LXQT_WALLET )
 
-		message ( STATUS "---------------------------------------------------------------------------" )
-		message ( STATUS "lxqt wallet support will be provided by an internal library" )
-		message ( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "lxqt wallet support will be provided by an internal library" )
+	message( STATUS "---------------------------------------------------------------------------" )
 
-		ADD_SUBDIRECTORY( lxqt_wallet )
-		add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+	ADD_SUBDIRECTORY( lxqt_wallet )
+	include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
 else()
 	pkg_check_modules( LXQT_WALLET lxqt-wallet )
 
 	if( NOT LXQT_WALLET_FOUND )
 
-		message ( STATUS "ERROR: could not find lxqt_wallet package" )
-		message ( STATUS "---------------------------------------------------------------------------" )
-		message ( STATUS "lxqt wallet support will be provided by an internal library" )
-		message ( STATUS "---------------------------------------------------------------------------" )
+		message( STATUS "ERROR: could not find lxqt_wallet package" )
+		message( STATUS "---------------------------------------------------------------------------" )
+		message( STATUS "lxqt wallet support will be provided by an internal library" )
+		message( STATUS "---------------------------------------------------------------------------" )
 
 		ADD_SUBDIRECTORY( lxqt_wallet )
-		add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+		include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
 	else()
 		if( LXQT_WALLET_VERSION VERSION_GREATER "2.0.0" )
 
 			include_directories( ${LXQT_WALLET_INCLUDEDIR} )
 			link_directories( ${LXQT_WALLET_LIBDIR} )
 
-			message ( STATUS "---------------------------------------------------------------------------" )
-			message ( STATUS "lxqt wallet support will be provided by an external libary" )
-			message ( STATUS "---------------------------------------------------------------------------" )
+			message( STATUS "---------------------------------------------------------------------------" )
+			message( STATUS "lxqt wallet support will be provided by an external libary" )
+			message( STATUS "---------------------------------------------------------------------------" )
 		else()
-			message ( STATUS "---------------------------------------------------------------------------" )
-			message ( STATUS "lxqt wallet support will be provided by an internal library" )
-			message ( STATUS "because external library is too old(<= 2.0.0)" )
+			message( STATUS "---------------------------------------------------------------------------" )
+			message( STATUS "lxqt wallet support will be provided by an internal library" )
+			message( STATUS "because external library is too old(<= 2.0.0)" )
 
-			message ( STATUS "---------------------------------------------------------------------------" )
+			message( STATUS "---------------------------------------------------------------------------" )
 
 			ADD_SUBDIRECTORY( lxqt_wallet )
-			add_definitions( -I${PROJECT_BINARY_DIR}/lxqt_wallet/frontend )
+			include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
 		endif()
 	endif()
 endif()
 
-INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR} )
+include_directories( ${CMAKE_BINARY_DIR} )
 
 add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
 
@@ -183,6 +183,7 @@ set( MOC_FILES	src/gmailauthorization.h
 		src/configurationoptionsdialog.h
 		src/statusicon.h
 		src/qcheckgmailplugin.h
+		src/task.h
 )
 
 set( CPP_FILES	src/gmailauthorization.cpp

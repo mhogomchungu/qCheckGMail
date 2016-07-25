@@ -21,9 +21,7 @@
 #include "walletmanager.h"
 #include "ui_walletmanager.h"
 
-#include "../lxqt_wallet/frontend/task.h"
-
-namespace Task = LXQt::Wallet::Task ;
+#include "task.h"
 
 #include <utility>
 
