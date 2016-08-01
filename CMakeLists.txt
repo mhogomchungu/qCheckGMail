@@ -422,14 +422,11 @@ Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
 Icon=qCheckGMail
-MimeType=
 Name[en_US]=qCheckGMail
 Name=qCheckGMail
 NoDisplay=false
-Path=
 StartupNotify=true
 Terminal=false
-TerminalOptions=
 Type=Application
 Categories=Network;X-MandrivaLinux-Internet;\n")
 

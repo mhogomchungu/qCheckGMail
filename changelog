@@ -56,3 +56,6 @@ version 1.2.6
 
 version 1.2.7
 - enable audio notification on non kde build using mplayer.
+
+version 1.2.8
+- add an option to configure accounts using google's oauth2 functionality.

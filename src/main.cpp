@@ -162,6 +162,7 @@ int main( int argc,char * argv[] )
 #endif //end if KDE4
 
 #elif USE_LXQT_PLUGIN
+
 /*
  * we dont get here
  */
@@ -169,7 +170,13 @@ int main( void )
 {
 	return 0 ;
 }
+
 #else
+
+/*
+ * A pure Qt5 application
+ *
+ */
 #include <QApplication>
 #include "qcheckgmail.h"
 #include <QStringList>
