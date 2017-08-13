@@ -67,7 +67,7 @@ public:
 	{
 		return m_manager ;
 	}
-	void get( const QNetworkRequest& r,function_t f,QNetworkReply ** e = nullptr )
+	void get( QNetworkReply ** e,const QNetworkRequest& r,function_t f )
 	{
 		auto s = m_manager.get( r ) ;
 

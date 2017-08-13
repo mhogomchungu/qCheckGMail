@@ -828,16 +828,16 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
                          return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
 
-		 }(),[ function ]( QNetworkReply& e ){
+		 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
 
-			function( _parseJSON( e.readAll(),"refresh_token" ) ) ;
+			funct( _parseJSON( e.readAll(),"refresh_token" ) ) ;
                 } ) ;
         } ;
 }
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-	m_manager.get( request,[ this ]( QNetworkReply& e ){
+	m_manager.get( &m_networkReply,request,[ this ]( QNetworkReply& e ){
 
 		auto content = e.readAll() ;
 
@@ -873,7 +873,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                                 _report( false ) ;
                         }
                 }
-	},&m_networkReply ) ;
+	} ) ;
 
         m_timeOut->start( m_networkTimeOut ) ;
 }
