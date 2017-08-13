@@ -28,6 +28,7 @@
 #include <QUrl>
 #include <QPixmap>
 #include <QPainter>
+#include <QMenu>
 
 #include <functional>
 
@@ -36,29 +37,13 @@
 #include "accounts.h"
 #include "configurationoptionsdialog.h"
 
-#if USE_KDE_STATUS_NOTIFIER
 #if KF5
-#include <QMenu>
 #include <kstatusnotifieritem.h>
 #include <knotification.h>
-#else
-#include <knotification.h>
-#include <kstatusnotifieritem.h>
-#include <knotification.h>
-#include <kmenu.h>
-#include <ktoolinvocation.h>
-#include <kcmdlineargs.h>
-#endif
 
 class statusicon : public KStatusNotifierItem
 {
-
-#elif USE_LXQT_PLUGIN
-#include <QToolButton>
-class statusicon : public QObject
-{
 #else
-#include <QMenu>
 class statusicon : public QObject
 {
 #endif
@@ -83,7 +68,6 @@ public:
 		NeedsAttention = 3
 	};
 	statusicon() ;
-	static bool KF5StatusIcon( void ) ;
 	virtual ~statusicon() ;
 	static void newEmailNotify( void ) ;
 	static bool enableDebug( void ) ;
@@ -97,8 +81,6 @@ public:
 	void setIconClickedActions( const statusicon::clickActions& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
 	void addAction( QAction * ) ;
-	QWidget * widget( void ) ;
-	QObject * statusQObject( void ) ;
 	QList< QAction * > getMenuActions( void ) ;
 	void addQuitAction( void ) ;
 private slots:
@@ -106,20 +88,14 @@ private slots:
 	void activateRequested( bool,const QPoint& ) ;
 	void trayIconClicked( QSystemTrayIcon::ActivationReason reason ) ;
 private:
+#if KF5
+	QMenu * m_menu ;
+#else
+	QMenu m_menu ;
+#endif
 	QString m_defaultApplication ;
 	statusicon::clickActions m_clickActions ;
-#if USE_KDE_STATUS_NOTIFIER
-#if KF5
-        QMenu * m_menu ;
-#else
-	KMenu * m_menu ;
-#endif
-#elif USE_LXQT_PLUGIN
-	QToolButton m_toolButton ;
-#else
-	QMenu * m_menu ;
-	QSystemTrayIcon * m_trayIcon ;
-#endif
+	QSystemTrayIcon m_trayIcon ;
 };
 
 #endif // STATUSICON_H

@@ -156,7 +156,7 @@ private:
 
         QStringList m_profileEmailList ;
 
-        std::unique_ptr< QMutex > m_mutex ;
+	QMutex m_mutex ;
 
 	QTimer * m_timeOut ;
         QTimer * m_timer ;
@@ -169,7 +169,7 @@ private:
 
         QVector< accounts > m_accounts ;
 
-        std::unique_ptr< statusicon > m_statusicon ;
+	statusicon m_statusicon ;
 };
 
 #endif // QCHECKGMAIL_H

@@ -24,17 +24,7 @@
 namespace Task = LXQt::Wallet::Task ;
 
 #include <QProcess>
-
-#if !USE_KDE_STATUS_NOTIFIER
-
-static void _playAudioFile()
-{
-	QProcess exe ;
-	exe.start( configurationoptionsdialog::audioPlayer() + " " + AUDIO_NOTIFY_FILE ) ;
-	exe.waitForFinished() ;
-}
-
-#endif
+#include <iostream>
 
 static QPixmap _icon( const QString& name,int count )
 {
@@ -52,7 +42,9 @@ static QPixmap _icon( const QString& name,int count )
 	int width = pixmap.width() * 0.8 ;
 
 	if( fm.width( number ) > width ){
+
 		while( fm.width( number ) > width && size > 0 ){
+
 			size = size - 1 ;
 			font.setPointSize( size ) ;
 		}
@@ -64,6 +56,7 @@ static QPixmap _icon( const QString& name,int count )
 	paint.setPen( QColor( configurationoptionsdialog::fontColor() ) ) ;
 	paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,number ) ;
 	paint.end() ;
+
 	return pixmap ;
 }
 
@@ -72,34 +65,21 @@ void statusicon::setIconClickedActions( const statusicon::clickActions& actions 
 	m_clickActions = actions ;
 }
 
-#if USE_KDE_STATUS_NOTIFIER
-
-bool statusicon::KF5StatusIcon()
-{
-	return KF5 ;
-}
-
-statusicon::statusicon()
-{
 #if KF5
-	m_menu = new QMenu() ;
-#else
-	m_menu = new KMenu() ;
-#endif
+
+statusicon::statusicon() : m_menu( new QMenu() )
+{
 	m_menu->clear() ;
+
 	KStatusNotifierItem::setContextMenu( m_menu ) ;
 	KStatusNotifierItem::setStandardActionsEnabled( false ) ;
-	connect( this,SIGNAL( activateRequested( bool,const QPoint& ) ),this,SLOT( activateRequested( bool,const QPoint& ) ) ) ;
+
+	connect( this,SIGNAL( activateRequested( bool,const QPoint& ) ),
+		 this,SLOT( activateRequested( bool,const QPoint& ) ) ) ;
 }
 
 statusicon::~statusicon()
 {
-	m_menu->deleteLater() ;
-}
-
-QWidget * statusicon::widget()
-{
-        return nullptr ;
 }
 
 void statusicon::setAttentionIcon( const QString& name )
@@ -149,40 +129,21 @@ void statusicon::addAction( QAction * ac )
 
 QAction * statusicon::getAction( const QString& title )
 {
-        auto ac = new QAction( m_menu ) ;
+	auto ac = new QAction( m_menu ) ;
 	ac->setText( title ) ;
 	m_menu->addAction( ac ) ;
 	return ac ;
 }
 
-QObject * statusicon::statusQObject()
-{
-	return this ;
-}
-
 void statusicon::newEmailNotify()
 {
 	QByteArray r( "qCheckGMail" ) ;
-#if KF5
 	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,r ) ;
-#else
-	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,
-			      KComponentData( r,r,KComponentData::SkipMainComponentRegistration ) ) ;
-#endif
 }
 
 bool statusicon::enableDebug()
 {
-#if KF5
-        return QCoreApplication::arguments().contains( "-d" ) ;
-#else
-	return KCmdLineArgs::allArguments().contains( "-d" ) ;
-#endif
-}
-
-QList< QAction * > statusicon::getMenuActions()
-{
-	return m_menu->actions() ;
+	return QCoreApplication::arguments().contains( "-d" ) ;
 }
 
 void statusicon::quit()
@@ -204,9 +165,9 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 
 void statusicon::addQuitAction()
 {
-        m_menu->addAction( [ this ](){
+	m_menu->addAction( [ this ](){
 
-                auto ac = new QAction( m_menu ) ;
+		auto ac = new QAction( m_menu ) ;
 
 		ac->setText( tr( "Quit" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
@@ -215,151 +176,33 @@ void statusicon::addQuitAction()
         }() ) ;
 }
 
-#elif USE_LXQT_PLUGIN
-
-statusicon::statusicon()
-{
-	m_toolButton.setPopupMode( QToolButton::InstantPopup ) ;
-}
-
-statusicon::~statusicon()
-{
-}
-
-void statusicon::setAttentionIcon( const QString& name )
-{
-	Q_UNUSED( name ) ;
-}
-
-void statusicon::setCategory( const statusicon::ItemCategory category )
-{
-	Q_UNUSED( category ) ;
-}
-
-void statusicon::quit()
-{
-	QCoreApplication::quit() ;
-}
-
-void statusicon::setIcon( const QString& name )
-{
-	m_toolButton.setIcon( QIcon( ":/" + name ) ) ;
-}
-
-void statusicon::setIcon( const QString& name,int count )
-{
-        auto pixmap = _icon( name,count ) ;
-	m_toolButton.setIcon( pixmap ) ;
-}
-
-void statusicon::setOverlayIcon( const QString& name )
-{
-	Q_UNUSED( name ) ;
-}
-
-void statusicon::setStatus( const statusicon::ItemStatus status )
-{
-	Q_UNUSED( status ) ;
-}
-
-void statusicon::setToolTip( const QString& iconName,const QString& title,const QString& subTitle )
-{
-	Q_UNUSED( iconName ) ;
-	Q_UNUSED( title ) ;
-        auto r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
-	m_toolButton.setToolTip( r ) ;
-}
-
 QList< QAction * > statusicon::getMenuActions()
 {
-	return m_toolButton.actions() ;
-}
-
-QAction * statusicon::getAction( const QString& title )
-{
-        auto ac = new QAction( &m_toolButton ) ;
-	ac->setText( title ) ;
-	m_toolButton.addAction( ac ) ;
-	return ac ;
-}
-
-void statusicon::addQuitAction()
-{
-}
-
-void statusicon::newEmailNotify()
-{
-	Task::exec( [](){ _playAudioFile() ; } ) ;
-}
-
-void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
-{
-	Q_UNUSED( reason ) ;
-}
-
-bool statusicon::enableDebug()
-{
-	return false ;
-}
-
-void statusicon::addAction( QAction * ac )
-{
-	m_toolButton.addAction( ac ) ;
-}
-
-QWidget * statusicon::widget()
-{
-	return &m_toolButton ;
-}
-
-void statusicon::activateRequested( bool x,const QPoint& y )
-{
-	Q_UNUSED( x ) ;
-	Q_UNUSED( y ) ;
-}
-
-QObject * statusicon::statusQObject()
-{
-	return this ;
-}
-
-bool statusicon::KF5StatusIcon()
-{
-	return false ;
+	return m_menu->actions() ;
 }
 
 #else
 
 statusicon::statusicon()
 {
-	m_trayIcon = new QSystemTrayIcon( this ) ;
-
-        m_menu = new QMenu() ;
-
-        connect( m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
+	connect( &m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
 
-        m_trayIcon->setContextMenu( m_menu ) ;
-}
-
-bool statusicon::KF5StatusIcon()
-{
-	return false ;
-}
-
-QWidget * statusicon::widget()
-{
-	return 0 ;
+	m_trayIcon.setContextMenu( &m_menu ) ;
 }
 
 statusicon::~statusicon()
 {
-	m_menu->deleteLater() ;
+}
+
+QList< QAction * > statusicon::getMenuActions()
+{
+	return m_menu.actions() ;
 }
 
 void statusicon::setAttentionIcon( const QString& name )
 {
-	m_trayIcon->setIcon( QIcon( ":/" + name ) ) ;
+	m_trayIcon.setIcon( QIcon( ":/" + name ) ) ;
 }
 
 void statusicon::setCategory( const statusicon::ItemCategory category )
@@ -374,13 +217,13 @@ void statusicon::quit()
 
 void statusicon::setIcon( const QString& name )
 {
-	m_trayIcon->setIcon( QIcon( ":/" + name ) ) ;
+	m_trayIcon.setIcon( QIcon( ":/" + name ) ) ;
 }
 
 void statusicon::setIcon( const QString& name,int count )
 {
         auto pixmap = _icon( name,count ) ;
-	m_trayIcon->setIcon( pixmap ) ;
+	m_trayIcon.setIcon( pixmap ) ;
 }
 
 void statusicon::setOverlayIcon( const QString& name )
@@ -397,32 +240,27 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 {
 	Q_UNUSED( iconName ) ;
 	Q_UNUSED( title ) ;
-        auto r = QString( "<table><tr><td><b>%1</b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
-	m_trayIcon->setToolTip( r ) ;
-}
-
-QList<QAction *> statusicon::getMenuActions()
-{
-	return m_menu->actions() ;
+	auto r = QString( "<table><tr><td><b>%1<br></b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
+	m_trayIcon.setToolTip( r ) ;
 }
 
 void statusicon::addQuitAction()
 {
-        m_menu->addAction( [ this ](){
+	m_menu.addAction( [ this ](){
 
-                auto ac = new QAction( m_menu ) ;
+		auto ac = new QAction( &m_menu ) ;
 		ac->setText( tr( "Quit" ) ) ;
                 connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 
                 return ac ;
         }() ) ;
 
-	m_trayIcon->show() ;
+	m_trayIcon.show() ;
 }
 
 void statusicon::newEmailNotify()
 {
-	Task::exec( [](){ _playAudioFile() ; } ) ;
+	QProcess::startDetached( configurationoptionsdialog::audioPlayer() + " " + AUDIO_NOTIFY_FILE ) ;
 }
 
 bool statusicon::enableDebug()
@@ -432,15 +270,15 @@ bool statusicon::enableDebug()
 
 void statusicon::addAction( QAction * ac )
 {
-	ac->setParent( m_menu ) ;
-	m_menu->addAction( ac ) ;
+	ac->setParent( &m_menu ) ;
+	m_menu.addAction( ac ) ;
 }
 
 QAction * statusicon::getAction( const QString& title )
 {
-	auto ac = new QAction( m_menu ) ;
+	auto ac = new QAction( &m_menu ) ;
 	ac->setText( title ) ;
-	m_menu->addAction( ac ) ;
+	m_menu.addAction( ac ) ;
 	return ac ;
 }
 
@@ -450,16 +288,12 @@ void statusicon::activateRequested( bool x,const QPoint& y )
 	Q_UNUSED( y ) ;
 }
 
-QObject * statusicon::statusQObject()
-{
-	return this ;
-}
-
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
 	if( reason == QSystemTrayIcon::Context ){
 
 		m_clickActions.onRightClick() ;
+
 	}else if( reason == QSystemTrayIcon::Trigger ){
 
 		m_clickActions.onLeftClick() ;

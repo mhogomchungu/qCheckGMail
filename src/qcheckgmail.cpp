@@ -24,7 +24,7 @@
 #include <string.h>
 #include <utility>
 
-qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile ),m_mutex( new QMutex() )
+qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile )
 {
 }
 
@@ -36,37 +36,37 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 {
 	if( showIcon ){
 
-                m_statusicon->setStatus( m_statusicon->NeedsAttention ) ;
+		m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
 	}else{
-                m_statusicon->setStatus( m_statusicon->Passive ) ;
+		m_statusicon.setStatus( m_statusicon.Passive ) ;
 	}
 }
 
 void qCheckGMail::showToolTip( const QString& x,const QString& y,const QString& z )
 {
-        m_statusicon->setToolTip( x,y,z ) ;
+	m_statusicon.setToolTip( x,y,z ) ;
 }
 
 void qCheckGMail::showPausedIcon( bool paused )
 {
 	if( paused ){
 
-                m_statusicon->setOverlayIcon( m_newEmailIcon ) ;
+		m_statusicon.setOverlayIcon( m_newEmailIcon ) ;
 	}else{
-                m_statusicon->setOverlayIcon( QString() ) ;
+		m_statusicon.setOverlayIcon( QString() ) ;
 	}
 }
 
 void qCheckGMail::changeIcon( const QString& icon )
 {
-        m_statusicon->setIcon( icon ) ;
+	m_statusicon.setIcon( icon ) ;
 }
 
 void qCheckGMail::changeIcon( const QString& icon,int count )
 {
 	if( m_displayEmailCount ){
 
-                m_statusicon->setIcon( icon,count ) ;
+		m_statusicon.setIcon( icon,count ) ;
 	}
 }
 
@@ -79,12 +79,10 @@ void qCheckGMail::run()
 {
 	configurationoptionsdialog::setProfile( m_profile ) ;
 
-        m_statusicon.reset( new statusicon() ) ;
-
-        m_statusicon->setCategory( m_statusicon->ApplicationStatus ) ;
+	m_statusicon.setCategory( m_statusicon.ApplicationStatus ) ;
         QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
-        m_enableDebug         = m_statusicon->enableDebug() ;
+	m_enableDebug         = m_statusicon.enableDebug() ;
 	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
 	m_audioNotify         = configurationoptionsdialog::audioNotify() ;
 	m_interval            = configurationoptionsdialog::getTimeFromConfigFile() ;
@@ -125,7 +123,7 @@ void qCheckGMail::run()
 		}
 	} ;
 
-        m_statusicon->setIconClickedActions( m_clickActions ) ;
+	m_statusicon.setIconClickedActions( m_clickActions ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
@@ -170,12 +168,12 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( checkMail() ),[ this ](){
 
-	       return m_statusicon->getAction( tr( "Check Mail Now" ) ) ;
+	       return m_statusicon.getAction( tr( "Check Mail Now" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( toggled( bool ) ),SLOT( pauseCheckingMail( bool ) ),[ this ](){
 
-		auto ac = m_statusicon->getAction( tr( "Pause Checking Mail" ) ) ;
+		auto ac = m_statusicon.getAction( tr( "Pause Checking Mail" ) ) ;
 
 		ac->setObjectName( "PauseCheckingMail" ) ;
                 ac->setCheckable( true ) ;
@@ -186,12 +184,12 @@ void qCheckGMail::addActionsToMenu()
 
         _connect( SIGNAL( triggered() ),SLOT( configureAccounts() ),[ this ](){
 
-		return m_statusicon->getAction( tr( "Configure Accounts" ) ) ;
+		return m_statusicon.getAction( tr( "Configure Accounts" ) ) ;
         }() ) ;
 
         _connect( SIGNAL( triggered() ),SLOT( configurePassWord() ),[ this ](){
 
-		auto ac = m_statusicon->getAction( tr( "Configure Password" ) ) ;
+		auto ac = m_statusicon.getAction( tr( "Configure Password" ) ) ;
 
 		ac->setObjectName( "ConfigurePassword" ) ;
                 ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
@@ -201,10 +199,10 @@ void qCheckGMail::addActionsToMenu()
 
          _connect( SIGNAL( triggered() ),SLOT( configurationoptionWindow() ),[ this ](){
 
-		return m_statusicon->getAction( tr( "Configure Options" ) ) ;
+		return m_statusicon.getAction( tr( "Configure Options" ) ) ;
         }() ) ;
 
-        m_statusicon->addQuitAction() ;
+	m_statusicon.addQuitAction() ;
 }
 
 void qCheckGMail::noInternet( const QString& e )
@@ -226,9 +224,8 @@ void qCheckGMail::noInternet( const QString& e )
 void qCheckGMail::timerExpired()
 {
 	m_timeOut->stop() ;
-	m_networkReply->close() ;
-	m_networkReply->abort() ;
-	m_networkReply->deleteLater() ;
+
+	m_manager.cancel( m_networkReply ) ;
 
         this->failedToCheckForNewEmail() ;
 
@@ -292,50 +289,32 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	this->doneCheckingMail() ;
 }
 
-static QString _account_status( statusicon * s,const QString& displayName,const QString& mailCount )
+static QString _account_status( const QString& displayName,const QString& mailCount )
 {
-	QString r ;
+	QString d_name = displayName ;
 
-        if( s->KF5StatusIcon() ){
+	if( d_name.size() >= 32 ){
 
-		/*
-		 * KF5 status icon does not seem to support html tags we have come to depend on
-		 * in KDE4 and hence we will have to be creative here on how to show info in KF5
-		 * as they appear in KDE4. More investigation needed.
-		 *
-		 * Alternative is to use Qt5 tooltip since it does support html tags we want.
-		 */
-		QString d_name = displayName ;
-
-		if( d_name.size() >= 32 ){
-
-			d_name.truncate( 29 ) ;
-			d_name += "..." ;
-		}else{
-			while( d_name.size() < 32 ){
-
-				d_name += " " ;
-			}
-		}
-
-		if( mailCount.toInt() > 0 ){
-
-                        r = "<b>%1 %2</b><br>" ;
-		}else{
-                        r = "%1 %2<br>" ;
-		}
-
-		return r.arg( d_name,mailCount ) ;
+		d_name.truncate( 29 ) ;
+		d_name += "..." ;
 	}else{
+		while( d_name.size() < 32 ){
+
+			d_name += " " ;
+		}
+	}
+
+	QString r = [ & ](){
+
 		if( mailCount.toInt() > 0 ){
 
-			r = "<tr valign=middle><td><b>%1</b></td><td width=50 align=right><b>%2</b></td></tr>" ;
+			return "<b>%1 %2</b><br>" ;
 		}else{
-			r = "<tr valign=middle><td>%1</td><td width=50 align=right>%2</td></tr>" ;
+			return "%1 %2<br>" ;
 		}
+	}() ;
 
-		return r.arg( displayName,mailCount ) ;
-	}
+	return r.arg( d_name,mailCount ) ;
 }
 
 /*
@@ -352,7 +331,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
                         /*
                          * Wrong user name or password entered
                          */
-                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
+			m_accountsStatus += _account_status( this->displayName(),"-1" ) ;
                 }else{
 			if( m_badAccessToken ){
 
@@ -361,7 +340,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 				 *
 				 * Bail out to prevent an endless loop.
 				 */
-				m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"-1" ) ;
+				m_accountsStatus += _account_status( this->displayName(),"-1" ) ;
 			}else{
 				/*
 				 * We will get here if:
@@ -383,10 +362,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 
 		if( mailCount_1 == 0 ){
 
-                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),"0" ) ;
+			m_accountsStatus += _account_status( this->displayName(),"0" ) ;
 		}else{
 			m_mailCount += mailCount_1 ;
-                        m_accountsStatus += _account_status( m_statusicon.get(),this->displayName(),mailCount ) ;
+			m_accountsStatus += _account_status( this->displayName(),mailCount ) ;
 		}
 
                 auto acc = m_accounts.data() + m_currentAccount ;
@@ -624,19 +603,19 @@ void qCheckGMail::audioNotify()
 {
         if( m_accountUpdated && m_audioNotify ){
 
-                m_statusicon->newEmailNotify() ;
+		m_statusicon.newEmailNotify() ;
 	}
 }
 
 void qCheckGMail::doneCheckingMail()
 {
-	m_mutex->lock();
+	m_mutex.lock();
 
         m_checkingMail = false ;
 
         auto redoMailCheck = m_redoMailCheck ;
 
-        m_mutex->unlock();
+	m_mutex.unlock();
 
 	if( redoMailCheck ){
 		/*
@@ -660,11 +639,11 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 	}else{
 		this->startTimer() ;
 
-		m_mutex->lock();
+		m_mutex.lock();
 
                 bool checking = m_checkingMail ;
 
-                m_mutex->unlock() ;
+		m_mutex.unlock() ;
 
 		if( checking ){
 
@@ -682,7 +661,7 @@ void qCheckGMail::configurationoptionWindow()
 
 void qCheckGMail::enablePassWordChange( bool changeable )
 {
-        auto e = m_statusicon->getMenuActions() ;
+	auto e = m_statusicon.getMenuActions() ;
 
         auto j = e.size() ;
 
@@ -742,7 +721,7 @@ void qCheckGMail::checkMail()
 
 		bool cancheckMail = false ;
 
-		m_mutex->lock() ;
+		m_mutex.lock() ;
 
 		if( m_checkingMail ){
 
@@ -754,7 +733,7 @@ void qCheckGMail::checkMail()
 
 		m_redoMailCheck = false ;
 
-		m_mutex->unlock() ;
+		m_mutex.unlock() ;
 
 		if( cancheckMail ){
 
@@ -817,11 +796,11 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
                 return QString( "%1&%2&%3&%4" ).arg( id,secret,token,type ).toLatin1() ;
 
-        }(),[ UrlLabel,this,&acc ]( NetworkAccessManager::NetworkReply n ){
+	}(),[ UrlLabel,this,&acc ]( QNetworkReply& n ){
 
                 this->networkAccess( [ & ](){
 
-                        auto e = _parseJSON( n->readAll(),"access_token" ) ;
+			auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
 			const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
@@ -849,26 +828,26 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
                          return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
 
-                 }(),[ function ]( NetworkAccessManager::NetworkReply e ){
+		 }(),[ function ]( QNetworkReply& e ){
 
-                        function( _parseJSON( e->readAll(),"refresh_token" ) ) ;
+			function( _parseJSON( e.readAll(),"refresh_token" ) ) ;
                 } ) ;
         } ;
 }
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-	m_networkReply = m_manager.get( request,[ this ]( NetworkAccessManager::NetworkReply e ){
+	m_manager.get( request,[ this ]( QNetworkReply& e ){
 
-                auto content = e->readAll() ;
+		auto content = e.readAll() ;
 
 		if( m_enableDebug ){
 
 			qDebug() << content << "\n" ;
 
-			qDebug() << e->errorString() << "\n" ;
+			qDebug() << e.errorString() << "\n" ;
 
-			qDebug() << e->error() << "\n\n" ;
+			qDebug() << e.error() << "\n\n" ;
 		}
 
                 m_timeOut->stop() ;
@@ -883,7 +862,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                         }
                 } ;
 
-                if( e->error() == QNetworkReply::AuthenticationRequiredError ){
+		if( e.error() == QNetworkReply::AuthenticationRequiredError ){
 
                         _report( true ) ;
                 }else{
@@ -894,7 +873,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                                 _report( false ) ;
                         }
                 }
-        } ) ;
+	},&m_networkReply ) ;
 
         m_timeOut->start( m_networkTimeOut ) ;
 }
@@ -981,9 +960,9 @@ void qCheckGMail::configureAccounts()
 {
         walletmanager::instance( m_applicationIcon,[ this ](){
 
-                m_mutex->lock() ;
+		m_mutex.lock() ;
                 m_redoMailCheck = true ;
-                m_mutex->unlock() ;
+		m_mutex.unlock() ;
 
         },this->getAuthorization(),[ this ]( QVector< accounts >&& e ){
 
@@ -1065,11 +1044,6 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 	}
 }
 
-QWidget * qCheckGMail::widget()
-{
-        return m_statusicon->widget() ;
-}
-
 void qCheckGMail::setTimer()
 {
 	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
@@ -1083,7 +1057,7 @@ void qCheckGMail::setTimer( int time )
 
 void qCheckGMail::startTimer()
 {
-        auto ac = m_statusicon->getMenuActions() ;
+	auto ac = m_statusicon.getMenuActions() ;
 
         auto j = ac.size() ;
 

@@ -3,18 +3,17 @@ The build system in use is cmake
 
 To build make sure you have the following packages installed(packages may be named differently in your distribution):
 
-gcc
-g++
+A C compiler
+A C++ compiler
 cmake
-kde-devel
-qt4-devel
+Qt5-devel( or whatever its called in your distribution )
 libgcrypt-devel
 
 To build WITH KDE support(kwallet integration and kde tray icon functionality),run the following commands from the source folder
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`  -DCMAKE_BUILD_TYPE=RELEASE ..
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE ..
 make
 make install
 
@@ -23,32 +22,11 @@ The last command must be run from root's account and depending on your distribut
 su -c "make install"
 sudo make install
 
+To build WITHOUT KWALLET support,add "-DNOKDESUPPORT=true" option.
 
-To build WITHOUT KDE support,ie to build a "pure" Qt application,run the following commands from the source folder
+To build WITHOUT libsecret support,add "-DNOSECRETSUPPORT=true" option.
 
-mkdir build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DNOKDESUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE ..
-make
-make install
-
-To build with lxqt support,ie to build an lxqt plugin application,run the following commands from the source folder
-mkdir build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DLXQTSUPPORT=true -DCMAKE_BUILD_TYPE=RELEASE ..
-make
-make install
-
-Note:
-The last command must be run from root's account and depending on your distribution,you may need to run one of below two:
-su -c "make install"
-sudo make install
-
-To build a Qt5 port with KF5 support,add "-DQT5=true" "-DKF5=true" to the cmake argument list
-
-To build using a system provided lxqtwallet,add "-DINTERNAL_LXQT_WALLET=false"
-
-A none KDE build will require presence of mplayer in order to use audio notification
+To build WITH KF5's KStatusNotifierItem support,add "-DKF5=true" option
 
 Possible build issues:
 Problem:
@@ -62,6 +40,3 @@ File a bug report with your distribution and ask for developments files to be in
 
 Solution1:
 Find the location of the library that could not be found and add its full path to CMakeLists.txt file in the "TARGET_LINK_LIBRARIES" line
-
-Doing a non KDE build on Debian Jessie, you need to:
-apt-get install build-essential cmake libgcrypt20-dev libsecret-1-dev mplayer libqt4-dev

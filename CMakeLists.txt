@@ -1,7 +1,5 @@
 
 cmake_minimum_required(VERSION 2.6)
-cmake_policy(SET CMP0017 OLD)
-cmake_policy(SET CMP0002 OLD)
 
 set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS ON)
 
@@ -9,18 +7,14 @@ project(qCheckGMail)
 
 INCLUDE(GNUInstallDirs)
 
-SET( QT_USE_QTNETWORK TRUE )
-SET( QT_USE_QTCORE TRUE )
-SET( QT_USE_QTGUI TRUE )
+if( "${DATA_INSTALL_DIR}" STREQUAL "" )
+	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
+endif()
 
 add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(FindPkgConfig)
-
-if( LXQTSUPPORT )
-	set( NOKDESUPPORT "true" )
-endif()
 
 # uninstall target
 configure_file(
@@ -31,32 +25,9 @@ configure_file(
 add_custom_target( uninstall
 COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
-if( LIB_SUFFIX )
-	if("${LIB_SUFFIX}" STREQUAL "default")
+INCLUDE(GNUInstallDirs)
 
-		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-			set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib64")
-		else()
-			set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
-		endif()
-	else()
-		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUFFIX}")
-	endif()
-else()
-	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib64")
-	else()
-		set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
-	endif()
-endif()
-
-if(KF5)
 set( QT5 "true" )
-endif()
-
-if( NOT DEFINED INTERNAL_LXQT_WALLET )
-	set( INTERNAL_LXQT_WALLET "false" )
-endif()
 
 if( INTERNAL_LXQT_WALLET )
 
@@ -102,11 +73,9 @@ endif()
 
 include_directories( ${CMAKE_BINARY_DIR} )
 
-add_definitions( -Wextra -Wall -pedantic -std=c++11 -I${PROJECT_BINARY_DIR})
-
-if( "${DATA_INSTALL_DIR}" STREQUAL "" )
-	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
-endif()
+add_definitions( -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
+set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
 "\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\"\n"
@@ -146,28 +115,6 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
 )
 
-if(QT5)
-        find_package(Qt5Widgets REQUIRED)
-        find_package(Qt5Core REQUIRED)
-
-	set( CMAKE_INCLUDE_CURRENT_DIR ON )
-	include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
-	include_directories( ${Qt5Network_INCLUDE_DIRS} )
-
-	add_definitions( ${Qt5Widgets_DEFINITIONS} )
-else()
-	find_package(Qt4 REQUIRED)
-	SET(QT_USE_QTCORE TRUE)
-	SET(QT_USE_QTGUI TRUE)
-
-	add_definitions(-I${Qt4_INCLUDE_DIR})
-	add_definitions(-I${QT_HEADERS_DIR})
-
-	INCLUDE(${QT_USE_FILE})
-
-	INCLUDE(${QT_USE_FILE})
-endif()
-
 set( UI_FILES 	src/gmailauthorization.ui
 		src/gmailauthorization.ui
 		src/walletmanager.ui
@@ -198,221 +145,69 @@ set( CPP_FILES	src/gmailauthorization.cpp
 
 set( RESOUCES 	icons/icon.qrc )
 
-if( LXQTSUPPORT )
-	INCLUDE(FindPkgConfig)
+find_package( Qt5Widgets REQUIRED )
+find_package( Qt5Core REQUIRED )
+find_package( Qt5Network REQUIRED )
 
-	if(QT5)
-		pkg_check_modules( LXQT lxqt-qt5 )
+find_package( ECM REQUIRED NO_MODULE )
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} )
 
-		if( NOT LXQT_FOUND )
-			pkg_check_modules( LXQT lxqt )
-		endif()
-	else()
-		pkg_check_modules( LXQT lxqt )
-	endif()
+set( CMAKE_INCLUDE_CURRENT_DIR ON )
+include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
 
-	if( LXQT_FOUND )
+add_definitions( ${Qt5Widgets_DEFINITIONS} )
 
-		if( LXQT_VERSION VERSION_GREATER "0.9.0" )
-			file( WRITE ${PROJECT_BINARY_DIR}/lxqt_api.h "#define NEW_LXQT_API 1\n" )
-		else()
-			file( WRITE ${PROJECT_BINARY_DIR}/lxqt_api.h "#define NEW_LXQT_API 0\n" )
-		endif()
+if( KF5 )
+	find_package( KF5Config REQUIRED )
+	find_package( KF5Notifications REQUIRED)
+	find_package( KF5CoreAddons )
+	find_package( KF5I18n NO_MODULE )
 
-		add_definitions( -I${LXQT_INCLUDE_DIR} )
-		include_directories( ${LXQT_INCLUDE_DIRS} )
+	message( STATUS "\n------------------------------------------------------------------------------------------" )
+	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
+	message( STATUS "---------------------------------------------------------------------------------------" )
 
-		if( QT5 )
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF5 1\n" )
 
-			QT5_WRAP_CPP( MOC ${MOC_FILES} )
-			QT5_WRAP_UI( UI ${UI_FILES} )
-			QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
+	QT5_WRAP_CPP( MOC ${MOC_FILES} )
+	QT5_WRAP_UI( UI ${UI_FILES} )
+	QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
+	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network ${LXQT_LIBRARIES})
-		else()
-
-			QT4_WRAP_CPP( MOC ${MOC_FILES} )
-			QT4_WRAP_UI( UI ${UI_FILES} )
-			QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
-
-			add_library( qCheckGMail MODULE ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-			TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork ${LXQT_LIBRARIES})
-		endif()
-
-		set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-		set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-		set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
-
-
-		if( LXQT_VERSION VERSION_GREATER "0.9.0" )
-			install( TARGETS qCheckGMail LIBRARY DESTINATION "${LIB_PATH}/lxqt-panel/" )
-		else()
-			install( TARGETS qCheckGMail LIBRARY DESTINATION "${LIB_PATH}/lxpanel/plugins/" )
-		endif()
-
-		install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
-		install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/lxqt/lxqt-panel/
-			PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-		)
-
-		message( STATUS "\n------------------------------------------------------------------------------------------" )
-		message( STATUS "lxqt support found,will build lxqt panel plugin based application" )
-		message( STATUS "------------------------------------------------------------------------------------------" )
-                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define KF5 0\n#define USE_LXQT_PLUGIN 1\n#define KDE4 0\n" )
-
-	else()
-		message( FATAL_ERROR "lxqt libraries not found" )
-	endif()
-elseif( NOKDESUPPORT )
-
-	if( QT5 )
-		QT5_WRAP_CPP( MOC ${MOC_FILES} )
-		QT5_WRAP_UI( UI ${UI_FILES} )
-		QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
-
-		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
-	else()
-		QT4_WRAP_CPP( MOC ${MOC_FILES} )
-		QT4_WRAP_UI( UI ${UI_FILES} )
-		QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
-
-		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-		TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork )
-	endif()
-
-	set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-	set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-	set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
-
-	install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-	install( FILES audio/KDE-Im-New-Mail.ogg DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio/" )
-	install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-	)
-
-	install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-	)
-
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
+else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 	message( STATUS "----------------------------------------------------------------------------------------" )
-        file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 0\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
 
-else()
-	if(KF5)
-		find_package(Qt5Widgets REQUIRED)
-		find_package(Qt5Core REQUIRED)
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF5 0\n" )
 
-                find_package( KF5Config REQUIRED )
-                find_package( ECM REQUIRED NO_MODULE)
-                set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+	QT5_WRAP_CPP( MOC ${MOC_FILES} )
+	QT5_WRAP_UI( UI ${UI_FILES} )
+	QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
 
-		set( CMAKE_INCLUDE_CURRENT_DIR ON )
-		include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
+	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-		add_definitions( ${Qt5Widgets_DEFINITIONS} )
-
-		find_package(KF5Notifications)
-		find_package(KF5CoreAddons)
-		find_package(KF5I18n NO_MODULE)
-
-                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 1\n#define USE_LXQT_PLUGIN 0\n#define KDE4 0\n" )
-
-		QT5_WRAP_CPP( MOC ${MOC_FILES} )
-		QT5_WRAP_UI( UI ${UI_FILES} )
-		QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
-
-		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-                TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
-	else()
-                find_package(KDE4 REQUIRED)
-                find_package(Qt4 REQUIRED)
-
-                include(KDE4Defaults)
-                include_directories(${KDE4_INCLUDES})
-                add_definitions( -I${KDE4_INCLUDE_DIR} )
-
-                find_library( LIBKDEUI_ libkdeui.so PATHS ${KDE_LIBRARY_PATH} )
-                if( NOT LIBKDEUI_ )
-                        # adding this one just in case the same case as above happen
-                        find_library( LIBKDEUI_ libkdeui.so.5 )
-                endif()
-
-                if( NOT LIBKDEUI_ )
-                        SET( KDE_SUPPORT "false" )
-                        message( FATAL_ERROR "could not find libkdeui.so or libkdeui.so.5,please make sure you have kde development libraries installed and try again" )
-                endif()
-
-                find_library( LIBKDECORE_ libkdecore.so PATHS ${KDE_LIBRARY_PATH} )
-                if( NOT LIBKDECORE_ )
-                        # adding this one just in case the same case as above happen
-                        find_library( LIBKDECORE_ libkdecore.so.5 )
-                endif()
-
-                if( NOT LIBKDECORE_ )
-                        SET( KDE_SUPPORT "false" )
-                        message( FATAL_ERROR "could not find libkdecore.so or libkdecore.so.5,please make sure you have kde development libraries installed and try again" )
-                endif()
-
-                file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define USE_KDE_STATUS_NOTIFIER 1\n#define KF5 0\n#define USE_LXQT_PLUGIN 0\n#define KDE4 1\n" )
-
-		QT4_WRAP_CPP( MOC ${MOC_FILES} )
-		QT4_WRAP_UI( UI ${UI_FILES} )
-		QT4_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
-
-		add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
-
-                TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${QT_LIBRARIES} -lQtNetwork )
-        endif()
-
-        set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
-        set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
-        set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
-
-        install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
-
-        install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-        )
-
-        install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
-                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-        )
-
-        message( STATUS "\n------------------------------------------------------------------------------------------" )
-        message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
-        message( STATUS "---------------------------------------------------------------------------------------" )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
 endif()
+
+set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
+set_target_properties( qCheckGMail PROPERTIES LINK_FLAGS "-pie" )
+set_target_properties( qCheckGMail PROPERTIES INSTALL_RPATH "${LIB_PATH}" )
+
+install( TARGETS qCheckGMail RUNTIME DESTINATION bin )
+
+install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/applications
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
+
+install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
 
 #Icon=${CMAKE_INSTALL_PREFIX}/share/icons/qCheckGMail.svg
 
-if( LXQTSUPPORT )
-# desktop file section
-if( LXQT_VERSION VERSION_GREATER "0.9.0" )
-file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
-"[Desktop Entry]
-Type=Service
-ServiceTypes=LXQtPanel/Plugin
-Name=qCheckGMailPlugIn
-Comment=a plugin to check for mail in gmail accounts\n")
-else()
-file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
-"[Desktop Entry]
-Type=Service
-ServiceTypes=LxQtPanel/Plugin
-Name=qCheckGMailPlugIn
-Comment=a plugin to check for mail in gmail accounts\n")
-endif()
-
-else()
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.desktop"
 "[Desktop Entry]
@@ -450,4 +245,3 @@ Terminal=false
 TerminalOptions=
 Type=Application
 Categories=Network;X-MandrivaLinux-Internet;\n")
-endif()
