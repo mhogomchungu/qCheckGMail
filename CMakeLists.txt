@@ -129,7 +129,6 @@ set( MOC_FILES	src/gmailauthorization.h
 		src/addaccount.h
 		src/configurationoptionsdialog.h
 		src/statusicon.h
-		src/qcheckgmailplugin.h
 		src/task.h
 )
 
