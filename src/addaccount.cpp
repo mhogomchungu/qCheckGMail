@@ -43,7 +43,26 @@ addaccount::addaccount( QDialog * parent,
         connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
 
-        this->ShowUI() ;
+	m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
+	m_ui->pushButtonCancel->setMinimumHeight( 31 ) ;
+
+	m_ui->lineEditPassword->setEnabled( false ) ;
+
+	gmailauthorization::instance( this,m_getAuthorization,[ this ](){
+
+		this->cancel() ;
+
+	},[ this ]( const QString& e ){
+
+		if( e.isEmpty() ){
+
+			this->HideUI() ;
+			qDebug() << "ERROR: Failed To Generate Token" ;
+		}else{
+			this->show() ;
+			m_ui->lineEditPassword->setText( e ) ;
+		}
+	} ) ;
 }
 
 addaccount::addaccount( QDialog * parent,
@@ -72,13 +91,13 @@ addaccount::addaccount( QDialog * parent,
 	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
 	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
 
+	m_ui->lineEditPassword->setEnabled( false ) ;
+
         if( m_edit ){
 
 		m_ui->pushButtonAdd->setText( tr( "Edit" ) ) ;
 		this->setWindowTitle( tr( "Edit Account" ) ) ;
         }
-
-        m_ui->cbToken->setChecked( !e.accRefreshToken.isEmpty() ) ;
 
         if( e.accRefreshToken.isEmpty() ){
 
@@ -87,39 +106,7 @@ addaccount::addaccount( QDialog * parent,
                 m_ui->lineEditPassword->setText( e.accRefreshToken ) ;
         }
 
-        this->ShowUI() ;
-}
-
-void addaccount::ShowUI()
-{
-        m_ui->cbToken->setEnabled( true ) ;
-	m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
-        m_ui->pushButtonCancel->setMinimumHeight( 31 ) ;
-
-        connect( m_ui->cbToken,SIGNAL( clicked( bool ) ),this,SLOT( useToken( bool ) ) ) ;
-
-        this->show() ;
-}
-
-void addaccount::useToken( bool e )
-{
-        if( e ){
-
-                gmailauthorization::instance( this,m_getAuthorization,[ this ](){
-
-                        m_ui->cbToken->setChecked( false ) ;
-
-                },[ this ]( const QString& e ){
-
-                        if( e.isEmpty() ){
-
-                                m_ui->lineEditPassword->clear() ;
-				qDebug() << "ERROR: Failed To Generate Token" ;
-                        }else{
-                                m_ui->lineEditPassword->setText( e ) ;
-                        }
-                } ) ;
-        }
+	this->show() ;
 }
 
 void addaccount::HideUI()
@@ -154,18 +141,7 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
-                QString accPassword ;
-                QString accToken ;
-
-                if( m_ui->cbToken->isChecked() ){
-
-                        accToken = key ;
-                }else{
-                        accPassword = key ;
-                }
-
-                m_result( { accName,accPassword,accDisplayName,accLabels,accToken } ) ;
-
+		m_result( { accName,QString(),accDisplayName,accLabels,key } ) ;
 		this->HideUI() ;
 	}
 }

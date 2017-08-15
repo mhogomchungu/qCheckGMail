@@ -72,9 +72,7 @@ public:
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;
-        void useToken( bool ) ;
 private:        
-        void ShowUI( void ) ;
         void HideUI( void ) ;
 
 	void closeEvent( QCloseEvent * ) ;
