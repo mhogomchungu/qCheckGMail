@@ -60,7 +60,7 @@ version 1.2.7
 version 1.2.8
 - add an option to configure accounts using google's oauth2 functionality.
 
-version 1.2.9(unreleased)
+version 1.2.9
 -- maintanance release.
    -- Remove KDE4/Qt4/LXQT plugin support.
    -- Fix random crashes

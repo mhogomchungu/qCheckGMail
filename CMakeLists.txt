@@ -73,9 +73,10 @@ endif()
 
 include_directories( ${CMAKE_BINARY_DIR} )
 
-add_definitions( -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
+add_definitions( -std=c++14 -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
 "\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\"\n"
