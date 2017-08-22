@@ -132,43 +132,47 @@ public:
 	}
 	void cancel( QNetworkReply * e )
 	{
-		for( decltype( m_entries.size() ) i = 0 ; i < m_entries.size() ; i++ ){
+		auto s = this->find_network_reply( e ) ;
 
-			if( std::get< 0 >( m_entries[ i ] ) == e ){
+		if( s != -1 ){
 
-				m_entries.erase( m_entries.begin() + i ) ;
+			m_entries.erase( m_entries.begin() + s ) ;
 
-				break ;
+			e->close() ;
+			e->abort() ;
+
+			if( std::get< bool >( m_entries[ s ] ) ){
+
+				e->deleteLater() ;
+			}
+		}
+	}
+	int find_network_reply( QNetworkReply * e )
+	{
+		for( decltype( m_entries.size() ) s = 0 ; s < m_entries.size() ; s++ ){
+
+			if( std::get< QNetworkReply * >( m_entries[ s ] ) == e ){
+
+				return static_cast< int >( s ) ;
 			}
 		}
 
-		e->close() ;
-		e->abort() ;
-		e->deleteLater() ;
+		return -1 ;
 	}
 private slots:
-	void networkReply( QNetworkReply * r )
+	void networkReply( QNetworkReply * e )
 	{
-		for( decltype( m_entries.size() ) i = 0 ; i < m_entries.size() ; i++ ){
+		auto s = this->find_network_reply( e ) ;
 
-			const auto& q = m_entries[ i ] ;
+		if( s != -1 ){
 
-			auto& nr          = std::get< 0 >( q ) ;
-			auto& deleteLater = std::get< 1 >( q ) ;
-			auto& function    = std::get< 2 >( q ) ;
+			std::get< function_t >( m_entries[ s ] )( *e ) ;
 
-			if( nr == r ){
+			m_entries.erase( m_entries.begin() + s ) ;
 
-				function( *r ) ;
+			if( std::get< bool >( m_entries[ s ] ) ){
 
-				m_entries.erase( m_entries.begin() + i ) ;
-
-				if( deleteLater ){
-
-					r->deleteLater() ;
-				}
-
-				break ;
+				e->deleteLater() ;
 			}
 		}
 	}
