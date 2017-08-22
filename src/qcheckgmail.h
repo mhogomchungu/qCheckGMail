@@ -35,6 +35,8 @@
 #include <QFile>
 #include <QTimer>
 #include <QProcess>
+#include <QtNetwork/QNetworkRequest>
+
 #include <functional>
 #include <memory>
 #include <utility>
@@ -166,6 +168,8 @@ private:
         QNetworkReply * m_networkReply ;
 
         NetworkAccessManager m_manager ;
+
+	QNetworkRequest m_networkRequest ;
 
         QVector< accounts > m_accounts ;
 

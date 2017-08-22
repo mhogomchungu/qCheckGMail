@@ -24,8 +24,12 @@
 #include <string.h>
 #include <utility>
 
-qCheckGMail::qCheckGMail( const QString& profile ) : m_profile( profile )
+qCheckGMail::qCheckGMail( const QString& profile ) :
+	m_profile( profile ),
+	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) )
 {
+	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
+	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -769,30 +773,27 @@ void qCheckGMail::checkMail( const accounts& acc )
 
 static QString _parseJSON( const QByteArray& json,const char * property )
 {
-	try{
-		auto e = nlohmann::json::parse( json.constData() ) ;
+	if( !json.isEmpty() ){
 
-		return QString::fromStdString( e.find( property ).value() ) ;
+		try{
+			auto e = nlohmann::json::parse( json.constData() ) ;
 
-	}catch( ... ){
+			auto s = e.find( property ) ;
 
-		return QString() ;
+			if( s != e.end() ){
+
+				return QString::fromStdString( s.value() ) ;
+			}
+
+		}catch( ... ){}
 	}
-}
 
-QNetworkRequest _networkRequest()
-{
-        QNetworkRequest request( QUrl( "https://accounts.google.com/o/oauth2/token" ) ) ;
-
-        request.setRawHeader( "Host","accounts.google.com" ) ;
-        request.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
-
-        return request ;
+	return QString() ;
 }
 
 void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
-        m_manager.post( _networkRequest(),[ & ](){
+	m_manager.post( m_networkRequest,[ & ](){
 
                 auto id     = "client_id="     + m_clientID ;
                 auto secret = "client_secret=" + m_clientSecret ;
@@ -803,19 +804,15 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 	}(),[ UrlLabel,this,&acc ]( QNetworkReply& n ){
 
-                this->networkAccess( [ & ](){
+		auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
-			auto e = _parseJSON( n.readAll(),"access_token" ) ;
+		const_cast< accounts * >( &acc )->setAccessToken( e ) ;
 
-			const_cast< accounts * >( &acc )->setAccessToken( e ) ;
+		QNetworkRequest request( QUrl( UrlLabel.toLatin1().constData() ) ) ;
 
-			QUrl url( UrlLabel ) ;
-			QNetworkRequest request( url ) ;
+		request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
 
-			request.setRawHeader( "Authorization","Bearer " + e.toLatin1() ) ;
-
-			return request ;
-                }() ) ;
+		this->networkAccess( request ) ;
         } ) ;
 }
 
@@ -823,7 +820,7 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 {
         return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
 
-                m_manager.post( _networkRequest(),[ & ](){
+		m_manager.post( m_networkRequest,[ & ](){
 
                          auto id     = "client_id="     + m_clientID ;
                          auto secret = "client_secret=" + m_clientSecret ;
@@ -850,9 +847,12 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 			qDebug() << content << "\n" ;
 
-			qDebug() << e.errorString() << "\n" ;
+			if( e.error() != QNetworkReply::NetworkError::NoError ){
 
-			qDebug() << e.error() << "\n\n" ;
+				qDebug() << e.errorString() << "\n" ;
+
+				qDebug() << e.error() << "\n\n" ;
+			}
 		}
 
                 m_timeOut->stop() ;
@@ -889,18 +889,12 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 
         if( refreshToken.isEmpty() ){
 
-                this->networkAccess( [ & ](){
+		QUrl url( UrlLabel ) ;
 
-                        return QNetworkRequest( [ & ](){
+		url.setUserName( acc.accountName() ) ;
+		url.setPassword( acc.passWord() ) ;
 
-                                QUrl url( UrlLabel ) ;
-
-                                url.setUserName( acc.accountName() ) ;
-                                url.setPassword( acc.passWord() ) ;
-
-                                return url ;
-                        }() ) ;
-                }() ) ;
+		this->networkAccess( QNetworkRequest( url ) ) ;
         }else{
                 const auto& accessToken = acc.accessToken() ;
 
@@ -911,16 +905,12 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
                          * or if an access token has expired.
                          */
                         this->getAccessToken( acc,refreshToken,UrlLabel ) ;
-                }else{
-                        this->networkAccess( [ & ](){
+		}else{
+			QNetworkRequest s( QUrl( UrlLabel.toLatin1().constData() ) ) ;
 
-                                QUrl url( UrlLabel ) ;
-                                QNetworkRequest request( url ) ;
+			s.setRawHeader( "Authorization","Bearer " + accessToken.toLatin1() ) ;
 
-				request.setRawHeader( "Authorization","Bearer " + accessToken.toLatin1() ) ;
-
-                                return request ;
-                        }() ) ;
+			this->networkAccess( s ) ;
                 }
         }
 }
