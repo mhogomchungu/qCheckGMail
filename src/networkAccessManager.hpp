@@ -140,15 +140,15 @@ public:
 	{
 		this->find_network_reply( e,[]( auto& e,auto& p,auto s ){
 
-			p.erase( p.begin() + s ) ;
-
-			e.close() ;
-			e.abort() ;
-
 			if( std::get< bool >( p[ s ] ) ){
 
 				e.deleteLater() ;
 			}
+
+			p.erase( p.begin() + s ) ;
+
+			e.close() ;
+			e.abort() ;
 		} ) ;
 	}
 private:
@@ -171,12 +171,12 @@ private slots:
 
 			std::get< function_t >( p[ s ] )( e ) ;
 
-			p.erase( p.begin() + s ) ;
-
 			if( std::get< bool >( p[ s ] ) ){
 
 				e.deleteLater() ;
 			}
+
+			p.erase( p.begin() + s ) ;
 		} ) ;
 	}
 };
