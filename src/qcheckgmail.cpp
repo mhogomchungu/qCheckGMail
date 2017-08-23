@@ -136,7 +136,7 @@ void qCheckGMail::run()
 
                 auto e = new QTimer( this ) ;
 
-                connect( e,SIGNAL( timeout() ),this,SLOT( timerExpired() ) ) ;
+		connect( e,SIGNAL( timeout() ),this,SLOT( timerExpired() ),Qt::QueuedConnection ) ;
 
                 return e ;
         }() ;
@@ -145,7 +145,7 @@ void qCheckGMail::run()
 
                 auto e = new QTimer( this ) ;
 
-                connect( e,SIGNAL( timeout() ),this,SLOT( checkMail() ) ) ;
+		connect( e,SIGNAL( timeout() ),this,SLOT( checkMail() ),Qt::QueuedConnection ) ;
 
                 e->start( m_interval ) ;
 
