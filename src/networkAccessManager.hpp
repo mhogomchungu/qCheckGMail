@@ -84,6 +84,10 @@ public:
 
 		m_entries.emplace_back( s,true,std::move( f ) ) ;
 	}
+	void get( const QNetworkRequest& r,function_t f )
+	{
+		this->get( nullptr,r,std::move( f ) ) ;
+	}
 	NetworkReply get( const QNetworkRequest& r )
 	{
 		QNetworkReply * q ;
@@ -99,9 +103,21 @@ public:
 		return { q,[]( QNetworkReply * e ){ e->deleteLater() ; } } ;
 	}
 	template< typename T >
+	void post( QNetworkReply ** s,const QNetworkRequest& r,const T& e,function_t f )
+	{
+		auto q = m_manager.post( r,e ) ;
+
+		if( s ){
+
+			*s = q ;
+		}
+
+		m_entries.emplace_back( std::make_tuple( q,true,std::move( f ) ) ) ;
+	}
+	template< typename T >
 	void post( const QNetworkRequest& r,const T& e,function_t f )
 	{
-		m_entries.emplace_back( std::make_tuple( m_manager.post( r,e ),true,std::move( f ) ) ) ;
+		this->post( nullptr,r,e,std::move( f ) ) ;
 	}
 	template< typename T >
 	NetworkReply post( const QNetworkRequest& r,const T& e )
@@ -118,9 +134,20 @@ public:
 
 		return { q,[]( QNetworkReply * e ){ e->deleteLater() ; } } ;
 	}
+	void head( QNetworkReply ** s,const QNetworkRequest& r,function_t f )
+	{
+		auto q = m_manager.head( r ) ;
+
+		if( s ){
+
+			*s = q ;
+		}
+
+		m_entries.emplace_back( std::make_tuple( q,true,std::move( f ) ) ) ;
+	}
 	void head( const QNetworkRequest& r,function_t f )
 	{
-		m_entries.emplace_back( std::make_tuple( m_manager.head( r ),true,std::move( f ) ) ) ;
+		this->head( nullptr,r,std::move( f ) ) ;
 	}
 	NetworkReply head( const QNetworkRequest& r )
 	{
