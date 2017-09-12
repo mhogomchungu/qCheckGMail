@@ -9,8 +9,21 @@ cmake
 Qt5-devel( or whatever its called in your distribution )
 libgcrypt-devel
 
-To build WITH KDE support(kwallet integration and kde tray icon functionality),run the following commands from the source folder
+-----------------------------------------------------------------------------
+Cmake is the supported build system and below addional options that can be
+passed to cmake to fine tune build process:
+-----------------------------------------------------------------------------
+To build WITHOUT KWALLET support,add "-DNOKDESUPPORT=true" option.
 
+To build WITHOUT libsecret support,add "-DNOSECRETSUPPORT=true" option.
+
+To build WITH KF5's KStatusNotifierItem support,add "-DKF5=true" option
+
+To build the application with default options,run below commands.
+
+------------------------------------------------------------------------------
+Building and installing the project can be done with below steps:
+------------------------------------------------------------------------------
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE ..
@@ -22,11 +35,6 @@ The last command must be run from root's account and depending on your distribut
 su -c "make install"
 sudo make install
 
-To build WITHOUT KWALLET support,add "-DNOKDESUPPORT=true" option.
-
-To build WITHOUT libsecret support,add "-DNOSECRETSUPPORT=true" option.
-
-To build WITH KF5's KStatusNotifierItem support,add "-DKF5=true" option
 
 Possible build issues:
 Problem:
