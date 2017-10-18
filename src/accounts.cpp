@@ -84,7 +84,7 @@ int accounts::numberOfLabels() const
         return m_labelUrls.size() ;
 }
 
-void accounts::setAccessToken( const QString& e )
+void accounts::setAccessToken( const QString& e ) const
 {
         m_accessToken = e ;
 }

@@ -69,11 +69,11 @@ public:
 
 	int   numberOfLabels( void )            const ;
 
-        void setAccessToken( const QString& ) ;
+	void setAccessToken( const QString& ) const ;
 
         accountLabel& getAccountLabel( int ) ;
 private:
-        QString m_accessToken ;
+	mutable QString m_accessToken ;
         accounts::entry m_entry ;
 	QVector< accountLabel > m_labelUrls ;
 };

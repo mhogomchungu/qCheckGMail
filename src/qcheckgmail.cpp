@@ -806,7 +806,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 		auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
-		const_cast< accounts * >( &acc )->setAccessToken( e ) ;
+		acc.setAccessToken( e ) ;
 
 		QNetworkRequest request( QUrl( UrlLabel.toLatin1().constData() ) ) ;
 
