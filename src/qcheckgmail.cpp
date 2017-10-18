@@ -618,13 +618,13 @@ void qCheckGMail::audioNotify()
 
 void qCheckGMail::doneCheckingMail()
 {
-	m_mutex.lock();
+	m_mutex.lock() ;
 
         m_checkingMail = false ;
 
         auto redoMailCheck = m_redoMailCheck ;
 
-	m_mutex.unlock();
+	m_mutex.unlock() ;
 
 	if( redoMailCheck ){
 		/*
@@ -648,7 +648,7 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 	}else{
 		this->startTimer() ;
 
-		m_mutex.lock();
+		m_mutex.lock() ;
 
                 bool checking = m_checkingMail ;
 
