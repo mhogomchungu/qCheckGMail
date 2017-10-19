@@ -839,7 +839,7 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-	m_manager.get( &m_networkReply,request,[ this ]( QNetworkReply& e ){
+	m_networkReply = m_manager.get( request,[ this ]( QNetworkReply& e ){
 
 		auto content = e.readAll() ;
 
