@@ -21,7 +21,7 @@
 #include "walletmanager.h"
 #include "ui_walletmanager.h"
 
-#include "task.h"
+#include "task.hpp"
 
 #include <utility>
 
@@ -29,7 +29,6 @@ static const auto LABEL_IDENTIFIER        = "-qCheckGMail-LABEL_ID" ;
 static const auto DISPLAY_NAME_IDENTIFIER = "-qCheckGMail-DISPLAY_NAME_ID" ;
 static const auto TOKEN_IDENTIFIER        = "-qCheckGMail-TOKEN_KEY_ID" ;
 
-template< typename T = void >
 class account
 {
 public:
@@ -72,8 +71,7 @@ public:
 		this->add() ;
 	}
 
-	template< typename E >
-	accounts::entry entry( const E& e )
+	accounts::entry entry( const QVector< std::pair< QString,QByteArray > >& e )
 	{
 		auto _entry = [ &e ]( const QString& acc )->const QByteArray&{
 
@@ -96,12 +94,9 @@ public:
 			_entry( m_token ) } ;
 	}
 
-	T readAll()
+	QVector< std::pair< QString,QByteArray > > readAll()
 	{
-		return Task::await< T >( [ this ](){
-
-			return m_wallet->readAllKeyValues() ;
-		} ) ;
+		return Task::await( [ this ](){	return m_wallet->readAllKeyValues() ; } ) ;
 	}
 
 	account( LXQt::Wallet::Wallet * w,const accounts::entry& e = accounts::entry() ) :
@@ -256,15 +251,15 @@ void walletmanager::readAccountInfo()
 {
 	m_accounts.clear() ;
 
-	auto e = account< decltype( m_wallet->readAllKeyValues() ) >( m_wallet ).readAll() ;
+	auto e = account( m_wallet ).readAll() ;
 
 	for( const auto& it : e ){
 
 		const auto& r = it.first ;
 
-		if( account<>::main( r ) ){
+		if( account::main( r ) ){
 
-			m_accounts.append( account<>( r ).entry( e ) ) ;
+			m_accounts.append( account( r ).entry( e ) ) ;
 		}
 	}
 }
@@ -387,7 +382,7 @@ void walletmanager::pushButtonAdd()
 
                 Task::run( [ this ](){
 
-			account<>( m_wallet,m_accEntry ).add() ;
+			account( m_wallet,m_accEntry ).add() ;
 
                 } ).then( [ this ](){
 
@@ -448,7 +443,7 @@ void walletmanager::deleteAccount()
 
                         Task::run( [ & ](){
 
-				account<>( accName,m_wallet ).remove() ;
+				account( accName,m_wallet ).remove() ;
 
 			} ).then( [ this ](){
 
@@ -505,7 +500,7 @@ void walletmanager::editAccount()
 
                 Task::run( [ this ](){
 
-			account<>( m_wallet,m_accEntry ).replace() ;
+			account( m_wallet,m_accEntry ).replace() ;
 
                 } ).then( [ this ](){
 

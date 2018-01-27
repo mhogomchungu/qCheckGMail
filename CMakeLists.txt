@@ -100,6 +100,22 @@ else()
 	include_directories( src/3rdParty/NetworkAccessManager )
 endif()
 
+if( MCHUNGU_TASK_FOUND )
+
+	message( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "mhogomchungu_task library will be provided by an external library" )
+	message( STATUS "---------------------------------------------------------------------------" )
+
+	include_directories( "${MCHUNGU_TASK_INCLUDEDIR}" )
+	link_directories( "${MCHUNGU_TASK_LIBDIR}" )
+else()
+	message( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "mhogomchungu_task library will be provided by an internal library" )
+	message( STATUS "---------------------------------------------------------------------------" )
+	include_directories( src/3rdParty/tasks )
+	ADD_SUBDIRECTORY( src/3rdParty/tasks )
+endif()
+
 add_definitions( -std=c++14 -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
@@ -156,7 +172,6 @@ set( MOC_FILES	src/gmailauthorization.h
 		src/addaccount.h
 		src/configurationoptionsdialog.h
 		src/statusicon.h
-		src/task.h
 )
 
 set( CPP_FILES	src/gmailauthorization.cpp
@@ -201,7 +216,7 @@ if( KF5 )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons mhogomchungu_network )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons mhogomchungu_network mhogomchungu_task )
 else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
@@ -215,7 +230,7 @@ else()
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network mhogomchungu_network )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network mhogomchungu_network mhogomchungu_task )
 endif()
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )

@@ -19,10 +19,6 @@
 
 #include "statusicon.h"
 
-#include "../lxqt_wallet/frontend/task.h"
-
-namespace Task = LXQt::Wallet::Task ;
-
 #include <QProcess>
 #include <iostream>
 
