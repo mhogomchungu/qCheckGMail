@@ -46,7 +46,7 @@
 #include "walletmanager.h"
 #include "configurationoptionsdialog.h"
 #include "tray_application_type.h"
-#include "networkAccessManager.hpp"
+#include "network_access_manager.hpp"
 #include "gmailauthorization.h"
 
 #include <functional>
@@ -86,7 +86,6 @@ private slots:
 	void configurePassWord( void ) ;
         void audioNotify( bool ) ;
         void enablePassWordChange( bool ) ;
-	void timerExpired( void  ) ;
 private:
         void getAccountsInfo( QVector< accounts >&& ) ;
 
@@ -160,12 +159,9 @@ private:
 
 	QMutex m_mutex ;
 
-	QTimer * m_timeOut ;
-        QTimer * m_timer ;
+	QTimer m_timer ;
 
         statusicon::clickActions m_clickActions ;
-
-        QNetworkReply * m_networkReply ;
 
         NetworkAccessManager m_manager ;
 

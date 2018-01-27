@@ -29,14 +29,25 @@ INCLUDE(GNUInstallDirs)
 
 set( QT5 "true" )
 
+pkg_check_modules( MCHUNGU_NETWORK mhogomchungu_network )
+
+find_file( JSON_HEADER_PATH "nlohmann/json.hpp" )
+
+if( NOT JSON_HEADER_PATH )
+	set( JSON_HEADER_PATH "${PROJECT_SOURCE_DIR}/src/3rdParty/json/nlohmann/json.hpp" )
+endif()
+
+file( WRITE ${PROJECT_BINARY_DIR}/json.h "\n#include \"${JSON_HEADER_PATH}\"" )
+MESSAGE( STATUS "found json.hpp header file at: ${JSON_HEADER_PATH}" )
+
 if( INTERNAL_LXQT_WALLET )
 
 	message( STATUS "---------------------------------------------------------------------------" )
 	message( STATUS "lxqt wallet support will be provided by an internal library" )
 	message( STATUS "---------------------------------------------------------------------------" )
 
-	ADD_SUBDIRECTORY( lxqt_wallet )
-	include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
+	ADD_SUBDIRECTORY( src/3rdParty/lxqt_wallet )
+	include_directories( src/3rdParty/lxqt_wallet/frontend )
 else()
 	pkg_check_modules( LXQT_WALLET lxqt-wallet )
 
@@ -47,8 +58,8 @@ else()
 		message( STATUS "lxqt wallet support will be provided by an internal library" )
 		message( STATUS "---------------------------------------------------------------------------" )
 
-		ADD_SUBDIRECTORY( lxqt_wallet )
-		include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
+		ADD_SUBDIRECTORY( src/3rdParty/lxqt_wallet )
+		include_directories( src/3rdParty/lxqt_wallet/frontend )
 	else()
 		if( LXQT_WALLET_VERSION VERSION_GREATER "2.0.0" )
 
@@ -65,13 +76,29 @@ else()
 
 			message( STATUS "---------------------------------------------------------------------------" )
 
-			ADD_SUBDIRECTORY( lxqt_wallet )
-			include_directories( ${PROJECT_SOURCE_DIR}/lxqt_wallet/frontend )
+			ADD_SUBDIRECTORY( src/3rdParty/lxqt_wallet )
+			include_directories( src/3rdParty/lxqt_wallet/frontend )
 		endif()
 	endif()
 endif()
 
 include_directories( ${CMAKE_BINARY_DIR} )
+
+if( MCHUNGU_NETWORK_FOUND )
+
+	message( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "mhogomchungu_network library will be provided by an external library" )
+	message( STATUS "---------------------------------------------------------------------------" )
+
+	include_directories( "${MCHUNGU_NETWORK_INCLUDEDIR}" )
+	link_directories( "${MCHUNGU_NETWORK_LIBDIR}" )
+else()
+	message( STATUS "---------------------------------------------------------------------------" )
+	message( STATUS "mhogomchungu_network library will be provided by an internal library" )
+	message( STATUS "---------------------------------------------------------------------------" )
+	ADD_SUBDIRECTORY( src/3rdParty/NetworkAccessManager )
+	include_directories( src/3rdParty/NetworkAccessManager )
+endif()
 
 add_definitions( -std=c++14 -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
 set( CMAKE_CXX_STANDARD 14 )
@@ -102,11 +129,11 @@ install( FILES translations.qm/german_DE.qm  DESTINATION "${DATA_INSTALL_DIR}/qC
 install( FILES translations.qm/spanish_ES.qm DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
 install( FILES translations.qm/french_FR.qm  DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/translations.qm/" )
 
-install( FILES lxqt_wallet/translations.qm/german_DE.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
-install( FILES lxqt_wallet/translations.qm/greek_GR.qm    DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
-install( FILES lxqt_wallet/translations.qm/dutch_NL.qm    DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
-install( FILES lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
-install( FILES lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
+install( FILES src/3rdParty/lxqt_wallet/translations.qm/german_DE.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
+install( FILES src/3rdParty/lxqt_wallet/translations.qm/greek_GR.qm    DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
+install( FILES src/3rdParty/lxqt_wallet/translations.qm/dutch_NL.qm    DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
+install( FILES src/3rdParty/lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
+install( FILES src/3rdParty/lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
 install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/kde4/apps/qCheckGMail/" )
@@ -124,7 +151,6 @@ set( UI_FILES 	src/gmailauthorization.ui
 )
 
 set( MOC_FILES	src/gmailauthorization.h
-		src/networkAccessManager.hpp
 		src/qcheckgmail.h
 		src/walletmanager.h
 		src/addaccount.h
@@ -175,7 +201,7 @@ if( KF5 )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons mhogomchungu_network )
 else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
@@ -189,7 +215,7 @@ else()
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network mhogomchungu_network )
 endif()
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )

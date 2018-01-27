@@ -19,7 +19,7 @@
 
 #include "qcheckgmail.h"
 
-#include "3rdParty/json.hpp"
+#include "json.h"
 
 #include <string.h>
 #include <utility>
@@ -132,25 +132,9 @@ void qCheckGMail::run()
 	this->changeIcon( m_errorIcon ) ;
 	this->setTrayIconToVisible( true ) ;
 
-        m_timeOut = [ this ](){
+	connect( &m_timer,&QTimer::timeout,this,[ this ](){ this->checkMail() ; },Qt::QueuedConnection ) ;
 
-                auto e = new QTimer( this ) ;
-
-		connect( e,SIGNAL( timeout() ),this,SLOT( timerExpired() ),Qt::QueuedConnection ) ;
-
-                return e ;
-        }() ;
-
-        m_timer = [ this ](){
-
-                auto e = new QTimer( this ) ;
-
-		connect( e,SIGNAL( timeout() ),this,SLOT( checkMail() ),Qt::QueuedConnection ) ;
-
-                e->start( m_interval ) ;
-
-                return e ;
-        }() ;
+	m_timer.start( m_interval ) ;
 
 	this->setLocalLanguage() ;
 	this->addActionsToMenu() ;
@@ -223,23 +207,6 @@ void qCheckGMail::noInternet( const QString& e )
 
 	this->changeIcon( m_errorIcon ) ;
 	this->doneCheckingMail() ;
-}
-
-void qCheckGMail::timerExpired()
-{
-	m_timeOut->stop() ;
-
-	m_manager.cancel( m_networkReply ) ;
-
-        this->failedToCheckForNewEmail() ;
-
-        this->doneCheckingMail() ;
-
-        /*
-	 * network time out occured,retry
-	 */
-
-        this->checkMail() ;
 }
 
 QString qCheckGMail::displayName()
@@ -642,8 +609,6 @@ void qCheckGMail::pauseCheckingMail( bool pauseAction )
 
 	if( pauseAction ){
 
-		m_timeOut->stop() ;
-
 		this->stopTimer() ;
 	}else{
 		this->startTimer() ;
@@ -793,7 +758,7 @@ static QString _parseJSON( const QByteArray& json,const char * property )
 
 void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
-	m_manager.post( m_networkRequest,[ & ](){
+	m_manager.post( -1,m_networkRequest,[ & ](){
 
                 auto id     = "client_id="     + m_clientID ;
                 auto secret = "client_secret=" + m_clientSecret ;
@@ -820,7 +785,7 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 {
         return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
 
-		m_manager.post( m_networkRequest,[ & ](){
+		m_manager.post( -1,m_networkRequest,[ & ](){
 
                          auto id     = "client_id="     + m_clientID ;
                          auto secret = "client_secret=" + m_clientSecret ;
@@ -839,7 +804,7 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-	m_networkReply = m_manager.get( request,[ this ]( QNetworkReply& e ){
+	m_manager.get( m_networkTimeOut,request,[ this ]( QNetworkReply& e ){
 
 		auto content = e.readAll() ;
 
@@ -854,8 +819,6 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 				qDebug() << e.error() << "\n\n" ;
 			}
 		}
-
-                m_timeOut->stop() ;
 
                 auto _report = [ & ]( bool e ){
 
@@ -878,9 +841,19 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
                                 _report( false ) ;
                         }
                 }
-	} ) ;
 
-        m_timeOut->start( m_networkTimeOut ) ;
+	},[ this ](){
+
+		this->failedToCheckForNewEmail() ;
+
+		this->doneCheckingMail() ;
+
+		/*
+		 * network time out occured,retry
+		 */
+
+		this->checkMail() ;
+	} ) ;
 }
 
 void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
@@ -1062,8 +1035,8 @@ void qCheckGMail::startTimer()
 
                         if( !ac.at( i )->isChecked() ){
 
-				m_timer->stop() ;
-				m_timer->start( m_interval ) ;
+				m_timer.stop() ;
+				m_timer.start( m_interval ) ;
 			}
 
 			break ;
@@ -1073,7 +1046,7 @@ void qCheckGMail::startTimer()
 
 void qCheckGMail::stopTimer()
 {
-	m_timer->stop() ;
+	m_timer.stop() ;
 }
 
 int qCheckGMail::instanceAlreadyRunning()
