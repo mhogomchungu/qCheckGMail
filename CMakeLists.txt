@@ -30,6 +30,7 @@ INCLUDE(GNUInstallDirs)
 set( QT5 "true" )
 
 pkg_check_modules( MCHUNGU_NETWORK mhogomchungu_network )
+pkg_check_modules( MCHUNGU_TASK mhogomchungu_task )
 
 find_file( JSON_HEADER_PATH "nlohmann/json.hpp" )
 
