@@ -24,6 +24,23 @@
 #include <string.h>
 #include <utility>
 
+#include <iostream>
+
+static void _debug( const char * s )
+{
+	std::cout << s << std::endl ;
+}
+
+static void _debug( const QByteArray& s )
+{
+	_debug( s.constData() ) ;
+}
+
+static void _debug( const QString& s )
+{
+	_debug( s.toLatin1() ) ;
+}
+
 qCheckGMail::qCheckGMail( const QString& profile ) :
 	m_profile( profile ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) )
@@ -720,7 +737,7 @@ void qCheckGMail::checkMail()
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
                 }
 	}else{
-		qDebug() << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) ;
+		_debug( tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) ) ;
 		this->getAccountsInfo() ;
 	}
 }
@@ -810,7 +827,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 		if( m_enableDebug ){
 
-			qDebug() << content << "\n" ;
+			_debug( content + "\n" ) ;
 
 			if( e.error() != QNetworkReply::NetworkError::NoError ){
 
@@ -1109,7 +1126,7 @@ int qCheckGMail::autoStartDisabled()
 
                 qapp.installTranslator( &translator ) ;
 
-		qDebug() << tr( "Autostart Disabled,Exiting This One" ) ;
+		_debug( tr( "Autostart Disabled,Exiting This One" ) ) ;
 	}
 
 	return 1 ;
