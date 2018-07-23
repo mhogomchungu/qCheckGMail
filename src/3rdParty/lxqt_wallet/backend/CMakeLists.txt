@@ -6,6 +6,8 @@ find_file( GCRYPT_INCLUDE_FILE gcrypt.h )
 
 find_library( GCRYPT_LIBRARY gcrypt )
 
+add_definitions( -Wall -pedantic -Wformat-truncation=0 )
+
 if( NOT GCRYPT_INCLUDE_FILE )
 	MESSAGE( FATAL_ERROR "could not find gcrypt header file" )
 else()
@@ -19,6 +21,6 @@ else()
 endif()
 
 add_library( lxqt-wallet-backend STATIC lxqtwallet.c )
-set_target_properties( lxqt-wallet-backend PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wall -s -fPIC -pedantic " )
+set_target_properties( lxqt-wallet-backend PROPERTIES COMPILE_FLAGS "-s -fPIC" )
 set_target_properties( lxqt-wallet-backend PROPERTIES LINK_FLAGS "-pie" )
 TARGET_LINK_LIBRARIES( lxqt-wallet-backend "${GCRYPT_LIBRARY}" )
