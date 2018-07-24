@@ -6,8 +6,6 @@ find_file( GCRYPT_INCLUDE_FILE gcrypt.h )
 
 find_library( GCRYPT_LIBRARY gcrypt )
 
-add_definitions( -Wall -pedantic -Wformat-truncation=0 )
-
 if( NOT GCRYPT_INCLUDE_FILE )
 	MESSAGE( FATAL_ERROR "could not find gcrypt header file" )
 else()
@@ -21,6 +19,10 @@ else()
 endif()
 
 add_library( lxqt-wallet-backend STATIC lxqtwallet.c )
-set_target_properties( lxqt-wallet-backend PROPERTIES COMPILE_FLAGS "-s -fPIC" )
+if( CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0 )
+	set_target_properties( lxqt-wallet-backend PROPERTIES COMPILE_FLAGS "-s -Wall -pedantic -Wformat-truncation=0 -fPIC" )
+else()
+	set_target_properties( lxqt-wallet-backend PROPERTIES COMPILE_FLAGS "-s -Wall -pedantic -fPIC" )
+endif()
 set_target_properties( lxqt-wallet-backend PROPERTIES LINK_FLAGS "-pie" )
 TARGET_LINK_LIBRARIES( lxqt-wallet-backend "${GCRYPT_LIBRARY}" )
