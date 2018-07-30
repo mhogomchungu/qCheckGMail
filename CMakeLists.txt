@@ -11,7 +11,7 @@ if( "${DATA_INSTALL_DIR}" STREQUAL "" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
 endif()
 
-add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE -Wformat-truncation=3 )
+add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
 
 INCLUDE(CMakeDependentOption)
 INCLUDE(FindPkgConfig)
