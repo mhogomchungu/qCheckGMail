@@ -204,6 +204,7 @@ if( KF5 )
 	find_package( KF5Notifications REQUIRED)
 	find_package( KF5CoreAddons )
 	find_package( KF5I18n NO_MODULE )
+	find_package( Qt5DBus REQUIRED )
 
 	message( STATUS "\n------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
