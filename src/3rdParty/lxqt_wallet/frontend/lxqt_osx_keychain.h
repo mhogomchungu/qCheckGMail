@@ -1,5 +1,5 @@
 /*
- * copyright: 2013-2015
+ * copyright: 2017
  * name : Francis Banyikwa
  * email: mhogomchungu@gmail.com
  *
@@ -28,8 +28,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef LXQT_LIBSECRET_H
-#define LXQT_LIBSECRET_H
+#ifndef LXQT_OSX_KEYCHAIN_H
+#define LXQT_OSX_KEYCHAIN_H
 
 #include "lxqt_wallet.h"
 
@@ -48,11 +48,11 @@ namespace LXQt
 namespace Wallet
 {
 
-class libsecret : public LXQt::Wallet::Wallet
+class osxKeyChain : public LXQt::Wallet::Wallet
 {
 public:
-    libsecret();
-    ~libsecret();
+    osxKeyChain();
+    ~osxKeyChain();
 
     void open(const QString &walletName,
               const QString &applicationName,
@@ -95,28 +95,12 @@ public:
     LXQt::Wallet::BackEnd backEnd(void);
     QObject *qObject(void);
 private:
-    void walletOpened(bool);
-
-    QByteArray m_byteArrayWalletName;
-    QByteArray m_byteArrayApplicationName;
-    QByteArray m_byteArraySchemaName;
-
-    const char *m_walletName;
-    const char *m_applicationName;
-
-    QString m_password;
-    QWidget *m_interfaceObject = nullptr;
-
-    std::unique_ptr<void, void( *)(void *)> m_schema;
-    std::unique_ptr<void, void( *)(void *)> m_schema_1;
-
-    bool m_opened;
-
-    std::function< void(bool) > m_walletOpened = [](bool e) { Q_UNUSED(e); };
+    bool m_opened = false ;
+    QByteArray m_walletName ;
 };
 
 }
 
 }
 
-#endif // LXQT_LIBSECRET_H
+#endif // LXQT_OSX_KEYCHAIN_H

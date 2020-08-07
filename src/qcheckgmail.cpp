@@ -43,7 +43,8 @@ static void _debug( const QString& s )
 
 qCheckGMail::qCheckGMail( const QString& profile ) :
 	m_profile( profile ),
-	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) )
+	//m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) )
+	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/v2/auth" ) )
 {
 	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
@@ -140,7 +141,7 @@ void qCheckGMail::run()
 				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
 			}
 		}else{
-			QProcess::startDetached( m_defaultApplication ) ;
+			QProcess::startDetached( m_defaultApplication,{} ) ;
 		}
 	} ;
 
@@ -744,7 +745,7 @@ void qCheckGMail::checkMail()
 
 void qCheckGMail::checkMail( const accounts& acc )
 {
-	m_manager.QtNAM().setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
+	//m_manager.QtNAM().setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
 
 	m_badAccessToken = false ;
 	m_currentLabel   = 0 ;
@@ -807,10 +808,12 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
                          auto id     = "client_id="     + m_clientID ;
                          auto secret = "client_secret=" + m_clientSecret ;
                          auto code   = "code="          + authocode ;
+			 auto scope  = "https://www.googleapis.com/auth/gmail.metadata" ;
                          auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
                          auto grant  = "grant_type=authorization_code" ;
+			 auto response_type = "response_type=code" ;
 
-                         return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
+			 return QString( "%1&%2&%3&%4&%5%6%7" ).arg( id,secret,uri,grant,code,scope,response_type ).toLatin1() ;
 
 		 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
 

@@ -219,7 +219,7 @@ void walletmanager::changeWalletPassword()
 
 	m_wallet->changeWalletPassWord( s,"qCheckGMail",[ this ]( bool e ){
 
-		Q_UNUSED( e ) ;
+		Q_UNUSED( e )
 		this->deleteLater() ;
 	} ) ;
 }

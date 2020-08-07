@@ -1,6 +1,10 @@
 
 cmake_minimum_required(VERSION 2.6)
 
+if( WIN32 )
+     cmake_policy(SET CMP0020 NEW)
+endif()
+
 INCLUDE(FindPkgConfig)
 
 #
@@ -12,14 +16,28 @@ set(LIBRARY_VERSION "2.0.0")
 
 add_definitions(-I${PROJECT_BINARY_DIR}/frontend)
 add_definitions(-I${PROJECT_BINARY_DIR}/backend)
+add_definitions(-I${PROJECT_BINARY_DIR}/src/lxqt_wallet/frontend)
+add_definitions(-I${PROJECT_BINARY_DIR}/src/lxqt_wallet/backend)
 add_definitions(-I${PROJECT_BINARY_DIR})
 
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
+if( APPLE )
+	file( WRITE ${PROJECT_BINARY_DIR}/osx_keychain.h "#define OSX_KEYCHAIN 1" )
+else()
+	file( WRITE ${PROJECT_BINARY_DIR}/osx_keychain.h "#define OSX_KEYCHAIN 0" )
+endif()
+
+file( WRITE ${PROJECT_BINARY_DIR}/translations_path.h
+"
+#define TRANSLATIONS_PATH \"${CMAKE_INSTALL_PREFIX}/share/lxqt/translations/lxqt-wallet/\"
+")
+
 if(QT5)
 	find_package(Qt5Widgets REQUIRED)
 	find_package(Qt5Core REQUIRED)
+	find_package(Qt5DBus REQUIRED)
 
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS})
@@ -41,6 +59,10 @@ else()
 	INCLUDE(${QT_USE_FILE})
 endif()
 
+if( APPLE )
+	SET(NOSECRETSUPPORT "true")
+endif()
+
 if(NOSECRETSUPPORT)
 	SET(SECRET_SUPPORT "false")
 	file(WRITE  ${PROJECT_BINARY_DIR}/storage_manager.h "\n#define HAS_SECRET_SUPPORT 0\n")
@@ -57,7 +79,7 @@ else()
 	endif()
 endif()
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 
 if(NOKDESUPPORT)
 	SET(KDE_SUPPORT "false")
@@ -67,6 +89,8 @@ else()
 	if(KF5)
 		find_package(Qt5Widgets REQUIRED)
 		find_package(Qt5Core REQUIRED)
+
+		cmake_policy(SET CMP0012 NEW)
 
 		find_package(KF5Wallet QUIET)
 		find_package(KF5Notifications QUIET)
@@ -171,10 +195,18 @@ set(MOC_FILES_1 changepassworddialog.h password_dialog.h lxqt_kwallet.h task.h)
 set(MOC_FILES_2 changepassworddialog.h password_dialog.h lxqt_kwallet.h task.h)
 set(MOC_FILES_3 changepassworddialog.h password_dialog.h task.h)
 
-set(SRC 	changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp)
-set(SRC_1 	changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_kwallet.cpp)
-set(SRC_2 	changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_kwallet.cpp lxqt_libsecret.cpp)
-set(SRC_3 	changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_libsecret.cpp)
+if( WIN32 )
+	set(SRC 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_wallet.cpp)
+	set(SRC_1 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_wallet.cpp lxqt_kwallet.cpp)
+	set(SRC_2 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_wallet.cpp lxqt_kwallet.cpp lxqt_libsecret.cpp)
+	set(SRC_3 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_wallet.cpp lxqt_libsecret.cpp)
+else()
+	set(SRC 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp)
+	set(SRC_1 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_kwallet.cpp)
+	set(SRC_2 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_kwallet.cpp lxqt_libsecret.cpp)
+	set(SRC_3 	lxqt_windows_dpapi.cpp lxqt_osx_keychain.cpp changepassworddialog.cpp password_dialog.cpp lxqt_internal_wallet.cpp lxqt_wallet.cpp lxqt_libsecret.cpp)
+
+endif()
 
 if(BUILD_SHARED)
 	set( LIBRARY_TYPE "SHARED")
@@ -276,9 +308,27 @@ endif()
 
 endif()
 
-set_target_properties(lxqt-wallet PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIC -pedantic ")
+if( WIN32 )
+    set_target_properties(lxqt-wallet PROPERTIES COMPILE_FLAGS "-Wextra -Wall -s -pedantic ")
+else()
+    set_target_properties(lxqt-wallet PROPERTIES COMPILE_FLAGS "-Wextra -Wall -s -fPIC -pedantic ")
+endif()
+
 set_target_properties(lxqt-wallet PROPERTIES SOVERSION "${LIBRARY_VERSION}")
-TARGET_LINK_LIBRARIES(lxqt-wallet "${link_libraries}" lxqt-wallet-backend)
+
+if( WIN32 )
+
+	TARGET_LINK_LIBRARIES(lxqt-wallet -lcrypt32 -lbcrypt "${link_libraries}" lxqt-wallet-backend)
+else()
+	TARGET_LINK_LIBRARIES(lxqt-wallet "${link_libraries}" lxqt-wallet-backend)
+endif()
+
+
+if( APPLE )
+	find_library(COREFOUNDATION_LIBRARY CoreFoundation REQUIRED)
+	find_library(SECURITY_LIBRARY Security REQUIRED)
+	TARGET_LINK_LIBRARIES(lxqt-wallet ${COREFOUNDATION_LIBRARY} ${SECURITY_LIBRARY})
+endif()
 
 if(BUILD_SHARED)
 	install(TARGETS lxqt-wallet RUNTIME LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")

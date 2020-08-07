@@ -26,7 +26,7 @@ static QPixmap _icon( const QString& name,int count )
 {
 	QIcon icon( ":/" + name ) ;
 	QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-	int size = pixmap.height() * 0.01 * configurationoptionsdialog::fontSize() ;
+	int size = pixmap.height() * static_cast< int >( 0.01 * configurationoptionsdialog::fontSize() ) ;
 	QPainter paint( &pixmap ) ;
 	QFont font( configurationoptionsdialog::fontFamily() ) ;
 	QFontMetrics fm( font ) ;
@@ -35,7 +35,9 @@ static QPixmap _icon( const QString& name,int count )
 	paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
 	paint.setRenderHint( QPainter::Antialiasing ) ;
 
-	int width = pixmap.width() * 0.8 ;
+	int width = static_cast< int >( pixmap.width() * 0.8 ) ;
+
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
 
 	if( fm.width( number ) > width ){
 
@@ -45,7 +47,16 @@ static QPixmap _icon( const QString& name,int count )
 			font.setPointSize( size ) ;
 		}
 	}
+#else
+	if( fm.horizontalAdvance( number ) > width ){
 
+		while( fm.horizontalAdvance( number ) > width && size > 0 ){
+
+			size = size - 1 ;
+			font.setPointSize( size ) ;
+		}
+	}
+#endif
 	font.setPixelSize( size ) ;
 	font.setBold( true ) ;
 	paint.setFont( font ) ;
@@ -256,7 +267,7 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
-	QProcess::startDetached( configurationoptionsdialog::audioPlayer() + " " + AUDIO_NOTIFY_FILE ) ;
+	QProcess::startDetached( configurationoptionsdialog::audioPlayer(),{ AUDIO_NOTIFY_FILE } ) ;
 }
 
 bool statusicon::enableDebug()

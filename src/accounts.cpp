@@ -33,8 +33,9 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 
                 if( index == -1 ){
 
-                        return "https://mail.google.com/mail/feed/atom/" ;
-                }else{
+			return "https://mail.google.com/mail/feed/atom/" ;
+			//return "https://www.googleapis.com/auth/gmail.metadata" ;
+		}else{
                         index++ ;
 
                         auto domain = QString( m_entry.accName.mid( index ) ) ;
@@ -47,10 +48,18 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 
         if( !m_entry.accLabels.isEmpty() ){
 
-                for( const auto& it : m_entry.accLabels.split( ",",QString::SkipEmptyParts ) ){
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+		for( const auto& it : m_entry.accLabels.split( ",",QString::SkipEmptyParts ) ){
 
-                        m_labelUrls.append( baseLabel + it ) ;
+			m_labelUrls.append( baseLabel + it ) ;
 		}
+#else
+		for( const auto& it : m_entry.accLabels.split( ",",Qt::SkipEmptyParts ) ){
+
+			m_labelUrls.append( baseLabel + it ) ;
+		}
+#endif
+
 	}
 }
 

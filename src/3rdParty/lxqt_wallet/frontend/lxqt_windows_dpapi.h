@@ -1,5 +1,5 @@
 /*
- * copyright: 2013-2015
+ * copyright: 2020
  * name : Francis Banyikwa
  * email: mhogomchungu@gmail.com
  *
@@ -28,16 +28,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef LXQT_LIBSECRET_H
-#define LXQT_LIBSECRET_H
+#ifndef LXQT_WINDOWS_H
+#define LXQT_WINDOWS_H
 
 #include "lxqt_wallet.h"
+#include "task.h"
 
 #include <QString>
 #include <QByteArray>
-#include <QDebug>
 #include <QEventLoop>
-
+#include <QSettings>
+#include <functional>
 #include <memory>
 
 class QWidget;
@@ -48,23 +49,23 @@ namespace LXQt
 namespace Wallet
 {
 
-class libsecret : public LXQt::Wallet::Wallet
+class windows_dpapi : public LXQt::Wallet::Wallet
 {
 public:
-    libsecret();
-    ~libsecret();
+    windows_dpapi();
+    ~windows_dpapi();
 
     void open(const QString &walletName,
               const QString &applicationName,
               std::function< void(bool) >,
               QWidget * = nullptr,
               const QString &password = QString(),
-              const QString &displayApplicationName = QString());
+	      const QString &displayApplicationName = QString());
 
     bool open(const QString &walletName,
-	      const QString &applicationName,
-	      QWidget * = nullptr,
-	      const QString &password = QString(),
+              const QString &applicationName,
+              QWidget * = nullptr,
+              const QString &password = QString(),
 	      const QString &displayApplicationName = QString());
 
     bool addKey(const QString &key, const QByteArray &value);
@@ -85,38 +86,50 @@ public:
     void closeWallet(bool);
     void changeWalletPassWord(const QString &walletName,
                               const QString &applicationName = QString(),
-                              std::function< void(bool) > = [](bool e) { Q_UNUSED(e); });
+    std::function< void(bool) > = [](bool e) { Q_UNUSED(e) });
     void setImage(const QIcon &);
 
-    int walletSize(void) ;
+    int walletSize(void);
 
     void log(std::function<void(QString)>);
 
     LXQt::Wallet::BackEnd backEnd(void);
     QObject *qObject(void);
 private:
-    void walletOpened(bool);
+    QByteArray getData();
 
-    QByteArray m_byteArrayWalletName;
-    QByteArray m_byteArrayApplicationName;
-    QByteArray m_byteArraySchemaName;
+    struct result
+    {
+	bool success;
+	QByteArray data;
+    };
 
-    const char *m_walletName;
-    const char *m_applicationName;
+    LXQt::Wallet::Task::future<result> &encrypt(QByteArray);
+    LXQt::Wallet::Task::future<result> &decrypt(QByteArray);
 
+    void setEntropy(const QString &);
+    void store();
+    void createWallet(void);
+    void openWallet(QByteArray);
+    void openWalletWithPassword(QString, const QByteArray &);
+    void deserializeData(const QByteArray &);
+    QByteArray serializeData();
+    QString m_walletName;
+    QString m_applicationName;
+    QString m_displayApplicationName;
     QString m_password;
-    QWidget *m_interfaceObject = nullptr;
-
-    std::unique_ptr<void, void( *)(void *)> m_schema;
-    std::unique_ptr<void, void( *)(void *)> m_schema_1;
-
-    bool m_opened;
-
-    std::function< void(bool) > m_walletOpened = [](bool e) { Q_UNUSED(e); };
+    QByteArray m_entropy;
+    bool m_opened = false;
+    std::function< void(bool) > m_correctPassword = [](bool e) { Q_UNUSED(e) };
+    std::function< void(bool) > m_walletOpened = [](bool e) { Q_UNUSED(e) };
+    std::function<void(QString)> m_log ;
+    QVector<std::pair<QString,QByteArray>> m_keys;
+    std::unique_ptr<QSettings> m_settings;
+    const QString m_settingsName = "LXQtWindowsDPAPI_Data";
 };
 
 }
 
 }
 
-#endif // LXQT_LIBSECRET_H
+#endif

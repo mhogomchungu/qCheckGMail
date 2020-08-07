@@ -205,20 +205,20 @@ LXQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
 
 			if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::libsecret ) ){
 
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ) ;
+				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ).release() ;
 			}else{
 				_settings.setValue( opt,QString( "internal wallet" ) ) ;
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ) ;
+				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
 			}
 
 		}else if( value.contains( "kde" ) ){
 
 			if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::kwallet ) ){
 
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ) ;
+				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ).release() ;
 			}else{
 				_settings.setValue( opt,"internal wallet" ) ;
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ) ;
+				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
 			}
 		}else{
 			QString wallet( "internal wallet" ) ;
@@ -228,25 +228,30 @@ LXQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
                                 _settings.setValue( opt,wallet ) ;
 			}
 
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ) ;
+			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
 		}
 	}else{
 		if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::kwallet ) ){
 
                         _settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ) ;
+			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ).release() ;
 
 		}else if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::libsecret ) ){
 
                         _settings.setValue( opt,QString( "gnome wallet" ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ) ;
+			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ).release() ;
 		}else{
 			_settings.setValue( opt,QString( "internal wallet" ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ) ;
+			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
 		}
 	}
 
-	_settings.sync() ;
+	_settings.sync() ;	
+
+	w->log( []( const QString& e ){
+
+		Q_UNUSED( e )
+	} ) ;
 
         return w ;
 }
@@ -402,7 +407,11 @@ QStringList configurationoptionsdialog::profileEmailList()
 
                 auto z = _settings.value( _profile ).toString() ;
 
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
                 return z.split( ",",QString::SkipEmptyParts ) ;
+#else
+		return z.split( ",",Qt::SkipEmptyParts ) ;
+#endif
 	}else{
 		return QStringList() ;
 	}
