@@ -155,7 +155,6 @@ walletmanager::walletmanager( const QString& icon,
 walletmanager::~walletmanager()
 {
         m_walletClosed() ;
-	m_wallet->deleteLater() ;
 
         delete m_ui ;
 }
@@ -251,7 +250,7 @@ void walletmanager::readAccountInfo()
 {
 	m_accounts.clear() ;
 
-	auto e = account( m_wallet ).readAll() ;
+	auto e = account( m_wallet.get() ).readAll() ;
 
 	for( const auto& it : e ){
 
@@ -382,7 +381,7 @@ void walletmanager::pushButtonAdd()
 
                 Task::run( [ this ](){
 
-			account( m_wallet,m_accEntry ).add() ;
+			account( m_wallet.get(),m_accEntry ).add() ;
 
                 } ).then( [ this ](){
 
@@ -443,7 +442,7 @@ void walletmanager::deleteAccount()
 
                         Task::run( [ & ](){
 
-				account( accName,m_wallet ).remove() ;
+				account( accName,m_wallet.get() ).remove() ;
 
 			} ).then( [ this ](){
 
@@ -500,7 +499,7 @@ void walletmanager::editAccount()
 
                 Task::run( [ this ](){
 
-			account( m_wallet,m_accEntry ).replace() ;
+			account( m_wallet.get(),m_accEntry ).replace() ;
 
                 } ).then( [ this ](){
 

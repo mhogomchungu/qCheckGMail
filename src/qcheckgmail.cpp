@@ -286,10 +286,10 @@ static QString _account_status( int current_account,const QString& displayName,c
 		d_name.truncate( 29 ) ;
 		d_name += "..." ;
 	}else{
-		while( d_name.size() < 32 ){
+		//while( d_name.size() < 32 ){
 
-			d_name += " " ;
-		}
+		//	d_name += " " ;
+		//}
 	}
 
 	QString e = [ & ](){

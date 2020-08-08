@@ -62,7 +62,7 @@ else()
 		ADD_SUBDIRECTORY( src/3rdParty/lxqt_wallet )
 		include_directories( src/3rdParty/lxqt_wallet/frontend )
 	else()
-	        if( LXQT_WALLET_VERSION VERSION_GREATER "3.0.0" )
+	        if( LXQT_WALLET_VERSION VERSION_GREATER "3.2.0" )
 
 			include_directories( ${LXQT_WALLET_INCLUDEDIR} )
 			link_directories( ${LXQT_WALLET_LIBDIR} )
@@ -73,7 +73,9 @@ else()
 		else()
 			message( STATUS "---------------------------------------------------------------------------" )
 			message( STATUS "lxqt wallet support will be provided by an internal library" )
-			message( STATUS "because external library is too old(<= 3.0.0)" )
+			message( STATUS "because external library is too old(<= 3.2.0)" )
+			message( STATUS "\nPlease install a more receant version from: https://github.com/lxqt/lxqt_wallet
+			message" )
 
 			message( STATUS "---------------------------------------------------------------------------" )
 

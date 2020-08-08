@@ -41,6 +41,8 @@ namespace Ui {
 class configurationoptionsdialog;
 }
 
+using unique_wallet_ptr = std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > ;
+
 class configurationoptionsdialog : public QDialog
 {
 	Q_OBJECT
@@ -60,7 +62,8 @@ public:
 	static int getTimeFromConfigFile( void ) ;
 	static QString walletName( LXQt::Wallet::BackEnd ) ;
 	static QString logFile( void ) ;
-	static LXQt::Wallet::Wallet * secureStorageSystem( void ) ;
+
+	static unique_wallet_ptr secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
         static QString clientID( void ) ;
         static QString clientSecret( void ) ;

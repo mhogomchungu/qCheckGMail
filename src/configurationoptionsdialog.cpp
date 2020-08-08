@@ -25,13 +25,12 @@
 #define PROGRAM_NAME "qCheckGMail"
 #define ORGANIZATION_NAME "qCheckGMail"
 
-#if USE_KDE_STATUS_NOTIFIER
-	#if KF5
-		#include <QStandardPaths>
-	#else
-		#include <kstandarddirs.h>
-	#endif
-#endif
+#include <QStandardPaths>
+
+static QString _configPath( void )
+{
+	return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
+}
 
 #define DEFAULT_KDE_WALLET     "default kde wallet"
 #define qCheckGMail_KDE_wALLET "qCheckGMail kde wallet"
@@ -47,28 +46,6 @@ static QString _getOption( const char * opt )
 		return QString( "%1/%2").arg( _profile,opt ) ;
 	}
 }
-
-#if USE_KDE_STATUS_NOTIFIER
-	#if KF5
-		#include <QStandardPaths>
-		static QString _configPath( void )
-		{
-			return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
-		}
-	#else
-		#include <kstandarddirs.h>
-		static QString _configPath( void )
-		{
-			KStandardDirs k ;
-			return k.localxdgconfdir() ;
-		}
-	#endif
-#else
-	static QString _configPath( void )
-	{
-		  return QDir::homePath() + "/.config" ;
-	}
-#endif
 
 configurationoptionsdialog::configurationoptionsdialog( QObject * parent ) :
         m_ui( new Ui::configurationoptionsdialog )
@@ -155,6 +132,17 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 	return false ;
 }
 
+static unique_wallet_ptr _get_bk( LXQt::Wallet::BackEnd bk )
+{
+	auto m = LXQt::Wallet::getWalletBackend( bk ) ;
+
+	auto w = unique_wallet_ptr( m.release(),[]( QObject * e ){ e->deleteLater() ; } ) ;
+
+	w->log( []( const QString& e ){ Q_UNUSED( e ) } ) ;
+
+	return w ;
+}
+
 QString configurationoptionsdialog::walletName( LXQt::Wallet::BackEnd backEnd )
 {
 	if( backEnd == LXQt::Wallet::BackEnd::kwallet ){
@@ -165,8 +153,7 @@ QString configurationoptionsdialog::walletName( LXQt::Wallet::BackEnd backEnd )
 
                         return "qCheckGMail" ;
 		}else{
-
-			std::unique_ptr< LXQt::Wallet::Wallet > w( LXQt::Wallet::getWalletBackend( backEnd ) ) ;
+			unique_wallet_ptr w( _get_bk( backEnd ) ) ;
 
                         if( w ){
 
@@ -192,68 +179,60 @@ QString configurationoptionsdialog::logFile()
 	return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME,PROGRAM_NAME ) ;
 }
 
-LXQt::Wallet::Wallet * configurationoptionsdialog::secureStorageSystem()
+unique_wallet_ptr configurationoptionsdialog::secureStorageSystem()
 {
-        auto opt = _getOption( "storageSystem" ) ;
-	LXQt::Wallet::Wallet * w ;
+	using bk = LXQt::Wallet::BackEnd ;
+
+	auto opt = _getOption( "storageSystem" ) ;
 
 	if( _settings.contains( opt ) ){
 
-                auto value = _settings.value( opt ).toString() ;
+		auto value = _settings.value( opt ).toString() ;
 
 		if( value == "gnome wallet" ){
 
-			if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::libsecret ) ){
+			if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
 
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ).release() ;
+				return _get_bk( bk::libsecret ) ;
 			}else{
 				_settings.setValue( opt,QString( "internal wallet" ) ) ;
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
+				return _get_bk( bk::internal ) ;
 			}
 
 		}else if( value.contains( "kde" ) ){
 
-			if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::kwallet ) ){
+			if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
 
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ).release() ;
+				return _get_bk( bk::kwallet ) ;
 			}else{
 				_settings.setValue( opt,"internal wallet" ) ;
-				w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
+				return _get_bk( bk::internal ) ;
 			}
 		}else{
 			QString wallet( "internal wallet" ) ;
 
-                        if( value != wallet ){
+			if( value != wallet ){
 
-                                _settings.setValue( opt,wallet ) ;
+				_settings.setValue( opt,wallet ) ;
 			}
 
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
+			return _get_bk( bk::internal ) ;
 		}
 	}else{
-		if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::kwallet ) ){
+		if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
 
-                        _settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::kwallet ).release() ;
+			_settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
+			return _get_bk( bk::kwallet ) ;
 
-		}else if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::libsecret ) ){
+		}else if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
 
-                        _settings.setValue( opt,QString( "gnome wallet" ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::libsecret ).release() ;
+			_settings.setValue( opt,QString( "gnome wallet" ) ) ;
+			return _get_bk( bk::libsecret ) ;
 		}else{
 			_settings.setValue( opt,QString( "internal wallet" ) ) ;
-			w = LXQt::Wallet::getWalletBackend( LXQt::Wallet::BackEnd::internal ).release() ;
+			return _get_bk( bk::internal ) ;
 		}
 	}
-
-	_settings.sync() ;	
-
-	w->log( []( const QString& e ){
-
-		Q_UNUSED( e )
-	} ) ;
-
-        return w ;
 }
 
 bool configurationoptionsdialog::audioNotify()

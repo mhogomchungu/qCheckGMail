@@ -117,7 +117,7 @@ private:
 	Ui::walletmanager * m_ui = nullptr ;
 
         QVector< accounts > m_accounts ;
-	LXQt::Wallet::Wallet * m_wallet = nullptr ;
+	unique_wallet_ptr m_wallet = { nullptr,[]( QObject * e ){ Q_UNUSED( e ) } } ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;

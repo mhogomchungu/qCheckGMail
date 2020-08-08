@@ -258,8 +258,8 @@ void statusicon::setToolTip( const QString& iconName,const QString& title,const 
 #else
 	auto r = QString( "%1\n%2" ).arg( title,subTitle ) ;
 	r.replace( "<table>","" ) ;
-	r.replace( "<b>","\n" ) ;
-	r.replace( "<br>","" ) ;
+	r.replace( "<b>","" ) ;
+	r.replace( "<br>","\n" ) ;
 	r.replace( "</table>","" ) ;
 	r.replace( "</b>","" ) ;
 	m_trayIcon.setToolTip( r ) ;
