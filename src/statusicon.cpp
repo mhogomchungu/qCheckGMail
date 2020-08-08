@@ -144,8 +144,12 @@ QAction * statusicon::getAction( const QString& title )
 
 void statusicon::newEmailNotify()
 {
-	QByteArray r( "qCheckGMail" ) ;
-	KNotification::event( "qCheckGMail-NewMail","",QPixmap(),0,0,r ) ;
+	KNotification::event( "qCheckGMail-NewMail",
+			      "",
+			      QPixmap(),
+			      nullptr,
+			      KNotification::CloseOnTimeout,
+			      "qCheckGMail" ) ;
 }
 
 bool statusicon::enableDebug()
@@ -160,14 +164,14 @@ void statusicon::quit()
 
 void statusicon::activateRequested( bool x,const QPoint& y )
 {
-	Q_UNUSED( x ) ;
-	Q_UNUSED( y ) ;
+	Q_UNUSED( x )
+	Q_UNUSED( y )
 	m_clickActions.onLeftClick() ;
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 {
-	Q_UNUSED( reason ) ;
+	Q_UNUSED( reason )
 }
 
 void statusicon::addQuitAction()
@@ -214,7 +218,7 @@ void statusicon::setAttentionIcon( const QString& name )
 
 void statusicon::setCategory( const statusicon::ItemCategory category )
 {
-	Q_UNUSED( category ) ;
+	Q_UNUSED( category )
 }
 
 void statusicon::quit()
@@ -235,20 +239,31 @@ void statusicon::setIcon( const QString& name,int count )
 
 void statusicon::setOverlayIcon( const QString& name )
 {
-	Q_UNUSED( name ) ;
+	Q_UNUSED( name )
 }
 
 void statusicon::setStatus( const statusicon::ItemStatus status )
 {
-	Q_UNUSED( status ) ;
+	Q_UNUSED( status )
 }
 
 void statusicon::setToolTip( const QString& iconName,const QString& title,const QString& subTitle )
 {
-	Q_UNUSED( iconName ) ;
-	Q_UNUSED( title ) ;
+	Q_UNUSED( iconName )
+	Q_UNUSED( title )
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+
 	auto r = QString( "<table><tr><td><b>%1<br></b></td></tr><tr><td>%2</td></tr></table>" ).arg( title,subTitle ) ;
 	m_trayIcon.setToolTip( r ) ;
+#else
+	auto r = QString( "%1\n%2" ).arg( title,subTitle ) ;
+	r.replace( "<table>","" ) ;
+	r.replace( "<b>","\n" ) ;
+	r.replace( "<br>","" ) ;
+	r.replace( "</table>","" ) ;
+	r.replace( "</b>","" ) ;
+	m_trayIcon.setToolTip( r ) ;
+#endif
 }
 
 void statusicon::addQuitAction()
@@ -291,8 +306,8 @@ QAction * statusicon::getAction( const QString& title )
 
 void statusicon::activateRequested( bool x,const QPoint& y )
 {
-	Q_UNUSED( x ) ;
-	Q_UNUSED( y ) ;
+	Q_UNUSED( x )
+	Q_UNUSED( y )
 }
 
 void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )

@@ -123,8 +123,22 @@ set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
-"\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/KDE-Im-New-Mail.ogg\"\n"
+"\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/new-email-sound.ogg\"\n"
 )
+
+file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc"
+"[Global]
+IconName=qCheckGMail
+Comment=qCheckGMail,a gmail account checker
+Name=qCheckGMail
+
+[Event/qCheckGMail-NewMail]
+Name=found new mail
+Sound=${DATA_INSTALL_DIR}/qCheckGMail/audio/new-email-sound.ogg
+Action=Sound"
+)
+
+install( FILES audio/new-email-sound.ogg     DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio" )
 
 #install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
 #install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
@@ -152,9 +166,8 @@ install( FILES src/3rdParty/lxqt_wallet/translations.qm/dutch_NL.qm    DESTINATI
 install( FILES src/3rdParty/lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 install( FILES src/3rdParty/lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 
-install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
-install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/kde4/apps/qCheckGMail/" )
-install( FILES qCheckGMail.notifyrc DESTINATION "${DATA_INSTALL_DIR}/knotifications5/" )
+install( FILES "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc" DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
+install( FILES "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc" DESTINATION "${DATA_INSTALL_DIR}/knotifications5/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
@@ -190,6 +203,7 @@ set( RESOUCES 	icons/icon.qrc )
 find_package( Qt5Widgets REQUIRED )
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Network REQUIRED )
+find_package(Qt5DBus REQUIRED)
 
 #find_package( ECM REQUIRED NO_MODULE )
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} )
