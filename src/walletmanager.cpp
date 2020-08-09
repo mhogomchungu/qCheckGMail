@@ -216,11 +216,18 @@ void walletmanager::changeWalletPassword()
 
 	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
 
-	m_wallet->changeWalletPassWord( s,"qCheckGMail",[ this ]( bool e ){
+	if( m_wallet->open( s,"qCheckGMail",this ) ){
 
-		Q_UNUSED( e )
+		m_wallet->changeWalletPassWord( s,"qCheckGMail",[ this ]( bool e ){
+
+			Q_UNUSED( e )
+			this->hide() ;
+			this->deleteLater() ;
+		} ) ;
+	}else{
+		this->hide() ;
 		this->deleteLater() ;
-	} ) ;
+	}
 }
 
 const accounts& walletmanager::addEntry( const accounts& acc )

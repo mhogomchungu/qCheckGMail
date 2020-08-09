@@ -64,3 +64,6 @@ version 1.2.9
 -- maintanance release.
    -- Remove KDE4/Qt4/LXQT plugin support.
    -- Fix random crashes
+
+   version 1.3.0
+-- maintanance release. Make it depend on lxqt_wallet version > 3.2.0.

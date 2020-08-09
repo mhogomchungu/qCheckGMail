@@ -267,9 +267,9 @@ void LXQt::Wallet::internalWallet::changeWalletPassWord(const QString &walletNam
 		auto s = _open(old);
 
                 if (s != lxqt_wallet_no_error)
-                {
+		{
 		    return {true, false};
-                }
+		}
             }
 
             auto m = lxqt_wallet_change_wallet_password(m_wallet,
