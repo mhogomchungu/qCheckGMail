@@ -80,6 +80,9 @@ public:
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
 	void setIconClickedActions( const statusicon::clickActions& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
+	QMenu * getMenu( const QString& ) ;
+	QMenu * getOGMenu( void ) ;
+
 	void addAction( QAction * ) ;
 	QList< QAction * > getMenuActions( void ) ;
 	void addQuitAction( void ) ;

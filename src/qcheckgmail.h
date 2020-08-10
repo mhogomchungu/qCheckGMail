@@ -109,6 +109,8 @@ private:
 	void walletNotOPenedError( void ) ;
         void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
+	void openMail( const accounts& acc ) ;
+	void openMail( void ) ;
 	void changeIcon( const QString& icon ) ;
 	void changeIcon( const QString& icon,int ) ;
 	void getAccountsInfo( void ) ;
@@ -160,6 +162,8 @@ private:
 	QMutex m_mutex ;
 
 	QTimer m_timer ;
+
+	QMenu * m_menu ;
 
         statusicon::clickActions m_clickActions ;
 

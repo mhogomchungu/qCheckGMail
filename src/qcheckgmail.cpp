@@ -122,25 +122,15 @@ void qCheckGMail::run()
 	m_numberOfAccounts  = 0 ;
 	m_numberOfLabels    = 0 ;
 
-        m_checkingMail      = false ;
+	m_checkingMail      = false ;
 
-        m_clickActions.onLeftClick = [ & ](){
+	m_clickActions.onLeftClick = [ & ](){
 
-		if( m_defaultApplication == "browser" ){
+		if( m_accounts.size() > 0 ){
 
-			if( m_accounts.size() > 0 ){
-
-                                auto url = m_accounts.first().defaultLabelUrl() ;
-
-				int index = url.size() - int( strlen( "/feed/atom/" ) ) ;
-				url.truncate( index ) ;
-
-				QDesktopServices::openUrl( QUrl( url ) ) ;
-			}else{
-				QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
-			}
+			this->openMail( m_accounts.first() ) ;
 		}else{
-			QProcess::startDetached( m_defaultApplication,{} ) ;
+			this->openMail() ;
 		}
 	} ;
 
@@ -157,6 +147,49 @@ void qCheckGMail::run()
 	this->addActionsToMenu() ;
 	this->showToolTip( m_errorIcon,tr( "Status" ),tr( "Opening Wallet" ) ) ;
 	this->getAccountsInfo() ;
+}
+
+void qCheckGMail::openMail( const accounts& acc )
+{
+	auto _open = [ & ]( const QString& url ){
+
+		if( m_defaultApplication == "browser" ){
+
+			QDesktopServices::openUrl( QUrl( url ) ) ;
+		}else{
+			QProcess::startDetached( m_defaultApplication,{ url } ) ;
+		}
+
+		_debug( url ) ;
+	} ;
+
+	if( m_accounts.size() > 0 ){
+
+		auto url = acc.defaultLabelUrl() ;
+
+		if( url.endsWith( "/a/gmail.com/feed/atom/" ) ){
+
+			url.truncate( url.size() - int( ( sizeof( "/a/gmail.com/feed/atom/" ) - 1 ) ) ) ;
+
+		}else if( url.endsWith( "/feed/atom/" ) ){
+
+			url.truncate( url.size() - int( ( sizeof( "/feed/atom/" ) - 1 ) ) ) ;
+		}
+
+		_open( url ) ;
+	}else{
+		_open( "https://mail.google.com/" ) ;
+	}
+}
+
+void qCheckGMail::openMail()
+{
+	if( m_defaultApplication == "browser" ){
+
+		QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
+	}else{
+		QProcess::startDetached( m_defaultApplication,{ "https://mail.google.com/" } ) ;
+	}
 }
 
 void qCheckGMail::iconClicked()
@@ -206,6 +239,31 @@ void qCheckGMail::addActionsToMenu()
 
 		return m_statusicon.getAction( tr( "Configure Options" ) ) ;
         }() ) ;
+
+	m_menu = m_statusicon.getMenu( tr( "Open Mail" ) ) ;
+
+	connect( m_menu,&QMenu::triggered,[ this ]( QAction * ac ){
+
+		for( const auto& it : m_accounts ){
+
+			if( it.accountName() == ac->objectName() ){
+
+				this->openMail( it ) ;
+				break ;
+			}
+		}
+	} ) ;
+
+	connect( m_statusicon.getOGMenu(),&QMenu::aboutToShow,[ this ](){
+
+		m_menu->clear() ;
+
+		for( const auto& it : m_accounts ){
+
+			auto ac = m_menu->addAction( it.accountName() ) ;
+			ac->setObjectName( it.accountName() ) ;
+		}
+	} ) ;
 
 	m_statusicon.addQuitAction() ;
 }

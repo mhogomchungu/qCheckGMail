@@ -142,6 +142,16 @@ QAction * statusicon::getAction( const QString& title )
 	return ac ;
 }
 
+QMenu * statusicon::getMenu( const QString& title )
+{
+	return m_menu->addMenu( title ) ;
+}
+
+QMenu * statusicon::getOGMenu()
+{
+	return m_menu ;
+}
+
 void statusicon::newEmailNotify()
 {
 	KNotification::event( "qCheckGMail-NewMail",
@@ -302,6 +312,16 @@ QAction * statusicon::getAction( const QString& title )
 	ac->setText( title ) ;
 	m_menu.addAction( ac ) ;
 	return ac ;
+}
+
+QMenu * statusicon::getMenu( const QString& title )
+{
+	return m_menu.addMenu( title ) ;
+}
+
+QMenu * statusicon::getOGMenu()
+{
+	return &m_menu ;
 }
 
 void statusicon::activateRequested( bool x,const QPoint& y )
