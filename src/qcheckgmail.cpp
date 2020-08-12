@@ -149,20 +149,47 @@ void qCheckGMail::run()
 	this->getAccountsInfo() ;
 }
 
-void qCheckGMail::openMail( const accounts& acc )
-{
-	auto _open = [ & ]( const QString& url ){
+static void _start_detached( bool debug,QString& exe,const QString& url ){
 
-		if( m_defaultApplication == "browser" ){
+	if( exe == "browser" ){
 
-			QDesktopServices::openUrl( QUrl( url ) ) ;
-		}else{
-			QProcess::startDetached( m_defaultApplication,{ url } ) ;
+		QDesktopServices::openUrl( QUrl( url ) ) ;
+	}else{
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+		auto s = exe.split( " ",QString::SkipEmptyParts ) ;
+#else
+		auto s = exe.split( " ",Qt::SkipEmptyParts ) ;
+#endif
+		auto m = s.takeAt( 0 ) ;
+
+		for( auto& it : s ){
+
+			if( it == "%{url}" ){
+
+				it = url ;
+
+				break ;
+			}
 		}
 
-		_debug( url ) ;
-	} ;
+		if( debug ){
 
+			std::cout << "\"" + m.toStdString() + "\"" ;
+
+			for( const auto& it : s ){
+
+				std::cout << " \"" + it.toStdString() + "\"" ;
+			}
+
+			std::cout << std::endl ;
+		}
+
+		QProcess::startDetached( m,s ) ;
+	}
+}
+
+void qCheckGMail::openMail( const accounts& acc )
+{
 	if( m_accounts.size() > 0 ){
 
 		auto url = acc.defaultLabelUrl() ;
@@ -176,20 +203,15 @@ void qCheckGMail::openMail( const accounts& acc )
 			url.truncate( url.size() - int( ( sizeof( "/feed/atom/" ) - 1 ) ) ) ;
 		}
 
-		_open( url ) ;
+		_start_detached( m_enableDebug,m_defaultApplication,url ) ;
 	}else{
-		_open( "https://mail.google.com/" ) ;
+		_start_detached( m_enableDebug,m_defaultApplication,"https://mail.google.com/" ) ;
 	}
 }
 
 void qCheckGMail::openMail()
 {
-	if( m_defaultApplication == "browser" ){
-
-		QDesktopServices::openUrl( QUrl( "https://mail.google.com/" ) ) ;
-	}else{
-		QProcess::startDetached( m_defaultApplication,{ "https://mail.google.com/" } ) ;
-	}
+	_start_detached( m_enableDebug,m_defaultApplication,"https://mail.google.com/" ) ;
 }
 
 void qCheckGMail::iconClicked()
