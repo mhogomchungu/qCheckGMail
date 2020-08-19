@@ -35,9 +35,9 @@ static QPixmap _icon( const QString& name,int count )
 	paint.setRenderHint( QPainter::SmoothPixmapTransform ) ;
 	paint.setRenderHint( QPainter::Antialiasing ) ;
 
-	int width = static_cast< int >( pixmap.width() * 0.8 ) ;
-
 #if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+
+	int width = static_cast< int >( pixmap.width() * 0.8 ) ;
 
 	if( fm.width( number ) > width ){
 
@@ -47,15 +47,10 @@ static QPixmap _icon( const QString& name,int count )
 			font.setPointSize( size ) ;
 		}
 	}
+
 #else
-	if( fm.horizontalAdvance( number ) > width ){
-
-		while( fm.horizontalAdvance( number ) > width && size > 0 ){
-
-			size = size - 1 ;
-			font.setPointSize( size ) ;
-		}
-	}
+	font.setPointSize( size ) ;
+	size = configurationoptionsdialog::fontSize() ;
 #endif
 	font.setPixelSize( size ) ;
 	font.setBold( true ) ;
