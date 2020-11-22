@@ -336,15 +336,26 @@ QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,
         auto x = QString( "<%1>" ).arg( cmp ) ;
         auto z = QString( "</%1>" ).arg( cmp ) ;
 
-        auto index_1 = msg.indexOf( x,from ) + x.size() ;
-        auto index_2 = msg.indexOf( z ) - index_1  ;
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+	auto index_1 = msg.indexOf( x,from ) + x.size() ;
+	auto index_2 = msg.indexOf( z ) - index_1  ;
 
 	return QString( msg.mid( index_1,index_2 ) ) ;
+#else
+	auto index_1 = msg.indexOf( x.toUtf8(),from ) + x.size() ;
+	auto index_2 = msg.indexOf( z.toUtf8() ) - index_1  ;
+
+	return QString( msg.mid( index_1,index_2 ) ) ;
+#endif
 }
 
 QString qCheckGMail::getAtomComponent( const QByteArray& msg,const QString& cmp,const QString& entry )
 {
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
 	return this->getAtomComponent( msg,cmp,msg.indexOf( entry ) ) ;
+#else
+	return this->getAtomComponent( msg,cmp,msg.indexOf( entry.toUtf8() ) ) ;
+#endif
 }
 
 void qCheckGMail::wrongAccountNameOrPassword()
