@@ -73,6 +73,7 @@ public:
 	static QString errorIcon( void ) ;
 	static QString fontFamily( void ) ;
 	static QString fontColor( void ) ;
+	static QString visibleIconState( void ) ;
 	static QString defaultApplication( void ) ;
         static QStringList profileEmailList( void ) ;
 	static bool usingInternalStorageSystem( void ) ;

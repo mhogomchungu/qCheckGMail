@@ -57,7 +57,20 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 {
 	if( showIcon ){
 
-		m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
+		if( m_visibleIconState == "NeedsAttention" ){
+
+			m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
+
+		}else if( m_visibleIconState == "Passive" ){
+
+			m_statusicon.setStatus( m_statusicon.Passive ) ;
+
+		}else if( m_visibleIconState == "Active" ){
+
+			m_statusicon.setStatus( m_statusicon.Active ) ;
+		}else{
+			m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
+		}
 	}else{
 		m_statusicon.setStatus( m_statusicon.Passive ) ;
 	}
@@ -114,8 +127,9 @@ void qCheckGMail::run()
 	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
 	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
 	m_profileEmailList    = configurationoptionsdialog::profileEmailList() ;
-        m_clientID            = configurationoptionsdialog::clientID() ;
-        m_clientSecret        = configurationoptionsdialog::clientSecret() ;
+	m_clientID            = configurationoptionsdialog::clientID() ;
+	m_clientSecret        = configurationoptionsdialog::clientSecret() ;
+	m_visibleIconState    = configurationoptionsdialog::visibleIconState() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 

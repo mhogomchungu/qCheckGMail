@@ -41,6 +41,7 @@ static QSettings _settings( ORGANIZATION_NAME,PROGRAM_NAME ) ;
 static QString _getOption( const char * opt )
 {
 	if( _profile.isEmpty() ){
+
 		return opt ;
 	}else{
 		return QString( "%1/%2").arg( _profile,opt ) ;
@@ -359,6 +360,21 @@ QString configurationoptionsdialog::fontColor()
                 return _settings.value( opt ).toString() ;
 	}else{
 		QString value( "black" ) ;
+		_settings.setValue( opt,value ) ;
+		_settings.sync() ;
+		return value ;
+	}
+}
+
+QString configurationoptionsdialog::visibleIconState()
+{
+	auto opt = _getOption( "visibleIconState" ) ;
+
+	if( _settings.contains( opt ) ){
+
+		return _settings.value( opt ).toString() ;
+	}else{
+		QString value( "NeedsAttention" ) ;
 		_settings.setValue( opt,value ) ;
 		_settings.sync() ;
 		return value ;
