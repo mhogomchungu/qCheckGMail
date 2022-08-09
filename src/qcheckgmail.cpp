@@ -900,7 +900,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 gmailauthorization::function_t qCheckGMail::getAuthorization()
 {
-        return [ this ]( const QString& authocode,std::function< void( const QString& ) > function ){
+	return [ this ]( const QString& authocode,std::function< void( const QString&,const QByteArray& ) > function ){
 
 		m_manager.post( -1,m_networkRequest,[ & ](){
 
@@ -916,7 +916,9 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
 		 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
 
-			funct( _parseJSON( e.readAll(),"refresh_token" ) ) ;
+			auto m = e.readAll() ;
+
+			funct( _parseJSON( m,"refresh_token" ),m ) ;
                 } ) ;
         } ;
 }

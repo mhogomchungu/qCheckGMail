@@ -37,7 +37,7 @@ class gmailauthorization : public QDialog
 {
         Q_OBJECT
 public:
-	using function_0_t = std::function< void( const QString& ) > ;
+	using function_0_t = std::function< void( const QString&,const QByteArray& ) > ;
 
 	using function_t = std::function< void( const QString&,function_0_t ) > ;
 

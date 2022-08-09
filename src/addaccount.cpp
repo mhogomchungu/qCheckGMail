@@ -23,6 +23,8 @@
 
 #include "gmailauthorization.h"
 
+#include <iostream>
+
 addaccount::addaccount( QDialog * parent,
 			gmailauthorization::function_t& k,
                         std::function< void() >&& e,
@@ -52,12 +54,14 @@ addaccount::addaccount( QDialog * parent,
 
 		this->cancel() ;
 
-	},[ this ]( const QString& e ){
+	},[ this ]( const QString& e,const QByteArray& s ){
 
 		if( e.isEmpty() ){
 
 			this->HideUI() ;
-			qDebug() << "ERROR: Failed To Generate Token" ;
+
+			std::cout << "ERROR: Failed To Generate Token\n" ;
+			std::cout << s.constData() << std::endl ;
 		}else{
 			this->show() ;
 			m_ui->lineEditPassword->setText( e ) ;

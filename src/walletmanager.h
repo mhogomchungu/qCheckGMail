@@ -129,12 +129,8 @@ private:
 
 	std::function< void() > m_walletClosed = [](){} ;
 
-	gmailauthorization::function_t m_getAuthorization = []( const QString& e,
-			std::function< void( const QString& ) > f ){
-
-		Q_UNUSED( e ) ;
-		Q_UNUSED( f ) ;
-	} ;
+	gmailauthorization::function_t m_getAuthorization = []( const QString&,
+			std::function< void( const QString&,const QByteArray& ) > ){} ;
 
 	walletmanager::function_t m_getAccountInfo = []( QVector< accounts >&& e ){
 

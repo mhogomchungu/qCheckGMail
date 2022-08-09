@@ -164,20 +164,17 @@ void gmailauthorization::setCode( const QString& r )
 
                 this->enableAll() ;
         }else{
-                m_getAuthorizationCode( r,[ this ]( const QString& e ){
+		m_getAuthorizationCode( r,[ this ]( const QString& e,const QByteArray& json ){
 
                         if( e.isEmpty() ){
 
-                                QMessageBox msg( this ) ;
+				auto m = tr( "Failed To Obtain Authorization Code" ) ;
 
-				msg.setText( tr( "Failed To Obtain Authorization Code" ) ) ;
-                                msg.addButton( tr( "&OK" ),QMessageBox::YesRole ) ;
-
-                                msg.exec() ;
+				m_ui->textEdit->setText( m + "\n" + QString( json ) ) ;
 
                                 this->enableAll() ;
                         }else{
-                                m_getAuthorization( e ) ;
+				m_getAuthorization( e,json ) ;
 
 				this->hideUI() ;
                         }

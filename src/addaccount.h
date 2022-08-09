@@ -78,7 +78,7 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
         bool m_edit ;
-        std::function< void( const QString&,std::function< void( const QString& ) > ) >& m_getAuthorization ;
+	std::function< void( const QString&,std::function< void( const QString&,const QByteArray& ) > ) >& m_getAuthorization ;
         std::function< void() > m_cancel ;
         std::function< void( accounts::entry&& ) > m_result ;
 };
