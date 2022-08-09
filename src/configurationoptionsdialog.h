@@ -41,6 +41,30 @@ namespace Ui {
 class configurationoptionsdialog;
 }
 
+class urlOpts
+{
+public:
+	urlOpts& add( const QString& key,const QString& value )
+	{
+		m_values += key + "=" + value + "&" ;
+		return *this ;
+	}
+	QByteArray toUtf8() const
+	{
+		auto m = m_values.toUtf8() ;
+		m.truncate( m.size() - 1 ) ;
+		return m ;
+	}
+	QString toString() const
+	{
+		auto m = m_values ;
+		m.truncate( m.size() - 1 ) ;
+		return m ;
+	}
+private:
+	QString m_values ;
+};
+
 using unique_wallet_ptr = std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > ;
 
 class configurationoptionsdialog : public QDialog
@@ -75,12 +99,15 @@ public:
 	static QString fontColor( void ) ;
 	static QString visibleIconState( void ) ;
 	static QString defaultApplication( void ) ;
+	static QString stringRunTimePortNumber( void ) ;
         static QStringList profileEmailList( void ) ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
+	static int portNumber( void ) ;
 	static bool displayEmailCount( void ) ;
 	static int networkTimeOut( void ) ;
 	static void setProfile( const QString& profile ) ;
+	static void setRuntimePortNumber( int ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
 signals:

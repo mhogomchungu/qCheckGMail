@@ -19,12 +19,13 @@
 
 #include "qcheckgmail.h"
 
-#include "json.h"
-
 #include <string.h>
 #include <utility>
 
 #include <iostream>
+
+#include <QJsonDocument>
+#include <QJsonObject>
 
 static void _debug( const char * s )
 {
@@ -163,7 +164,12 @@ void qCheckGMail::run()
 	this->getAccountsInfo() ;
 }
 
-static void _start_detached( bool debug,QString& exe,const QString& url ){
+static void _start_detached( bool debug,QString& exe,const QString& url )
+{
+	if( exe.isEmpty() ){
+
+		return ;
+	}
 
 	if( exe == "browser" ){
 
@@ -858,36 +864,25 @@ void qCheckGMail::checkMail( const accounts& acc )
 	this->checkMail( acc,acc.defaultLabelUrl() ) ;
 }
 
-static QString _parseJSON( const QByteArray& json,const char * property )
+static QString _parseJSON( const QByteArray& json,const char * key )
 {
-	if( !json.isEmpty() ){
+	auto m = QJsonDocument::fromJson( json ).object() ;
 
-		try{
-			auto e = nlohmann::json::parse( json.constData() ) ;
-
-			auto s = e.find( property ) ;
-
-			if( s != e.end() ){
-
-				return QString::fromStdString( s.value() ) ;
-			}
-
-		}catch( ... ){}
-	}
-
-	return QString() ;
+	return m.value( key ).toString() ;
 }
 
 void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
 	m_manager.post( -1,m_networkRequest,[ & ](){
 
-		auto id     = "client_id="     + m_clientID ;
-		auto secret = "client_secret=" + m_clientSecret ;
-		auto token  = "refresh_token=" + refresh_token ;
-		auto type   = "grant_type=refresh_token" ;
+		urlOpts opts ;
 
-		return QString( "%1&%2&%3&%4" ).arg( id,secret,token,type ).toLatin1() ;
+		opts.add( "client_id",m_clientID ) ;
+		opts.add( "client_secret",m_clientSecret ) ;
+		opts.add( "refresh_token",refresh_token ) ;
+		opts.add( "grant_type","refresh_token" ) ;
+
+		return opts.toUtf8() ;
 
 	}(),[ UrlLabel,this,&acc ]( QNetworkReply& n ){
 
@@ -909,13 +904,15 @@ gmailauthorization::function_t qCheckGMail::getAuthorization()
 
 		m_manager.post( -1,m_networkRequest,[ & ](){
 
-			auto id     = "client_id="     + m_clientID ;
-			auto secret = "client_secret=" + m_clientSecret ;
-			auto code   = "code="          + authocode ;
-			auto uri    = "redirect_uri=urn:ietf:wg:oauth:2.0:oob" ;
-			auto grant  = "grant_type=authorization_code" ;
+			urlOpts opts ;
 
-			return QString( "%1&%2&%3&%4&%5" ).arg( id,secret,uri,grant,code ).toLatin1() ;
+			opts.add( "client_id",m_clientID ) ;
+			opts.add( "client_secret",m_clientSecret ) ;
+			opts.add( "code",authocode ) ;
+			opts.add( "grant_type","authorization_code" ) ;
+			opts.add( "redirect_uri","http://127.0.0.1:" + configurationoptionsdialog::stringRunTimePortNumber() ) ;
+
+			return opts.toUtf8() ;
 
 		 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
 

@@ -22,7 +22,28 @@
 
 #include "configurationoptionsdialog.h"
 
+#include <QDesktopServices>
 #include <QMessageBox>
+#include <QtNetwork/QTcpSocket>
+
+#include <QFile>
+
+static auto header = R"R(HTTP/1.1 200 OK
+Date: Thur, 04 Aug 2022 14:28:02 GMT
+Server: qCheckGMail
+Last-Modified: Thur, 04 Aug 2022 14:28:02 GMT
+Content-Length: %1
+Content-Type: text/html)R" ;
+
+static auto responce = R"R(
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Thank you using qCheckGmail, close this window and go back to qCheckGmail to complete adding an account</h1>
+
+</body>
+</html>)R" ;
 
 gmailauthorization::gmailauthorization( QDialog * parent,
 					gmailauthorization::function_t& k,
@@ -35,27 +56,102 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 {
         m_ui->setupUi( this ) ;
 
-        connect( m_ui->pbCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
-        connect( m_ui->pbSetCode,SIGNAL( clicked() ),this,SLOT( setCode() ) ) ;
+	connect( m_ui->pbCancel,&QPushButton::clicked,[ this ](){
 
-	QString id = "https://accounts.google.com/o/oauth2/auth?client_id=%1&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=https%3A%2F%2Fmail.google.com%2F" ;
+		this->cancel() ;
+	} ) ;
 
-        m_ui->textEdit->setText( id.arg( configurationoptionsdialog::clientID() ) ) ;
+	connect( m_ui->pbTextBrowser,&QPushButton::clicked,[ this ](){
 
-        this->show() ;
+		QDesktopServices::openUrl( m_ui->textEdit->toPlainText() ) ;
+	} ) ;
+
+	QObject::connect( &m_server,&QTcpServer::newConnection,[ this ](){
+
+		if( m_firstConnection ){
+
+			m_firstConnection = false ;
+
+			auto s = m_server.nextPendingConnection() ;
+
+			QObject::connect( s,&QTcpSocket::readyRead,[ this,s ]{
+
+				auto mm = s->readAll() ;
+
+				auto a = mm.indexOf( "code=4/" ) ;
+
+				if( a != -1 ){
+
+					mm = mm.mid( a + 5 ) ;
+
+					a = mm.indexOf( '&' ) ;
+
+					if( a != -a ){
+
+						mm.truncate( a ) ;
+					}
+				}
+
+				auto h = QString( header ) ;
+				auto r = QString( responce ) ;
+				h = h.arg( QString::number( r.size() ) ) ;
+
+				s->write( header + QByteArray( "\n\n" ) + responce ) ;
+
+				s->waitForBytesWritten() ;
+
+				s->close() ;
+
+				s->deleteLater() ;
+
+				this->setCode( mm ) ;
+			} ) ;
+		}
+	} ) ;
+
+	auto portNumber = configurationoptionsdialog::portNumber() ;
+
+	while( true ){
+
+		if( portNumber >= 60000 ){
+
+			m_ui->textEdit->setText( "Error: Failed To Accure Port Number For A Localhost Address" ) ;
+			break ;
+		}
+
+		auto s = m_server.listen( QHostAddress( "http://127.0.0.1" ),static_cast< unsigned short >( portNumber ) ) ;
+
+		if( s ){
+
+			urlOpts opts ;
+
+			opts.add( "https://accounts.google.com/o/oauth2/auth?client_id",configurationoptionsdialog::clientID() ) ;
+			opts.add( "redirect_uri","http://127.0.0.1:" + QString::number( portNumber ) ) ;
+			opts.add( "response_type","code" ) ;
+			opts.add( "scope","https%3A%2F%2Fmail.google.com%2F" ) ;
+
+			m_ui->textEdit->setText( opts.toString() ) ;
+
+			configurationoptionsdialog::setRuntimePortNumber( portNumber ) ;
+
+			break ;
+		}else{
+			portNumber++ ;
+		}
+	}
+
+	this->show() ;
 }
 
 void gmailauthorization::cancel()
 {
-        m_cancel() ;
-        this->hideUI() ;
+	m_cancel() ;
+	this->hideUI() ;
 }
 
-void gmailauthorization::setCode()
+void gmailauthorization::setCode( const QString& r )
 {
         this->disableAll() ;
-
-        auto r = m_ui->lineEdit->text() ;
 
         if( r.isEmpty() ){
 
@@ -83,7 +179,7 @@ void gmailauthorization::setCode()
                         }else{
                                 m_getAuthorization( e ) ;
 
-                                this->hideUI() ;
+				this->hideUI() ;
                         }
                 } ) ;
         }
@@ -97,20 +193,14 @@ void gmailauthorization::hideUI()
 
 void gmailauthorization::enableAll()
 {
-        m_ui->label->setEnabled( true ) ;
         m_ui->pbCancel->setEnabled( true ) ;
-        m_ui->pbSetCode->setEnabled( true ) ;
-        m_ui->lineEdit->setEnabled( true ) ;
         m_ui->groupBox->setEnabled( true ) ;
         m_ui->textEdit->setEnabled( true ) ;
 }
 
 void gmailauthorization::disableAll()
 {
-        m_ui->label->setEnabled( false ) ;
         m_ui->pbCancel->setEnabled( false ) ;
-        m_ui->pbSetCode->setEnabled( false ) ;
-        m_ui->lineEdit->setEnabled( false ) ;
         m_ui->groupBox->setEnabled( false ) ;
         m_ui->textEdit->setEnabled( false ) ;
 }

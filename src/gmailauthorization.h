@@ -26,9 +26,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QDebug>
-
-#include "gmailauthorization.h"
-
+#include <QtNetwork/QTcpServer>
 #include <functional>
 
 namespace Ui {
@@ -55,10 +53,10 @@ public:
 			    function_t&,
                             std::function< void() >&&,
 			    function_0_t&& ) ;
-private slots:
-        void cancel() ;
-        void setCode() ;
 private:
+	void cancel() ;
+	void setCode( const QString& ) ;
+
         void hideUI() ;
 
         void enableAll() ;
@@ -71,6 +69,8 @@ private:
 	gmailauthorization::function_t& m_getAuthorizationCode ;
         std::function< void() > m_cancel ;
 	function_0_t m_getAuthorization ;
+	QTcpServer m_server ;
+	bool m_firstConnection = true ;
 };
 
 #endif

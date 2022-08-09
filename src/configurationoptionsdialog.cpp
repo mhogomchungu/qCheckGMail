@@ -114,6 +114,18 @@ void configurationoptionsdialog::setProfile( const QString& profile )
 	_settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
 }
 
+static int _runtimePortNumber ;
+
+void configurationoptionsdialog::setRuntimePortNumber( int s )
+{
+	_runtimePortNumber = s ;
+}
+
+QString configurationoptionsdialog::stringRunTimePortNumber()
+{
+	return QString::number( _runtimePortNumber ) ;
+}
+
 bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 {
 	if( watched == this ){
@@ -430,6 +442,20 @@ int configurationoptionsdialog::fontSize()
 		_settings.setValue( opt,value ) ;
 		_settings.sync() ;
 		return 80 ;
+	}
+}
+
+int configurationoptionsdialog::portNumber()
+{
+	auto opt = _getOption( "PortNumber" ) ;
+
+	if( _settings.contains( opt ) ){
+
+		return _settings.value( opt ).toInt() ;
+	}else{
+		_settings.setValue( opt,10000 ) ;
+		_settings.sync() ;
+		return 10000 ;
 	}
 }
 
