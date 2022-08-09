@@ -123,9 +123,9 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
 		if( s ){
 
-			urlOpts opts ;
+			urlOpts opts( "https://accounts.google.com/o/oauth2/auth" ) ;
 
-			opts.add( "https://accounts.google.com/o/oauth2/auth?client_id",configurationoptionsdialog::clientID() ) ;
+			opts.add( "client_id",configurationoptionsdialog::clientID() ) ;
 			opts.add( "redirect_uri","http://127.0.0.1:" + QString::number( portNumber ) ) ;
 			opts.add( "response_type","code" ) ;
 			opts.add( "scope","https%3A%2F%2Fmail.google.com%2F" ) ;

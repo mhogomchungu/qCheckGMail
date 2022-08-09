@@ -44,6 +44,12 @@ class configurationoptionsdialog;
 class urlOpts
 {
 public:
+	urlOpts( const QString& url ) : m_values( url + "?" )
+	{
+	}
+	urlOpts()
+	{
+	}
 	urlOpts& add( const QString& key,const QString& value )
 	{
 		m_values += key + "=" + value + "&" ;
