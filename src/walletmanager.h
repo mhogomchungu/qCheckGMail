@@ -56,11 +56,6 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	template< typename T >
-	struct type_identity{
-		using type = T ;
-	} ;
-
 	class wallet
 	{
 	public:
@@ -109,7 +104,7 @@ public:
 
         static walletmanager& instance( const QString& icon,
 					walletmanager::Wallet e,
-					gmailauthorization::getAutho k )
+					gmailauthorization::getAuth k )
         {
 		return *( new walletmanager( icon,std::move( e ),std::move( k ) ) ) ;
         }
@@ -119,7 +114,7 @@ public:
 
         walletmanager( const QString& icon,
 		       walletmanager::Wallet,
-		       gmailauthorization::getAutho ) ;
+		       gmailauthorization::getAuth ) ;
 
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
@@ -151,7 +146,7 @@ private:
 	Ui::walletmanager * m_ui = nullptr ;
 
         QVector< accounts > m_accounts ;
-	unique_wallet_ptr m_wallet ;
+	util::unique_wallet_ptr m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
@@ -163,7 +158,7 @@ private:
 
 	walletmanager::Wallet m_walletData ;
 
-	gmailauthorization::getAutho m_getAuthorization ;
+	gmailauthorization::getAuth m_getAuthorization ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

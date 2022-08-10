@@ -35,71 +35,11 @@
 #include "language_path.h"
 #include "tray_application_type.h"
 
-#include "../lxqt_wallet/frontend/lxqt_wallet.h"
+#include "util.hpp"
 
 namespace Ui {
 class configurationoptionsdialog;
 }
-
-class urlOpts
-{
-public:
-	urlOpts( const QString& url ) : m_values( url + "?" )
-	{
-	}
-	urlOpts()
-	{
-	}
-	urlOpts& add( const QString& key,const QString& value )
-	{
-		m_values += key + "=" + value + "&" ;
-		return *this ;
-	}
-	QByteArray toUtf8() const
-	{
-		auto m = m_values.toUtf8() ;
-		m.truncate( m.size() - 1 ) ;
-		return m ;
-	}
-	QString toString() const
-	{
-		auto m = m_values ;
-		m.truncate( m.size() - 1 ) ;
-		return m ;
-	}
-private:
-	QString m_values ;
-};
-
-class unique_wallet_ptr
-{
-public:
-	unique_wallet_ptr() : m_handle( nullptr,[]( QObject * e ){ e->deleteLater() ; } )
-	{
-	}
-	unique_wallet_ptr( LXQt::Wallet::Wallet * w ) :
-		m_handle( std::move( w ),[]( QObject * e ){ e->deleteLater() ; } )
-	{
-	}
-	LXQt::Wallet::Wallet * get()
-	{
-		return m_handle.get() ;
-	}
-	LXQt::Wallet::Wallet * operator->()
-	{
-		return m_handle.operator->() ;
-	}
-	LXQt::Wallet::Wallet * release()
-	{
-		return m_handle.release() ;
-	}
-	operator bool()
-	{
-		return this->get() ;
-	}
-private:
-	std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > m_handle ;
-};
 
 class configurationoptionsdialog : public QDialog
 {
@@ -121,7 +61,7 @@ public:
 	static QString walletName( LXQt::Wallet::BackEnd ) ;
 	static QString logFile( void ) ;
 
-	static unique_wallet_ptr secureStorageSystem( void ) ;
+	static util::unique_wallet_ptr secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
         static QString clientID( void ) ;
         static QString clientSecret( void ) ;

@@ -26,7 +26,7 @@
 #include <iostream>
 
 addaccount::addaccount( QDialog * parent,
-			gmailauthorization::getAutho& k,
+			gmailauthorization::getAuth& k,
 			addaccount::Actions s ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
@@ -51,38 +51,38 @@ addaccount::addaccount( QDialog * parent,
 	class accs : public gmailauthorization::actions
 	{
 	public:
-		accs( addaccount * acc ) : m_acc( acc )
+		accs( addaccount * acc ) : m_this( acc )
 		{
 		}
 		void cancel() override
 		{
-			m_acc->cancel() ;
+			m_this->cancel() ;
 		}
 		void getToken( const QString& e,const QByteArray& s ) override
 		{
 			if( e.isEmpty() ){
 
-				m_acc->HideUI() ;
+				m_this->HideUI() ;
 
 				std::cout << "ERROR: Failed To Generate Token\n" ;
 				std::cout << s.constData() << std::endl ;
 			}else{
-				m_acc->show() ;
-				m_acc->m_ui->lineEditPassword->setText( e ) ;
+				m_this->show() ;
+				m_this->m_ui->lineEditPassword->setText( e ) ;
 			}
 		}
 	private:
-		addaccount * m_acc ;
+		addaccount * m_this ;
 	};
 
 	gmailauthorization::instance( this,
 				      m_getAuthorization,
-				      { gmailauthorization::type_identity< accs >(),this } ) ;
+				      { util::type_identity< accs >(),this } ) ;
 }
 
 addaccount::addaccount( QDialog * parent,
                         const accounts::entry& e,
-			gmailauthorization::getAutho& k,
+			gmailauthorization::getAuth& k,
 			addaccount::Actions s ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),

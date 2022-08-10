@@ -29,6 +29,8 @@
 
 #include "accounts.h"
 #include "gmailauthorization.h"
+#include "util.hpp"
+
 #include <functional>
 
 namespace Ui {
@@ -39,11 +41,6 @@ class addaccount : public QDialog
 {
 	Q_OBJECT
 public:
-	template< typename T >
-	struct type_identity{
-		using type = T ;
-	} ;
-
 	class actions
 	{
 	public:
@@ -79,14 +76,14 @@ public:
 
         static addaccount& instance( QDialog * parent,
                                      const accounts::entry& e,
-				     gmailauthorization::getAutho& k,
+				     gmailauthorization::getAuth& k,
 				     addaccount::Actions r )
         {
 		return *( new addaccount( parent,e,k,std::move( r ) ) ) ;
         }
 
         static addaccount& instance( QDialog * parent,
-				     gmailauthorization::getAutho& k,
+				     gmailauthorization::getAuth& k,
 				     addaccount::Actions e )
         {
 		return *( new addaccount( parent,k,std::move( e ) ) ) ;
@@ -94,11 +91,11 @@ public:
 
         addaccount( QDialog *,
                     const accounts::entry&,
-		    gmailauthorization::getAutho&,
+		    gmailauthorization::getAuth&,
 		    addaccount::Actions ) ;
 
         addaccount( QDialog *,
-		    gmailauthorization::getAutho&,
+		    gmailauthorization::getAuth&,
 		    addaccount::Actions ) ;
 
 	~addaccount() ;
@@ -111,7 +108,7 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
         bool m_edit ;
-	gmailauthorization::getAutho& m_getAuthorization ;
+	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;
 };
 

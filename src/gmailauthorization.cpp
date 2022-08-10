@@ -21,6 +21,7 @@
 #include "ui_gmailauthorization.h"
 
 #include "configurationoptionsdialog.h"
+#include "util.hpp"
 
 #include <QDesktopServices>
 #include <QMessageBox>
@@ -46,7 +47,7 @@ static auto responce = R"R(
 </html>)R" ;
 
 gmailauthorization::gmailauthorization( QDialog * parent,
-					gmailauthorization::getAutho& k,
+					gmailauthorization::getAuth& k,
 					gmailauthorization::Actions e ) :
         QDialog( parent ),m_ui( new Ui::gmailauthorization ),
         m_getAuthorizationCode( k ),
@@ -121,7 +122,7 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
 		if( s ){
 
-			urlOpts opts( "https://accounts.google.com/o/oauth2/auth" ) ;
+			util::urlOpts opts( "https://accounts.google.com/o/oauth2/auth" ) ;
 
 			opts.add( "client_id",configurationoptionsdialog::clientID() ) ;
 			opts.add( "redirect_uri","http://127.0.0.1:" + QString::number( portNumber ) ) ;
@@ -162,21 +163,32 @@ void gmailauthorization::setCode( const QString& r )
 
                 this->enableAll() ;
         }else{
-		m_getAuthorizationCode( r,[ this ]( const QString& e,const QByteArray& json ){
+		class meaw : public gmailauthorization::authResult
+		{
+		public:
+			meaw( gmailauthorization * g ) : m_this( g )
+			{
+			}
+			void operator()( const QString& e,const QByteArray& json ) override
+			{
+				if( e.isEmpty() ){
 
-                        if( e.isEmpty() ){
+					auto m = tr( "Failed To Obtain Authorization Code" ) ;
 
-				auto m = tr( "Failed To Obtain Authorization Code" ) ;
+					m_this->m_ui->textEdit->setText( m + "\n" + QString( json ) ) ;
 
-				m_ui->textEdit->setText( m + "\n" + QString( json ) ) ;
+					m_this->enableAll() ;
+				}else{
+					m_this->m_gmailAuthorization.getToken( e,json ) ;
 
-                                this->enableAll() ;
-                        }else{
-				m_gmailAuthorization.getToken( e,json ) ;
+					m_this->hideUI() ;
+				}
+			}
+		private:
+			gmailauthorization * m_this ;
+		};
 
-				this->hideUI() ;
-                        }
-                } ) ;
+		m_getAuthorizationCode( r,{ util::type_identity< meaw >(),this } ) ;
         }
 }
 
@@ -207,5 +219,13 @@ void gmailauthorization::closeEvent( QCloseEvent * e )
 }
 
 gmailauthorization::actions::~actions()
+{
+}
+
+gmailauthorization::authActions::~authActions()
+{
+}
+
+gmailauthorization::authResult::~authResult()
 {
 }

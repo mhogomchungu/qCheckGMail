@@ -143,7 +143,7 @@ walletmanager::walletmanager( walletmanager::Wallet f ) :
 
 walletmanager::walletmanager( const QString& icon,
 			      walletmanager::Wallet e,
-			      gmailauthorization::getAutho k ) :
+			      gmailauthorization::getAuth k ) :
 	m_icon( QString( ":/%1" ).arg( icon ) ),
 	m_walletData( std::move( e ) ),
 	m_getAuthorization( std::move( k ) )
@@ -379,34 +379,34 @@ void walletmanager::pushButtonAdd()
 	class meaw : public addaccount::actions
 	{
 	public:
-		meaw( walletmanager * m ) : m_walletManager( m )
+		meaw( walletmanager * m ) : m_this( m )
 		{
 		}
 		void cancel() override
 		{
-			m_walletManager->enableAll() ;
+			m_this->enableAll() ;
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_walletManager->m_accEntry = std::move( e ) ;
+			m_this->m_accEntry = std::move( e ) ;
 
 			Task::run( [ this ](){
 
-				account( m_walletManager->m_wallet.get(),m_walletManager->m_accEntry ).add() ;
+				account( m_this->m_wallet.get(),m_this->m_accEntry ).add() ;
 
 			} ).then( [ this ](){
 
-				m_walletManager->m_accounts.append( m_walletManager->addEntry( m_walletManager->m_accEntry ) ) ;
+				m_this->m_accounts.append( m_this->addEntry( m_this->m_accEntry ) ) ;
 
-				m_walletManager->selectLastRow() ;
-				m_walletManager->enableAll() ;
+				m_this->selectLastRow() ;
+				m_this->enableAll() ;
 			} ) ;
 		}
 	private:
-		walletmanager * m_walletManager ;
+		walletmanager * m_this ;
 	};
 
-	addaccount::instance( this,m_getAuthorization,{ addaccount::type_identity< meaw >(),this } ) ;
+	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this } ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -507,38 +507,40 @@ void walletmanager::editAccount()
 	class meaw : public addaccount::actions
 	{
 	public:
-		meaw( walletmanager * m ) : m_walletManager( m )
+		meaw( walletmanager * m ) : m_this( m )
 		{
 		}
 		void cancel() override
 		{
-			m_walletManager->enableAll() ;
+			m_this->enableAll() ;
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_walletManager->m_accEntry = std::move( e ) ;
+			m_this->m_accEntry = std::move( e ) ;
 
 			Task::run( [ this ](){
 
-				account( m_walletManager->m_wallet.get(),m_walletManager->m_accEntry ).replace() ;
+				account( m_this->m_wallet.get(),m_this->m_accEntry ).replace() ;
 
 			} ).then( [ this ](){
 
-				m_walletManager->m_accounts.replace( m_walletManager->m_row,m_walletManager->m_accEntry ) ;
+				m_this->m_accounts.replace( m_this->m_row,m_this->m_accEntry ) ;
 
-				m_walletManager->m_table->item( m_walletManager->m_row,0 )->setText( m_walletManager->m_accEntry.accName ) ;
-				m_walletManager->m_table->item( m_walletManager->m_row,1 )->setText( m_walletManager->m_accEntry.accDisplayName ) ;
-				m_walletManager->m_table->item( m_walletManager->m_row,2 )->setText( m_walletManager->m_accEntry.accLabels ) ;
+				m_this->m_table->item( m_this->m_row,0 )->setText( m_this->m_accEntry.accName ) ;
+				m_this->m_table->item( m_this->m_row,1 )->setText( m_this->m_accEntry.accDisplayName ) ;
+				m_this->m_table->item( m_this->m_row,2 )->setText( m_this->m_accEntry.accLabels ) ;
 
-				m_walletManager->enableAll() ;
+				m_this->enableAll() ;
 			} ) ;
 		}
 	private:
-		walletmanager * m_walletManager ;
+		walletmanager * m_this ;
 	};
 
-        addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,refreshToken },
-			     m_getAuthorization,{ addaccount::type_identity< meaw >(),this } ) ;
+	addaccount::instance( this,
+			      { accName,accPassword,accDisplayName,accLabels,refreshToken },
+			      m_getAuthorization,
+			      { util::type_identity< meaw >(),this } ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )

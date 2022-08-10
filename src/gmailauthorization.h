@@ -27,18 +27,6 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QtNetwork/QTcpServer>
-#include <QtNetwork/QNetworkRequest>
-
-#include <QJsonDocument>
-#include <QJsonObject>
-
-#include <functional>
-
-#include "../../3rdParty/NetworkAccessManager/network_access_manager.hpp"
-
-#include "configurationoptionsdialog.h"
-
-#include <memory>
 
 namespace Ui {
 class gmailauthorization;
@@ -48,62 +36,60 @@ class gmailauthorization : public QDialog
 {
         Q_OBJECT
 public:
-	class getAutho
+	class authResult
 	{
 	public:
-		getAutho()
+		virtual void operator()( const QString&,const QByteArray& )
 		{
 		}
-		getAutho( NetworkAccessManager& nm,
-			  QNetworkRequest& r,
-			  const QString& id,
-			  const QString& secret ) :
-			m_networkManager( &nm ),
-			m_networkRequest( &r ),
-			m_clientID( &id ),
-			m_clientSecret( &secret )
-		{
-		}
-		template< typename Function >
-		void operator()( const QString& authocode,Function function )
-		{
-			if( m_networkManager ){
-
-				m_networkManager->post( -1,*m_networkRequest,[ & ](){
-
-					auto s = configurationoptionsdialog::stringRunTimePortNumber() ;
-
-					urlOpts opts ;
-
-					opts.add( "client_id",*m_clientID ) ;
-					opts.add( "client_secret",*m_clientSecret ) ;
-					opts.add( "code",authocode ) ;
-					opts.add( "grant_type","authorization_code" ) ;
-					opts.add( "redirect_uri","http://127.0.0.1:" + s ) ;
-
-					return opts.toUtf8() ;
-
-				 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
-
-					auto m = e.readAll() ;
-
-					auto s = QJsonDocument::fromJson( m ).object() ;
-
-					funct( s.value( "refresh_token" ).toString(),m ) ;
-				 } ) ;
-			}
-		}
+		virtual ~authResult() ;
 	private:
-		NetworkAccessManager * m_networkManager = nullptr ;
-		QNetworkRequest * m_networkRequest ;
-		const QString * m_clientID ;
-		const QString * m_clientSecret ;
 	};
 
-	template< typename T >
-	struct type_identity{
-		using type = T ;
+	class AuthResult
+	{
+	public:
+		template< typename Type,typename ... Args >
+		AuthResult( Type,Args&& ... args ) :
+			m_handle( std::make_shared< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void operator()( const QString& e,const QByteArray& s ) const
+		{
+			( *m_handle )( e,s ) ;
+		}
+	private:
+		std::shared_ptr< gmailauthorization::authResult > m_handle ;
+	};
+
+	class authActions
+	{
+	public:
+		virtual void operator()( const QString&,AuthResult )
+		{
+		}
+		virtual ~authActions() ;
+	private:
 	} ;
+
+	class getAuth
+	{
+	public:
+		getAuth() : m_handle( std::make_unique< gmailauthorization::authActions >() )
+		{
+		}
+		template< typename Type,typename ... Args >
+		getAuth( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void operator()( const QString& authocode,AuthResult result )
+		{
+			( *m_handle )( authocode,std::move( result ) ) ;
+		}
+	private:
+		std::unique_ptr< gmailauthorization::authActions > m_handle ;
+	};
 
 	class actions
 	{
@@ -139,14 +125,14 @@ public:
 	} ;
 
         static void instance( QDialog * parent,
-			      gmailauthorization::getAutho& r,
+			      gmailauthorization::getAuth& r,
 			      gmailauthorization::Actions e )
         {
 		new gmailauthorization( parent,r,std::move( e ) ) ;
         }
 
         gmailauthorization( QDialog * parent,
-			    gmailauthorization::getAutho&,
+			    gmailauthorization::getAuth&,
 			    gmailauthorization::Actions ) ;
 private:
 	void cancel() ;
@@ -161,7 +147,7 @@ private:
 
         Ui::gmailauthorization * m_ui ;
 
-	gmailauthorization::getAutho& m_getAuthorizationCode ;
+	gmailauthorization::getAuth& m_getAuthorizationCode ;
 	gmailauthorization::Actions m_gmailAuthorization ;
 	QTcpServer m_server ;
 	bool m_firstConnection = true ;

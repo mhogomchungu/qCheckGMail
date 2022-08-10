@@ -18,6 +18,7 @@
  */
 
 #include "qcheckgmail.h"
+#include "util.hpp"
 
 #include <string.h>
 #include <utility>
@@ -875,7 +876,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 {
 	m_manager.post( -1,m_networkRequest,[ & ](){
 
-		urlOpts opts ;
+		util::urlOpts opts ;
 
 		opts.add( "client_id",m_clientID ) ;
 		opts.add( "client_secret",m_clientSecret ) ;
@@ -898,9 +899,42 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
         } ) ;
 }
 
-gmailauthorization::getAutho qCheckGMail::getAuthorization()
+gmailauthorization::getAuth qCheckGMail::getAuthorization()
 {
-	return { m_manager,m_networkRequest,m_clientID,m_clientSecret } ;
+	class meaw : public gmailauthorization::authActions
+	{
+	public:
+		meaw( qCheckGMail * g ) : m_this( g )
+		{
+		}
+		void operator()( const QString& authocode,gmailauthorization::AuthResult function ) override
+		{
+			m_this->m_manager.post( -1,m_this->m_networkRequest,[ & ](){
+
+				auto s = configurationoptionsdialog::stringRunTimePortNumber() ;
+
+				util::urlOpts opts ;
+
+				opts.add( "client_id",m_this->m_clientID ) ;
+				opts.add( "client_secret",m_this->m_clientSecret ) ;
+				opts.add( "code",authocode ) ;
+				opts.add( "grant_type","authorization_code" ) ;
+				opts.add( "redirect_uri","http://127.0.0.1:" + s ) ;
+
+				return opts.toUtf8() ;
+
+			 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
+
+				auto m = e.readAll() ;
+
+				funct( _parseJSON( m,"refresh_token" ),m ) ;
+			 } ) ;
+		}
+	private:
+		qCheckGMail * m_this ;
+	};
+
+	return { util::type_identity< meaw >(),this } ;
 }
 
 walletmanager::Wallet qCheckGMail::walletHandle()
@@ -908,24 +942,24 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 	class meaw : public walletmanager::wallet
 	{
 	public:
-		meaw( qCheckGMail * g ) : m_gmail( g )
+		meaw( qCheckGMail * g ) : m_this( g )
 		{
 		}
 		void data( QVector< accounts >&& e ) override
 		{
-			m_gmail->getAccountsInfo( std::move( e ) ) ;
+			m_this->getAccountsInfo( std::move( e ) ) ;
 		}
 		void closed() override
 		{
-			m_gmail->m_mutex.lock() ;
-			m_gmail->m_redoMailCheck = true ;
-			m_gmail->m_mutex.unlock() ;
+			m_this->m_mutex.lock() ;
+			m_this->m_redoMailCheck = true ;
+			m_this->m_mutex.unlock() ;
 		}
 	private:
-		qCheckGMail * m_gmail ;
+		qCheckGMail * m_this ;
 	};
 
-	return { walletmanager::type_identity< meaw >(),this } ;
+	return { util::type_identity< meaw >(),this } ;
 }
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )

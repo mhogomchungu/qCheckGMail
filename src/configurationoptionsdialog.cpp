@@ -145,9 +145,9 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 	return false ;
 }
 
-static unique_wallet_ptr _get_bk( LXQt::Wallet::BackEnd bk )
+static util::unique_wallet_ptr _get_bk( LXQt::Wallet::BackEnd bk )
 {
-	auto w = unique_wallet_ptr( LXQt::Wallet::getWalletBackend( bk ).release() ) ;
+	auto w = util::unique_wallet_ptr( LXQt::Wallet::getWalletBackend( bk ).release() ) ;
 
 	w->log( []( const QString& e ){ Q_UNUSED( e ) } ) ;
 
@@ -164,7 +164,7 @@ QString configurationoptionsdialog::walletName( LXQt::Wallet::BackEnd backEnd )
 
                         return "qCheckGMail" ;
 		}else{
-			unique_wallet_ptr w( _get_bk( backEnd ) ) ;
+			util::unique_wallet_ptr w( _get_bk( backEnd ) ) ;
 
                         if( w ){
 
@@ -190,7 +190,7 @@ QString configurationoptionsdialog::logFile()
 	return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME,PROGRAM_NAME ) ;
 }
 
-unique_wallet_ptr configurationoptionsdialog::secureStorageSystem()
+util::unique_wallet_ptr configurationoptionsdialog::secureStorageSystem()
 {
 	using bk = LXQt::Wallet::BackEnd ;
 

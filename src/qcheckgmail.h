@@ -93,7 +93,7 @@ private:
 	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
 	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
 
-	gmailauthorization::getAutho getAuthorization() ;
+	gmailauthorization::getAuth getAuthorization() ;
 
 	walletmanager::Wallet walletHandle() ;
 
