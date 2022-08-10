@@ -136,25 +136,23 @@ walletmanager::walletmanager( const QString& icon ) :
 {
 }
 
-walletmanager::walletmanager( std::function< void( QVector< accounts >&& ) >&& f ) :
-	m_getAccountInfo( std::move( f ) )
+walletmanager::walletmanager( walletmanager::Wallet f ) :
+	m_walletData( std::move( f ) )
 {
 }
 
 walletmanager::walletmanager( const QString& icon,
-                              std::function< void() >&& e,
-			      gmailauthorization::function_t&& k,
-                              std::function< void( QVector< accounts > && ) >&& f ) :
+			      walletmanager::Wallet e,
+			      gmailauthorization::getAutho k ) :
 	m_icon( QString( ":/%1" ).arg( icon ) ),
-	m_walletClosed( e ),
-	m_getAuthorization( k ),
-	m_getAccountInfo( f )
+	m_walletData( std::move( e ) ),
+	m_getAuthorization( std::move( k ) )
 {
 }
 
 walletmanager::~walletmanager()
 {
-        m_walletClosed() ;
+	m_walletData.closed() ;
 
         delete m_ui ;
 }
@@ -303,7 +301,7 @@ void walletmanager::openWallet()
 
 				this->readAccountInfo() ;
 
-				m_getAccountInfo( std::move( m_accounts ) ) ;
+				m_walletData.data( std::move( m_accounts ) ) ;
 				this->deleteLater() ;
 
 				break ;
@@ -369,7 +367,7 @@ void walletmanager::pushButtonClose()
 
 void walletmanager::HideUI()
 {
-        m_getAccountInfo( std::move( m_accounts ) ) ;
+	m_walletData.data( std::move( m_accounts ) ) ;
 	this->hide() ;
 	this->deleteLater() ;
 }
@@ -378,26 +376,37 @@ void walletmanager::pushButtonAdd()
 {
 	this->disableAll() ;
 
-        addaccount::instance( this,m_getAuthorization,[ this ](){
+	class meaw : public addaccount::actions
+	{
+	public:
+		meaw( walletmanager * m ) : m_walletManager( m )
+		{
+		}
+		void cancel() override
+		{
+			m_walletManager->enableAll() ;
+		}
+		void results( accounts::entry&& e ) override
+		{
+			m_walletManager->m_accEntry = std::move( e ) ;
 
-                this->enableAll() ;
+			Task::run( [ this ](){
 
-        },[ this ]( accounts::entry&& e ){
+				account( m_walletManager->m_wallet.get(),m_walletManager->m_accEntry ).add() ;
 
-		m_accEntry = std::move( e ) ;
+			} ).then( [ this ](){
 
-                Task::run( [ this ](){
+				m_walletManager->m_accounts.append( m_walletManager->addEntry( m_walletManager->m_accEntry ) ) ;
 
-			account( m_wallet.get(),m_accEntry ).add() ;
+				m_walletManager->selectLastRow() ;
+				m_walletManager->enableAll() ;
+			} ) ;
+		}
+	private:
+		walletmanager * m_walletManager ;
+	};
 
-                } ).then( [ this ](){
-
-			m_accounts.append( this->addEntry( m_accEntry ) ) ;
-
-                        this->selectLastRow() ;
-                        this->enableAll() ;
-                } ) ;
-        } ) ;
+	addaccount::instance( this,m_getAuthorization,{ addaccount::type_identity< meaw >(),this } ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -495,30 +504,41 @@ void walletmanager::editAccount()
 
 	this->disableAll() ;
 
+	class meaw : public addaccount::actions
+	{
+	public:
+		meaw( walletmanager * m ) : m_walletManager( m )
+		{
+		}
+		void cancel() override
+		{
+			m_walletManager->enableAll() ;
+		}
+		void results( accounts::entry&& e ) override
+		{
+			m_walletManager->m_accEntry = std::move( e ) ;
+
+			Task::run( [ this ](){
+
+				account( m_walletManager->m_wallet.get(),m_walletManager->m_accEntry ).replace() ;
+
+			} ).then( [ this ](){
+
+				m_walletManager->m_accounts.replace( m_walletManager->m_row,m_walletManager->m_accEntry ) ;
+
+				m_walletManager->m_table->item( m_walletManager->m_row,0 )->setText( m_walletManager->m_accEntry.accName ) ;
+				m_walletManager->m_table->item( m_walletManager->m_row,1 )->setText( m_walletManager->m_accEntry.accDisplayName ) ;
+				m_walletManager->m_table->item( m_walletManager->m_row,2 )->setText( m_walletManager->m_accEntry.accLabels ) ;
+
+				m_walletManager->enableAll() ;
+			} ) ;
+		}
+	private:
+		walletmanager * m_walletManager ;
+	};
+
         addaccount::instance( this,{ accName,accPassword,accDisplayName,accLabels,refreshToken },
-                             m_getAuthorization,[ this ](){
-
-                this->enableAll() ;
-
-        },[ this ]( accounts::entry&& e ){
-
-		m_accEntry = std::move( e ) ;
-
-                Task::run( [ this ](){
-
-			account( m_wallet.get(),m_accEntry ).replace() ;
-
-                } ).then( [ this ](){
-
-			m_accounts.replace( m_row,m_accEntry ) ;
-
-			m_table->item( m_row,0 )->setText( m_accEntry.accName ) ;
-			m_table->item( m_row,1 )->setText( m_accEntry.accDisplayName ) ;
-			m_table->item( m_row,2 )->setText( m_accEntry.accLabels ) ;
-
-                        this->enableAll() ;
-                } ) ;
-        } ) ;
+			     m_getAuthorization,{ addaccount::type_identity< meaw >(),this } ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )
@@ -560,4 +580,8 @@ void walletmanager::tableItemChanged( QTableWidgetItem * current,QTableWidgetIte
 			this->selectRow( previous->row(),false ) ;
 		}
 	}
+}
+
+walletmanager::wallet::~wallet()
+{
 }

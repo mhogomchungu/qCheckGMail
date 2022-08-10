@@ -71,7 +71,35 @@ private:
 	QString m_values ;
 };
 
-using unique_wallet_ptr = std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > ;
+class unique_wallet_ptr
+{
+public:
+	unique_wallet_ptr() : m_handle( nullptr,[]( QObject * e ){ e->deleteLater() ; } )
+	{
+	}
+	unique_wallet_ptr( LXQt::Wallet::Wallet * w ) :
+		m_handle( std::move( w ),[]( QObject * e ){ e->deleteLater() ; } )
+	{
+	}
+	LXQt::Wallet::Wallet * get()
+	{
+		return m_handle.get() ;
+	}
+	LXQt::Wallet::Wallet * operator->()
+	{
+		return m_handle.operator->() ;
+	}
+	LXQt::Wallet::Wallet * release()
+	{
+		return m_handle.release() ;
+	}
+	operator bool()
+	{
+		return this->get() ;
+	}
+private:
+	std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > m_handle ;
+};
 
 class configurationoptionsdialog : public QDialog
 {

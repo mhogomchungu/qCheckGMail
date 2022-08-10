@@ -46,13 +46,11 @@ static auto responce = R"R(
 </html>)R" ;
 
 gmailauthorization::gmailauthorization( QDialog * parent,
-					gmailauthorization::function_t& k,
-                                        std::function< void() >&& e,
-					gmailauthorization::function_0_t&& f ) :
+					gmailauthorization::getAutho& k,
+					gmailauthorization::Actions e ) :
         QDialog( parent ),m_ui( new Ui::gmailauthorization ),
         m_getAuthorizationCode( k ),
-        m_cancel( std::move( e ) ),
-        m_getAuthorization( std::move( f ) )
+	m_gmailAuthorization( std::move( e ) )
 {
         m_ui->setupUi( this ) ;
 
@@ -145,7 +143,7 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
 void gmailauthorization::cancel()
 {
-	m_cancel() ;
+	m_gmailAuthorization.cancel() ;
 	this->hideUI() ;
 }
 
@@ -174,7 +172,7 @@ void gmailauthorization::setCode( const QString& r )
 
                                 this->enableAll() ;
                         }else{
-				m_getAuthorization( e,json ) ;
+				m_gmailAuthorization.getToken( e,json ) ;
 
 				this->hideUI() ;
                         }
@@ -206,4 +204,8 @@ void gmailauthorization::closeEvent( QCloseEvent * e )
 {
         e->ignore() ;
         this->cancel() ;
+}
+
+gmailauthorization::actions::~actions()
+{
 }

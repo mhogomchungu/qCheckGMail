@@ -898,29 +898,34 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
         } ) ;
 }
 
-gmailauthorization::function_t qCheckGMail::getAuthorization()
+gmailauthorization::getAutho qCheckGMail::getAuthorization()
 {
-	return [ this ]( const QString& authocode,std::function< void( const QString&,const QByteArray& ) > function ){
+	return { m_manager,m_networkRequest,m_clientID,m_clientSecret } ;
+}
 
-		m_manager.post( -1,m_networkRequest,[ & ](){
+walletmanager::Wallet qCheckGMail::walletHandle()
+{
+	class meaw : public walletmanager::wallet
+	{
+	public:
+		meaw( qCheckGMail * g ) : m_gmail( g )
+		{
+		}
+		void data( QVector< accounts >&& e ) override
+		{
+			m_gmail->getAccountsInfo( std::move( e ) ) ;
+		}
+		void closed() override
+		{
+			m_gmail->m_mutex.lock() ;
+			m_gmail->m_redoMailCheck = true ;
+			m_gmail->m_mutex.unlock() ;
+		}
+	private:
+		qCheckGMail * m_gmail ;
+	};
 
-			urlOpts opts ;
-
-			opts.add( "client_id",m_clientID ) ;
-			opts.add( "client_secret",m_clientSecret ) ;
-			opts.add( "code",authocode ) ;
-			opts.add( "grant_type","authorization_code" ) ;
-			opts.add( "redirect_uri","http://127.0.0.1:" + configurationoptionsdialog::stringRunTimePortNumber() ) ;
-
-			return opts.toUtf8() ;
-
-		 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
-
-			auto m = e.readAll() ;
-
-			funct( _parseJSON( m,"refresh_token" ),m ) ;
-                } ) ;
-        } ;
+	return { walletmanager::type_identity< meaw >(),this } ;
 }
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
@@ -1047,31 +1052,19 @@ QString qCheckGMail::defaultApplication()
 
 void qCheckGMail::configureAccounts()
 {
-        walletmanager::instance( m_applicationIcon,[ this ](){
-
-		m_mutex.lock() ;
-                m_redoMailCheck = true ;
-		m_mutex.unlock() ;
-
-        },this->getAuthorization(),[ this ]( QVector< accounts >&& e ){
-
-                 this->getAccountsInfo( std::move( e ) ) ;
-
-        } ).ShowUI() ;
+	walletmanager::instance( m_applicationIcon,
+				 this->walletHandle(),
+				 this->getAuthorization() ).ShowUI() ;
 }
 
 void qCheckGMail::configurePassWord()
 {
-        walletmanager::instance( m_applicationIcon ).changeWalletPassword() ;
+	walletmanager::instance( m_applicationIcon ).changeWalletPassword() ;
 }
 
 void qCheckGMail::getAccountsInfo()
 {
-        walletmanager::instance( [ this ]( QVector< accounts >&& e ){
-
-                this->getAccountsInfo( std::move( e ) ) ;
-
-        } ).getAccounts() ;
+	walletmanager::instance( this->walletHandle() ).getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()

@@ -147,9 +147,7 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 
 static unique_wallet_ptr _get_bk( LXQt::Wallet::BackEnd bk )
 {
-	auto m = LXQt::Wallet::getWalletBackend( bk ) ;
-
-	auto w = unique_wallet_ptr( m.release(),[]( QObject * e ){ e->deleteLater() ; } ) ;
+	auto w = unique_wallet_ptr( LXQt::Wallet::getWalletBackend( bk ).release() ) ;
 
 	w->log( []( const QString& e ){ Q_UNUSED( e ) } ) ;
 

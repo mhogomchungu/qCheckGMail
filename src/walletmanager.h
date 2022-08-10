@@ -43,8 +43,6 @@
 
 #include "lxqt_wallet.h"
 
-#include <functional>
-
 namespace Ui {
 class walletmanager;
 }
@@ -58,34 +56,70 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	using function_t = std::function< void( QVector< accounts >&& ) > ;
+	template< typename T >
+	struct type_identity{
+		using type = T ;
+	} ;
 
-        static walletmanager& instance( const QString& icon )
+	class wallet
+	{
+	public:
+		virtual void closed()
+		{
+		}
+		virtual void data( QVector< accounts >&& )
+		{
+		}
+		virtual ~wallet() ;
+	private:
+	};
+
+	class Wallet
+	{
+	public:
+		Wallet() : m_handle( std::make_unique< wallet >() )
+		{
+		}
+		template< typename Type,typename ... Args >
+		Wallet( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void closed()
+		{
+			m_handle->closed() ;
+		}
+		void data( QVector< accounts >&& e )
+		{
+			m_handle->data( std::move( e ) ) ;
+		}
+	private:
+		std::unique_ptr< walletmanager::wallet > m_handle ;
+	} ;
+
+	static walletmanager& instance( const QString& icon )
         {
 		return *( new walletmanager( icon ) ) ;
         }
 
-	static walletmanager& instance( walletmanager::function_t&& f )
+	static walletmanager& instance( walletmanager::Wallet f )
 	{
 		return *( new walletmanager( std::move( f ) ) ) ;
-        }
+	}
 
         static walletmanager& instance( const QString& icon,
-                                        std::function< void() >&& e,
-					gmailauthorization::function_t&& k,
-					walletmanager::function_t&& f )
+					walletmanager::Wallet e,
+					gmailauthorization::getAutho k )
         {
-		return *( new walletmanager( icon,std::move( e ),
-					     std::move( k ),std::move( f ) ) ) ;
+		return *( new walletmanager( icon,std::move( e ),std::move( k ) ) ) ;
         }
 
 	walletmanager( const QString& icon ) ;
-	walletmanager( walletmanager::function_t&& ) ;
+	walletmanager( walletmanager::Wallet ) ;
 
         walletmanager( const QString& icon,
-                       std::function< void() >&&,
-		       gmailauthorization::function_t&&,
-		       walletmanager::function_t&& ) ;
+		       walletmanager::Wallet,
+		       gmailauthorization::getAutho ) ;
 
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
@@ -117,7 +151,7 @@ private:
 	Ui::walletmanager * m_ui = nullptr ;
 
         QVector< accounts > m_accounts ;
-	unique_wallet_ptr m_wallet = { nullptr,[]( QObject * e ){ Q_UNUSED( e ) } } ;
+	unique_wallet_ptr m_wallet ;
 
 	int m_deleteRow ;
 	QTableWidget * m_table ;
@@ -127,15 +161,9 @@ private:
 	QString m_icon ;
 	int m_row ;
 
-	std::function< void() > m_walletClosed = [](){} ;
+	walletmanager::Wallet m_walletData ;
 
-	gmailauthorization::function_t m_getAuthorization = []( const QString&,
-			std::function< void( const QString&,const QByteArray& ) > ){} ;
-
-	walletmanager::function_t m_getAccountInfo = []( QVector< accounts >&& e ){
-
-		Q_UNUSED( e ) ;
-	} ;
+	gmailauthorization::getAutho m_getAuthorization ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

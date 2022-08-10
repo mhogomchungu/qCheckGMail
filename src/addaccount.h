@@ -39,36 +39,69 @@ class addaccount : public QDialog
 {
 	Q_OBJECT
 public:
+	template< typename T >
+	struct type_identity{
+		using type = T ;
+	} ;
+
+	class actions
+	{
+	public:
+		virtual void cancel()
+		{
+		}
+		virtual void results( accounts::entry&& )
+		{
+		}
+		virtual ~actions() ;
+	private:
+	} ;
+
+	class Actions
+	{
+	public:
+		template< typename Type,typename ... Args >
+		Actions( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void cancel()
+		{
+			m_handle->cancel() ;
+		}
+		void results( accounts::entry&& e )
+		{
+			m_handle->results( std::move( e ) ) ;
+		}
+	private:
+		std::unique_ptr< addaccount::actions > m_handle ;
+	} ;
 
         static addaccount& instance( QDialog * parent,
                                      const accounts::entry& e,
-				     gmailauthorization::function_t& k,
-                                     std::function< void() >&& r,
-                                     std::function< void( accounts::entry&& e ) >&& f )
+				     gmailauthorization::getAutho& k,
+				     addaccount::Actions r )
         {
-                return *( new addaccount( parent,e,k,std::move( r ),std::move( f ) ) ) ;
+		return *( new addaccount( parent,e,k,std::move( r ) ) ) ;
         }
 
         static addaccount& instance( QDialog * parent,
-				     gmailauthorization::function_t& k,
-                                     std::function< void() >&& e,
-                                     std::function< void( accounts::entry&& e ) >&& f )
+				     gmailauthorization::getAutho& k,
+				     addaccount::Actions e )
         {
-                return *( new addaccount( parent,k,std::move( e ),std::move( f ) ) ) ;
+		return *( new addaccount( parent,k,std::move( e ) ) ) ;
         }
 
         addaccount( QDialog *,
                     const accounts::entry&,
-		    gmailauthorization::function_t&,
-                    std::function< void() >&&,
-                    std::function< void( accounts::entry&& ) >&& ) ;
+		    gmailauthorization::getAutho&,
+		    addaccount::Actions ) ;
 
         addaccount( QDialog *,
-		    gmailauthorization::function_t&,
-                    std::function< void() >&&,
-                    std::function< void( accounts::entry&& ) >&& ) ;
+		    gmailauthorization::getAutho&,
+		    addaccount::Actions ) ;
 
-        ~addaccount();
+	~addaccount() ;
 private slots:
 	void add( void ) ;
 	void cancel( void ) ;
@@ -78,9 +111,8 @@ private:
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
         bool m_edit ;
-	std::function< void( const QString&,std::function< void( const QString&,const QByteArray& ) > ) >& m_getAuthorization ;
-        std::function< void() > m_cancel ;
-        std::function< void( accounts::entry&& ) > m_result ;
+	gmailauthorization::getAutho& m_getAuthorization ;
+	addaccount::Actions m_actions ;
 };
 
 #endif // ADDACCOUNT_H

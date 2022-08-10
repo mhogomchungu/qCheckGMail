@@ -26,14 +26,12 @@
 #include <iostream>
 
 addaccount::addaccount( QDialog * parent,
-			gmailauthorization::function_t& k,
-                        std::function< void() >&& e,
-                        std::function< void( accounts::entry&& e ) >&& f ) :
+			gmailauthorization::getAutho& k,
+			addaccount::Actions s ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
         m_getAuthorization( k ),
-        m_cancel( std::move( e ) ),
-        m_result( std::move( f ) )
+	m_actions( std::move( s ) )
 {
 	m_ui->setupUi( this ) ;
 
@@ -50,35 +48,46 @@ addaccount::addaccount( QDialog * parent,
 
 	m_ui->lineEditPassword->setEnabled( false ) ;
 
-	gmailauthorization::instance( this,m_getAuthorization,[ this ](){
-
-		this->cancel() ;
-
-	},[ this ]( const QString& e,const QByteArray& s ){
-
-		if( e.isEmpty() ){
-
-			this->HideUI() ;
-
-			std::cout << "ERROR: Failed To Generate Token\n" ;
-			std::cout << s.constData() << std::endl ;
-		}else{
-			this->show() ;
-			m_ui->lineEditPassword->setText( e ) ;
+	class accs : public gmailauthorization::actions
+	{
+	public:
+		accs( addaccount * acc ) : m_acc( acc )
+		{
 		}
-	} ) ;
+		void cancel() override
+		{
+			m_acc->cancel() ;
+		}
+		void getToken( const QString& e,const QByteArray& s ) override
+		{
+			if( e.isEmpty() ){
+
+				m_acc->HideUI() ;
+
+				std::cout << "ERROR: Failed To Generate Token\n" ;
+				std::cout << s.constData() << std::endl ;
+			}else{
+				m_acc->show() ;
+				m_acc->m_ui->lineEditPassword->setText( e ) ;
+			}
+		}
+	private:
+		addaccount * m_acc ;
+	};
+
+	gmailauthorization::instance( this,
+				      m_getAuthorization,
+				      { gmailauthorization::type_identity< accs >(),this } ) ;
 }
 
 addaccount::addaccount( QDialog * parent,
                         const accounts::entry& e,
-			gmailauthorization::function_t& k,
-                        std::function< void() >&& r,
-                        std::function< void( accounts::entry&& e ) >&& f ) :
+			gmailauthorization::getAutho& k,
+			addaccount::Actions s ) :
         QDialog( parent ),
         m_ui( new Ui::addaccount ),
-        m_getAuthorization( k ),
-        m_cancel( std::move( r ) ),
-        m_result( std::move( f ) )
+	m_getAuthorization( k ),
+	m_actions( std::move( s ) )
 {
 	m_ui->setupUi( this );
         //this->setFixedSize( this->size() ) ;
@@ -145,13 +154,17 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
-		m_result( { accName,QString(),accDisplayName,accLabels,key } ) ;
+		m_actions.results( { accName,QString(),accDisplayName,accLabels,key } ) ;
 		this->HideUI() ;
 	}
 }
 
 void addaccount::cancel()
 {
-        m_cancel() ;
+	m_actions.cancel() ;
 	this->HideUI() ;
+}
+
+addaccount::actions::~actions()
+{
 }
