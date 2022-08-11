@@ -41,9 +41,8 @@ class addaccount : public QDialog
 {
 	Q_OBJECT
 public:
-	class actions
+	struct actions
 	{
-	public:
 		virtual void cancel()
 		{
 		}
@@ -51,7 +50,6 @@ public:
 		{
 		}
 		virtual ~actions() ;
-	private:
 	} ;
 
 	class Actions

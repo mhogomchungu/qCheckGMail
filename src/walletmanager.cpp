@@ -372,6 +372,23 @@ void walletmanager::HideUI()
 	this->deleteLater() ;
 }
 
+void walletmanager::pushButtonAdd( accounts::entry&& e )
+{
+	m_accEntry = std::move( e ) ;
+
+	Task::run( [ this ](){
+
+		account( m_wallet.get(),m_accEntry ).add() ;
+
+	} ).then( [ this ](){
+
+		m_accounts.append( this->addEntry( m_accEntry ) ) ;
+
+		this->selectLastRow() ;
+		this->enableAll() ;
+	} ) ;
+}
+
 void walletmanager::pushButtonAdd()
 {
 	this->disableAll() ;
@@ -388,19 +405,7 @@ void walletmanager::pushButtonAdd()
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_this->m_accEntry = std::move( e ) ;
-
-			Task::run( [ this ](){
-
-				account( m_this->m_wallet.get(),m_this->m_accEntry ).add() ;
-
-			} ).then( [ this ](){
-
-				m_this->m_accounts.append( m_this->addEntry( m_this->m_accEntry ) ) ;
-
-				m_this->selectLastRow() ;
-				m_this->enableAll() ;
-			} ) ;
+			m_this->pushButtonAdd( std::move( e ) ) ;
 		}
 	private:
 		walletmanager * m_this ;
@@ -516,22 +521,7 @@ void walletmanager::editAccount()
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_this->m_accEntry = std::move( e ) ;
-
-			Task::run( [ this ](){
-
-				account( m_this->m_wallet.get(),m_this->m_accEntry ).replace() ;
-
-			} ).then( [ this ](){
-
-				m_this->m_accounts.replace( m_this->m_row,m_this->m_accEntry ) ;
-
-				m_this->m_table->item( m_this->m_row,0 )->setText( m_this->m_accEntry.accName ) ;
-				m_this->m_table->item( m_this->m_row,1 )->setText( m_this->m_accEntry.accDisplayName ) ;
-				m_this->m_table->item( m_this->m_row,2 )->setText( m_this->m_accEntry.accLabels ) ;
-
-				m_this->enableAll() ;
-			} ) ;
+			m_this->editAccount( std::move( e ) ) ;
 		}
 	private:
 		walletmanager * m_this ;
@@ -541,6 +531,26 @@ void walletmanager::editAccount()
 			      { accName,accPassword,accDisplayName,accLabels,refreshToken },
 			      m_getAuthorization,
 			      { util::type_identity< meaw >(),this } ) ;
+}
+
+void walletmanager::editAccount( accounts::entry&& e )
+{
+	m_accEntry = std::move( e ) ;
+
+	Task::run( [ this ](){
+
+		account( m_wallet.get(),m_accEntry ).replace() ;
+
+	} ).then( [ this ](){
+
+		m_accounts.replace( m_row,m_accEntry ) ;
+
+		m_table->item( m_row,0 )->setText( m_accEntry.accName ) ;
+		m_table->item( m_row,1 )->setText( m_accEntry.accDisplayName ) ;
+		m_table->item( m_row,2 )->setText( m_accEntry.accLabels ) ;
+
+		this->enableAll() ;
+	} ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )

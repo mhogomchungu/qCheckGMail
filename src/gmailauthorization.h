@@ -36,15 +36,13 @@ class gmailauthorization : public QDialog
 {
         Q_OBJECT
 public:
-	class authResult
+	struct authResult
 	{
-	public:
 		virtual void operator()( const QString&,const QByteArray& )
 		{
 		}
 		virtual ~authResult() ;
-	private:
-	};
+	} ;
 
 	class AuthResult
 	{
@@ -60,16 +58,14 @@ public:
 		}
 	private:
 		std::shared_ptr< gmailauthorization::authResult > m_handle ;
-	};
+	} ;
 
-	class authActions
+	struct authActions
 	{
-	public:
 		virtual void operator()( const QString&,AuthResult )
 		{
 		}
 		virtual ~authActions() ;
-	private:
 	} ;
 
 	class getAuth
@@ -91,9 +87,8 @@ public:
 		std::unique_ptr< gmailauthorization::authActions > m_handle ;
 	};
 
-	class actions
+	struct actions
 	{
-	public:
 		virtual void cancel()
 		{
 		}
@@ -101,7 +96,6 @@ public:
 		{
 		}
 		virtual ~actions() ;
-	private:
 	} ;
 
 	class Actions

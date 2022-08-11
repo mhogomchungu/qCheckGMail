@@ -56,9 +56,8 @@ class walletmanager : public QDialog
 
 	Q_OBJECT
 public:
-	class wallet
+	struct wallet
 	{
-	public:
 		virtual void closed()
 		{
 		}
@@ -66,8 +65,7 @@ public:
 		{
 		}
 		virtual ~wallet() ;
-	private:
-	};
+	} ;
 
 	class Wallet
 	{
@@ -131,6 +129,8 @@ private slots:
 	void editAccount( void ) ;
 	void enableAll( void ) ;
 private:
+	void pushButtonAdd( accounts::entry&& ) ;
+	void editAccount( accounts::entry&& ) ;
 	void openWallet( void ) ;
 	const accounts& addEntry( const accounts& ) ;
 	void disableAll( void ) ;
