@@ -333,7 +333,6 @@ void qCheckGMail::noInternet( const QString& e )
 QString qCheckGMail::displayName( const QString& l )
 {
 	const auto& account     = m_accounts.at( m_currentAccount ) ;
-	const auto& displayName = account.displayName() ;
 	const auto& accountName = account.accountName() ;
 	auto label      	= l ;
 
@@ -344,19 +343,9 @@ QString qCheckGMail::displayName( const QString& l )
 
 	if( label.isEmpty() ){
 
-		if( displayName.isEmpty() ){
-
-			return accountName ;
-		}else{
-			return displayName ;
-		}
+		return accountName ;
 	}else{
-		if( displayName.isEmpty() ){
-
-			return QString( "%1/%2" ).arg( accountName,label ) ;
-		}else{
-			return QString( "%1/%2" ).arg( displayName,label ) ;
-		}
+		return QString( "%1/%2" ).arg( accountName,label ) ;
 	}
 }
 

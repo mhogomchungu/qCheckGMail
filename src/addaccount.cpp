@@ -166,8 +166,6 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
-		QString accDisplayName  ;
-
 		auto accLabels = this->m_ui->lineEditLabel->text() ;
 		auto accLabelsOrg = accLabels ;
 
@@ -178,7 +176,7 @@ void addaccount::add()
 
 		auto lbs = util::labelsToJson( accLabels,accLabelsOrg ) ;
 
-		m_actions.results( { accName,QString(),accDisplayName,lbs,m_key } ) ;
+		m_actions.results( { accName,QString(),lbs,m_key } ) ;
 
 		this->HideUI() ;
 	}

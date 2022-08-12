@@ -53,7 +53,6 @@ public:
 	{
 		m_wallet->addKey( m_name       ,m_acc.accPassword ) ;
 		m_wallet->addKey( m_labels     ,m_acc.accLabels ) ;
-		m_wallet->addKey( m_displayName,m_acc.accDisplayName ) ;
 		m_wallet->addKey( m_token      ,m_acc.accRefreshToken ) ;
 	}
 
@@ -61,7 +60,6 @@ public:
 	{
 		m_wallet->deleteKey( m_name ) ;
 		m_wallet->deleteKey( m_labels ) ;
-		m_wallet->deleteKey( m_displayName ) ;
 		m_wallet->deleteKey( m_token ) ;
 	}
 
@@ -89,7 +87,6 @@ public:
 
 		return { m_name,
 			_entry( m_name ),
-			_entry( m_displayName ),
 			_entry( m_labels ),
 			_entry( m_token ) } ;
 	}
@@ -102,7 +99,6 @@ public:
 	account( LXQt::Wallet::Wallet * w,const accounts::entry& e = accounts::entry() ) :
 		m_name( e.accName ),
 		m_labels( m_name + LABEL_IDENTIFIER ),
-		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
 		m_token( m_name + TOKEN_IDENTIFIER ),
 		m_acc( e ),
 		m_wallet( w )
@@ -114,7 +110,6 @@ public:
 		 const accounts::entry& e = accounts::entry() ) :
 		m_name( accName ),
 		m_labels( m_name + LABEL_IDENTIFIER ),
-		m_displayName( m_name + DISPLAY_NAME_IDENTIFIER ),
 		m_token( m_name + TOKEN_IDENTIFIER ),
 		m_acc( e ),
 		m_wallet( w )
@@ -123,7 +118,6 @@ public:
 private:
 	const QString m_name ;
 	const QString m_labels ;
-	const QString m_displayName ;
 	const QString m_token ;
 
 	const accounts::entry& m_acc ;
@@ -179,9 +173,8 @@ void walletmanager::buildGUI()
 	connect( m_ui->tableWidget,&QTableWidget::itemClicked,this,&walletmanager::tableItemClicked ) ;
 	connect( m_ui->tableWidget,&QTableWidget::currentItemChanged,this,dm ) ;
 
-	m_ui->tableWidget->setColumnWidth( 0,171 ) ;
-	m_ui->tableWidget->setColumnWidth( 1,171 ) ;
-	m_ui->tableWidget->setColumnWidth( 2,171 ) ;
+	m_ui->tableWidget->setColumnWidth( 0,300 ) ;
+	m_ui->tableWidget->horizontalHeader()->setStretchLastSection( true ) ;
 
 	m_table = m_ui->tableWidget ;
 
@@ -248,8 +241,7 @@ const accounts& walletmanager::addEntry( const accounts& acc )
 	} ;
 
 	m_table->setItem( row,0,_add_item( acc.accountName() ) ) ;
-	m_table->setItem( row,1,_add_item( acc.displayName() ) ) ;
-	m_table->setItem( row,2,_add_item( util::namesFromJson( acc.labels() ) ) ) ;
+	m_table->setItem( row,1,_add_item( util::namesFromJson( acc.labels() ) ) ) ;
 
 	return acc ;
 }
@@ -430,21 +422,8 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 		connect( ac,&QAction::triggered,this,&walletmanager::deleteAccount ) ;
 
                 return ac ;
-        }() ) ;
+	}() ) ;
 
-	/*
-        m.addAction( [ & ](){
-
-                auto ac = new QAction( &m ) ;
-		ac->setText( tr( "Edit Entry" ) ) ;
-
-		auto cm = static_cast< void( walletmanager::* )( bool ) >( &walletmanager::editAccount ) ;
-
-		connect( ac,&QAction::triggered,this,cm ) ;
-
-                return ac ;
-        }() ) ;
-	*/
 	m.exec( QCursor::pos() ) ;
 }
 
@@ -485,80 +464,6 @@ void walletmanager::deleteAccount( bool )
 	}else{
 		this->enableAll() ;
 	}
-}
-
-void walletmanager::editAccount( bool )
-{
-        m_row = m_table->currentRow() ;
-
-        auto _getPassWord = [ this ]( const QString& accName,QString& p,QString& t ){
-
-		for( const auto& it : m_accounts ){
-
-			if( it.accountName() == accName ){
-
-                                p = it.passWord() ;
-                                t = it.refreshToken() ;
-
-                                break ;
-			}
-                }
-	} ;
-
-        auto accName        = m_table->item( m_row,0 )->text() ;
-        auto accDisplayName = m_table->item( m_row,1 )->text() ;
-        auto accLabels      = m_table->item( m_row,2 )->text() ;
-
-        QString accPassword ;
-        QString refreshToken ;
-
-        _getPassWord( accName,accPassword,refreshToken ) ;
-
-	this->disableAll() ;
-
-	class meaw : public addaccount::actions
-	{
-	public:
-		meaw( walletmanager * m ) : m_this( m )
-		{
-		}
-		void cancel() override
-		{
-			m_this->enableAll() ;
-		}
-		void results( accounts::entry&& e ) override
-		{
-			m_this->editAccount( std::move( e ) ) ;
-		}
-	private:
-		walletmanager * m_this ;
-	};
-
-	addaccount::instance( this,
-			      { accName,accPassword,accDisplayName,accLabels,refreshToken },
-			      m_getAuthorization,
-			      { util::type_identity< meaw >(),this },
-			      m_getAddr ) ;
-}
-
-void walletmanager::editAccount( accounts::entry&& e )
-{
-	m_accEntry = std::move( e ) ;
-
-	Task::run( [ this ](){
-
-		account( m_wallet.get(),m_accEntry ).replace() ;
-
-	} ).then( [ this ](){
-
-		m_accounts.replace( m_row,m_accEntry ) ;
-
-		m_table->item( m_row,0 )->setText( m_accEntry.accName ) ;
-		m_table->item( m_row,1 )->setText( m_accEntry.accDisplayName ) ;
-		m_table->item( m_row,2 )->setText( m_accEntry.accLabels ) ;
-
-		this->enableAll() ;
-	} ) ;
 }
 
 void walletmanager::selectRow( int row,bool highlight )

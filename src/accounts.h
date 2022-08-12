@@ -50,7 +50,6 @@ public:
 	{
 		QString accName ;
 		QString accPassword ;
-		QString accDisplayName ;
 		QString accLabels ;
 		QString accRefreshToken ;
 	};
@@ -62,7 +61,6 @@ public:
 	const QString& accountName( void ) const ;
 	const QString& passWord( void )	 const ;
 	const QString& defaultLabelUrl( void ) const ;
-	const QString& displayName( void ) const ;
 	const QString& labels( void ) const ;
 	const QString& labelUrlAt( int ) const ;
 	const QString& accessToken( void ) const ;

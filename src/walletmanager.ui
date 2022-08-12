@@ -50,11 +50,6 @@
         </column>
         <column>
          <property name="text">
-          <string>Display Name</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
           <string>Account Labels</string>
          </property>
         </column>

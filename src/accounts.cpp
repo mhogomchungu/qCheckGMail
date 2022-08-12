@@ -54,11 +54,6 @@ const QString& accounts::passWord() const
 	return m_entry.accPassword ;
 }
 
-const QString& accounts::displayName() const
-{
-	return m_entry.accDisplayName ;
-}
-
 const QString& accounts::labels() const
 {
 	return m_entry.accLabels ;

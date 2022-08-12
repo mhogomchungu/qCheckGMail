@@ -124,10 +124,8 @@ private:
 	void pushButtonClose( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void editAccount( bool = false ) ;
 	void enableAll( void ) ;
 	void pushButtonAdd( accounts::entry&& ) ;
-	void editAccount( accounts::entry&& ) ;
 	void openWallet( void ) ;
 	const accounts& addEntry( const accounts& ) ;
 	void disableAll( void ) ;
