@@ -31,27 +31,25 @@ class qCheckGMailInit
 public:
 	struct args
 	{
-		const QStringList& args ;
 		QApplication& app ;
 	} ;
 	qCheckGMailInit( const qCheckGMailInit::args& args ) :
-		m_args( args ),
+		m_qApp( args.app ),
+		m_args( m_qApp.arguments() ),
 		m_mainApp( this->setProfile() )
 	{
 	}
 	QString setProfile()
 	{
-		QString arg( "-p" ) ;
-
-		int j = m_args.args.size() ;
+		int j = m_args.size() ;
 
 		for( int i = 0 ; i < j ; i++ ){
 
-			if( m_args.args.at( i ) == arg ){
+			if( m_args.at( i ) == "-p" ){
 
 				if( i + 1 < j ){
 
-					return m_args.args.at( i + 1 ) ;
+					return m_args.at( i + 1 ) ;
 				}else{
 					return QString() ;
 				}
@@ -65,20 +63,21 @@ public:
 	}
 	void start( const QByteArray& )
 	{
-		if( m_args.args.contains( "-a" ) ){
+		if( m_args.contains( "-a" ) ){
 
 			if( configurationoptionsdialog::autoStartEnabled() ){
 
 				m_mainApp.start() ;
 			}else{
-				m_args.app.exit( qCheckGMail::autoStartDisabled() ) ;
+				m_qApp.exit( qCheckGMail::autoStartDisabled() ) ;
 			}
 		}else{
 			m_mainApp.start() ;
 		}
 	}
 private:
-	qCheckGMailInit::args m_args ;
+	QApplication& m_qApp ;
+	QStringList m_args ;
 	qCheckGMail m_mainApp ;
 } ;
 
@@ -86,10 +85,9 @@ int main( int argc,char * argv[] )
 {
 	QApplication a( argc,argv ) ;
 
-	auto instanceArgs = util::make_oneinstance_args( [ & ](){
+	auto instanceArgs = util::make_oneinstance_args( [](){
 
 		std::cout << "There seem to be another instance running,exiting this one" << std::endl ;
-		a.exit() ;
 	},[](){
 		std::cout << "Previous instance seem to have crashed,trying to clean up before starting" << std::endl ;
 	} ) ;
@@ -100,11 +98,5 @@ int main( int argc,char * argv[] )
 
 	QString spath = QDir::homePath() + "/.qCheckGMail.socket" ;
 
-	auto args = a.arguments() ;
-
-	qCheckGMailInit::args mArgs{ args,a } ;
-
-	singleInstance instance( spath,QByteArray(),std::move( mArgs ),std::move( instanceArgs ) ) ;
-
-	return a.exec() ;
+	return singleInstance( spath,{},a,{ a },std::move( instanceArgs ) ).exec() ;
 }

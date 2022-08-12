@@ -191,10 +191,12 @@ namespace util
 	public:
 		oneinstance( const QString& socketPath,
 			     const QByteArray& argument,
+			     QApplication& app,
 			     MainAppArgs args,
 			     InstanceArgs iargs ) :
 			m_serverPath( socketPath ),
 			m_argument( argument ),
+			m_qApp( app ),
 			m_args( std::move( args ) ),
 			m_iargs( std::move( iargs ) ),
 			m_exec( [ this ](){ this->run() ; } )
@@ -207,6 +209,10 @@ namespace util
 				m_localServer.close() ;
 				QFile::remove( m_serverPath ) ;
 			}
+		}
+		int exec()
+		{
+			return m_qApp.exec() ;
 		}
 	private:
 		void run()
@@ -224,23 +230,22 @@ namespace util
 					m_localSocket.close() ;
 
 					m_iargs.otherInstanceRunning() ;
+					m_qApp.quit() ;
 				} ) ;
 
 			#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
 				using cs = void( QLocalSocket::* )( QLocalSocket::LocalSocketError ) ;
 
-				QObject::connect( &m_localSocket,static_cast< cs >( &QLocalSocket::error ),[ this ]( QLocalSocket::LocalSocketError e ){
+				QObject::connect( &m_localSocket,static_cast< cs >( &QLocalSocket::error ),[ this ]( QLocalSocket::LocalSocketError ){
 
-					Q_UNUSED( e )
 					m_iargs.otherInstanceCrashed() ;
 					QFile::remove( m_serverPath ) ;
 					this->start() ;
 				} ) ;
 			#else
-				QObject::connect( &m_localSocket,&QLocalSocket::errorOccurred,[ this ]( QLocalSocket::LocalSocketError e ){
+				QObject::connect( &m_localSocket,&QLocalSocket::errorOccurred,[ this ]( QLocalSocket::LocalSocketError ){
 
 					m_iargs.otherInstanceCrashed() ;
-					Q_UNUSED( e )
 					QFile::remove( m_serverPath ) ;
 					this->start() ;
 				} ) ;
@@ -273,12 +278,12 @@ namespace util
 		QLocalSocket m_localSocket ;
 		QString m_serverPath ;
 		QByteArray m_argument ;
+		QApplication& m_qApp ;
 		std::unique_ptr< MainApp > m_mainApp ;
 		MainAppArgs m_args ;
 		InstanceArgs m_iargs ;
 		util::exec m_exec ;
-	};
-
+	} ;
 }
 
 #endif
