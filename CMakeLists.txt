@@ -182,7 +182,11 @@ set( UI_FILES 	src/gmailauthorization.ui
 		src/configurationoptionsdialog.ui
 )
 
-set( MOC_FILES	src/statusicon.h )
+set( MOC_FILES	src/statusicon.h
+                src/walletmanager.h
+		src/addaccount.h
+		src/qcheckgmail.h
+		src/configurationoptionsdialog.h )
 
 set( CPP_FILES	src/gmailauthorization.cpp
 		src/main.cpp

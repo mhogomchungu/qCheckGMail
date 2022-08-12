@@ -38,6 +38,7 @@ class addaccount;
 
 class addaccount : public QDialog
 {
+	Q_OBJECT
 public:
 	struct labels
 	{

@@ -49,6 +49,7 @@ class walletmanager;
 
 class walletmanager : public QDialog
 {
+	Q_OBJECT
 	typedef enum{
 		getAccountInfo,
 		showAccountInfo,

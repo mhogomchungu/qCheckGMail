@@ -54,6 +54,7 @@
 
 class qCheckGMail : public QObject
 {
+	Q_OBJECT
 public:
 	explicit qCheckGMail( const QString& profile = QString() ) ;
 	~qCheckGMail() ;

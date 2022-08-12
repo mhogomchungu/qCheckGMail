@@ -45,6 +45,7 @@ class configurationoptionsdialog;
 
 class configurationoptionsdialog : public QDialog
 {
+	Q_OBJECT
 public:
 	struct actions
 	{
