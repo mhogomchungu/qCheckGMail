@@ -21,14 +21,18 @@
 #define UTIL_H
 
 #include <memory>
+
+#include <QApplication>
+#include <QTimer>
 #include <QString>
 #include <QByteArray>
 #include <QObject>
-
-#include "lxqt_wallet.h"
-
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QtNetwork/QLocalServer>
+#include <QtNetwork/QLocalSocket>
+
+#include "lxqt_wallet.h"
 
 namespace util
 {
@@ -134,6 +138,147 @@ namespace util
 	private:
 		std::unique_ptr< LXQt::Wallet::Wallet,void( * )( QObject * ) > m_handle ;
 	} ;
+
+	#if QT_VERSION < QT_VERSION_CHECK( 5,4,0 )
+		class exec : public QObject
+		{
+			Q_OBJECT
+		public:
+			exec( std::function< void() > function ) : m_function( std::move( function ) )
+			{
+				QTimer::singleShot( 0,this,SLOT( run() ) ) ;
+			}
+		private slots:
+			void run()
+			{
+				m_function() ;
+			}
+		private:
+			std::function< void() > m_function ;
+		} ;
+	#else
+		class exec
+		{
+		public:
+			template< typename Function >
+			exec( Function function )
+			{
+				QTimer::singleShot( 0,[ function = std::move( function ) ]{
+
+					function() ;
+				} ) ;
+			}
+		private:
+		} ;
+	#endif
+
+	template< typename OIR,typename PIC >
+	struct instanceArgs
+	{
+		OIR otherInstanceRunning ;
+		PIC otherInstanceCrashed ;
+	} ;
+
+	template< typename OIR,typename PIC >
+	auto make_oneinstance_args( OIR r,PIC c )
+	{
+		return instanceArgs< OIR,PIC >{ std::move( r ),std::move( c ) } ;
+	}
+
+	template< typename MainApp,typename MainAppArgs,typename InstanceArgs >
+	class oneinstance
+	{
+	public:
+		oneinstance( const QString& socketPath,
+			     const QByteArray& argument,
+			     MainAppArgs args,
+			     InstanceArgs iargs ) :
+			m_serverPath( socketPath ),
+			m_argument( argument ),
+			m_args( std::move( args ) ),
+			m_iargs( std::move( iargs ) ),
+			m_exec( [ this ](){ this->run() ; } )
+		{
+		}
+		~oneinstance()
+		{
+			if( m_localServer.isListening() ){
+
+				m_localServer.close() ;
+				QFile::remove( m_serverPath ) ;
+			}
+		}
+	private:
+		void run()
+		{
+			if( QFile::exists( m_serverPath ) ){
+
+				QObject::connect( &m_localSocket,&QLocalSocket::connected,[ this ](){
+
+					if( !m_argument.isEmpty() ){
+
+						m_localSocket.write( m_argument ) ;
+						m_localSocket.waitForBytesWritten() ;
+					}
+
+					m_localSocket.close() ;
+
+					m_iargs.otherInstanceRunning() ;
+				} ) ;
+
+			#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+				using cs = void( QLocalSocket::* )( QLocalSocket::LocalSocketError ) ;
+
+				QObject::connect( &m_localSocket,static_cast< cs >( &QLocalSocket::error ),[ this ]( QLocalSocket::LocalSocketError e ){
+
+					Q_UNUSED( e )
+					m_iargs.otherInstanceCrashed() ;
+					QFile::remove( m_serverPath ) ;
+					this->start() ;
+				} ) ;
+			#else
+				QObject::connect( &m_localSocket,&QLocalSocket::errorOccurred,[ this ]( QLocalSocket::LocalSocketError e ){
+
+					m_iargs.otherInstanceCrashed() ;
+					Q_UNUSED( e )
+					QFile::remove( m_serverPath ) ;
+					this->start() ;
+				} ) ;
+			#endif
+				m_localSocket.connectToServer( m_serverPath ) ;
+			}else{
+				this->start() ;
+			}
+		}
+		void start( void )
+		{
+			m_mainApp = std::make_unique< MainApp >( std::move( m_args ) ) ;
+
+			m_mainApp->start( m_argument ) ;
+
+			QObject::connect( &m_localServer,&QLocalServer::newConnection,[ this ](){
+
+				auto s = m_localServer.nextPendingConnection() ;
+
+				QObject::connect( s,&QLocalSocket::readyRead,[ this,s ]{
+
+					m_mainApp->event( s->readAll() ) ;
+					s->deleteLater() ;
+				} ) ;
+			} ) ;
+
+			m_localServer.listen( m_serverPath ) ;
+		}
+		QLocalServer m_localServer ;
+		QLocalSocket m_localSocket ;
+		QString m_serverPath ;
+		QByteArray m_argument ;
+		std::unique_ptr< MainApp > m_mainApp ;
+		MainAppArgs m_args ;
+		InstanceArgs m_iargs ;
+		util::exec m_exec ;
+	};
+
 }
 
 #endif

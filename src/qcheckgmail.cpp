@@ -113,8 +113,6 @@ void qCheckGMail::start()
 
 		this->run() ;
 	} ) ;
-
-	//QMetaObject::invokeMethod( this,"run",Qt::QueuedConnection ) ;
 }
 
 void qCheckGMail::run()

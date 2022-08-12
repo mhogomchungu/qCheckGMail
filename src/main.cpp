@@ -19,21 +19,39 @@
 
 #include <QApplication>
 #include <QStringList>
+#include <QStandardPaths>
 
 #include "qcheckgmail.h"
+#include "util.hpp"
 
-int main( int argc,char * argv[] )
+#include <iostream>
+
+class qCheckGMailInit
 {
-	QApplication a( argc,argv ) ;
-	QStringList l = QCoreApplication::arguments() ;
-
-	auto _setProfile = [&]()->QString{
+public:
+	struct args
+	{
+		const QStringList& args ;
+		QApplication& app ;
+	} ;
+	qCheckGMailInit( const qCheckGMailInit::args& args ) :
+		m_args( args ),
+		m_mainApp( this->setProfile() )
+	{
+	}
+	QString setProfile()
+	{
 		QString arg( "-p" ) ;
-		int j = l.size() ;
+
+		int j = m_args.args.size() ;
+
 		for( int i = 0 ; i < j ; i++ ){
-			if( l.at( i ) == arg ){
+
+			if( m_args.args.at( i ) == arg ){
+
 				if( i + 1 < j ){
-					return l.at( i + 1 ) ;
+
+					return m_args.args.at( i + 1 ) ;
 				}else{
 					return QString() ;
 				}
@@ -41,19 +59,52 @@ int main( int argc,char * argv[] )
 		}
 
 		return QString() ;
-	} ;
-
-	if( l.contains( "-a" ) ){
-		if( configurationoptionsdialog::autoStartEnabled() ){
-			qCheckGMail w( _setProfile() ) ;
-			w.start() ;
-			return a.exec() ;
-		}else{
-			return qCheckGMail::autoStartDisabled() ;
-		}
-	}else{
-		qCheckGMail w( _setProfile() ) ;
-		w.start() ;
-		return a.exec() ;
 	}
+	void event( const QByteArray& )
+	{
+	}
+	void start( const QByteArray& )
+	{
+		if( m_args.args.contains( "-a" ) ){
+
+			if( configurationoptionsdialog::autoStartEnabled() ){
+
+				m_mainApp.start() ;
+			}else{
+				m_args.app.exit( qCheckGMail::autoStartDisabled() ) ;
+			}
+		}else{
+			m_mainApp.start() ;
+		}
+	}
+private:
+	qCheckGMailInit::args m_args ;
+	qCheckGMail m_mainApp ;
+} ;
+
+int main( int argc,char * argv[] )
+{
+	QApplication a( argc,argv ) ;
+
+	auto instanceArgs = util::make_oneinstance_args( [ & ](){
+
+		std::cout << "There seem to be another instance running,exiting this one" << std::endl ;
+		a.exit() ;
+	},[](){
+		std::cout << "Previous instance seem to have crashed,trying to clean up before starting" << std::endl ;
+	} ) ;
+
+	using type = decltype( instanceArgs ) ;
+
+	using singleInstance = util::oneinstance< qCheckGMailInit,qCheckGMailInit::args,type > ;
+
+	QString spath = QDir::homePath() + "/.qCheckGMail.socket" ;
+
+	auto args = a.arguments() ;
+
+	qCheckGMailInit::args mArgs{ args,a } ;
+
+	singleInstance instance( spath,QByteArray(),std::move( mArgs ),std::move( instanceArgs ) ) ;
+
+	return a.exec() ;
 }
