@@ -35,7 +35,9 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 
 	if( !m_entry.accLabels.isEmpty() ){
 
-		for( const auto& it : util::split( m_entry.accLabels ) ){
+		auto m = util::idsFromJson( m_entry.accLabels ) ;
+
+		for( const auto& it : util::split( m ) ){
 
 			m_labelUrls.append( baseLabel + it ) ;
 		}

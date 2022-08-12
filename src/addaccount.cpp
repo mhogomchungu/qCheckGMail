@@ -167,14 +167,18 @@ void addaccount::add()
 		msg.exec() ;
 	}else{
 		QString accDisplayName  ;
+
 		auto accLabels = this->m_ui->lineEditLabel->text() ;
+		auto accLabelsOrg = accLabels ;
 
 		for( const auto& it : m_labels.entries ){
 
 			accLabels.replace( it.name,it.id ) ;
 		}
 
-		m_actions.results( { accName,QString(),accDisplayName,accLabels,m_key } ) ;
+		auto lbs = util::labelsToJson( accLabels,accLabelsOrg ) ;
+
+		m_actions.results( { accName,QString(),accDisplayName,lbs,m_key } ) ;
 
 		this->HideUI() ;
 	}

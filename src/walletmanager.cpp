@@ -249,7 +249,7 @@ const accounts& walletmanager::addEntry( const accounts& acc )
 
 	m_table->setItem( row,0,_add_item( acc.accountName() ) ) ;
 	m_table->setItem( row,1,_add_item( acc.displayName() ) ) ;
-	m_table->setItem( row,2,_add_item( acc.labels() ) ) ;
+	m_table->setItem( row,2,_add_item( util::namesFromJson( acc.labels() ) ) ) ;
 
 	return acc ;
 }
@@ -277,7 +277,7 @@ void walletmanager::openWallet()
 
 	m_wallet->setParent( this ) ;
 
-	m_wallet->open( s,"qCheckGMail",[ this ]( bool walletOpened ){
+	m_wallet->open( s,"qCheckGMailv2",[ this ]( bool walletOpened ){
 
 		if( walletOpened ){
 

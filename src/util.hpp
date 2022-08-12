@@ -27,12 +27,39 @@
 
 #include "lxqt_wallet.h"
 
+#include <QJsonObject>
+#include <QJsonDocument>
+
 namespace util
 {
 	template< typename T >
 	struct type_identity{
 		using type = T ;
 	} ;
+
+	static inline QString labelsToJson( const QString& ids,const QString& names )
+	{
+		QJsonObject obj ;
+
+		obj.insert( "ids",ids ) ;
+		obj.insert( "names",names ) ;
+
+		return QJsonDocument( obj ).toJson( QJsonDocument::Compact ) ;
+	}
+
+	static inline QString namesFromJson( const QString& e )
+	{
+		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
+
+		return m.find( "names" )->toString() ;
+	}
+
+	static inline QString idsFromJson( const QString& e )
+	{
+		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
+
+		return m.find( "ids" )->toString() ;
+	}
 
 	template< typename Signal,typename Slot,typename QObj,typename SignalSource >
 	void connect( Signal s,Slot l,QObj obj,SignalSource ac )
