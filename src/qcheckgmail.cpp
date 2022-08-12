@@ -434,8 +434,6 @@ static bool _error( const QByteArray& msg )
  */
 void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 {
-	std::cout << msg.constData() << "\n-----\n" << std::endl ;
-
 	auto emailInfo = _getEmailInfo( msg ) ;
 
 	if( _error( msg ) || error ){
