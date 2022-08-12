@@ -143,10 +143,12 @@ walletmanager::walletmanager( walletmanager::Wallet f ) :
 
 walletmanager::walletmanager( const QString& icon,
 			      walletmanager::Wallet e,
-			      gmailauthorization::getAuth k ) :
+			      gmailauthorization::getAuth k,
+			      addaccount::GMailInfo a ) :
 	m_icon( QString( ":/%1" ).arg( icon ) ),
 	m_walletData( std::move( e ) ),
-	m_getAuthorization( std::move( k ) )
+	m_getAuthorization( std::move( k ) ),
+	m_getAddr( std::move( a ) )
 {
 }
 
@@ -168,13 +170,14 @@ void walletmanager::buildGUI()
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 	this->setWindowIcon( QIcon( m_icon ) ) ;
 
-	connect( m_ui->pushButtonAccountAdd,SIGNAL( clicked() ),this,SLOT( pushButtonAdd() ) ) ;
-	connect( m_ui->pushButtonClose,SIGNAL( clicked() ),this,SLOT( pushButtonClose() ) ) ;
+	auto cm = static_cast< void( walletmanager::* )() >( &walletmanager::pushButtonAdd ) ;
+	auto dm = static_cast< void( walletmanager::* )( QTableWidgetItem *,QTableWidgetItem * ) >( &walletmanager::tableItemChanged ) ;
 
-	connect( m_ui->tableWidget,SIGNAL( itemClicked( QTableWidgetItem * ) ),
-		 this,SLOT( tableItemClicked( QTableWidgetItem * ) ) ) ;
-	connect( m_ui->tableWidget,SIGNAL( currentItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ),this,
-		 SLOT( tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ) ) ;
+	connect( m_ui->pushButtonAccountAdd,&QPushButton::clicked,this,cm ) ;
+	connect( m_ui->pushButtonClose,&QPushButton::clicked,this,&walletmanager::pushButtonClose ) ;
+
+	connect( m_ui->tableWidget,&QTableWidget::itemClicked,this,&walletmanager::tableItemClicked ) ;
+	connect( m_ui->tableWidget,&QTableWidget::currentItemChanged,this,dm ) ;
 
 	m_ui->tableWidget->setColumnWidth( 0,171 ) ;
 	m_ui->tableWidget->setColumnWidth( 1,171 ) ;
@@ -411,7 +414,7 @@ void walletmanager::pushButtonAdd()
 		walletmanager * m_this ;
 	};
 
-	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this } ) ;
+	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAddr ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -424,24 +427,28 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 
                 auto ac = new QAction( &m ) ;
 		ac->setText( tr( "Delete Entry" ) ) ;
-                connect( ac,SIGNAL( triggered() ),this,SLOT( deleteAccount() ) ) ;
+		connect( ac,&QAction::triggered,this,&walletmanager::deleteAccount ) ;
 
                 return ac ;
         }() ) ;
 
+	/*
         m.addAction( [ & ](){
 
                 auto ac = new QAction( &m ) ;
 		ac->setText( tr( "Edit Entry" ) ) ;
-                connect( ac,SIGNAL( triggered() ),this,SLOT( editAccount() ) ) ;
+
+		auto cm = static_cast< void( walletmanager::* )( bool ) >( &walletmanager::editAccount ) ;
+
+		connect( ac,&QAction::triggered,this,cm ) ;
 
                 return ac ;
         }() ) ;
-
+	*/
 	m.exec( QCursor::pos() ) ;
 }
 
-void walletmanager::deleteAccount()
+void walletmanager::deleteAccount( bool )
 {
 	auto item = m_table->currentItem() ;
 	m_row = item->row() ;
@@ -480,7 +487,7 @@ void walletmanager::deleteAccount()
 	}
 }
 
-void walletmanager::editAccount()
+void walletmanager::editAccount( bool )
 {
         m_row = m_table->currentRow() ;
 
@@ -530,7 +537,8 @@ void walletmanager::editAccount()
 	addaccount::instance( this,
 			      { accName,accPassword,accDisplayName,accLabels,refreshToken },
 			      m_getAuthorization,
-			      { util::type_identity< meaw >(),this } ) ;
+			      { util::type_identity< meaw >(),this },
+			      m_getAddr ) ;
 }
 
 void walletmanager::editAccount( accounts::entry&& e )

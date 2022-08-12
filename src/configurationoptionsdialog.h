@@ -37,20 +37,66 @@
 
 #include "util.hpp"
 
+#include <memory>
+
 namespace Ui {
 class configurationoptionsdialog;
 }
 
 class configurationoptionsdialog : public QDialog
 {
-	Q_OBJECT
 public:
-        static void instance( QObject * parent )
-        {
-                new configurationoptionsdialog( parent ) ;
-        }
+	struct actions
+	{
+		virtual void configurationWindowClosed( int )
+		{
+		}
+		virtual void enablePassWordChange( bool )
+		{
+		}
+		virtual void reportOnAllAccounts( bool )
+		{
+		}
+		virtual void audioNotify( bool )
+		{
+		}
+		virtual ~actions() ;
+	} ;
 
-        explicit configurationoptionsdialog( QObject * parent = 0 ) ;
+	class Actions
+	{
+	public:
+		template< typename Type,typename ... Args >
+		Actions( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void configurationWindowClosed( int s )
+		{
+			m_handle->configurationWindowClosed( s ) ;
+		}
+		void enablePassWordChange( bool s )
+		{
+			m_handle->enablePassWordChange( s ) ;
+		}
+		void reportOnAllAccounts( bool s )
+		{
+			m_handle->reportOnAllAccounts( s ) ;
+		}
+		void audioNotify( bool s )
+		{
+			m_handle->audioNotify( s ) ;
+		}
+	private:
+		std::unique_ptr< configurationoptionsdialog::actions > m_handle ;
+	} ;
+
+	static void instance( QObject * parent,configurationoptionsdialog::Actions ac )
+	{
+		new configurationoptionsdialog( parent,std::move( ac ) ) ;
+	}
+
+	configurationoptionsdialog( QObject * parent,configurationoptionsdialog::Actions ) ;
 	~configurationoptionsdialog() ;
 	static bool autoStartEnabled( void ) ;
 	static void enableAutoStart( bool ) ;
@@ -63,8 +109,8 @@ public:
 
 	static util::unique_wallet_ptr secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
-        static QString clientID( void ) ;
-        static QString clientSecret( void ) ;
+	static QString clientID( void ) ;
+	static QString clientSecret( void ) ;
 	static QString audioPlayer( void ) ;
 	static QString noEmailIcon( void ) ;
 	static QString newEmailIcon( void ) ;
@@ -74,7 +120,7 @@ public:
 	static QString visibleIconState( void ) ;
 	static QString defaultApplication( void ) ;
 	static QString stringRunTimePortNumber( void ) ;
-        static QStringList profileEmailList( void ) ;
+	static QStringList profileEmailList( void ) ;
 	static bool usingInternalStorageSystem( void ) ;
 	static int fontSize( void ) ;
 	static int portNumber( void ) ;
@@ -84,14 +130,8 @@ public:
 	static void setRuntimePortNumber( int ) ;
 	void ShowUI( void ) ;
 	void HideUI( void ) ;
-signals:
-	void audioNotify( bool ) ;
-	void setTimer( int ) ;
-	void reportOnAllAccounts( bool ) ;
-	void enablePassWordChange( bool ) ;
-private slots:
-	void pushButtonClose( void ) ;
 private:
+	void pushButtonClose( void ) ;
 	bool eventFilter( QObject * watched,QEvent * event ) ;
 	void setAudioNotify( bool ) ;
 	void saveStorageSystem( const QString& ) ;
@@ -100,7 +140,8 @@ private:
 	void setSupportedLanguages( void ) ;
 	void saveLocalLanguage( void ) ;
 	void closeEvent( QCloseEvent * ) ;
-        Ui::configurationoptionsdialog * m_ui ;
+	Ui::configurationoptionsdialog * m_ui ;
+	configurationoptionsdialog::Actions m_actions ;
 };
 
 #endif // CONFIGURATIONOPTIONSDIALOG_H

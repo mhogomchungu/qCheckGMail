@@ -30,8 +30,7 @@
 #include "accounts.h"
 #include "gmailauthorization.h"
 #include "util.hpp"
-
-#include <functional>
+#include "../../NetworkAccessManager/network_access_manager.hpp"
 
 namespace Ui {
 class addaccount;
@@ -39,8 +38,69 @@ class addaccount;
 
 class addaccount : public QDialog
 {
-	Q_OBJECT
 public:
+	struct labels
+	{
+		QString emailAddress ;
+		struct entry
+		{
+			QString name ;
+			QString id ;
+		} ;
+		QVector< entry > entries ;
+	} ;
+
+	struct gmailAccountInfo
+	{
+		virtual void operator()( addaccount::labels )
+		{
+		}
+		virtual ~gmailAccountInfo() ;
+	} ;
+
+	class GmailAccountInfo
+	{
+	public:
+		template< typename Type,typename ... Args >
+		GmailAccountInfo( Type,Args&& ... args ) :
+			m_handle( std::make_shared< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void operator()( addaccount::labels e ) const
+		{
+			( *m_handle )( std::move( e ) ) ;
+		}
+	private:
+		std::shared_ptr< addaccount::gmailAccountInfo > m_handle ;
+	} ;
+
+	struct gMailInfo
+	{
+		virtual void operator()( const QString&,addaccount::GmailAccountInfo )
+		{
+		}
+		virtual ~gMailInfo() ;
+	} ;
+
+	class GMailInfo
+	{
+	public:
+		GMailInfo() : m_handle( std::make_unique< addaccount::gMailInfo >() )
+		{
+		}
+		template< typename Type,typename ... Args >
+		GMailInfo( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void operator()( const QString& authocode,addaccount::GmailAccountInfo result )
+		{
+			( *m_handle )( authocode,std::move( result ) ) ;
+		}
+	private:
+		std::unique_ptr< addaccount::gMailInfo > m_handle ;
+	} ;
+
 	struct actions
 	{
 		virtual void cancel()
@@ -72,42 +132,52 @@ public:
 		std::unique_ptr< addaccount::actions > m_handle ;
 	} ;
 
-        static addaccount& instance( QDialog * parent,
-                                     const accounts::entry& e,
+	static addaccount& instance( QDialog * parent,
+				     const accounts::entry& e,
 				     gmailauthorization::getAuth& k,
-				     addaccount::Actions r )
-        {
-		return *( new addaccount( parent,e,k,std::move( r ) ) ) ;
-        }
+				     addaccount::Actions r,
+				     addaccount::GMailInfo& n )
+	{
+		return *( new addaccount( parent,e,k,std::move( r ),n ) ) ;
+	}
 
-        static addaccount& instance( QDialog * parent,
+	static addaccount& instance( QDialog * parent,
 				     gmailauthorization::getAuth& k,
-				     addaccount::Actions e )
-        {
-		return *( new addaccount( parent,k,std::move( e ) ) ) ;
-        }
+				     addaccount::Actions e,
+				     addaccount::GMailInfo& n )
+	{
+		return *( new addaccount( parent,k,std::move( e ),n ) ) ;
+	}
 
-        addaccount( QDialog *,
-                    const accounts::entry&,
+	addaccount( QDialog *,
+		    const accounts::entry&,
 		    gmailauthorization::getAuth&,
-		    addaccount::Actions ) ;
+		    addaccount::Actions,
+		    addaccount::GMailInfo& ) ;
 
-        addaccount( QDialog *,
+	addaccount( QDialog *,
 		    gmailauthorization::getAuth&,
-		    addaccount::Actions ) ;
+		    addaccount::Actions,
+		    addaccount::GMailInfo& ) ;
 
 	~addaccount() ;
-private slots:
-	void add( void ) ;
+
+	void add() ;
 	void cancel( void ) ;
-private:        
-        void HideUI( void ) ;
+	void HideUI( void ) ;
+
+private:
+	void Show( const QString& ) ;
+	void getLabels( const QString& ) ;
 
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
-        bool m_edit ;
+	bool m_edit ;
+	QString m_key ;
 	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;
+	addaccount::GMailInfo& m_gmailAccountInfo ;
+	addaccount::labels m_labels ;
 };
 
 #endif // ADDACCOUNT_H

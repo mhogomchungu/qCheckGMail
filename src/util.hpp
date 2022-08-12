@@ -34,6 +34,20 @@ namespace util
 		using type = T ;
 	} ;
 
+	template< typename Signal,typename Slot,typename QObj,typename SignalSource >
+	void connect( Signal s,Slot l,QObj obj,SignalSource ac )
+	{
+		obj->connect( ac,s,obj,l ) ;
+	}
+
+	static inline QStringList split( const QString& e )
+	{
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+		return.split( ",",QString::SkipEmptyParts ) ;
+#else
+		return e.split( ",",Qt::SkipEmptyParts ) ;
+#endif
+	}
 	class urlOpts
 	{
 	public:

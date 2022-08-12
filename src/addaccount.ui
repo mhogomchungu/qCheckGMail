@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>594</width>
-    <height>363</height>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,104 +23,7 @@
       <string/>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Account Name</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEditName">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
-Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Display Name(Optional)</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEditOptionalName">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Authorization Code</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="lineEditPassword">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>31</height>
-         </size>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
        <widget class="QLabel" name="label_3">
         <property name="minimumSize">
          <size>
@@ -139,7 +42,7 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="1" column="1">
        <widget class="QLineEdit" name="lineEditLabel">
         <property name="minimumSize">
          <size>
@@ -149,6 +52,39 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
         </property>
         <property name="toolTip">
          <string>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditName">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
+Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Account Name</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -185,8 +121,6 @@ Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</strin
  </widget>
  <tabstops>
   <tabstop>lineEditName</tabstop>
-  <tabstop>lineEditOptionalName</tabstop>
-  <tabstop>lineEditPassword</tabstop>
   <tabstop>lineEditLabel</tabstop>
   <tabstop>pushButtonAdd</tabstop>
   <tabstop>pushButtonCancel</tabstop>

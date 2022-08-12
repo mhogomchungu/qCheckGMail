@@ -34,7 +34,6 @@ class gmailauthorization;
 
 class gmailauthorization : public QDialog
 {
-        Q_OBJECT
 public:
 	struct authResult
 	{
@@ -85,7 +84,7 @@ public:
 		}
 	private:
 		std::unique_ptr< gmailauthorization::authActions > m_handle ;
-	};
+	} ;
 
 	struct actions
 	{
@@ -118,28 +117,28 @@ public:
 		std::unique_ptr< gmailauthorization::actions > m_handle ;
 	} ;
 
-        static void instance( QDialog * parent,
+	static void instance( QDialog * parent,
 			      gmailauthorization::getAuth& r,
 			      gmailauthorization::Actions e )
-        {
+	{
 		new gmailauthorization( parent,r,std::move( e ) ) ;
-        }
+	}
 
-        gmailauthorization( QDialog * parent,
+	gmailauthorization( QDialog * parent,
 			    gmailauthorization::getAuth&,
 			    gmailauthorization::Actions ) ;
 private:
 	void cancel() ;
 	void setCode( const QString& ) ;
 
-        void hideUI() ;
+	void hideUI() ;
 
-        void enableAll() ;
-        void disableAll() ;
+	void enableAll() ;
+	void disableAll() ;
 
-        void closeEvent( QCloseEvent * ) ;
+	void closeEvent( QCloseEvent * ) ;
 
-        Ui::gmailauthorization * m_ui ;
+	Ui::gmailauthorization * m_ui ;
 
 	gmailauthorization::getAuth& m_getAuthorizationCode ;
 	gmailauthorization::Actions m_gmailAuthorization ;

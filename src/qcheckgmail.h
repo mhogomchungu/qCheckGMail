@@ -54,62 +54,60 @@
 
 class qCheckGMail : public QObject
 {
-	Q_OBJECT
 public:
 	explicit qCheckGMail( const QString& profile = QString() ) ;
-	~qCheckGMail();
+	~qCheckGMail() ;
 
-        void start( void ) ;
+	void start( void ) ;
 	void earlyExit( void ) ;
 
-        static int instanceAlreadyRunning( void ) ;
+	static int instanceAlreadyRunning( void ) ;
 	static int autoStartDisabled( void ) ;
 
-        static bool autoStartEnabled( void ) ;
+	static bool autoStartEnabled( void ) ;
 
-        static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
+	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 
-        QWidget * widget( void ) ;
+	QWidget * widget( void ) ;
 	QString defaultApplication( void ) ;
 
-        void iconClicked( void ) ;
-
-private slots:
+	void iconClicked( void ) ;
+private:
 	void run( void ) ;
 	void configurationWindowClosed( int ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;
 	void configurationoptionWindow( void ) ;
-	void checkMail( void ) ;
+	void checkMail( bool = false ) ;
 	void setTimer( int ) ;
 	void reportOnAllAccounts( bool ) ;
 	void configurePassWord( void ) ;
-        void audioNotify( bool ) ;
-        void enablePassWordChange( bool ) ;
-private:
-        void getAccountsInfo( QVector< accounts >&& ) ;
+	void audioNotify( bool ) ;
+	void enablePassWordChange( bool ) ;
 
-	QString displayName( void ) ;
-	QString getAtomComponent( const QByteArray&,const QString&,int from = 0 ) ;
-	QString getAtomComponent( const QByteArray&,const QString&,const QString& ) ;
+	void getAccountsInfo( QVector< accounts >&& ) ;
+
+	QString displayName( const QString& ) ;
 
 	gmailauthorization::getAuth getAuthorization() ;
 
 	walletmanager::Wallet walletHandle() ;
 
-        void getAccessToken( const accounts&,const QString&,const QString& ) ;
+	void getAccessToken( const accounts&,const QString&,const QString& ) ;
 
-        void networkAccess( const QNetworkRequest& ) ;
+	void networkAccess( const QNetworkRequest& ) ;
 
-        void setTrayIconToVisible( bool ) ;
+	void getGMailAccountInfo( const QString& authocode,addaccount::GmailAccountInfo returnEmail ) ;
+
+	void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
-        void noInternet( const QString& = QString() ) ;
+	void noInternet( const QString& = QString() ) ;
 	void wrongAccountNameOrPassword( void ) ;
 	void setUpEmailNotifications( void ) ;
 	void setLocalLanguage( void ) ;
 	void walletNotOPenedError( void ) ;
-        void checkMail( const accounts& acc,const QString& label ) ;
+	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
 	void openMail( const accounts& acc ) ;
 	void openMail( void ) ;
@@ -119,36 +117,35 @@ private:
 	void startTimer( void ) ;
 	void stopTimer( void ) ;
 	void setTimer( void ) ;
-        void reportOnAllAccounts( const QByteArray&,bool ) ;
-        void reportOnlyFirstAccountWithMail( const QByteArray&,bool ) ;
+	void reportOnAllAccounts( const QByteArray&,bool ) ;
+	void reportOnlyFirstAccountWithMail( const QByteArray&,bool ) ;
 	void noAccountConfigured( void ) ;
 	void doneCheckingMail( void ) ;
 	void failedToCheckForNewEmail( void ) ;
-        void audioNotify( void ) ;
-        void checkAccountLastUpdate( accountLabel&,const QByteArray&,int ) ;
-        void addActionsToMenu( void ) ;
+	void audioNotify( void ) ;
+	void addActionsToMenu( void ) ;
 
-        int m_interval ;
+	int m_interval ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
 	int m_numberOfAccounts ;
 	int m_currentAccount ;
 	int m_mailCount ;
-        int m_networkTimeOut ;
+	int m_networkTimeOut ;
 
-        bool m_audioNotify ;
+	bool m_audioNotify ;
 	bool m_displayEmailCount ;
-        bool m_newMailFound ;
-        bool m_checkingMail ;
-        bool m_reportOnAllAccounts ;
-        bool m_enableDebug ;
-        bool m_redoMailCheck ;
-        bool m_accountUpdated ;
-        bool m_timeExpired ;
-        bool m_accountFailed ;
-        bool m_badAccessToken ;
+	bool m_newMailFound ;
+	bool m_checkingMail ;
+	bool m_reportOnAllAccounts ;
+	bool m_enableDebug ;
+	bool m_redoMailCheck ;
+	bool m_accountUpdated ;
+	bool m_timeExpired ;
+	bool m_accountFailed ;
+	bool m_badAccessToken ;
 
-        QString m_accountsStatus ;
+	QString m_accountsStatus ;
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
@@ -160,7 +157,7 @@ private:
 	QString m_clientSecret ;
 	QString m_visibleIconState ;
 
-        QStringList m_profileEmailList ;
+	QStringList m_profileEmailList ;
 
 	QMutex m_mutex ;
 
@@ -168,13 +165,13 @@ private:
 
 	QMenu * m_menu ;
 
-        statusicon::clickActions m_clickActions ;
+	statusicon::clickActions m_clickActions ;
 
-        NetworkAccessManager m_manager ;
+	NetworkAccessManager m_manager ;
 
 	QNetworkRequest m_networkRequest ;
 
-        QVector< accounts > m_accounts ;
+	QVector< accounts > m_accounts ;
 
 	statusicon m_statusicon ;
 };

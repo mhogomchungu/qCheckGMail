@@ -25,28 +25,31 @@
 
 #include <iostream>
 
+#include <QJsonDocument>
+#include <QJsonObject>
+
 addaccount::addaccount( QDialog * parent,
 			gmailauthorization::getAuth& k,
-			addaccount::Actions s ) :
-        QDialog( parent ),
-        m_ui( new Ui::addaccount ),
-        m_getAuthorization( k ),
-	m_actions( std::move( s ) )
+			addaccount::Actions s,
+			addaccount::GMailInfo& n ) :
+	QDialog( parent ),
+	m_ui( new Ui::addaccount ),
+	m_getAuthorization( k ),
+	m_actions( std::move( s ) ),
+	m_gmailAccountInfo( n )
 {
 	m_ui->setupUi( this ) ;
 
-        //this->setFixedSize( this->size() ) ;
+	//this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
-        m_edit = false ;
+	m_edit = false ;
 
-        connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
-	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
+	connect( m_ui->pushButtonAdd,&QPushButton::clicked,this,&addaccount::add ) ;
+	connect( m_ui->pushButtonCancel,&QPushButton::clicked,this,&addaccount::cancel ) ;
 
 	m_ui->pushButtonAdd->setMinimumHeight( 31 ) ;
 	m_ui->pushButtonCancel->setMinimumHeight( 31 ) ;
-
-	m_ui->lineEditPassword->setEnabled( false ) ;
 
 	class accs : public gmailauthorization::actions
 	{
@@ -67,8 +70,7 @@ addaccount::addaccount( QDialog * parent,
 				std::cout << "ERROR: Failed To Generate Token\n" ;
 				std::cout << s.constData() << std::endl ;
 			}else{
-				m_this->show() ;
-				m_this->m_ui->lineEditPassword->setText( e ) ;
+				m_this->getLabels( e ) ;
 			}
 		}
 	private:
@@ -81,43 +83,34 @@ addaccount::addaccount( QDialog * parent,
 }
 
 addaccount::addaccount( QDialog * parent,
-                        const accounts::entry& e,
+			const accounts::entry& e,
 			gmailauthorization::getAuth& k,
-			addaccount::Actions s ) :
-        QDialog( parent ),
-        m_ui( new Ui::addaccount ),
+			addaccount::Actions s,
+			addaccount::GMailInfo& n ) :
+	QDialog( parent ),
+	m_ui( new Ui::addaccount ),
 	m_getAuthorization( k ),
-	m_actions( std::move( s ) )
+	m_actions( std::move( s ) ),
+	m_gmailAccountInfo( n )
 {
 	m_ui->setupUi( this );
-        //this->setFixedSize( this->size() ) ;
+	//this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
-        m_edit = true ;
+	m_edit = true ;
 
-        m_ui->lineEditName->setText( e.accName ) ;
+	m_ui->lineEditName->setText( e.accName ) ;
 	m_ui->lineEditName->setEnabled( false ) ;
 	m_ui->lineEditName->setToolTip( QString() ) ;
-        m_ui->lineEditLabel->setText( e.accLabels ) ;
-        m_ui->lineEditOptionalName->setText( e.accDisplayName ) ;
 
-	connect( m_ui->pushButtonAdd,SIGNAL( clicked() ),this,SLOT( add() ) ) ;
-	connect( m_ui->pushButtonCancel,SIGNAL( clicked() ),this,SLOT( cancel() ) ) ;
+	connect( m_ui->pushButtonAdd,&QPushButton::clicked,this,&addaccount::add ) ;
+	connect( m_ui->pushButtonCancel,&QPushButton::clicked,this,&addaccount::cancel ) ;
 
-	m_ui->lineEditPassword->setEnabled( false ) ;
-
-        if( m_edit ){
+	if( m_edit ){
 
 		m_ui->pushButtonAdd->setText( tr( "Edit" ) ) ;
 		this->setWindowTitle( tr( "Edit Account" ) ) ;
-        }
-
-        if( e.accRefreshToken.isEmpty() ){
-
-                m_ui->lineEditPassword->setText( e.accPassword ) ;
-        }else{
-                m_ui->lineEditPassword->setText( e.accRefreshToken ) ;
-        }
+	}
 
 	this->show() ;
 }
@@ -126,6 +119,29 @@ void addaccount::HideUI()
 {
 	this->hide() ;
 	this->deleteLater() ;
+}
+
+void addaccount::getLabels( const QString& e )
+{
+	m_key = e ;
+
+	class meaw : public addaccount::gmailAccountInfo
+	{
+	public:
+		meaw( addaccount * acc ) : m_this( acc )
+		{
+		}
+		void operator()( addaccount::labels s ) override
+		{
+			m_this->m_labels = std::move( s ) ;
+			m_this->show() ;
+		}
+	private:
+		addaccount * m_this ;
+	};
+
+	m_gmailAccountInfo( e,{ util::type_identity< meaw >(),this } ) ;
+	this->show() ;
 }
 
 addaccount::~addaccount()
@@ -141,20 +157,25 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
-        auto accName  = m_ui->lineEditName->text() ;
-        auto accDisplayName = m_ui->lineEditOptionalName->text() ;
-        auto accLabels   = m_ui->lineEditLabel->text() ;
+	auto accName  = this->m_ui->lineEditName->text() ;
 
-        auto key = m_ui->lineEditPassword->text() ;
-
-        if( accName.isEmpty() || key.isEmpty() ){
+	if( accName.isEmpty() ){
 
 		QMessageBox msg( this ) ;
 
 		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
-		m_actions.results( { accName,QString(),accDisplayName,accLabels,key } ) ;
+		QString accDisplayName  ;
+		auto accLabels = this->m_ui->lineEditLabel->text() ;
+
+		for( const auto& it : m_labels.entries ){
+
+			accLabels.replace( it.name,it.id ) ;
+		}
+
+		m_actions.results( { accName,QString(),accDisplayName,accLabels,m_key } ) ;
+
 		this->HideUI() ;
 	}
 }
@@ -166,5 +187,13 @@ void addaccount::cancel()
 }
 
 addaccount::actions::~actions()
+{
+}
+
+addaccount::gmailAccountInfo::~gmailAccountInfo()
+{
+}
+
+addaccount::gMailInfo::~gMailInfo()
 {
 }

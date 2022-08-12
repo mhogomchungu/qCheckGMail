@@ -28,13 +28,13 @@ class accountLabel
 public:
 	accountLabel( const QString& accountLabel = QString(),int accountEmailCount = -1 ) ;
 
-        const QString& labelUrl( void )     const  ;
+	const QString& labelUrl( void )     const  ;
 	const QString& labelName( void )    const  ;
 	const QString& lastModified( void ) const  ;
 
-        int emailCount( void )              const  ;
+	int emailCount( void ) const  ;
 
-        void setLastModifiedTime( const QString& ) ;
+	void setLastModifiedTime( const QString& ) ;
 	void setEmailCount( int ) ;
 private:
 	int m_emailCount ;
@@ -46,35 +46,37 @@ private:
 class accounts
 {
 public:
-        struct entry
-        {
-                QString accName ;
-                QString accPassword ;
-                QString accDisplayName ;
-                QString accLabels ;
-                QString accRefreshToken ;
-        };
+	struct entry
+	{
+		QString accName ;
+		QString accPassword ;
+		QString accDisplayName ;
+		QString accLabels ;
+		QString accRefreshToken ;
+	};
 
-        accounts( const accounts::entry& ) ;
-        accounts() ;
+	accounts( const accounts::entry& ) ;
+	accounts() ;
 
-        const QString& refreshToken( void )     const ;
-	const QString& accountName( void )      const ;
-	const QString& passWord( void )         const ;
-	const QString& defaultLabelUrl( void )  const ;
-	const QString& displayName( void )      const ;
-	const QString& labels( void )           const ;
-	const QString& labelUrlAt( int )        const ;
-        const QString& accessToken( void )      const ;
+	const QString& refreshToken( void ) const ;
+	const QString& accountName( void ) const ;
+	const QString& passWord( void )	 const ;
+	const QString& defaultLabelUrl( void ) const ;
+	const QString& displayName( void ) const ;
+	const QString& labels( void ) const ;
+	const QString& labelUrlAt( int ) const ;
+	const QString& accessToken( void ) const ;
 
-	int   numberOfLabels( void )            const ;
+	int   numberOfLabels( void ) const ;
 
+	void labelReplaceAt( int,const QString& ) const ;
 	void setAccessToken( const QString& ) const ;
+	void setAccountName( const QString& ) const ;
 
-        accountLabel& getAccountLabel( int ) ;
+	accountLabel& getAccountLabel( int ) ;
 private:
 	mutable QString m_accessToken ;
-        accounts::entry m_entry ;
+	accounts::entry m_entry ;
 	QVector< accountLabel > m_labelUrls ;
 };
 

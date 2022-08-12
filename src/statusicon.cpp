@@ -186,10 +186,10 @@ void statusicon::addQuitAction()
 		auto ac = new QAction( m_menu ) ;
 
 		ac->setText( tr( "Quit" ) ) ;
-                connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+		connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 
-                return ac ;
-        }() ) ;
+		return ac ;
+	}() ) ;
 }
 
 QList< QAction * > statusicon::getMenuActions()
@@ -238,7 +238,7 @@ void statusicon::setIcon( const QString& name )
 
 void statusicon::setIcon( const QString& name,int count )
 {
-        auto pixmap = _icon( name,count ) ;
+	auto pixmap = _icon( name,count ) ;
 	m_trayIcon.setIcon( pixmap ) ;
 }
 
@@ -277,10 +277,10 @@ void statusicon::addQuitAction()
 
 		auto ac = new QAction( &m_menu ) ;
 		ac->setText( tr( "Quit" ) ) ;
-                connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
+		connect( ac,SIGNAL( triggered() ),this,SLOT( quit() ) ) ;
 
-                return ac ;
-        }() ) ;
+		return ac ;
+	}() ) ;
 
 	m_trayIcon.show() ;
 }

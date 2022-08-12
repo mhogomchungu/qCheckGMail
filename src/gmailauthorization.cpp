@@ -49,11 +49,11 @@ static auto responce = R"R(
 gmailauthorization::gmailauthorization( QDialog * parent,
 					gmailauthorization::getAuth& k,
 					gmailauthorization::Actions e ) :
-        QDialog( parent ),m_ui( new Ui::gmailauthorization ),
-        m_getAuthorizationCode( k ),
+	QDialog( parent ),m_ui( new Ui::gmailauthorization ),
+	m_getAuthorizationCode( k ),
 	m_gmailAuthorization( std::move( e ) )
 {
-        m_ui->setupUi( this ) ;
+	m_ui->setupUi( this ) ;
 
 	connect( m_ui->pbCancel,&QPushButton::clicked,[ this ](){
 
@@ -127,7 +127,7 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 			opts.add( "client_id",configurationoptionsdialog::clientID() ) ;
 			opts.add( "redirect_uri","http://127.0.0.1:" + QString::number( portNumber ) ) ;
 			opts.add( "response_type","code" ) ;
-			opts.add( "scope","https%3A%2F%2Fmail.google.com%2F" ) ;
+			opts.add( "scope","https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.labels" ) ;
 
 			m_ui->textEdit->setText( opts.toString() ) ;
 
@@ -150,19 +150,19 @@ void gmailauthorization::cancel()
 
 void gmailauthorization::setCode( const QString& r )
 {
-        this->disableAll() ;
+	this->disableAll() ;
 
-        if( r.isEmpty() ){
+	if( r.isEmpty() ){
 
-                QMessageBox msg( this ) ;
+		QMessageBox msg( this ) ;
 
 		msg.setText( tr( "Authorization Code Field Is Empty" ) ) ;
-                msg.addButton( tr( "&OK" ),QMessageBox::YesRole ) ;
+		msg.addButton( tr( "&OK" ),QMessageBox::YesRole ) ;
 
-                msg.exec() ;
+		msg.exec() ;
 
-                this->enableAll() ;
-        }else{
+		this->enableAll() ;
+	}else{
 		class meaw : public gmailauthorization::authResult
 		{
 		public:
@@ -189,33 +189,33 @@ void gmailauthorization::setCode( const QString& r )
 		};
 
 		m_getAuthorizationCode( r,{ util::type_identity< meaw >(),this } ) ;
-        }
+	}
 }
 
 void gmailauthorization::hideUI()
 {
-        this->hide() ;
-        this->deleteLater() ;
+	this->hide() ;
+	this->deleteLater() ;
 }
 
 void gmailauthorization::enableAll()
 {
-        m_ui->pbCancel->setEnabled( true ) ;
-        m_ui->groupBox->setEnabled( true ) ;
-        m_ui->textEdit->setEnabled( true ) ;
+	m_ui->pbCancel->setEnabled( true ) ;
+	m_ui->groupBox->setEnabled( true ) ;
+	m_ui->textEdit->setEnabled( true ) ;
 }
 
 void gmailauthorization::disableAll()
 {
-        m_ui->pbCancel->setEnabled( false ) ;
-        m_ui->groupBox->setEnabled( false ) ;
-        m_ui->textEdit->setEnabled( false ) ;
+	m_ui->pbCancel->setEnabled( false ) ;
+	m_ui->groupBox->setEnabled( false ) ;
+	m_ui->textEdit->setEnabled( false ) ;
 }
 
 void gmailauthorization::closeEvent( QCloseEvent * e )
 {
-        e->ignore() ;
-        this->cancel() ;
+	e->ignore() ;
+	this->cancel() ;
 }
 
 gmailauthorization::actions::~actions()

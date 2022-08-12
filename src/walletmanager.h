@@ -53,8 +53,6 @@ class walletmanager : public QDialog
 		getAccountInfo,
 		showAccountInfo,
 	}accountOperation ;
-
-	Q_OBJECT
 public:
 	struct wallet
 	{
@@ -102,9 +100,10 @@ public:
 
         static walletmanager& instance( const QString& icon,
 					walletmanager::Wallet e,
-					gmailauthorization::getAuth k )
+					gmailauthorization::getAuth k,
+					addaccount::GMailInfo n )
         {
-		return *( new walletmanager( icon,std::move( e ),std::move( k ) ) ) ;
+		return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( n ) ) ) ;
         }
 
 	walletmanager( const QString& icon ) ;
@@ -112,23 +111,21 @@ public:
 
         walletmanager( const QString& icon,
 		       walletmanager::Wallet,
-		       gmailauthorization::getAuth ) ;
+		       gmailauthorization::getAuth,
+		       addaccount::GMailInfo ) ;
 
 	void changeWalletPassword( void ) ;
 	void ShowUI( void ) ;
 	void getAccounts( void ) ;
-	~walletmanager();
-signals:
-	void walletmanagerClosed( void ) ;
-private slots:
-	void deleteAccount() ;
+	~walletmanager() ;
+private:
+	void deleteAccount( bool = false ) ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void editAccount( void ) ;
+	void editAccount( bool = false ) ;
 	void enableAll( void ) ;
-private:
 	void pushButtonAdd( accounts::entry&& ) ;
 	void editAccount( accounts::entry&& ) ;
 	void openWallet( void ) ;
@@ -159,6 +156,8 @@ private:
 	walletmanager::Wallet m_walletData ;
 
 	gmailauthorization::getAuth m_getAuthorization ;
+
+	addaccount::GMailInfo m_getAddr ;
 };
 
 #endif // CONFIGURATIONDIALOG_H
