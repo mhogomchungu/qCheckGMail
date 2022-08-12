@@ -209,7 +209,7 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="572"/>
-        <source>1 Emails Is Waiting For You</source>
+        <source>1 Email Is Waiting For You</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

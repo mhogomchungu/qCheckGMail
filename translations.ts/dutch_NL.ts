@@ -207,7 +207,7 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="572"/>
-        <source>1 Emails Is Waiting For You</source>
+        <source>1 Email Is Waiting For You</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

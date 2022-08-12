@@ -567,9 +567,9 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 
 		QString info ;
 
-		if( count == 0 ){
+		if( count == 1 ){
 
-			info = tr( "1 Emails Is Waiting For You" ) ;
+			info = tr( "1 Email Is Waiting For You" ) ;
 		}else{
 			info = tr( "%1 Emails Are Waiting For You" ).arg( mailCount ) ;
 		}
