@@ -56,11 +56,19 @@ class qCheckGMail : public QObject
 {
 	Q_OBJECT
 public:
-	explicit qCheckGMail( const QString& profile = QString() ) ;
-	~qCheckGMail() ;
+	struct args
+	{
+		QApplication& app ;
+	} ;
+	qCheckGMail( const qCheckGMail::args& ) ;
+	~qCheckGMail() override ;
 
 	void start( void ) ;
+	void start( const QByteArray& ) ;
+
 	void earlyExit( void ) ;
+
+	void event( const QByteArray& ) ;
 
 	static int instanceAlreadyRunning( void ) ;
 	static int autoStartDisabled( void ) ;
@@ -152,7 +160,6 @@ private:
 	QString m_noEmailIcon ;
 	QString m_applicationIcon ;
 	QString m_defaultApplication ;
-	QString m_profile ;
 	QString m_accountNameColumnWidth ;
 	QString m_clientID ;
 	QString m_clientSecret ;
@@ -175,6 +182,9 @@ private:
 	QVector< accounts > m_accounts ;
 
 	statusicon m_statusicon ;
+
+	QApplication& m_qApp ;
+	QStringList m_args ;
 };
 
 #endif // QCHECKGMAIL_H

@@ -26,77 +26,13 @@
 
 #include <iostream>
 
-class qCheckGMailInit
-{
-public:
-	struct args
-	{
-		QApplication& app ;
-	} ;
-	qCheckGMailInit( const qCheckGMailInit::args& args ) :
-		m_qApp( args.app ),
-		m_args( m_qApp.arguments() ),
-		m_mainApp( this->setProfile() )
-	{
-	}
-	QString setProfile()
-	{
-		int j = m_args.size() ;
-
-		for( int i = 0 ; i < j ; i++ ){
-
-			if( m_args.at( i ) == "-p" ){
-
-				if( i + 1 < j ){
-
-					return m_args.at( i + 1 ) ;
-				}else{
-					return QString() ;
-				}
-			}
-		}
-
-		return QString() ;
-	}
-	void event( const QByteArray& )
-	{
-	}
-	void start( const QByteArray& )
-	{
-		if( m_args.contains( "-a" ) ){
-
-			if( configurationoptionsdialog::autoStartEnabled() ){
-
-				m_mainApp.start() ;
-			}else{
-				m_qApp.exit( qCheckGMail::autoStartDisabled() ) ;
-			}
-		}else{
-			m_mainApp.start() ;
-		}
-	}
-private:
-	QApplication& m_qApp ;
-	QStringList m_args ;
-	qCheckGMail m_mainApp ;
-} ;
-
 int main( int argc,char * argv[] )
 {
-	QApplication a( argc,argv ) ;
+	QApplication qGMail( argc,argv ) ;
 
-	auto instanceArgs = util::make_oneinstance_args( [](){
+	auto appType = util::type_identity< qCheckGMail >() ;
+	auto appArgs = qCheckGMail::args{ qGMail } ;
+	auto socketPath = QDir::homePath() + "/.qCheckGMail.socket" ;
 
-		std::cout << "There seem to be another instance running,exiting this one" << std::endl ;
-	},[](){
-		std::cout << "Previous instance seem to have crashed,trying to clean up before starting" << std::endl ;
-	} ) ;
-
-	using type = decltype( instanceArgs ) ;
-
-	using singleInstance = util::oneinstance< qCheckGMailInit,qCheckGMailInit::args,type > ;
-
-	QString spath = QDir::homePath() + "/.qCheckGMail.socket" ;
-
-	return singleInstance( spath,{},a,{ a },std::move( instanceArgs ) ).exec() ;
+	return util::runOneInstance( appType,appArgs,socketPath,QByteArray(),qGMail ) ;
 }

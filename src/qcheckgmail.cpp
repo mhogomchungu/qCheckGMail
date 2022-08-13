@@ -44,9 +44,10 @@ static void _debug( const QString& s )
 	_debug( s.toLatin1() ) ;
 }
 
-qCheckGMail::qCheckGMail( const QString& profile ) :
-	m_profile( profile ),
-	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) )
+qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
+	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
+	m_qApp( args.app ),
+	m_args( m_qApp.arguments() )
 {
 	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
@@ -115,9 +116,41 @@ void qCheckGMail::start()
 	} ) ;
 }
 
+void qCheckGMail::start( const QByteArray& )
+{
+	if( m_args.contains( "-a" ) ){
+
+		if( configurationoptionsdialog::autoStartEnabled() ){
+
+			this->start() ;
+		}else{
+			m_qApp.exit( qCheckGMail::autoStartDisabled() ) ;
+		}
+	}else{
+		this->start() ;
+	}
+}
+
+void qCheckGMail::event( const QByteArray& )
+{
+}
+
 void qCheckGMail::run()
 {
-	configurationoptionsdialog::setProfile( m_profile ) ;
+	int j = m_args.size() ;
+
+	for( int i = 0 ; i < j ; i++ ){
+
+		if( m_args.at( i ) == "-p" ){
+
+			if( i + 1 < j ){
+
+				configurationoptionsdialog::setProfile( m_args.at( i + 1 ) ) ;
+
+				break ;
+			}
+		}
+	}
 
 	m_statusicon.setCategory( m_statusicon.ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;

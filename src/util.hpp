@@ -21,6 +21,7 @@
 #define UTIL_H
 
 #include <memory>
+#include <iostream>
 
 #include <QApplication>
 #include <QTimer>
@@ -277,13 +278,66 @@ namespace util
 		QLocalServer m_localServer ;
 		QLocalSocket m_localSocket ;
 		QString m_serverPath ;
-		QByteArray m_argument ;
+		const QByteArray& m_argument ;
 		QApplication& m_qApp ;
 		std::unique_ptr< MainApp > m_mainApp ;
 		MainAppArgs m_args ;
 		InstanceArgs m_iargs ;
 		util::exec m_exec ;
 	} ;
+
+	class AppTypeInterface
+	{
+	public:
+		struct args
+		{
+			QApplication& app ;
+		} ;
+		AppTypeInterface( const AppTypeInterface::args& )
+		{
+		}
+		void event( const QByteArray& )
+		{
+			//This method is called with data from another instance that failed
+			//to start because this instance prevented it from starting
+			//Argument should be the same type as Args below
+		}
+		void start( const QByteArray& )
+		{
+			//This method is called when the first instance is started
+			//Argument should be the same type as Args below
+		}
+	} ;
+
+	template< typename AppType,typename AppConstructorArgs,typename Args,typename Err >
+	int runOneInstance( AppType,
+			    AppConstructorArgs cargs,
+			    const QString& spath,
+			    Args opts,
+			    QApplication& qapp,
+			    Err err )
+	{
+		using singleInstance = util::oneinstance< typename AppType::type,AppConstructorArgs,Err > ;
+
+		return singleInstance( spath,std::move( opts ),qapp,std::move( cargs ),std::move( err ) ).exec() ;
+	}
+
+	template< typename AppType,typename AppConstructorArgs,typename Args >
+	int runOneInstance( AppType appType,
+			    AppConstructorArgs cargs,
+			    const QString& spath,
+			    Args opts,
+			    QApplication& qapp )
+	{
+		auto err = util::make_oneinstance_args( [](){
+
+			std::cout << "There seem to be another instance running,exiting this one" << std::endl ;
+		},[](){
+			std::cout << "Previous instance seem to have crashed,trying to clean up before starting" << std::endl ;
+		} ) ;
+
+		return util::runOneInstance( appType,std::move( cargs ),spath,std::move( opts ),qapp,std::move( err ) ) ;
+	}
 }
 
 #endif
