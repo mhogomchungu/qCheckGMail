@@ -186,17 +186,17 @@ namespace util
 		return instanceArgs< OIR,PIC >{ std::move( r ),std::move( c ) } ;
 	}
 
-	template< typename MainApp,typename MainAppArgs,typename InstanceArgs >
+	template< typename MainApp,typename MainAConstructorppArgs,typename InstanceArgs >
 	class oneinstance
 	{
 	public:
 		oneinstance( const QString& socketPath,
-			     const QByteArray& argument,
+			     QByteArray argument,
 			     QApplication& app,
-			     MainAppArgs args,
+			     MainAConstructorppArgs args,
 			     InstanceArgs iargs ) :
 			m_serverPath( socketPath ),
-			m_argument( argument ),
+			m_argument( std::move( argument ) ),
 			m_qApp( app ),
 			m_args( std::move( args ) ),
 			m_iargs( std::move( iargs ) ),
@@ -260,7 +260,7 @@ namespace util
 		{
 			m_mainApp = std::make_unique< MainApp >( std::move( m_args ) ) ;
 
-			m_mainApp->start( m_argument ) ;
+			m_mainApp->start( std::move( m_argument ) ) ;
 
 			QObject::connect( &m_localServer,&QLocalServer::newConnection,[ this ](){
 
@@ -281,7 +281,7 @@ namespace util
 		const QByteArray& m_argument ;
 		QApplication& m_qApp ;
 		std::unique_ptr< MainApp > m_mainApp ;
-		MainAppArgs m_args ;
+		MainAConstructorppArgs m_args ;
 		InstanceArgs m_iargs ;
 		util::exec m_exec ;
 	} ;
@@ -296,24 +296,22 @@ namespace util
 		AppTypeInterface( const AppTypeInterface::args& )
 		{
 		}
-		void event( const QByteArray& )
+		void event( QByteArray )
 		{
 			//This method is called with data from another instance that failed
 			//to start because this instance prevented it from starting
-			//Argument should be the same type as Args below
 		}
-		void start( const QByteArray& )
+		void start( QByteArray )
 		{
 			//This method is called when the first instance is started
-			//Argument should be the same type as Args below
 		}
 	} ;
 
-	template< typename AppType,typename AppConstructorArgs,typename Args,typename Err >
+	template< typename AppType,typename AppConstructorArgs,typename Err >
 	int runOneInstance( AppType,
 			    AppConstructorArgs cargs,
 			    const QString& spath,
-			    Args opts,
+			    QByteArray opts,
 			    QApplication& qapp,
 			    Err err )
 	{
@@ -322,11 +320,11 @@ namespace util
 		return singleInstance( spath,std::move( opts ),qapp,std::move( cargs ),std::move( err ) ).exec() ;
 	}
 
-	template< typename AppType,typename AppConstructorArgs,typename Args >
+	template< typename AppType,typename AppConstructorArgs >
 	int runOneInstance( AppType appType,
 			    AppConstructorArgs cargs,
 			    const QString& spath,
-			    Args opts,
+			    QByteArray opts,
 			    QApplication& qapp )
 	{
 		auto err = util::make_oneinstance_args( [](){
