@@ -403,7 +403,7 @@ void qCheckGMail::wrongAccountNameOrPassword()
 	this->doneCheckingMail() ;
 }
 
-static QString _account_status( int current_account,const QString& displayName,const QString& mailCount )
+static void _account_status( QString& status,const QString& displayName,const QString& mailCount )
 {
 	QString d_name = displayName ;
 
@@ -428,11 +428,11 @@ static QString _account_status( int current_account,const QString& displayName,c
 		}
 	}() ;
 
-	if( current_account > 0 ){
+	if( status == "<table>" ){
 
-		return "<br>" + e.arg( d_name,mailCount ) ;
+		status += e.arg( d_name,mailCount ) ;
 	}else{
-		return "<br>" + e.arg( d_name,mailCount ) ;
+		status += "<br>" + e.arg( d_name,mailCount ) ;
 	}
 }
 
@@ -455,9 +455,9 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 		if( acc.refreshToken().isEmpty() ){
 
 			/*
-			 * Wrong user name or password entered
+			 * RefreshToken should never be empy
 			 */
-			m_accountsStatus += _account_status( m_currentAccount,this->displayName( emailInfo.labelName ),"-1" ) ;
+			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"-1" ) ;
 		}else{
 			if( m_badAccessToken ){
 
@@ -466,7 +466,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 				 *
 				 * Bail out to prevent an endless loop.
 				 */
-				m_accountsStatus += _account_status( m_currentAccount,this->displayName( emailInfo.labelName ),"-1" ) ;
+				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"-1" ) ;
 			}else{
 				/*
 				 * We will get here if:
@@ -488,10 +488,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 
 		if( mailCount_1 == 0 ){
 
-			m_accountsStatus += _account_status( m_currentAccount,this->displayName( emailInfo.labelName ),"0" ) ;
+			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"0" ) ;
 		}else{
 			m_mailCount += mailCount_1 ;
-			m_accountsStatus += _account_status( m_currentAccount,this->displayName( emailInfo.labelName ),mailCount ) ;
+			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),mailCount ) ;
 		}
 	}
 
