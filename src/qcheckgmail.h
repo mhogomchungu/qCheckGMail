@@ -63,7 +63,6 @@ public:
 	qCheckGMail( const qCheckGMail::args& ) ;
 	~qCheckGMail() override ;
 
-	void start( void ) ;
 	void start( const QByteArray& ) ;
 
 	void earlyExit( void ) ;
@@ -82,7 +81,7 @@ public:
 
 	void iconClicked( void ) ;
 private:
-	void run( void ) ;
+	void start( void ) ;
 	void configurationWindowClosed( int ) ;
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts( void ) ;

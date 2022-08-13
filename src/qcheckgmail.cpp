@@ -108,14 +108,6 @@ void qCheckGMail::changeIcon( const QString& icon,int count )
 	}
 }
 
-void qCheckGMail::start()
-{
-	QTimer::singleShot( 0,[ this ](){
-
-		this->run() ;
-	} ) ;
-}
-
 void qCheckGMail::start( const QByteArray& )
 {
 	if( m_args.contains( "-a" ) ){
@@ -135,7 +127,7 @@ void qCheckGMail::event( const QByteArray& )
 {
 }
 
-void qCheckGMail::run()
+void qCheckGMail::start()
 {
 	int j = m_args.size() ;
 
