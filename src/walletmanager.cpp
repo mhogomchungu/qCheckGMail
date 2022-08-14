@@ -386,8 +386,6 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 
 void walletmanager::editAccount( accounts::entry&& e,addaccount::labels&& l,int row )
 {
-	std::cout << QString( "sd") << std::endl ;
-
 	if( !l.entries.isEmpty() && row < m_accounts.size() ){
 
 		auto labels = e.accLabels ;

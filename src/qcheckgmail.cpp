@@ -376,20 +376,22 @@ struct emailInfo
 {
 	QString labelName ;
 	QString labelUnreadEmails ;
-};
+	QString totalMessages ;
+} ;
 
 static emailInfo _getEmailInfo( const QByteArray& json )
 {
 	if( json.contains( "error" ) ){
 
-		return { "","-1" } ;
+		return { "","-1","" } ;
 	}else{
 		auto m = QJsonDocument::fromJson( json ) ;
 
 		auto a = m.object().value( "name" ).toString() ;
 		auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
+		auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
 
-		return { a,b } ;
+		return { a,b,c } ;
 	}
 }
 
