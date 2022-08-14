@@ -69,20 +69,9 @@ int accounts::numberOfLabels() const
 	return m_labelUrls.size() ;
 }
 
-void accounts::labelReplaceAt( int index,const QString& e ) const
-{
-	auto m = const_cast< QVector< accountLabel > * >( &m_labelUrls ) ;
-	( *m ) [ index ] = accountLabel( e ) ;
-}
-
 void accounts::setAccessToken( const QString& e ) const
 {
 	m_accessToken = e ;
-}
-
-void accounts::setAccountName( const QString& e ) const
-{
-	const_cast< accounts::entry * >( &m_entry )->accName = e ;
 }
 
 const QString& accounts::refreshToken() const

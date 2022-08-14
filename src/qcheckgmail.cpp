@@ -1009,8 +1009,6 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 			auto ss = n.readAll() ;
 
-			std::cout << "dddd: " + ss.toStdString() << std::endl ;
-
 			const auto arr = QJsonDocument::fromJson( ss ).object().value( "labels" ).toArray() ;
 
 			addaccount::labels labels ;

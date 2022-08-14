@@ -391,19 +391,19 @@ void walletmanager::pushButtonAdd()
 	class meaw : public addaccount::actions
 	{
 	public:
-		meaw( walletmanager * m ) : m_this( m )
+		meaw( walletmanager * m ) : m_parent( m )
 		{
 		}
 		void cancel() override
 		{
-			m_this->enableAll() ;
+			m_parent->enableAll() ;
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_this->pushButtonAdd( std::move( e ) ) ;
+			m_parent->pushButtonAdd( std::move( e ) ) ;
 		}
 	private:
-		walletmanager * m_this ;
+		walletmanager * m_parent ;
 	};
 
 	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAddr ) ;

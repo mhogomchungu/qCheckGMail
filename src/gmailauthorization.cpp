@@ -166,7 +166,7 @@ void gmailauthorization::setCode( const QString& r )
 		class meaw : public gmailauthorization::authResult
 		{
 		public:
-			meaw( gmailauthorization * g ) : m_this( g )
+			meaw( gmailauthorization * g ) : m_parent( g )
 			{
 			}
 			void operator()( const QString& e,const QByteArray& json ) override
@@ -175,17 +175,17 @@ void gmailauthorization::setCode( const QString& r )
 
 					auto m = tr( "Failed To Obtain Authorization Code" ) ;
 
-					m_this->m_ui->textEdit->setText( m + "\n" + QString( json ) ) ;
+					m_parent->m_ui->textEdit->setText( m + "\n" + QString( json ) ) ;
 
-					m_this->enableAll() ;
+					m_parent->enableAll() ;
 				}else{
-					m_this->m_gmailAuthorization.getToken( e,json ) ;
+					m_parent->m_gmailAuthorization.getToken( e,json ) ;
 
-					m_this->hideUI() ;
+					m_parent->hideUI() ;
 				}
 			}
 		private:
-			gmailauthorization * m_this ;
+			gmailauthorization * m_parent ;
 		};
 
 		m_getAuthorizationCode( r,{ util::type_identity< meaw >(),this } ) ;

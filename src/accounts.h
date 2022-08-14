@@ -67,9 +67,7 @@ public:
 
 	int   numberOfLabels( void ) const ;
 
-	void labelReplaceAt( int,const QString& ) const ;
 	void setAccessToken( const QString& ) const ;
-	void setAccountName( const QString& ) const ;
 
 	accountLabel& getAccountLabel( int ) ;
 private:

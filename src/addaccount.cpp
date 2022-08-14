@@ -54,27 +54,27 @@ addaccount::addaccount( QDialog * parent,
 	class accs : public gmailauthorization::actions
 	{
 	public:
-		accs( addaccount * acc ) : m_this( acc )
+		accs( addaccount * acc ) : m_parent( acc )
 		{
 		}
 		void cancel() override
 		{
-			m_this->cancel() ;
+			m_parent->cancel() ;
 		}
 		void getToken( const QString& e,const QByteArray& s ) override
 		{
 			if( e.isEmpty() ){
 
-				m_this->HideUI() ;
+				m_parent->HideUI() ;
 
 				std::cout << "ERROR: Failed To Generate Token\n" ;
 				std::cout << s.constData() << std::endl ;
 			}else{
-				m_this->getLabels( e ) ;
+				m_parent->getLabels( e ) ;
 			}
 		}
 	private:
-		addaccount * m_this ;
+		addaccount * m_parent ;
 	};
 
 	gmailauthorization::instance( this,
@@ -128,16 +128,16 @@ void addaccount::getLabels( const QString& e )
 	class meaw : public addaccount::gmailAccountInfo
 	{
 	public:
-		meaw( addaccount * acc ) : m_this( acc )
+		meaw( addaccount * acc ) : m_parent( acc )
 		{
 		}
 		void operator()( addaccount::labels s ) override
 		{
-			m_this->m_labels = std::move( s ) ;
-			m_this->show() ;
+			m_parent->m_labels = std::move( s ) ;
+			m_parent->show() ;
 		}
 	private:
-		addaccount * m_this ;
+		addaccount * m_parent ;
 	};
 
 	m_gmailAccountInfo( e,{ util::type_identity< meaw >(),this } ) ;
@@ -166,17 +166,25 @@ void addaccount::add()
 		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 		msg.exec() ;
 	}else{
-		auto accLabels = this->m_ui->lineEditLabel->text() ;
-		auto accLabelsOrg = accLabels ;
+		auto accLabelsOrg = this->m_ui->lineEditLabel->text() ;
+		auto autoaccLabelOrgList = util::split( accLabelsOrg ) ;
 
-		for( const auto& it : m_labels.entries ){
+		QStringList labelIds ;
 
-			accLabels.replace( it.name,it.id ) ;
+		for( const auto& it : autoaccLabelOrgList ){
+
+			for( const auto& xt : m_labels.entries ){
+
+				if( it == xt.name ){
+
+					labelIds.append( xt.id ) ;
+				}
+			}
 		}
 
-		auto lbs = util::labelsToJson( accLabels,accLabelsOrg ) ;
+		auto lbs = util::labelsToJson( labelIds.join( "," ),accLabelsOrg ) ;
 
-		m_actions.results( { accName,QString(),lbs,m_key } ) ;
+		m_actions.results( { accName,QString(),std::move( lbs ),m_key } ) ;
 
 		this->HideUI() ;
 	}
