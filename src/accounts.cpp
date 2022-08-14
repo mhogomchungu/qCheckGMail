@@ -44,6 +44,11 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 	}
 }
 
+const accounts::entry & accounts::data() const
+{
+	return m_entry ;
+}
+
 const QString& accounts::accountName() const
 {
 	return m_entry.accName ;

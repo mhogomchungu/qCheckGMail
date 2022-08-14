@@ -83,12 +83,13 @@ addaccount::addaccount( QDialog * parent,
 }
 
 addaccount::addaccount( QDialog * parent,
-			const accounts::entry& e,
+			accounts::entry e,
 			gmailauthorization::getAuth& k,
 			addaccount::Actions s,
 			addaccount::GMailInfo& n ) :
 	QDialog( parent ),
 	m_ui( new Ui::addaccount ),
+	m_entry( std::move( e ) ),
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
 	m_gmailAccountInfo( n )
@@ -99,8 +100,9 @@ addaccount::addaccount( QDialog * parent,
 
 	m_edit = true ;
 
-	m_ui->lineEditName->setText( e.accName ) ;
-	m_ui->lineEditName->setEnabled( false ) ;
+	m_ui->lineEditName->setText( m_entry.accName ) ;
+	m_ui->lineEditLabel->setText( util::namesFromJson( m_entry.accLabels ) ) ;
+
 	m_ui->lineEditName->setToolTip( QString() ) ;
 
 	connect( m_ui->pushButtonAdd,&QPushButton::clicked,this,&addaccount::add ) ;
@@ -157,36 +159,30 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
-	auto accName  = this->m_ui->lineEditName->text() ;
+	if( m_edit ){
 
-	if( accName.isEmpty() ){
+		m_entry.accName = m_ui->lineEditName->text() ;
+		m_entry.accLabels = m_ui->lineEditLabel->text() ;
 
-		QMessageBox msg( this ) ;
-
-		msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
-		msg.exec() ;
-	}else{
-		auto accLabelsOrg = this->m_ui->lineEditLabel->text() ;
-		auto autoaccLabelOrgList = util::split( accLabelsOrg ) ;
-
-		QStringList labelIds ;
-
-		for( const auto& it : autoaccLabelOrgList ){
-
-			for( const auto& xt : m_labels.entries ){
-
-				if( it == xt.name ){
-
-					labelIds.append( xt.id ) ;
-				}
-			}
-		}
-
-		auto lbs = util::labelsToJson( labelIds.join( "," ),accLabelsOrg ) ;
-
-		m_actions.results( { accName,QString(),std::move( lbs ),m_key } ) ;
+		m_actions.edit( std::move( m_entry ) ) ;
 
 		this->HideUI() ;
+	}else{
+		auto accName  = this->m_ui->lineEditName->text() ;
+
+		if( accName.isEmpty() ){
+
+			QMessageBox msg( this ) ;
+
+			msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
+			msg.exec() ;
+		}else{
+			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),m_labels.entries ) ;
+
+			m_actions.results( { accName,QString(),std::move( lbs ),m_key } ) ;
+
+			this->HideUI() ;
+		}
 	}
 }
 

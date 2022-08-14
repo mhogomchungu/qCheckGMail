@@ -121,12 +121,15 @@ public:
 	~walletmanager() ;
 private:
 	void deleteAccount( bool = false ) ;
+	void editEntryLabels( void ) ;
 	void pushButtonAdd( void ) ;
 	void pushButtonClose( void ) ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void enableAll( void ) ;
 	void pushButtonAdd( accounts::entry&& ) ;
+	void editAccount( accounts::entry&&,addaccount::labels&&,int row ) ;
+	void editAccount( int row,addaccount::labels&& ) ;
 	void openWallet( void ) ;
 	const accounts& addEntry( const accounts& ) ;
 	void disableAll( void ) ;
@@ -156,7 +159,7 @@ private:
 
 	gmailauthorization::getAuth m_getAuthorization ;
 
-	addaccount::GMailInfo m_getAddr ;
+	addaccount::GMailInfo m_getAccountInfo ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

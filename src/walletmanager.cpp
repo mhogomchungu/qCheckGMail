@@ -142,7 +142,7 @@ walletmanager::walletmanager( const QString& icon,
 	m_icon( QString( ":/%1" ).arg( icon ) ),
 	m_walletData( std::move( e ) ),
 	m_getAuthorization( std::move( k ) ),
-	m_getAddr( std::move( a ) )
+	m_getAccountInfo( std::move( a ) )
 {
 }
 
@@ -384,6 +384,89 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 	} ) ;
 }
 
+void walletmanager::editAccount( accounts::entry&& e,addaccount::labels&& l,int row )
+{
+	std::cout << QString( "sd") << std::endl ;
+
+	if( !l.entries.isEmpty() && row < m_accounts.size() ){
+
+		auto labels = e.accLabels ;
+		auto accName = e.accName ;
+
+		e.accLabels = util::labelsToJson( e.accLabels,l.entries ) ;
+
+		m_accounts[ row ] = std::move( e ) ;
+
+		const auto& s = m_accounts[ row ].data() ;
+
+		Task::run( [ this,&s,l = std::move( l ) ](){
+
+			account( m_wallet.get(),s ).replace() ;
+
+		} ).then( [ this,row,labels,accName ](){
+
+			m_table->item( row,0 )->setText( accName ) ;
+			m_table->item( row,1 )->setText( labels ) ;
+
+			this->enableAll() ;
+		} ) ;
+	}
+}
+
+void walletmanager::editAccount( int row,addaccount::labels&& l )
+{
+	class meaw : public addaccount::actions
+	{
+	public:
+		meaw( walletmanager * m,addaccount::labels&& l,int row ) :
+			m_parent( m ),m_labels( std::move( l ) ),m_row( row )
+		{
+		}
+		void cancel() override
+		{
+			m_parent->enableAll() ;
+		}
+		void edit( accounts::entry e ) override
+		{
+			m_parent->editAccount( std::move( e ),std::move( m_labels ),m_row ) ;
+		}
+	private:
+		walletmanager * m_parent ;
+		addaccount::labels m_labels ;
+		int m_row ;
+	};
+
+	addaccount::instance( this,
+			      m_accounts[ row ].data(),
+			      m_getAuthorization,
+			      { util::type_identity< meaw >(),this,std::move( l ),row },
+			      m_getAccountInfo ) ;
+}
+
+void walletmanager::editEntryLabels()
+{
+	auto item = m_table->currentItem() ;
+	auto row = item->row() ;
+	auto accName = m_table->item( row,0 )->text().toUtf8() ;
+
+	class meaw : public addaccount::gmailAccountInfo
+	{
+	public:
+		meaw( walletmanager * w,int row ) : m_parent( w ),m_row( row )
+		{
+		}
+		void operator()( addaccount::labels l ) override
+		{
+			m_parent->editAccount( m_row,std::move( l ) ) ;
+		}
+	private:
+		walletmanager * m_parent ;
+		int m_row ;
+	} ;
+
+	m_getAccountInfo( accName,{ util::type_identity< meaw >(),this,row } ) ;
+}
+
 void walletmanager::pushButtonAdd()
 {
 	this->disableAll() ;
@@ -406,7 +489,7 @@ void walletmanager::pushButtonAdd()
 		walletmanager * m_parent ;
 	};
 
-	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAddr ) ;
+	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAccountInfo ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )
@@ -422,6 +505,15 @@ void walletmanager::tableItemClicked( QTableWidgetItem * item )
 		connect( ac,&QAction::triggered,this,&walletmanager::deleteAccount ) ;
 
                 return ac ;
+	}() ) ;
+
+	m.addAction( [ & ](){
+
+		auto ac = new QAction( &m ) ;
+		ac->setText( tr( "Edit Entry" ) ) ;
+		connect( ac,&QAction::triggered,this,&walletmanager::editEntryLabels ) ;
+
+		return ac ;
 	}() ) ;
 
 	m.exec( QCursor::pos() ) ;
@@ -447,7 +539,7 @@ void walletmanager::deleteAccount( bool )
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-                        Task::run( [ & ](){
+			Task::run( [ & ](){
 
 				account( accName,m_wallet.get() ).remove() ;
 

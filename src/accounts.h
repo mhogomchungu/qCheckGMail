@@ -57,6 +57,7 @@ public:
 	accounts( const accounts::entry& ) ;
 	accounts() ;
 
+	const accounts::entry& data( void ) const ;
 	const QString& refreshToken( void ) const ;
 	const QString& accountName( void ) const ;
 	const QString& passWord( void )	 const ;

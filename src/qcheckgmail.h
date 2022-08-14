@@ -106,6 +106,9 @@ private:
 	void networkAccess( const QNetworkRequest& ) ;
 
 	void getGMailAccountInfo( const QString& authocode,addaccount::GmailAccountInfo returnEmail ) ;
+	void getGMailAccountInfo( const QByteArray& accName,addaccount::GmailAccountInfo returnEmail ) ;
+
+	void getLabels( const QString& accessToken,addaccount::GmailAccountInfo ) ;
 
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;

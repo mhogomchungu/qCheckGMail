@@ -77,8 +77,13 @@ public:
 
 	struct gMailInfo
 	{
-		virtual void operator()( const QString&,addaccount::GmailAccountInfo )
+		virtual void operator()( const QString& authoCode,addaccount::GmailAccountInfo )
 		{
+			Q_UNUSED( authoCode )
+		}
+		virtual void operator()( const QByteArray& accountName,addaccount::GmailAccountInfo )
+		{
+			Q_UNUSED( accountName )
 		}
 		virtual ~gMailInfo() ;
 	} ;
@@ -98,6 +103,10 @@ public:
 		{
 			( *m_handle )( authocode,std::move( result ) ) ;
 		}
+		virtual void operator()( const QByteArray& accountName,addaccount::GmailAccountInfo result )
+		{
+			( *m_handle )( accountName,std::move( result ) ) ;
+		}
 	private:
 		std::unique_ptr< addaccount::gMailInfo > m_handle ;
 	} ;
@@ -108,6 +117,9 @@ public:
 		{
 		}
 		virtual void results( accounts::entry&& )
+		{
+		}
+		virtual void edit( accounts::entry )
 		{
 		}
 		virtual ~actions() ;
@@ -129,12 +141,16 @@ public:
 		{
 			m_handle->results( std::move( e ) ) ;
 		}
+		void edit( accounts::entry e )
+		{
+			m_handle->edit( std::move( e ) ) ;
+		}
 	private:
 		std::unique_ptr< addaccount::actions > m_handle ;
 	} ;
 
 	static addaccount& instance( QDialog * parent,
-				     const accounts::entry& e,
+				     accounts::entry e,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions r,
 				     addaccount::GMailInfo& n )
@@ -151,7 +167,7 @@ public:
 	}
 
 	addaccount( QDialog *,
-		    const accounts::entry&,
+		    accounts::entry,
 		    gmailauthorization::getAuth&,
 		    addaccount::Actions,
 		    addaccount::GMailInfo& ) ;
@@ -162,18 +178,17 @@ public:
 		    addaccount::GMailInfo& ) ;
 
 	~addaccount() ;
-
-	void add() ;
+private:	
+	void add( void ) ;
 	void cancel( void ) ;
 	void HideUI( void ) ;
-
-private:
 	void Show( const QString& ) ;
 	void getLabels( const QString& ) ;
 
 	void closeEvent( QCloseEvent * ) ;
 	Ui::addaccount * m_ui ;
 	bool m_edit ;
+	accounts::entry m_entry ;
 	QString m_key ;
 	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;

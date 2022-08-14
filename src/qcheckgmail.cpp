@@ -705,27 +705,27 @@ void qCheckGMail::configurationoptionWindow()
 	class meaw : public configurationoptionsdialog::actions
 	{
 	public:
-		meaw( qCheckGMail * g ) : m_this( g )
+		meaw( qCheckGMail * g ) : m_parent( g )
 		{
 		}
 		void configurationWindowClosed( int s ) override
 		{
-			m_this->configurationWindowClosed( s ) ;
+			m_parent->configurationWindowClosed( s ) ;
 		}
 		void enablePassWordChange( bool s ) override
 		{
-			m_this->enablePassWordChange( s ) ;
+			m_parent->enablePassWordChange( s ) ;
 		}
 		void reportOnAllAccounts( bool s ) override
 		{
-			m_this->reportOnAllAccounts( s ) ;
+			m_parent->reportOnAllAccounts( s ) ;
 		}
 		void audioNotify( bool s ) override
 		{
-			m_this->audioNotify( s ) ;
+			m_parent->audioNotify( s ) ;
 		}
 	private:
-		qCheckGMail * m_this ;
+		qCheckGMail * m_parent ;
 	};
 
 	configurationoptionsdialog::instance( this,{ util::type_identity< meaw >(),this } ) ;
@@ -873,19 +873,19 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 	class meaw : public gmailauthorization::authActions
 	{
 	public:
-		meaw( qCheckGMail * g ) : m_this( g )
+		meaw( qCheckGMail * g ) : m_parent( g )
 		{
 		}
 		void operator()( const QString& authocode,gmailauthorization::AuthResult function ) override
 		{
-			m_this->m_manager.post( -1,m_this->m_networkRequest,[ & ](){
+			m_parent->m_manager.post( -1,m_parent->m_networkRequest,[ & ](){
 
 				auto s = configurationoptionsdialog::stringRunTimePortNumber() ;
 
 				util::urlOpts opts ;
 
-				opts.add( "client_id",m_this->m_clientID ) ;
-				opts.add( "client_secret",m_this->m_clientSecret ) ;
+				opts.add( "client_id",m_parent->m_clientID ) ;
+				opts.add( "client_secret",m_parent->m_clientSecret ) ;
 				opts.add( "code",authocode ) ;
 				opts.add( "grant_type","authorization_code" ) ;
 				opts.add( "redirect_uri","http://127.0.0.1:" + s ) ;
@@ -900,7 +900,7 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 			 } ) ;
 		}
 	private:
-		qCheckGMail * m_this ;
+		qCheckGMail * m_parent ;
 	};
 
 	return { util::type_identity< meaw >(),this } ;
@@ -911,21 +911,21 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 	class meaw : public walletmanager::wallet
 	{
 	public:
-		meaw( qCheckGMail * g ) : m_this( g )
+		meaw( qCheckGMail * g ) : m_parent( g )
 		{
 		}
 		void data( QVector< accounts >&& e ) override
 		{
-			m_this->getAccountsInfo( std::move( e ) ) ;
+			m_parent->getAccountsInfo( std::move( e ) ) ;
 		}
 		void closed() override
 		{
-			m_this->m_mutex.lock() ;
-			m_this->m_redoMailCheck = true ;
-			m_this->m_mutex.unlock() ;
+			m_parent->m_mutex.lock() ;
+			m_parent->m_redoMailCheck = true ;
+			m_parent->m_mutex.unlock() ;
 		}
 	private:
-		qCheckGMail * m_this ;
+		qCheckGMail * m_parent ;
 	};
 
 	return { util::type_identity< meaw >(),this } ;
@@ -1002,28 +1002,46 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
-		QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
-		r.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
+		this->getLabels( e,std::move( ginfo ) ) ;
+	} ) ;
+}
 
-		this->m_manager.get( -1,r,[ ginfo = std::move( ginfo ),e ]( QNetworkReply& n ){
+void qCheckGMail::getGMailAccountInfo( const QByteArray& accName,addaccount::GmailAccountInfo ginfo )
+{
+	for( const auto& it : m_accounts ){
 
-			auto ss = n.readAll() ;
+		if( it.accountName() ==accName ){
 
-			const auto arr = QJsonDocument::fromJson( ss ).object().value( "labels" ).toArray() ;
+			this->getLabels( it.accessToken(),std::move( ginfo ) ) ;
 
-			addaccount::labels labels ;
+			break ;
+		}
+	}
+}
 
-			for( const auto& it : arr ){
+void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccountInfo ginfo )
+{
+	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
+	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-				auto obj = it.toObject() ;
-				auto id = obj.value( "id" ).toString() ;
-				auto name = obj.value( "name" ).toString() ;
+	this->m_manager.get( -1,r,[ ginfo = std::move( ginfo ) ]( QNetworkReply& n ){
 
-				labels.entries.append( { name,id } ) ;
-			}
+		auto ss = n.readAll() ;
 
-			ginfo( std::move( labels ) ) ;
-		} ) ;
+		const auto arr = QJsonDocument::fromJson( ss ).object().value( "labels" ).toArray() ;
+
+		addaccount::labels labels ;
+
+		for( const auto& it : arr ){
+
+			auto obj = it.toObject() ;
+			auto id = obj.value( "id" ).toString() ;
+			auto name = obj.value( "name" ).toString() ;
+
+			labels.entries.append( { name,id } ) ;
+		}
+
+		ginfo( std::move( labels ) ) ;
 	} ) ;
 }
 
@@ -1088,15 +1106,19 @@ void qCheckGMail::configureAccounts()
 	class meaw : public addaccount::gMailInfo
 	{
 	public:
-		meaw( qCheckGMail * m ) : m_this( m )
+		meaw( qCheckGMail * m ) : m_parent( m )
 		{
 		}
 		void operator()( const QString& authocode,addaccount::GmailAccountInfo returnEmail ) override
 		{
-			m_this->getGMailAccountInfo( authocode,std::move( returnEmail ) ) ;
+			m_parent->getGMailAccountInfo( authocode,std::move( returnEmail ) ) ;
+		}
+		void operator()( const QByteArray& accountName,addaccount::GmailAccountInfo returnEmail ) override
+		{
+			m_parent->getGMailAccountInfo( accountName,std::move( returnEmail ) ) ;
 		}
 	private:
-		qCheckGMail * m_this ;
+		qCheckGMail * m_parent ;
 	};
 
 	walletmanager::instance( m_applicationIcon,

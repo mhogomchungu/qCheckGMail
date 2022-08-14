@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <iostream>
+#include <cstring>
 
 #include <QApplication>
 #include <QTimer>
@@ -35,23 +36,71 @@
 
 #include "lxqt_wallet.h"
 
+static inline std::ostream& operator<<( std::ostream& cout,const QString& s )
+{
+	cout << s.toUtf8().constData() ;
+	return cout ;
+}
+
+static inline std::ostream& operator<<( std::ostream& cout,const QByteArray& s )
+{
+	cout << s.constData() ;
+	return cout ;
+}
+
+static inline std::ostream& operator<<( std::ostream& cout,const QStringList& s )
+{
+	std::cout << "(" ;
+
+	for( const auto& it : s ){
+
+		std::cout << it.toUtf8().constData() ;
+	}
+
+	std::cout << ")" ;
+
+	return cout ;
+}
+
 namespace util
 {
 	template< typename T >
 	struct type_identity{
 		using type = T ;
 	} ;
-
-	static inline QString labelsToJson( const QString& ids,const QString& names )
+	static inline QStringList split( const QString& e )
 	{
+#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
+		return.split( ",",QString::SkipEmptyParts ) ;
+#else
+		return e.split( ",",Qt::SkipEmptyParts ) ;
+#endif
+	}
+	template< typename Labels >
+	QString labelsToJson( const QString& userLabels,const Labels& labels )
+	{
+		auto autoaccLabelOrgList = util::split( userLabels ) ;
+
+		QStringList labelIds ;
+
+		for( const auto& it : autoaccLabelOrgList ){
+
+			for( const auto& xt : labels ){
+
+				if( it == xt.name ){
+
+					labelIds.append( xt.id ) ;
+				}
+			}
+		}
+
 		QJsonObject obj ;
 
-		obj.insert( "ids",ids ) ;
-		obj.insert( "names",names ) ;
+		obj.insert( "ids",labelIds.join( "," ) ) ;
+		obj.insert( "names",userLabels ) ;
 
 		return QJsonDocument( obj ).toJson( QJsonDocument::Compact ) ;
 	}
-
 	static inline QString namesFromJson( const QString& e )
 	{
 		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
@@ -65,21 +114,12 @@ namespace util
 
 		return m.find( "ids" )->toString() ;
 	}
-
 	template< typename Signal,typename Slot,typename QObj,typename SignalSource >
 	void connect( Signal s,Slot l,QObj obj,SignalSource ac )
 	{
 		obj->connect( ac,s,obj,l ) ;
 	}
 
-	static inline QStringList split( const QString& e )
-	{
-#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
-		return.split( ",",QString::SkipEmptyParts ) ;
-#else
-		return e.split( ",",Qt::SkipEmptyParts ) ;
-#endif
-	}
 	class urlOpts
 	{
 	public:
