@@ -305,7 +305,7 @@ QString configurationoptionsdialog::noEmailIcon()
 
 		return _settings.value( opt ).toString() ;
 	}else{
-		QString value( "grey" ) ;
+		QString value( "qCheckGMail-hasNoMail" ) ;
 		_settings.setValue( opt,value ) ;
 		_settings.sync() ;
 		return value ;
@@ -320,7 +320,7 @@ QString configurationoptionsdialog::newEmailIcon()
 
 		return _settings.value( opt ).toString() ;
 	}else{
-		QString value( "blue" ) ;
+		QString value( "qCheckGMail-hasMail" ) ;
 		_settings.setValue( opt,value ) ;
 		_settings.sync() ;
 		return value ;
@@ -335,7 +335,7 @@ QString configurationoptionsdialog::errorIcon()
 
 		return _settings.value( opt ).toString() ;
 	}else{
-		QString value( "red" ) ;
+		QString value( "qCheckGMail-hasError" ) ;
 		_settings.setValue( opt,value ) ;
 		_settings.sync() ;
 		return value ;

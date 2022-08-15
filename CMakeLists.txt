@@ -142,12 +142,10 @@ Action=Sound"
 
 install( FILES audio/new-email-sound.ogg     DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio" )
 
-#install( FILES icons/qCheckGMail-GotMail.svg DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
-#install( FILES icons/qCheckGMail-NoMail.svg  DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
-install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}/pixmaps" )
-install( FILES icons/qCheckGMail.svg         DESTINATION "${DATA_INSTALL_DIR}/icons" )
-
-#install( FILES icons/qCheckGMailError.svg    DESTINATION "${DATA_INSTALL_DIR}//pixmaps" )
+install( FILES icons/qCheckGMail.svg           DESTINATION ${DATA_INSTALL_DIR}/icons )
+install( FILES icons/qCheckGMail-hasNoMail.svg DESTINATION ${DATA_INSTALL_DIR}/icons )
+install( FILES icons/qCheckGMail-hasError.svg  DESTINATION ${DATA_INSTALL_DIR}/icons )
+install( FILES icons/qCheckGMail-hasMail.svg   DESTINATION ${DATA_INSTALL_DIR}/icons )
 
 #install( FILES translations.ts/translations.ts DESTINATION share/qCheckGMail/translations.ts/ )
 #install( FILES translations.ts/greek_GR.ts DESTINATION share/qCheckGMail/translations.ts/ )

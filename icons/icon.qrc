@@ -2,8 +2,9 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
 	 <qresource>
-		 <file>red.svg</file>
-		 <file>blue.svg</file>		 
-		 <file>grey.svg</file>
+		 <file>qCheckGMail-hasError.svg</file>
+		 <file>qCheckGMail-hasMail.svg</file>
+		 <file>qCheckGMail-hasNoMail.svg</file>
+		 <file>qCheckGMail.svg</file>
 	 </qresource>
  </RCC>

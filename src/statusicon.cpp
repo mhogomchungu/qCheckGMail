@@ -22,9 +22,8 @@
 #include <QProcess>
 #include <iostream>
 
-static QPixmap _icon( const QString& name,int count )
+static QPixmap _icon( const QIcon& icon,int count )
 {
-	QIcon icon( ":/" + name ) ;
 	QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
 	int size = pixmap.height() * static_cast< int >( 0.01 * configurationoptionsdialog::fontSize() ) ;
 	QPainter paint( &pixmap ) ;
@@ -96,13 +95,15 @@ void statusicon::setCategory( const statusicon::ItemCategory category )
 
 void statusicon::setIcon( const QString& name )
 {
-	KStatusNotifierItem::setIconByPixmap( QIcon( ":/" + name ) ) ;
+	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	KStatusNotifierItem::setIconByPixmap( icon ) ;
 	statusicon::setAttentionIcon( name ) ;
 }
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	QPixmap pixmap = _icon( name,count ) ;
+	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	QPixmap pixmap = _icon( icon,count ) ;
 	KStatusNotifierItem::setIconByPixmap( pixmap ) ;
 	KStatusNotifierItem::setAttentionIconByPixmap( pixmap ) ;
 }
@@ -233,12 +234,15 @@ void statusicon::quit()
 
 void statusicon::setIcon( const QString& name )
 {
-	m_trayIcon.setIcon( QIcon( ":/" + name ) ) ;
+	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+
+	m_trayIcon.setIcon( icon ) ;
 }
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	auto pixmap = _icon( name,count ) ;
+	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	QPixmap pixmap = _icon( icon,count ) ;
 	m_trayIcon.setIcon( pixmap ) ;
 }
 
