@@ -36,6 +36,7 @@
 #include "audio_file_path.h"
 #include "accounts.h"
 #include "configurationoptionsdialog.h"
+#include "settings.h"
 
 #if KF5
 #include <kstatusnotifieritem.h>
@@ -50,9 +51,9 @@ class statusicon : public QObject
 	Q_OBJECT
 public:
 	typedef struct{
-		std::function< void( void ) > onLeftClick   = [](){} ;
-		std::function< void( void ) > onRightClick  = [](){} ;
-		std::function< void( void ) > onMiddleClick = [](){} ;
+		std::function< void() > onLeftClick   = [](){} ;
+		std::function< void() > onRightClick  = [](){} ;
+		std::function< void() > onMiddleClick = [](){} ;
 	}clickActions;
 
 	enum ItemCategory {
@@ -67,10 +68,10 @@ public:
 		Active = 2,
 		NeedsAttention = 3
 	};
-	statusicon() ;
+	statusicon( settings& ) ;
 	virtual ~statusicon() ;
-	static void newEmailNotify( void ) ;
-	static bool enableDebug( void ) ;
+	static void newEmailNotify() ;
+	static bool enableDebug() ;
 	void setAttentionIcon( const QString& name ) ;
 	void setCategory( const ItemCategory category ) ;
 	void setIcon( const QString& name ) ;
@@ -81,13 +82,13 @@ public:
 	void setIconClickedActions( const statusicon::clickActions& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
 	QMenu * getMenu( const QString& ) ;
-	QMenu * getOGMenu( void ) ;
+	QMenu * getOGMenu() ;
 	statusicon::ItemStatus getStatus() ;
 	void addAction( QAction * ) ;
-	QList< QAction * > getMenuActions( void ) ;
-	void addQuitAction( void ) ;
+	QList< QAction * > getMenuActions() ;
+	void addQuitAction() ;
 private slots:
-	void quit( void ) ;
+	void quit() ;
 	void activateRequested( bool,const QPoint& ) ;
 	void trayIconClicked( QSystemTrayIcon::ActivationReason reason ) ;
 private:
@@ -100,6 +101,7 @@ private:
 	QString m_defaultApplication ;
 	statusicon::clickActions m_clickActions ;
 	QSystemTrayIcon m_trayIcon ;
+	settings& m_settings ;
 };
 
 #endif // STATUSICON_H

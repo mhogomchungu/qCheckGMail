@@ -48,6 +48,7 @@
 #include "tray_application_type.h"
 #include "network_access_manager.hpp"
 #include "gmailauthorization.h"
+#include "settings.h"
 
 #include <functional>
 #include <utility>
@@ -65,31 +66,31 @@ public:
 
 	void start( const QByteArray& ) ;
 
-	void earlyExit( void ) ;
+	void earlyExit() ;
 
 	void event( const QByteArray& ) ;
 
-	static int instanceAlreadyRunning( void ) ;
-	static int autoStartDisabled( void ) ;
+	static int instanceAlreadyRunning() ;
+	static int autoStartDisabled() ;
 
-	static bool autoStartEnabled( void ) ;
+	static bool autoStartEnabled() ;
 
 	static void setLocalLanguage( QCoreApplication&,QTranslator * ) ;
 
-	QWidget * widget( void ) ;
-	QString defaultApplication( void ) ;
+	QWidget * widget() ;
+	QString defaultApplication() ;
 
-	void iconClicked( void ) ;
+	void iconClicked() ;
 private:
-	void start( void ) ;
+	void start() ;
 	void configurationWindowClosed( int ) ;
 	void pauseCheckingMail( bool ) ;
-	void configureAccounts( void ) ;
-	void configurationoptionWindow( void ) ;
+	void configureAccounts() ;
+	void configurationoptionWindow() ;
 	void checkMail( bool = false ) ;
 	void setTimer( int ) ;
 	void reportOnAllAccounts( bool ) ;
-	void configurePassWord( void ) ;
+	void configurePassWord() ;
 	void audioNotify( bool ) ;
 	void alwaysShowTrayIcon( bool ) ;
 	void enablePassWordChange( bool ) ;
@@ -115,27 +116,27 @@ private:
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
 	void noInternet( const QString& = QString() ) ;
-	void wrongAccountNameOrPassword( void ) ;
-	void setUpEmailNotifications( void ) ;
-	void setLocalLanguage( void ) ;
-	void walletNotOPenedError( void ) ;
+	void wrongAccountNameOrPassword() ;
+	void setUpEmailNotifications() ;
+	void setLocalLanguage() ;
+	void walletNotOPenedError() ;
 	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
 	void openMail( const accounts& acc ) ;
-	void openMail( void ) ;
+	void openMail() ;
 	void changeIcon( const QString& icon ) ;
 	void changeIcon( const QString& icon,int ) ;
-	void getAccountsInfo( void ) ;
-	void startTimer( void ) ;
-	void stopTimer( void ) ;
-	void setTimer( void ) ;
+	void getAccountsInfo() ;
+	void startTimer() ;
+	void stopTimer() ;
+	void setTimer() ;
 	void reportOnAllAccounts( const QByteArray&,bool ) ;
 	void reportOnlyFirstAccountWithMail( const QByteArray&,bool ) ;
-	void noAccountConfigured( void ) ;
-	void doneCheckingMail( void ) ;
-	void failedToCheckForNewEmail( void ) ;
-	void audioNotify( void ) ;
-	void addActionsToMenu( void ) ;
+	void noAccountConfigured() ;
+	void doneCheckingMail() ;
+	void failedToCheckForNewEmail() ;
+	void audioNotify() ;
+	void addActionsToMenu() ;
 
 	int m_interval ;
 	int m_numberOfLabels ;
@@ -185,10 +186,12 @@ private:
 
 	QVector< accounts > m_accounts ;
 
-	statusicon m_statusicon ;
-
 	QApplication& m_qApp ;
 	QStringList m_args ;
+
+	settings m_settings ;
+
+	statusicon m_statusicon ;
 };
 
 #endif // QCHECKGMAIL_H

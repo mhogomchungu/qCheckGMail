@@ -47,11 +47,13 @@ static auto responce = R"R(
 </html>)R" ;
 
 gmailauthorization::gmailauthorization( QDialog * parent,
+					settings& s,
 					gmailauthorization::getAuth& k,
 					gmailauthorization::Actions e ) :
 	QDialog( parent ),m_ui( new Ui::gmailauthorization ),
 	m_getAuthorizationCode( k ),
-	m_gmailAuthorization( std::move( e ) )
+	m_gmailAuthorization( std::move( e ) ),
+	m_settings( s )
 {
 	m_ui->setupUi( this ) ;
 
@@ -108,7 +110,7 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 		}
 	} ) ;
 
-	auto portNumber = configurationoptionsdialog::portNumber() ;
+	auto portNumber = m_settings.portNumber() ;
 
 	while( true ){
 
@@ -124,14 +126,14 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
 			util::urlOpts opts( "https://accounts.google.com/o/oauth2/auth" ) ;
 
-			opts.add( "client_id",configurationoptionsdialog::clientID() ) ;
+			opts.add( "client_id",m_settings.clientID() ) ;
 			opts.add( "redirect_uri","http://127.0.0.1:" + QString::number( portNumber ) ) ;
 			opts.add( "response_type","code" ) ;
 			opts.add( "scope","https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.labels" ) ;
 
 			m_ui->textEdit->setText( opts.toString() ) ;
 
-			configurationoptionsdialog::setRuntimePortNumber( portNumber ) ;
+			m_settings.setRuntimePortNumber( portNumber ) ;
 
 			break ;
 		}else{

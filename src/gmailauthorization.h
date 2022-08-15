@@ -28,6 +28,8 @@
 #include <QDebug>
 #include <QtNetwork/QTcpServer>
 
+#include "settings.h"
+
 namespace Ui {
 class gmailauthorization;
 }
@@ -118,13 +120,15 @@ public:
 	} ;
 
 	static void instance( QDialog * parent,
+			      settings& s,
 			      gmailauthorization::getAuth& r,
 			      gmailauthorization::Actions e )
 	{
-		new gmailauthorization( parent,r,std::move( e ) ) ;
+		new gmailauthorization( parent,s,r,std::move( e ) ) ;
 	}
 
 	gmailauthorization( QDialog * parent,
+			    settings&,
 			    gmailauthorization::getAuth&,
 			    gmailauthorization::Actions ) ;
 private:
@@ -136,7 +140,7 @@ private:
 	void enableAll() ;
 	void disableAll() ;
 
-	void closeEvent( QCloseEvent * ) ;
+	void closeEvent( QCloseEvent * ) override ;
 
 	Ui::gmailauthorization * m_ui ;
 
@@ -144,6 +148,7 @@ private:
 	gmailauthorization::Actions m_gmailAuthorization ;
 	QTcpServer m_server ;
 	bool m_firstConnection = true ;
+	settings& m_settings ;
 };
 
 #endif

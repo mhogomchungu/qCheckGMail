@@ -22,12 +22,12 @@
 #include <QProcess>
 #include <iostream>
 
-static QPixmap _icon( const QIcon& icon,int count )
+static QPixmap _icon( const QIcon& icon,int count,settings& s )
 {
 	QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
-	int size = pixmap.height() * static_cast< int >( 0.01 * configurationoptionsdialog::fontSize() ) ;
+	int size = pixmap.height() * static_cast< int >( 0.01 * s.fontSize() ) ;
 	QPainter paint( &pixmap ) ;
-	QFont font( configurationoptionsdialog::fontFamily() ) ;
+	QFont font( s.fontFamily() ) ;
 	QFontMetrics fm( font ) ;
 	QString number = QString::number( count ) ;
 
@@ -49,12 +49,12 @@ static QPixmap _icon( const QIcon& icon,int count )
 
 #else
 	font.setPointSize( size ) ;
-	size = configurationoptionsdialog::fontSize() ;
+	size = s.fontSize() ;
 #endif
 	font.setPixelSize( size ) ;
 	font.setBold( true ) ;
 	paint.setFont( font ) ;
-	paint.setPen( QColor( configurationoptionsdialog::fontColor() ) ) ;
+	paint.setPen( QColor( s.fontColor() ) ) ;
 	paint.drawText( pixmap.rect(),Qt::AlignVCenter | Qt::AlignHCenter,number ) ;
 	paint.end() ;
 
@@ -68,7 +68,7 @@ void statusicon::setIconClickedActions( const statusicon::clickActions& actions 
 
 #if KF5
 
-statusicon::statusicon() : m_menu( new QMenu() )
+statusicon::statusicon( settings& s ) : m_menu( new QMenu() ),m_settings( s )
 {
 	m_menu->clear() ;
 
@@ -103,7 +103,7 @@ void statusicon::setIcon( const QString& name )
 void statusicon::setIcon( const QString& name,int count )
 {
 	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
-	QPixmap pixmap = _icon( icon,count ) ;
+	QPixmap pixmap = _icon( icon,count,m_settings ) ;
 	KStatusNotifierItem::setIconByPixmap( pixmap ) ;
 	KStatusNotifierItem::setAttentionIconByPixmap( pixmap ) ;
 }
@@ -206,7 +206,7 @@ QList< QAction * > statusicon::getMenuActions()
 
 #else
 
-statusicon::statusicon()
+statusicon::statusicon( settings& s ) : m_settings( s )
 {
 	connect( &m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
@@ -253,7 +253,7 @@ void statusicon::setIcon( const QString& name )
 void statusicon::setIcon( const QString& name,int count )
 {
 	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
-	QPixmap pixmap = _icon( icon,count ) ;
+	QPixmap pixmap = _icon( icon,count,m_settings ) ;
 	m_trayIcon.setIcon( pixmap ) ;
 }
 

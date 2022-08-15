@@ -42,6 +42,7 @@
 #include "gmailauthorization.h"
 
 #include "lxqt_wallet.h"
+#include "settings.h"
 
 namespace Ui {
 class walletmanager;
@@ -89,57 +90,59 @@ public:
 		std::unique_ptr< walletmanager::wallet > m_handle ;
 	} ;
 
-	static walletmanager& instance( const QString& icon )
+	static walletmanager& instance( const QString& icon,settings& s )
         {
-		return *( new walletmanager( icon ) ) ;
+		return *( new walletmanager( icon,s ) ) ;
         }
 
-	static walletmanager& instance( walletmanager::Wallet f )
+	static walletmanager& instance( walletmanager::Wallet f,settings& s )
 	{
-		return *( new walletmanager( std::move( f ) ) ) ;
+		return *( new walletmanager( std::move( f ),s ) ) ;
 	}
 
         static walletmanager& instance( const QString& icon,
+					settings& s,
 					walletmanager::Wallet e,
 					gmailauthorization::getAuth k,
 					addaccount::GMailInfo n )
         {
-		return *( new walletmanager( icon,std::move( e ),std::move( k ),std::move( n ) ) ) ;
+		return *( new walletmanager( icon,s,std::move( e ),std::move( k ),std::move( n ) ) ) ;
         }
 
-	walletmanager( const QString& icon ) ;
-	walletmanager( walletmanager::Wallet ) ;
+	walletmanager( const QString& icon,settings& ) ;
+	walletmanager( walletmanager::Wallet,settings& ) ;
 
         walletmanager( const QString& icon,
+		       settings&,
 		       walletmanager::Wallet,
 		       gmailauthorization::getAuth,
 		       addaccount::GMailInfo ) ;
 
-	void changeWalletPassword( void ) ;
-	void ShowUI( void ) ;
-	void getAccounts( void ) ;
-	~walletmanager() ;
+	void changeWalletPassword() ;
+	void ShowUI() ;
+	void getAccounts() ;
+	~walletmanager() override ;
 private:
 	void deleteAccount( bool = false ) ;
-	void editEntryLabels( void ) ;
-	void pushButtonAdd( void ) ;
-	void pushButtonClose( void ) ;
+	void editEntryLabels() ;
+	void pushButtonAdd() ;
+	void pushButtonClose() ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
-	void enableAll( void ) ;
+	void enableAll() ;
 	void pushButtonAdd( accounts::entry&& ) ;
 	void editAccount( accounts::entry&&,addaccount::labels&&,int row ) ;
 	void editAccount( int row,addaccount::labels&& ) ;
-	void openWallet( void ) ;
+	void openWallet() ;
 	const accounts& addEntry( const accounts& ) ;
-	void disableAll( void ) ;
+	void disableAll() ;
 	void changePassword( bool ) ;
-	void buildGUI( void ) ;
+	void buildGUI() ;
 	void selectRow( int row,bool highlight = true ) ;
-	void selectLastRow( void ) ;
-	void HideUI( void ) ;
-	void closeEvent( QCloseEvent * ) ;
-	bool eventFilter( QObject * watched,QEvent * event ) ;
+	void selectLastRow() ;
+	void HideUI() ;
+	void closeEvent( QCloseEvent * ) override ;
+	bool eventFilter( QObject * watched,QEvent * event ) override ;
 	void readAccountInfo() ;
 
 	Ui::walletmanager * m_ui = nullptr ;
@@ -160,6 +163,8 @@ private:
 	gmailauthorization::getAuth m_getAuthorization ;
 
 	addaccount::GMailInfo m_getAccountInfo ;
+
+	settings& m_settings ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

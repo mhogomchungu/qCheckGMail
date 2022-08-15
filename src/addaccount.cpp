@@ -29,6 +29,7 @@
 #include <QJsonObject>
 
 addaccount::addaccount( QDialog * parent,
+			settings& e,
 			gmailauthorization::getAuth& k,
 			addaccount::Actions s,
 			addaccount::GMailInfo& n ) :
@@ -36,7 +37,8 @@ addaccount::addaccount( QDialog * parent,
 	m_ui( new Ui::addaccount ),
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
-	m_gmailAccountInfo( n )
+	m_gmailAccountInfo( n ),
+	m_setting( e )
 {
 	m_ui->setupUi( this ) ;
 
@@ -78,11 +80,13 @@ addaccount::addaccount( QDialog * parent,
 	};
 
 	gmailauthorization::instance( this,
+				      m_setting,
 				      m_getAuthorization,
 				      { util::type_identity< accs >(),this } ) ;
 }
 
 addaccount::addaccount( QDialog * parent,
+			settings& m,
 			accounts::entry e,
 			gmailauthorization::getAuth& k,
 			addaccount::Actions s,
@@ -92,7 +96,8 @@ addaccount::addaccount( QDialog * parent,
 	m_entry( std::move( e ) ),
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
-	m_gmailAccountInfo( n )
+	m_gmailAccountInfo( n ),
+	m_setting( m )
 {
 	m_ui->setupUi( this );
 	//this->setFixedSize( this->size() ) ;

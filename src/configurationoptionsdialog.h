@@ -34,7 +34,7 @@
 
 #include "language_path.h"
 #include "tray_application_type.h"
-
+#include "settings.h"
 #include "util.hpp"
 
 #include <memory>
@@ -99,59 +99,23 @@ public:
 		std::unique_ptr< configurationoptionsdialog::actions > m_handle ;
 	} ;
 
-	static void instance( QObject * parent,configurationoptionsdialog::Actions ac )
+	static void instance( QObject * parent,settings& s,configurationoptionsdialog::Actions ac )
 	{
-		new configurationoptionsdialog( parent,std::move( ac ) ) ;
+		new configurationoptionsdialog( parent,s,std::move( ac ) ) ;
 	}
 
-	configurationoptionsdialog( QObject * parent,configurationoptionsdialog::Actions ) ;
-	~configurationoptionsdialog() ;
-	static bool autoStartEnabled( void ) ;
-	static void enableAutoStart( bool ) ;
-	static bool reportOnAllAccounts( void ) ;
-	static QString localLanguage( void ) ;
-	static QString localLanguagePath( void ) ;
-	static int getTimeFromConfigFile( void ) ;
-	static QString walletName( LXQt::Wallet::BackEnd ) ;
-	static QString logFile( void ) ;
-
-	static util::unique_wallet_ptr secureStorageSystem( void ) ;
-	static bool audioNotify( void ) ;
-	static bool alwaysShowTrayIcon( void ) ;
-	static QString clientID( void ) ;
-	static QString clientSecret( void ) ;
-	static QString audioPlayer( void ) ;
-	static QString noEmailIcon( void ) ;
-	static QString newEmailIcon( void ) ;
-	static QString errorIcon( void ) ;
-	static QString fontFamily( void ) ;
-	static QString fontColor( void ) ;
-	static QString visibleIconState( void ) ;
-	static QString defaultApplication( void ) ;
-	static QString stringRunTimePortNumber( void ) ;
-	static QStringList profileEmailList( void ) ;
-	static bool usingInternalStorageSystem( void ) ;
-	static int fontSize( void ) ;
-	static int portNumber( void ) ;
-	static bool displayEmailCount( void ) ;
-	static int networkTimeOut( void ) ;
-	static void setProfile( const QString& profile ) ;
-	static void setRuntimePortNumber( int ) ;
-	void ShowUI( void ) ;
-	void HideUI( void ) ;
+	configurationoptionsdialog( QObject * parent,settings&,configurationoptionsdialog::Actions ) ;
+	~configurationoptionsdialog() override ;
+	void ShowUI() ;
+	void HideUI() ;
 private:
-	void pushButtonClose( void ) ;
-	bool eventFilter( QObject * watched,QEvent * event ) ;
-	void setAudioNotify( bool ) ;
-	void setIconAlwaysVisible( bool ) ;
-	void saveStorageSystem( const QString& ) ;
-	void saveReportOnAllAccounts( bool ) ;
-	void saveTimeToConfigFile( void ) ;
-	void setSupportedLanguages( void ) ;
-	void saveLocalLanguage( void ) ;
-	void closeEvent( QCloseEvent * ) ;
+	void setSupportedLanguages() ;
+	void pushButtonClose() ;
+	bool eventFilter( QObject * watched,QEvent * event ) override ;
+	void closeEvent( QCloseEvent * ) override ;
 	Ui::configurationoptionsdialog * m_ui ;
 	configurationoptionsdialog::Actions m_actions ;
+	settings& m_settings ;
 };
 
 #endif // CONFIGURATIONOPTIONSDIALOG_H

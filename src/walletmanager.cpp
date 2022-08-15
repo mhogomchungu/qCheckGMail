@@ -125,24 +125,26 @@ private:
 	LXQt::Wallet::Wallet * m_wallet ;
 };
 
-walletmanager::walletmanager( const QString& icon ) :
-	m_icon( QString( ":/%1" ).arg( icon ) )
+walletmanager::walletmanager( const QString& icon,settings& s ) :
+	m_icon( QString( ":/%1" ).arg( icon ) ),m_settings( s )
 {
 }
 
-walletmanager::walletmanager( walletmanager::Wallet f ) :
-	m_walletData( std::move( f ) )
+walletmanager::walletmanager( walletmanager::Wallet f,settings& s ) :
+	m_walletData( std::move( f ) ),m_settings( s )
 {
 }
 
 walletmanager::walletmanager( const QString& icon,
+			      settings& s,
 			      walletmanager::Wallet e,
 			      gmailauthorization::getAuth k,
 			      addaccount::GMailInfo a ) :
 	m_icon( QString( ":/%1" ).arg( icon ) ),
 	m_walletData( std::move( e ) ),
 	m_getAuthorization( std::move( k ) ),
-	m_getAccountInfo( std::move( a ) )
+	m_getAccountInfo( std::move( a ) ),
+	m_settings( s )
 {
 }
 
@@ -190,7 +192,7 @@ void walletmanager::buildGUI()
 void walletmanager::ShowUI()
 {
 	m_action = walletmanager::showAccountInfo ;
-	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet = m_settings.secureStorageSystem() ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
 
 	this->openWallet() ;
@@ -199,22 +201,23 @@ void walletmanager::ShowUI()
 void walletmanager::getAccounts( void )
 {
 	m_action = walletmanager::getAccountInfo ;
-	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet = m_settings.secureStorageSystem() ;
 
 	this->openWallet() ;
 }
 
 void walletmanager::changeWalletPassword()
 {
-	m_wallet = configurationoptionsdialog::secureStorageSystem() ;
+	m_wallet = m_settings.secureStorageSystem() ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
 	m_wallet->setParent( this ) ;
 
-	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
+	auto walletName = m_settings.walletName( m_wallet->backEnd() ) ;
+	auto appName = m_settings.applictionName() ;
 
-	if( m_wallet->open( s,"qCheckGMail",this ) ){
+	if( m_wallet->open( walletName,appName,this ) ){
 
-		m_wallet->changeWalletPassWord( s,"qCheckGMail",[ this ]( bool e ){
+		m_wallet->changeWalletPassWord( walletName,appName,[ this ]( bool e ){
 
 			Q_UNUSED( e )
 			this->hide() ;
@@ -267,11 +270,11 @@ void walletmanager::readAccountInfo()
 
 void walletmanager::openWallet()
 {
-	auto s = configurationoptionsdialog::walletName( m_wallet->backEnd() ) ;
+	auto s = m_settings.walletName( m_wallet->backEnd() ) ;
 
 	m_wallet->setParent( this ) ;
 
-	m_wallet->open( s,"qCheckGMailv2",[ this ]( bool walletOpened ){
+	m_wallet->open( s,m_settings.applictionName(),[ this ]( bool walletOpened ){
 
 		if( walletOpened ){
 
@@ -439,6 +442,7 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 	m_ui->labelNetworkWarning->setVisible( false ) ;
 
 	addaccount::instance( this,
+			      m_settings,
 			      m_accounts[ row ].data(),
 			      m_getAuthorization,
 			      { util::type_identity< meaw >(),this,std::move( l ),row },
@@ -494,7 +498,7 @@ void walletmanager::pushButtonAdd()
 		walletmanager * m_parent ;
 	};
 
-	addaccount::instance( this,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAccountInfo ) ;
+	addaccount::instance( this,m_settings,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAccountInfo ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )

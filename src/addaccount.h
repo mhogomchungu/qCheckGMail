@@ -30,6 +30,7 @@
 #include "accounts.h"
 #include "gmailauthorization.h"
 #include "util.hpp"
+#include "settings.h"
 #include "../../NetworkAccessManager/network_access_manager.hpp"
 
 namespace Ui {
@@ -150,42 +151,46 @@ public:
 	} ;
 
 	static addaccount& instance( QDialog * parent,
+				     settings& s,
 				     accounts::entry e,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions r,
 				     addaccount::GMailInfo& n )
 	{
-		return *( new addaccount( parent,e,k,std::move( r ),n ) ) ;
+		return *( new addaccount( parent,s,e,k,std::move( r ),n ) ) ;
 	}
 
 	static addaccount& instance( QDialog * parent,
+				     settings& s,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions e,
 				     addaccount::GMailInfo& n )
 	{
-		return *( new addaccount( parent,k,std::move( e ),n ) ) ;
+		return *( new addaccount( parent,s,k,std::move( e ),n ) ) ;
 	}
 
 	addaccount( QDialog *,
+		    settings&,
 		    accounts::entry,
 		    gmailauthorization::getAuth&,
 		    addaccount::Actions,
 		    addaccount::GMailInfo& ) ;
 
 	addaccount( QDialog *,
+		    settings&,
 		    gmailauthorization::getAuth&,
 		    addaccount::Actions,
 		    addaccount::GMailInfo& ) ;
 
-	~addaccount() ;
+	~addaccount() override ;
 private:	
-	void add( void ) ;
-	void cancel( void ) ;
-	void HideUI( void ) ;
+	void add() ;
+	void cancel() ;
+	void HideUI() ;
 	void Show( const QString& ) ;
 	void getLabels( const QString& ) ;
 
-	void closeEvent( QCloseEvent * ) ;
+	void closeEvent( QCloseEvent * ) override ;
 	Ui::addaccount * m_ui ;
 	bool m_edit ;
 	accounts::entry m_entry ;
@@ -194,6 +199,7 @@ private:
 	addaccount::Actions m_actions ;
 	addaccount::GMailInfo& m_gmailAccountInfo ;
 	addaccount::labels m_labels ;
+	settings& m_setting ;
 };
 
 #endif // ADDACCOUNT_H

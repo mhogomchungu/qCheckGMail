@@ -25,32 +25,13 @@
 #define PROGRAM_NAME "qCheckGMail"
 #define ORGANIZATION_NAME "qCheckGMail"
 
-#include <QStandardPaths>
-
-static QString _configPath( void )
-{
-	return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
-}
-
 #define DEFAULT_KDE_WALLET     "default kde wallet"
 #define qCheckGMail_KDE_wALLET "qCheckGMail kde wallet"
 
-static QString _profile ;
-static QSettings _settings( ORGANIZATION_NAME,PROGRAM_NAME ) ;
-
-static QString _getOption( const char * opt )
-{
-	if( _profile.isEmpty() ){
-
-		return opt ;
-	}else{
-		return QString( "%1/%2").arg( _profile,opt ) ;
-	}
-}
-
-configurationoptionsdialog::configurationoptionsdialog( QObject *,configurationoptionsdialog::Actions ac ) :
+configurationoptionsdialog::configurationoptionsdialog( QObject *,settings& s,configurationoptionsdialog::Actions ac ) :
 	m_ui( new Ui::configurationoptionsdialog ),
-	m_actions( std::move( ac ) )
+	m_actions( std::move( ac ) ),
+	m_settings( s )
 {
 	m_ui->setupUi( this ) ;
 
@@ -77,9 +58,7 @@ configurationoptionsdialog::configurationoptionsdialog( QObject *,configurationo
 
 	m_ui->checkBoxAudioNotify->setEnabled( true ) ;
 
-	auto opt = _getOption( "storageSystem" ) ;
-
-	auto value = _settings.value( opt ).toString() ;
+	auto value = m_settings.storageSystem() ;
 
 	auto j = m_ui->comboBoxBackEndSystem->count() ;
 
@@ -95,31 +74,11 @@ configurationoptionsdialog::configurationoptionsdialog( QObject *,configurationo
 
 	this->installEventFilter( this ) ;
 
-	this->setWindowIcon( QIcon( ":/" + configurationoptionsdialog::noEmailIcon() ) ) ;
+	auto co = m_settings.noEmailIcon() ;
+
+	this->setWindowIcon( QIcon::fromTheme( co,QIcon( ":/" + co ) ) ) ;
 
 	this->ShowUI() ;
-}
-
-void configurationoptionsdialog::setProfile( const QString& profile )
-{
-	if( !profile.isEmpty() && _settings.contains( profile ) ){
-
-		_profile = profile ;
-	}
-
-	_settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
-}
-
-static int _runtimePortNumber ;
-
-void configurationoptionsdialog::setRuntimePortNumber( int s )
-{
-	_runtimePortNumber = s ;
-}
-
-QString configurationoptionsdialog::stringRunTimePortNumber()
-{
-	return QString::number( _runtimePortNumber ) ;
 }
 
 bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
@@ -141,484 +100,15 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 	return false ;
 }
 
-static util::unique_wallet_ptr _get_bk( LXQt::Wallet::BackEnd bk )
-{
-	auto w = util::unique_wallet_ptr( LXQt::Wallet::getWalletBackend( bk ).release() ) ;
-
-	w->log( []( const QString& e ){ Q_UNUSED( e ) } ) ;
-
-	return w ;
-}
-
-QString configurationoptionsdialog::walletName( LXQt::Wallet::BackEnd backEnd )
-{
-	if( backEnd == LXQt::Wallet::BackEnd::kwallet ){
-
-		auto opt = _getOption( "storageSystem" ) ;
-
-		if( _settings.value( opt ).toString() == qCheckGMail_KDE_wALLET ){
-
-			return "qCheckGMail" ;
-		}else{
-			util::unique_wallet_ptr w( _get_bk( backEnd ) ) ;
-
-			if( w ){
-
-				return w->localDefaultWalletName() ;
-			}else{
-				return "kdewallet" ;
-			}
-		}
-	}else{
-		return "qCheckGMail" ;
-	}
-}
-
-void configurationoptionsdialog::saveStorageSystem( const QString& system )
-{
-	auto opt = _getOption( "storageSystem" ) ;
-	_settings.setValue( opt,system ) ;
-	_settings.sync() ;
-}
-
-QString configurationoptionsdialog::logFile()
-{
-	return _configPath() + QString( "/%1/%2.log" ).arg( PROGRAM_NAME,PROGRAM_NAME ) ;
-}
-
-util::unique_wallet_ptr configurationoptionsdialog::secureStorageSystem()
-{
-	using bk = LXQt::Wallet::BackEnd ;
-
-	auto opt = _getOption( "storageSystem" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		auto value = _settings.value( opt ).toString() ;
-
-		if( value == "gnome wallet" ){
-
-			if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
-
-				return _get_bk( bk::libsecret ) ;
-			}else{
-				_settings.setValue( opt,QString( "internal wallet" ) ) ;
-				return _get_bk( bk::internal ) ;
-			}
-
-		}else if( value.contains( "kde" ) ){
-
-			if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
-
-				return _get_bk( bk::kwallet ) ;
-			}else{
-				_settings.setValue( opt,"internal wallet" ) ;
-				return _get_bk( bk::internal ) ;
-			}
-		}else{
-			QString wallet( "internal wallet" ) ;
-
-			if( value != wallet ){
-
-				_settings.setValue( opt,wallet ) ;
-			}
-
-			return _get_bk( bk::internal ) ;
-		}
-	}else{
-		if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
-
-			_settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
-			return _get_bk( bk::kwallet ) ;
-
-		}else if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
-
-			_settings.setValue( opt,QString( "gnome wallet" ) ) ;
-			return _get_bk( bk::libsecret ) ;
-		}else{
-			_settings.setValue( opt,QString( "internal wallet" ) ) ;
-			return _get_bk( bk::internal ) ;
-		}
-	}
-}
-
-bool configurationoptionsdialog::audioNotify()
-{
-	QString opt = _getOption( "audioNotify" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toBool() ;
-	}else{
-		_settings.setValue( opt,true ) ;
-		return true ;
-	}
-}
-
-void configurationoptionsdialog::setIconAlwaysVisible( bool e )
-{
-	QString opt = _getOption( "alwaysShowTrayIcon" ) ;
-
-	_settings.setValue( opt,e ) ;
-}
-
-bool configurationoptionsdialog::alwaysShowTrayIcon()
-{
-	QString opt = _getOption( "alwaysShowTrayIcon" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toBool() ;
-	}else{
-		_settings.setValue( opt,false ) ;
-		return false ;
-	}
-}
-
-QString configurationoptionsdialog::clientID()
-{
-	QString opt = _getOption( "clientID" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString e = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
-		_settings.setValue( opt,e ) ;
-		return e ;
-	}
-}
-
-QString configurationoptionsdialog::clientSecret()
-{
-	QString opt = _getOption( "clientSecret" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString e = "LRfPCp9m4PLK-WTo3jHMAQ4i" ;
-		_settings.setValue( opt,e ) ;
-		return e ;
-	}
-}
-
-QString configurationoptionsdialog::audioPlayer()
-{
-	auto opt = _getOption( "audioPlayer" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString e( "mplayer" ) ;
-		_settings.setValue( opt,e ) ;
-		return e ;
-	}
-}
-
-QString configurationoptionsdialog::noEmailIcon()
-{
-	QString opt = _getOption( "noEmailIconColor" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "qCheckGMail-hasNoMail" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::newEmailIcon()
-{
-	auto opt = _getOption( "newEmailIconColor" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "qCheckGMail-hasMail" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::errorIcon()
-{
-	auto opt = _getOption( "errorIconColor" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "qCheckGMail-hasError" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::fontFamily()
-{
-	auto opt = _getOption( "displayEmailCountFontFamily" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "Helvetica" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::fontColor()
-{
-	auto opt = _getOption( "displayEmailCountFontColor" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "black" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::visibleIconState()
-{
-	auto opt = _getOption( "visibleIconState" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "NeedsAttention" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QString configurationoptionsdialog::defaultApplication()
-{
-	auto opt = _getOption( "defaultApplication" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString value( "browser" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return value ;
-	}
-}
-
-QStringList configurationoptionsdialog::profileEmailList()
-{
-	if( !_profile.isEmpty() && _settings.contains( _profile ) ){
-
-		auto z = _settings.value( _profile ).toString() ;
-
-#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
-		return z.split( ",",QString::SkipEmptyParts ) ;
-#else
-		return z.split( ",",Qt::SkipEmptyParts ) ;
-#endif
-	}else{
-		return QStringList() ;
-	}
-}
-
-bool configurationoptionsdialog::usingInternalStorageSystem()
-{
-	auto opt = _getOption( "storageSystem" ) ;
-	return _settings.value( opt ).toString() == "internal wallet" ;
-}
-
-int configurationoptionsdialog::fontSize()
-{
-	auto opt = _getOption( "displayEmailCountFontSize" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toInt() ;
-	}else{
-		QString value( "80" ) ;
-		_settings.setValue( opt,value ) ;
-		_settings.sync() ;
-		return 80 ;
-	}
-}
-
-int configurationoptionsdialog::portNumber()
-{
-	auto opt = _getOption( "PortNumber" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toInt() ;
-	}else{
-		_settings.setValue( opt,10000 ) ;
-		_settings.sync() ;
-		return 10000 ;
-	}
-}
-
-bool configurationoptionsdialog::displayEmailCount()
-{
-	auto opt = _getOption( "displayEmailCount" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toBool() ;
-	}else{
-		_settings.setValue( opt,true ) ;
-		_settings.sync() ;
-		return true ;
-	}
-}
-
-int configurationoptionsdialog::networkTimeOut()
-{
-	auto opt = _getOption( "networkTimeOut" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return 1000 * 60 * _settings.value( opt ).toInt() ;
-	}else{
-		_settings.setValue( opt,2 ) ;
-		_settings.sync() ;
-		return 1000 * 60 * 2 ;
-	}
-}
-
-void configurationoptionsdialog::setAudioNotify( bool audioNotify )
-{
-	QString opt( "audioNotify" ) ;
-	_settings.setValue( opt,audioNotify ) ;
-}
-
-bool configurationoptionsdialog::autoStartEnabled()
-{
-	auto opt = _getOption( "autostart" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toBool() ;
-	}else{
-		_settings.setValue( opt,true ) ;
-		_settings.sync() ;
-		return true ;
-	}
-}
-
-void configurationoptionsdialog::enableAutoStart( bool b )
-{
-	QString opt( "autostart" ) ;
-	_settings.setValue( opt,b ) ;
-}
-
-bool configurationoptionsdialog::reportOnAllAccounts()
-{
-	auto opt = _getOption( "reportOnAllAccounts" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toBool() ;
-	}else{
-		_settings.setValue( opt,true ) ;
-		_settings.sync() ;
-		return true ;
-	}
-}
-
-void configurationoptionsdialog::saveReportOnAllAccounts( bool b )
-{
-	QString opt = _getOption( "reportOnAllAccounts" ) ;
-	_settings.setValue( opt,b ) ;
-	m_actions.reportOnAllAccounts( b ) ;
-}
-
-QString configurationoptionsdialog::localLanguage()
-{
-	auto opt = _getOption( "language" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		return _settings.value( opt ).toString() ;
-	}else{
-		QString lang( "english_US" ) ;
-		_settings.setValue( opt,lang ) ;
-		_settings.sync() ;
-		return lang ;
-	}
-}
-
-QString configurationoptionsdialog::localLanguagePath()
-{
-	/*
-	 * LANGUAGE_FILE_PATH is set by the build system and
-	 * it will contain something line $install_prefix/share/qCheckGMail/
-	 */
-	return LANGUAGE_FILE_PATH ;
-}
-
-void configurationoptionsdialog::saveLocalLanguage()
-{
-	auto opt = _getOption( "language" ) ;
-	auto language = m_ui->comboBoxLocalLanguage->currentText() ;
-	_settings.setValue( opt,language ) ;
-}
-
-void configurationoptionsdialog::saveTimeToConfigFile()
-{
-	auto opt = _getOption( "interval" ) ;
-	auto time = m_ui->lineEditUpdateCheckInterval->text() ;
-	_settings.setValue( opt,time ) ;
-	_settings.sync() ;
-}
-
-int configurationoptionsdialog::getTimeFromConfigFile()
-{
-	auto opt = _getOption( "interval" ) ;
-
-	if( _settings.contains( opt ) ){
-
-		bool ok ;
-		auto time = _settings.value( opt ).toInt( &ok ) ;
-
-		if( ok ){
-
-			return time * 60 * 1000 ;
-		}else{
-			return 30 * 60 * 1000 ;
-		}
-	}else{
-		_settings.setValue( opt,QString( "30" ) ) ;
-		_settings.sync() ;
-
-		return 30 * 60 * 1000 ;
-	}
-}
-
 void configurationoptionsdialog::ShowUI()
 {
-	auto time = configurationoptionsdialog::getTimeFromConfigFile() / ( 60 * 1000 ) ;
+	auto time = m_settings.getTimeFromConfigFile() / ( 60 * 1000 ) ;
 
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
-	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
-	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
-	m_ui->checkBoxAudioNotify->setChecked( configurationoptionsdialog::audioNotify() ) ;
-	m_ui->checkBoxAlwaysShowTrayIcon->setChecked( configurationoptionsdialog::alwaysShowTrayIcon() ) ;
+	m_ui->checkBoxAutoStartEnabled->setChecked( m_settings.autoStartEnabled() ) ;
+	m_ui->checkBoxReportOnAllAccounts->setChecked( m_settings.reportOnAllAccounts() ) ;
+	m_ui->checkBoxAudioNotify->setChecked( m_settings.audioNotify() ) ;
+	m_ui->checkBoxAlwaysShowTrayIcon->setChecked( m_settings.alwaysShowTrayIcon() ) ;
 
 	this->setSupportedLanguages() ;
 	this->show() ;
@@ -626,7 +116,7 @@ void configurationoptionsdialog::ShowUI()
 
 void configurationoptionsdialog::HideUI()
 {
-	configurationoptionsdialog::enableAutoStart( m_ui->checkBoxAutoStartEnabled->isChecked() ) ;
+	m_settings.enableAutoStart( m_ui->checkBoxAutoStartEnabled->isChecked() ) ;
 
 	auto x = m_ui->lineEditUpdateCheckInterval->text() ;
 	bool y ;
@@ -646,27 +136,29 @@ void configurationoptionsdialog::HideUI()
 		return ;
 	}
 
-	this->saveLocalLanguage() ;
+	m_settings.saveLocalLanguage( m_ui->comboBoxLocalLanguage->currentText() ) ;
 
-	this->saveReportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+	m_settings.saveReportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
 
-	this->saveTimeToConfigFile() ;
+	m_actions.reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+
+	m_settings.saveTimeToConfigFile( m_ui->lineEditUpdateCheckInterval->text() ) ;
 
 	m_actions.configurationWindowClosed( z * 60 * 1000 ) ;
 
 	m_actions.audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
-	this->setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
+	m_settings.setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
 	auto s = m_ui->comboBoxBackEndSystem->currentText() ;
 
-	this->saveStorageSystem( s ) ;
+	m_settings.saveStorageSystem( s ) ;
 
 	m_actions.enablePassWordChange( s == "internal wallet" ) ;
 
 	auto m = m_ui->checkBoxAlwaysShowTrayIcon->isChecked() ;
 
-	this->setIconAlwaysVisible( m ) ;
+	m_settings.setIconAlwaysVisible( m ) ;
 
 	m_actions.alwaysShowTrayIcon( m ) ;
 
@@ -686,7 +178,6 @@ void configurationoptionsdialog::closeEvent( QCloseEvent * e )
 	this->HideUI() ;
 }
 
-
 void configurationoptionsdialog::pushButtonClose()
 {
 	this->HideUI() ;
@@ -694,7 +185,7 @@ void configurationoptionsdialog::pushButtonClose()
 
 void configurationoptionsdialog::setSupportedLanguages()
 {
-	QDir d( configurationoptionsdialog::localLanguagePath() + "/translations.qm/" ) ;
+	QDir d( m_settings.localLanguagePath() + "/translations.qm/" ) ;
 
 	QStringList l = d.entryList() ;
 
@@ -714,7 +205,7 @@ void configurationoptionsdialog::setSupportedLanguages()
 		cbox->addItem( x ) ;
 	}
 
-	x = configurationoptionsdialog::localLanguage() ;
+	x = m_settings.localLanguage() ;
 
 	j = cbox->count() ;
 

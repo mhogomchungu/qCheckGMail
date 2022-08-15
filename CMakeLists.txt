@@ -32,15 +32,6 @@ set( QT5 "true" )
 pkg_check_modules( MCHUNGU_NETWORK mhogomchungu_network )
 pkg_check_modules( MCHUNGU_TASK mhogomchungu_task )
 
-find_file( JSON_HEADER_PATH "nlohmann/json.hpp" )
-
-if( NOT JSON_HEADER_PATH )
-	set( JSON_HEADER_PATH "${PROJECT_SOURCE_DIR}/src/3rdParty/json/nlohmann/json.hpp" )
-endif()
-
-file( WRITE ${PROJECT_BINARY_DIR}/json.h "\n#include \"${JSON_HEADER_PATH}\"" )
-MESSAGE( STATUS "found json.hpp header file at: ${JSON_HEADER_PATH}" )
-
 if( INTERNAL_LXQT_WALLET )
 
 	message( STATUS "---------------------------------------------------------------------------" )
@@ -188,6 +179,7 @@ set( MOC_FILES	src/statusicon.h
 
 set( CPP_FILES	src/gmailauthorization.cpp
 		src/main.cpp
+		src/settings.cpp
 		src/qcheckgmail.cpp
 		src/accounts.cpp
 		src/statusicon.cpp
@@ -201,7 +193,7 @@ set( RESOUCES 	icons/icon.qrc )
 find_package( Qt5Widgets REQUIRED )
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Network REQUIRED )
-find_package(Qt5DBus REQUIRED)
+find_package( Qt5DBus REQUIRED)
 
 #find_package( ECM REQUIRED NO_MODULE )
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} )
@@ -214,7 +206,7 @@ add_definitions( ${Qt5Widgets_DEFINITIONS} )
 if( KF5 )
 	cmake_policy( SET CMP0012 NEW )
 	find_package( KF5Config REQUIRED )
-	find_package( KF5Notifications REQUIRED)
+	find_package( KF5Notifications REQUIRED )
 	find_package( KF5CoreAddons )
 	find_package( KF5I18n NO_MODULE )
 

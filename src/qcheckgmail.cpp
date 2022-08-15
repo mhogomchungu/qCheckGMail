@@ -47,7 +47,8 @@ static void _debug( const QString& s )
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
-	m_args( m_qApp.arguments() )
+	m_args( m_qApp.arguments() ),
+	m_statusicon( m_settings )
 {
 	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
@@ -117,7 +118,7 @@ void qCheckGMail::start( const QByteArray& )
 {
 	if( m_args.contains( "-a" ) ){
 
-		if( configurationoptionsdialog::autoStartEnabled() ){
+		if( m_settings.autoStartEnabled() ){
 
 			this->start() ;
 		}else{
@@ -142,7 +143,7 @@ void qCheckGMail::start()
 
 			if( i + 1 < j ){
 
-				configurationoptionsdialog::setProfile( m_args.at( i + 1 ) ) ;
+				m_settings.setProfile( m_args.at( i + 1 ) ) ;
 
 				break ;
 			}
@@ -153,20 +154,20 @@ void qCheckGMail::start()
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
 	m_enableDebug	      = m_statusicon.enableDebug() ;
-	m_reportOnAllAccounts = configurationoptionsdialog::reportOnAllAccounts() ;
-	m_audioNotify	      = configurationoptionsdialog::audioNotify() ;
-	m_interval	      = configurationoptionsdialog::getTimeFromConfigFile() ;
-	m_newEmailIcon	      = configurationoptionsdialog::newEmailIcon() ;
-	m_errorIcon	      = configurationoptionsdialog::errorIcon() ;
-	m_noEmailIcon	      = configurationoptionsdialog::noEmailIcon() ;
-	m_displayEmailCount   = configurationoptionsdialog::displayEmailCount() ;
-	m_networkTimeOut      = configurationoptionsdialog::networkTimeOut() ;
-	m_defaultApplication  = configurationoptionsdialog::defaultApplication() ;
-	m_profileEmailList    = configurationoptionsdialog::profileEmailList() ;
-	m_clientID	      = configurationoptionsdialog::clientID() ;
-	m_clientSecret	      = configurationoptionsdialog::clientSecret() ;
-	m_visibleIconState    = configurationoptionsdialog::visibleIconState() ;
-	m_alwaysShowTrayIcon  = configurationoptionsdialog::alwaysShowTrayIcon() ;
+	m_reportOnAllAccounts = m_settings.reportOnAllAccounts() ;
+	m_audioNotify	      = m_settings.audioNotify() ;
+	m_interval	      = m_settings.getTimeFromConfigFile() ;
+	m_newEmailIcon	      = m_settings.newEmailIcon() ;
+	m_errorIcon	      = m_settings.errorIcon() ;
+	m_noEmailIcon	      = m_settings.noEmailIcon() ;
+	m_displayEmailCount   = m_settings.displayEmailCount() ;
+	m_networkTimeOut      = m_settings.networkTimeOut() ;
+	m_defaultApplication  = m_settings.defaultApplication() ;
+	m_profileEmailList    = m_settings.profileEmailList() ;
+	m_clientID	      = m_settings.clientID() ;
+	m_clientSecret	      = m_settings.clientSecret() ;
+	m_visibleIconState    = m_settings.visibleIconState() ;
+	m_alwaysShowTrayIcon  = m_settings.alwaysShowTrayIcon() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
@@ -306,7 +307,7 @@ void qCheckGMail::addActionsToMenu()
 		auto ac = m_statusicon.getAction( tr( "Configure Password" ) ) ;
 
 		ac->setObjectName( "ConfigurePassword" ) ;
-		ac->setEnabled( configurationoptionsdialog::usingInternalStorageSystem() ) ;
+		ac->setEnabled( m_settings.usingInternalStorageSystem() ) ;
 
 		return ac ;
 	}() ) ;
@@ -740,7 +741,7 @@ void qCheckGMail::configurationoptionWindow()
 		qCheckGMail * m_parent ;
 	};
 
-	configurationoptionsdialog::instance( this,{ util::type_identity< meaw >(),this } ) ;
+	configurationoptionsdialog::instance( this,m_settings,{ util::type_identity< meaw >(),this } ) ;
 }
 
 void qCheckGMail::enablePassWordChange( bool changeable )
@@ -907,7 +908,7 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 		{
 			m_parent->m_manager.post( -1,m_parent->m_networkRequest,[ & ](){
 
-				auto s = configurationoptionsdialog::stringRunTimePortNumber() ;
+				auto s = m_parent->m_settings.stringRunTimePortNumber() ;
 
 				util::urlOpts opts ;
 
@@ -1149,6 +1150,7 @@ void qCheckGMail::configureAccounts()
 	};
 
 	walletmanager::instance( m_applicationIcon,
+				 m_settings,
 				 this->walletHandle(),
 				 this->getAuthorization(),
 				 { util::type_identity< meaw >(),this } ).ShowUI() ;
@@ -1156,12 +1158,12 @@ void qCheckGMail::configureAccounts()
 
 void qCheckGMail::configurePassWord()
 {
-	walletmanager::instance( m_applicationIcon ).changeWalletPassword() ;
+	walletmanager::instance( m_applicationIcon,m_settings ).changeWalletPassword() ;
 }
 
 void qCheckGMail::getAccountsInfo()
 {
-	walletmanager::instance( this->walletHandle() ).getAccounts() ;
+	walletmanager::instance( this->walletHandle(),m_settings ).getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()
@@ -1174,8 +1176,8 @@ void qCheckGMail::noAccountConfigured()
 
 void qCheckGMail::setLocalLanguage()
 {
-	auto lang     = configurationoptionsdialog::localLanguage() ;
-	auto langPath = configurationoptionsdialog::localLanguagePath() ;
+	auto lang     = m_settings.localLanguage() ;
+	auto langPath = m_settings.localLanguagePath() ;
 
 	auto r = lang.toLatin1() ;
 
@@ -1207,8 +1209,10 @@ void qCheckGMail::setLocalLanguage()
 
 void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * translator )
 {
-	auto lang     = configurationoptionsdialog::localLanguage() ;
-	auto langPath = configurationoptionsdialog::localLanguagePath() ;
+	settings s ;
+
+	auto lang     = s.localLanguage() ;
+	auto langPath = s.localLanguagePath() ;
 
 	auto r = lang.toLatin1() ;
 
@@ -1225,7 +1229,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 
 void qCheckGMail::setTimer()
 {
-	m_interval = configurationoptionsdialog::getTimeFromConfigFile() ;
+	m_interval = m_settings.getTimeFromConfigFile() ;
 }
 
 void qCheckGMail::setTimer( int time )
@@ -1262,7 +1266,9 @@ void qCheckGMail::stopTimer()
 
 int qCheckGMail::instanceAlreadyRunning()
 {
-	auto lang = configurationoptionsdialog::localLanguage() ;
+	settings s ;
+
+	auto lang = s.localLanguage() ;
 	auto r = lang.toLatin1() ;
 
 	if( r == "english_US" ){
@@ -1279,7 +1285,7 @@ int qCheckGMail::instanceAlreadyRunning()
 
 		QCoreApplication qapp( e,const_cast< char ** >( x ) ) ;
 
-		auto langPath = configurationoptionsdialog::localLanguagePath() ;
+		auto langPath = s.localLanguagePath() ;
 
 		QTranslator translator ;
 
@@ -1295,7 +1301,9 @@ int qCheckGMail::instanceAlreadyRunning()
 
 int qCheckGMail::autoStartDisabled()
 {
-	auto lang = configurationoptionsdialog::localLanguage() ;
+	settings s ;
+
+	auto lang = s.localLanguage() ;
 	auto r = lang.toLatin1() ;
 
 	if( r == "english_US" ){
@@ -1312,7 +1320,7 @@ int qCheckGMail::autoStartDisabled()
 
 		QCoreApplication qapp( e,const_cast< char ** >( x ) ) ;
 
-		QString langPath = configurationoptionsdialog::localLanguagePath() ;
+		QString langPath = s.localLanguagePath() ;
 
 		QTranslator translator ;
 
@@ -1328,5 +1336,5 @@ int qCheckGMail::autoStartDisabled()
 
 bool qCheckGMail::autoStartEnabled()
 {
-	return configurationoptionsdialog::autoStartEnabled() ;
+	return settings().autoStartEnabled() ;
 }
