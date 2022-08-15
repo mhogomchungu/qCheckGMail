@@ -91,6 +91,7 @@ private:
 	void reportOnAllAccounts( bool ) ;
 	void configurePassWord( void ) ;
 	void audioNotify( bool ) ;
+	void alwaysShowTrayIcon( bool ) ;
 	void enablePassWordChange( bool ) ;
 
 	void getAccountsInfo( QVector< accounts >&& ) ;
@@ -155,6 +156,7 @@ private:
 	bool m_timeExpired ;
 	bool m_accountFailed ;
 	bool m_badAccessToken ;
+	bool m_alwaysShowTrayIcon ;
 
 	QString m_accountsStatus ;
 	QString m_newEmailIcon ;

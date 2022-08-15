@@ -76,7 +76,12 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 			m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
 		}
 	}else{
-		m_statusicon.setStatus( m_statusicon.Passive ) ;
+		if( m_alwaysShowTrayIcon ){
+
+			m_statusicon.setStatus( m_statusicon.Active ) ;
+		}else{
+			m_statusicon.setStatus( m_statusicon.Passive ) ;
+		}
 	}
 }
 
@@ -161,6 +166,7 @@ void qCheckGMail::start()
 	m_clientID	      = configurationoptionsdialog::clientID() ;
 	m_clientSecret	      = configurationoptionsdialog::clientSecret() ;
 	m_visibleIconState    = configurationoptionsdialog::visibleIconState() ;
+	m_alwaysShowTrayIcon  = configurationoptionsdialog::alwaysShowTrayIcon() ;
 
 	m_applicationIcon     = m_noEmailIcon ;
 
@@ -182,6 +188,7 @@ void qCheckGMail::start()
 	m_statusicon.setIconClickedActions( m_clickActions ) ;
 
 	this->changeIcon( m_errorIcon ) ;
+
 	this->setTrayIconToVisible( true ) ;
 
 	connect( &m_timer,&QTimer::timeout,this,[ this ](){ this->checkMail() ; },Qt::QueuedConnection ) ;
@@ -563,7 +570,6 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	int count = 0 ;
 	QString mailCount ;
 
 	if( _error( msg ) || error ){
@@ -585,21 +591,21 @@ void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool err
 		}
 	}else{
 		mailCount = emailInfo.labelUnreadEmails ;
-		count = mailCount.toInt() ;
+		m_mailCount = mailCount.toInt() ;
 	}
 
-	if( count > 0 ){
+	if( m_mailCount > 0 ){
 
 		QString info ;
 
-		if( count == 1 ){
+		if( m_mailCount == 1 ){
 
 			info = tr( "1 Email Is Waiting For You" ) ;
 		}else{
 			info = tr( "%1 Emails Are Waiting For You" ).arg( mailCount ) ;
 		}
 
-		this->changeIcon( m_newEmailIcon,count ) ;
+		this->changeIcon( m_newEmailIcon,m_mailCount ) ;
 		this->setTrayIconToVisible( true ) ;
 		this->showToolTip( m_newEmailIcon,this->displayName( emailInfo.labelName ),info ) ;
 		this->audioNotify() ;
@@ -726,6 +732,10 @@ void qCheckGMail::configurationoptionWindow()
 		{
 			m_parent->audioNotify( s ) ;
 		}
+		void alwaysShowTrayIcon( bool s ) override
+		{
+			m_parent->alwaysShowTrayIcon( s ) ;
+		}
 	private:
 		qCheckGMail * m_parent ;
 	};
@@ -761,6 +771,21 @@ void qCheckGMail::configurationWindowClosed( int r )
 void qCheckGMail::audioNotify( bool audioNotify )
 {
 	m_audioNotify = audioNotify ;
+}
+
+void qCheckGMail::alwaysShowTrayIcon( bool e )
+{
+	m_alwaysShowTrayIcon = e ;
+
+	if( e ){
+
+		this->setTrayIconToVisible( false ) ;
+	}else{
+		if( m_mailCount == 0 ){
+
+			m_statusicon.setStatus( m_statusicon.Passive ) ;
+		}
+	}
 }
 
 void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )

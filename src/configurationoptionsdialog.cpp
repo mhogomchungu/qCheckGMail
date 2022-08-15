@@ -255,6 +255,26 @@ bool configurationoptionsdialog::audioNotify()
 	}
 }
 
+void configurationoptionsdialog::setIconAlwaysVisible( bool e )
+{
+	QString opt = _getOption( "alwaysShowTrayIcon" ) ;
+
+	_settings.setValue( opt,e ) ;
+}
+
+bool configurationoptionsdialog::alwaysShowTrayIcon()
+{
+	QString opt = _getOption( "alwaysShowTrayIcon" ) ;
+
+	if( _settings.contains( opt ) ){
+
+		return _settings.value( opt ).toBool() ;
+	}else{
+		_settings.setValue( opt,false ) ;
+		return false ;
+	}
+}
+
 QString configurationoptionsdialog::clientID()
 {
 	QString opt = _getOption( "clientID" ) ;
@@ -593,10 +613,12 @@ int configurationoptionsdialog::getTimeFromConfigFile()
 void configurationoptionsdialog::ShowUI()
 {
 	auto time = configurationoptionsdialog::getTimeFromConfigFile() / ( 60 * 1000 ) ;
+
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( configurationoptionsdialog::autoStartEnabled() ) ;
 	m_ui->checkBoxReportOnAllAccounts->setChecked( configurationoptionsdialog::reportOnAllAccounts() ) ;
 	m_ui->checkBoxAudioNotify->setChecked( configurationoptionsdialog::audioNotify() ) ;
+	m_ui->checkBoxAlwaysShowTrayIcon->setChecked( configurationoptionsdialog::alwaysShowTrayIcon() ) ;
 
 	this->setSupportedLanguages() ;
 	this->show() ;
@@ -641,6 +663,12 @@ void configurationoptionsdialog::HideUI()
 	this->saveStorageSystem( s ) ;
 
 	m_actions.enablePassWordChange( s == "internal wallet" ) ;
+
+	auto m = m_ui->checkBoxAlwaysShowTrayIcon->isChecked() ;
+
+	this->setIconAlwaysVisible( m ) ;
+
+	m_actions.alwaysShowTrayIcon( m ) ;
 
 	this->hide() ;
 

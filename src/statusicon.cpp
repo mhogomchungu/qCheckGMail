@@ -115,6 +115,7 @@ void statusicon::setOverlayIcon( const QString& name )
 
 void statusicon::setStatus( const statusicon::ItemStatus status )
 {
+	m_status = status ;
 	KStatusNotifierItem::setStatus( KStatusNotifierItem::ItemStatus( status ) ) ;
 }
 
@@ -146,6 +147,11 @@ QMenu * statusicon::getMenu( const QString& title )
 QMenu * statusicon::getOGMenu()
 {
 	return m_menu ;
+}
+
+statusicon::ItemStatus statusicon::getStatus()
+{
+	return m_status ;
 }
 
 void statusicon::newEmailNotify()
@@ -212,6 +218,11 @@ statusicon::~statusicon()
 {
 }
 
+statusicon::ItemStatus statusicon::getStatus()
+{
+	return m_status ;
+}
+
 QList< QAction * > statusicon::getMenuActions()
 {
 	return m_menu.actions() ;
@@ -253,7 +264,7 @@ void statusicon::setOverlayIcon( const QString& name )
 
 void statusicon::setStatus( const statusicon::ItemStatus status )
 {
-	Q_UNUSED( status )
+	m_status = status ;
 }
 
 void statusicon::setToolTip( const QString& iconName,const QString& title,const QString& subTitle )

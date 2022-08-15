@@ -61,6 +61,9 @@ public:
 		virtual void audioNotify( bool )
 		{
 		}
+		virtual void alwaysShowTrayIcon( bool )
+		{
+		}
 		virtual ~actions() ;
 	} ;
 
@@ -88,6 +91,10 @@ public:
 		{
 			m_handle->audioNotify( s ) ;
 		}
+		void alwaysShowTrayIcon( bool s )
+		{
+			m_handle->alwaysShowTrayIcon( s ) ;
+		}
 	private:
 		std::unique_ptr< configurationoptionsdialog::actions > m_handle ;
 	} ;
@@ -110,6 +117,7 @@ public:
 
 	static util::unique_wallet_ptr secureStorageSystem( void ) ;
 	static bool audioNotify( void ) ;
+	static bool alwaysShowTrayIcon( void ) ;
 	static QString clientID( void ) ;
 	static QString clientSecret( void ) ;
 	static QString audioPlayer( void ) ;
@@ -135,6 +143,7 @@ private:
 	void pushButtonClose( void ) ;
 	bool eventFilter( QObject * watched,QEvent * event ) ;
 	void setAudioNotify( bool ) ;
+	void setIconAlwaysVisible( bool ) ;
 	void saveStorageSystem( const QString& ) ;
 	void saveReportOnAllAccounts( bool ) ;
 	void saveTimeToConfigFile( void ) ;

@@ -82,7 +82,7 @@ public:
 	QAction * getAction( const QString& title = QString() ) ;
 	QMenu * getMenu( const QString& ) ;
 	QMenu * getOGMenu( void ) ;
-
+	statusicon::ItemStatus getStatus() ;
 	void addAction( QAction * ) ;
 	QList< QAction * > getMenuActions( void ) ;
 	void addQuitAction( void ) ;
@@ -96,6 +96,7 @@ private:
 #else
 	QMenu m_menu ;
 #endif
+	statusicon::ItemStatus m_status ;
 	QString m_defaultApplication ;
 	statusicon::clickActions m_clickActions ;
 	QSystemTrayIcon m_trayIcon ;
