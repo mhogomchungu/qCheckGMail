@@ -302,7 +302,7 @@ void statusicon::addQuitAction()
 
 void statusicon::newEmailNotify()
 {
-	QProcess::startDetached( configurationoptionsdialog::audioPlayer(),{ AUDIO_NOTIFY_FILE } ) ;
+	QProcess::startDetached( m_settings.audioPlayer(),{ AUDIO_NOTIFY_FILE } ) ;
 }
 
 bool statusicon::enableDebug()

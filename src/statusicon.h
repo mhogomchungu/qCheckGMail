@@ -69,9 +69,9 @@ public:
 		NeedsAttention = 3
 	};
 	statusicon( settings& ) ;
-	virtual ~statusicon() ;
-	static void newEmailNotify() ;
+	~statusicon() override ;
 	static bool enableDebug() ;
+	void newEmailNotify() ;
 	void setAttentionIcon( const QString& name ) ;
 	void setCategory( const ItemCategory category ) ;
 	void setIcon( const QString& name ) ;
