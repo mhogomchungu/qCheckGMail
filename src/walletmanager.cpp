@@ -182,6 +182,8 @@ void walletmanager::buildGUI()
 
 	m_ui->groupBox->setTitle( QString() ) ;
 
+	m_ui->labelNetworkWarning->setVisible( false ) ;
+
 	this->installEventFilter( this ) ;
 }
 
@@ -434,6 +436,8 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 		int m_row ;
 	};
 
+	m_ui->labelNetworkWarning->setVisible( false ) ;
+
 	addaccount::instance( this,
 			      m_accounts[ row ].data(),
 			      m_getAuthorization,
@@ -443,6 +447,9 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 
 void walletmanager::editEntryLabels()
 {
+	m_ui->labelNetworkWarning->setVisible( true ) ;
+
+	this->disableAll() ;
 	auto item = m_table->currentItem() ;
 	auto row = item->row() ;
 	auto accName = m_table->item( row,0 )->text().toUtf8() ;

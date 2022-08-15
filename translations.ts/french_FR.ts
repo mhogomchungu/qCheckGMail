@@ -129,8 +129,8 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
     <name>qCheckGMail</name>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="193"/>
-        <location filename="../src/qcheckgmail.cpp" line="634"/>
-        <location filename="../src/qcheckgmail.cpp" line="1089"/>
+        <location filename="../src/qcheckgmail.cpp" line="636"/>
+        <location filename="../src/qcheckgmail.cpp" line="1091"/>
         <source>Status</source>
         <translation>Statuts</translation>
     </message>
@@ -171,7 +171,7 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
     </message>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="342"/>
-        <location filename="../src/qcheckgmail.cpp" line="777"/>
+        <location filename="../src/qcheckgmail.cpp" line="779"/>
         <source>Network Problem Detected</source>
         <translation>Problème réseau détecté</translation>
     </message>
@@ -181,71 +181,71 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
         <translation>Impossible de se connecter au réseau</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="399"/>
+        <location filename="../src/qcheckgmail.cpp" line="401"/>
         <source>%1 Account Has Wrong Username/Password Combination</source>
         <translation>Le compte %1 a une mauvaise combinaison nom utilisateur/mot de passe</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="402"/>
-        <location filename="../src/qcheckgmail.cpp" line="1144"/>
+        <location filename="../src/qcheckgmail.cpp" line="404"/>
+        <location filename="../src/qcheckgmail.cpp" line="1146"/>
         <source>Account Related Error Was Detected</source>
         <translation>Une erreur concernant le compte a été détecté</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="535"/>
+        <location filename="../src/qcheckgmail.cpp" line="537"/>
         <source>Found 1 New Email</source>
         <translation>1 nouvel émail reçu</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="538"/>
+        <location filename="../src/qcheckgmail.cpp" line="540"/>
         <source>Found %1 New Emails</source>
         <translation>%1 nouvels émail reçus</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="545"/>
-        <location filename="../src/qcheckgmail.cpp" line="634"/>
+        <location filename="../src/qcheckgmail.cpp" line="547"/>
+        <location filename="../src/qcheckgmail.cpp" line="636"/>
         <source>No New Email Found</source>
         <translation>Pas de nouvel émail</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="595"/>
+        <location filename="../src/qcheckgmail.cpp" line="597"/>
         <source>1 Email Is Waiting For You</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="597"/>
+        <location filename="../src/qcheckgmail.cpp" line="599"/>
         <source>%1 Emails Are Waiting For You</source>
         <translation>%1 émail sont en attente</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="778"/>
+        <location filename="../src/qcheckgmail.cpp" line="780"/>
         <source>Email Checking Is Taking Longer Than Expected.</source>
         <translation>La vérification des e-mails prend plus de temps que prévu.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="779"/>
+        <location filename="../src/qcheckgmail.cpp" line="781"/>
         <source>Recommending Restarting qCheckGMail If The Problem Persists</source>
         <translation>Nous vous recommandons de relancer qCkeckGmail si le problème persiste</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="821"/>
+        <location filename="../src/qcheckgmail.cpp" line="823"/>
         <source>Dont Have Credentials,(Re)Trying To Open Wallet</source>
         <translation>Pas d&apos;informations, retentative d&apos;ouverture du portefeuille</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1145"/>
+        <location filename="../src/qcheckgmail.cpp" line="1147"/>
         <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>Aucun compte ne semble avoir été configuré dans le portefeuille</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1247"/>
-        <location filename="../src/qcheckgmail.cpp" line="1263"/>
+        <location filename="../src/qcheckgmail.cpp" line="1249"/>
+        <location filename="../src/qcheckgmail.cpp" line="1265"/>
         <source>another instance is already running,exiting this one</source>
         <translation>une autre instance de CheckGMail est déjà lancée, veuillez l&apos;arrêter</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1280"/>
-        <location filename="../src/qcheckgmail.cpp" line="1296"/>
+        <location filename="../src/qcheckgmail.cpp" line="1282"/>
+        <location filename="../src/qcheckgmail.cpp" line="1298"/>
         <source>Autostart Disabled,Exiting This One</source>
         <translation>L&apos;autostart est désactivé, veuillez l&apos;arrêter</translation>
     </message>
@@ -267,22 +267,27 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
         <translation>Fenêtre de configuration du compte</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="23"/>
+        <location filename="../src/walletmanager.ui" line="36"/>
         <source>Accounts Information</source>
         <translation>Informations sur les comptes</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="48"/>
+        <location filename="../src/walletmanager.ui" line="61"/>
         <source>Account Name</source>
         <translation>Nom du compte</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="53"/>
+        <location filename="../src/walletmanager.ui" line="66"/>
         <source>Account Labels</source>
         <translation>Labels des comptes</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.ui" line="70"/>
+        <location filename="../src/walletmanager.ui" line="93"/>
+        <source>Please Wait While I Make A Network Request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/walletmanager.ui" line="29"/>
         <source>&amp;Add</source>
         <translation>&amp;Ajouter</translation>
     </message>
@@ -292,27 +297,27 @@ ERREUR : l&apos;intervalle minimum est de 1 minute
         <translation>&amp;Fermer</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="504"/>
+        <location filename="../src/walletmanager.cpp" line="509"/>
         <source>Delete Entry</source>
         <translation>Supprimer l&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="513"/>
+        <location filename="../src/walletmanager.cpp" line="518"/>
         <source>Edit Entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="529"/>
+        <location filename="../src/walletmanager.cpp" line="534"/>
         <source>Are You Sure You Want To Delete &quot;%1&quot; Account?</source>
         <translation>êtes-vous sur de vouloir supprimer le compte « %1 » ?</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="530"/>
+        <location filename="../src/walletmanager.cpp" line="535"/>
         <source>&amp;Yes</source>
         <translation>&amp;Oui</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="531"/>
+        <location filename="../src/walletmanager.cpp" line="536"/>
         <source>&amp;No</source>
         <translation>&amp;Non</translation>
     </message>
