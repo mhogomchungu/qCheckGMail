@@ -140,13 +140,7 @@ void configurationoptionsdialog::HideUI()
 
 	m_settings.saveReportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
 
-	m_actions.reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
-
 	m_settings.saveTimeToConfigFile( m_ui->lineEditUpdateCheckInterval->text() ) ;
-
-	m_actions.configurationWindowClosed( z * 60 * 1000 ) ;
-
-	m_actions.audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
 	m_settings.setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
@@ -154,13 +148,15 @@ void configurationoptionsdialog::HideUI()
 
 	m_settings.saveStorageSystem( s ) ;
 
-	m_actions.enablePassWordChange( s == "internal wallet" ) ;
-
 	auto m = m_ui->checkBoxAlwaysShowTrayIcon->isChecked() ;
 
 	m_settings.setIconAlwaysVisible( m ) ;
 
 	m_actions.alwaysShowTrayIcon( m ) ;
+	m_actions.configurationWindowClosed( z * 60 * 1000 ) ;
+	m_actions.audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
+	m_actions.reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
+	m_actions.enablePassWordChange( s == "internal wallet" ) ;
 
 	this->hide() ;
 

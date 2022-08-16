@@ -49,7 +49,6 @@ public:
 	struct entry
 	{
 		QString accName ;
-		QString accPassword ;
 		QString accLabels ;
 		QString accRefreshToken ;
 	};

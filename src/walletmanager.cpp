@@ -25,105 +25,74 @@
 
 #include <utility>
 
-static const auto LABEL_IDENTIFIER        = "-qCheckGMail-LABEL_ID" ;
-static const auto DISPLAY_NAME_IDENTIFIER = "-qCheckGMail-DISPLAY_NAME_ID" ;
-static const auto TOKEN_IDENTIFIER        = "-qCheckGMail-TOKEN_KEY_ID" ;
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class account
 {
 public:
-	static bool main( const QString& e )
+	static void add( LXQt::Wallet::Wallet * w,const accounts::entry& e )
 	{
-		const auto ids = { LABEL_IDENTIFIER,
-				   DISPLAY_NAME_IDENTIFIER,
-				   TOKEN_IDENTIFIER } ;
+		QJsonObject obj ;
 
-		for( const auto& it : ids ){
+		obj.insert( "accName",e.accName ) ;
+		obj.insert( "labels",e.accLabels ) ;
+		obj.insert( "refreshToken",e.accRefreshToken ) ;
 
-			if( e.endsWith( it ) ){
+		auto id = e.accName + account::identifier() ;
 
-				return false ;
+		w->addKey( id,QJsonDocument( obj ).toJson( QJsonDocument::JsonFormat::Compact ) ) ;
+	}
+
+	static void replace( LXQt::Wallet::Wallet * w,const accounts::entry& e )
+	{
+		account::remove( e.accName,w ) ;
+		account::add( w,e ) ;
+	}
+
+	static void remove( const QString& accName,LXQt::Wallet::Wallet * w )
+	{
+		w->deleteKey( accName + account::identifier() ) ;
+	}
+
+	static void readAll( LXQt::Wallet::Wallet * w,QVector< accounts >& acc )
+	{
+		auto m = Task::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
+
+		QJsonParseError err ;
+
+		QString id = account::identifier() ;
+
+		for( const auto& it : m ){
+
+			if( it.first.endsWith( id ) ){
+
+				auto m = QJsonDocument::fromJson( it.second,&err ) ;
+
+				if( err.error == QJsonParseError::NoError ){
+
+					QJsonObject obj = m.object() ;
+
+					accounts::entry m{ obj.value( "accName" ).toString(),
+							   obj.value( "labels" ).toString(),
+							   obj.value( "refreshToken" ).toString() } ;
+
+					acc.append( std::move( m ) ) ;
+				}
 			}
 		}
 
-		return true ;
-	}
+		std::sort( acc.begin(),acc.end(),[]( const accounts& acc,const accounts& xcc ){
 
-	void add()
-	{
-		m_wallet->addKey( m_name       ,m_acc.accPassword ) ;
-		m_wallet->addKey( m_labels     ,m_acc.accLabels ) ;
-		m_wallet->addKey( m_token      ,m_acc.accRefreshToken ) ;
-	}
-
-	void remove()
-	{
-		m_wallet->deleteKey( m_name ) ;
-		m_wallet->deleteKey( m_labels ) ;
-		m_wallet->deleteKey( m_token ) ;
-	}
-
-	void replace()
-	{
-		this->remove() ;
-		this->add() ;
-	}
-
-	accounts::entry entry( const QVector< std::pair< QString,QByteArray > >& e )
-	{
-		auto _entry = [ &e ]( const QString& acc )->const QByteArray&{
-
-			for( const auto& it : e ){
-
-				if( it.first == acc ){
-
-					return it.second ;
-				}
-			}
-
-			static QByteArray shouldNotGetHere ;
-			return shouldNotGetHere ;
-		} ;
-
-		return { m_name,
-			_entry( m_name ),
-			_entry( m_labels ),
-			_entry( m_token ) } ;
-	}
-
-	QVector< std::pair< QString,QByteArray > > readAll()
-	{
-		return Task::await( [ this ](){	return m_wallet->readAllKeyValues() ; } ) ;
-	}
-
-	account( LXQt::Wallet::Wallet * w,const accounts::entry& e = accounts::entry() ) :
-		m_name( e.accName ),
-		m_labels( m_name + LABEL_IDENTIFIER ),
-		m_token( m_name + TOKEN_IDENTIFIER ),
-		m_acc( e ),
-		m_wallet( w )
-	{
-	}
-
-	account( const QString& accName,
-		 LXQt::Wallet::Wallet * w = nullptr,
-		 const accounts::entry& e = accounts::entry() ) :
-		m_name( accName ),
-		m_labels( m_name + LABEL_IDENTIFIER ),
-		m_token( m_name + TOKEN_IDENTIFIER ),
-		m_acc( e ),
-		m_wallet( w )
-	{
+			return acc.accountName().length() < xcc.accountName().length() ;
+		} ) ;
 	}
 private:
-	const QString m_name ;
-	const QString m_labels ;
-	const QString m_token ;
-
-	const accounts::entry& m_acc ;
-
-	LXQt::Wallet::Wallet * m_wallet ;
-};
+	static const char * identifier()
+	{
+		return "-qCheckGMail2-ID" ;
+	}
+} ;
 
 walletmanager::walletmanager( const QString& icon,settings& s ) :
 	m_icon( QString( ":/%1" ).arg( icon ) ),m_settings( s )
@@ -217,9 +186,8 @@ void walletmanager::changeWalletPassword()
 
 	if( m_wallet->open( walletName,appName,this ) ){
 
-		m_wallet->changeWalletPassWord( walletName,appName,[ this ]( bool e ){
+		m_wallet->changeWalletPassWord( walletName,appName,[ this ]( bool ){
 
-			Q_UNUSED( e )
 			this->hide() ;
 			this->deleteLater() ;
 		} ) ;
@@ -254,18 +222,7 @@ const accounts& walletmanager::addEntry( const accounts& acc )
 void walletmanager::readAccountInfo()
 {
 	m_accounts.clear() ;
-
-	auto e = account( m_wallet.get() ).readAll() ;
-
-	for( const auto& it : e ){
-
-		const auto& r = it.first ;
-
-		if( account::main( r ) ){
-
-			m_accounts.append( account( r ).entry( e ) ) ;
-		}
-	}
+	account::readAll( m_wallet.get(),m_accounts ) ;
 }
 
 void walletmanager::openWallet()
@@ -378,7 +335,7 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 
 	Task::run( [ this ](){
 
-		account( m_wallet.get(),m_accEntry ).add() ;
+		account::add( m_wallet.get(),m_accEntry ) ;
 
 	} ).then( [ this ](){
 
@@ -404,7 +361,7 @@ void walletmanager::editAccount( accounts::entry&& e,addaccount::labels&& l,int 
 
 		Task::run( [ this,&s,l = std::move( l ) ](){
 
-			account( m_wallet.get(),s ).replace() ;
+			account::replace( m_wallet.get(),s ) ;
 
 		} ).then( [ this,row,labels,accName ](){
 
@@ -550,7 +507,7 @@ void walletmanager::deleteAccount( bool )
 
 			Task::run( [ & ](){
 
-				account( accName,m_wallet.get() ).remove() ;
+				account::remove( accName,m_wallet.get() ) ;
 
 			} ).then( [ this ](){
 

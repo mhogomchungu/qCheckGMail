@@ -184,7 +184,7 @@ void addaccount::add()
 		}else{
 			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),m_labels.entries ) ;
 
-			m_actions.results( { accName,QString(),std::move( lbs ),m_key } ) ;
+			m_actions.results( { accName,std::move( lbs ),m_key } ) ;
 
 			this->HideUI() ;
 		}
