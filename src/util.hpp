@@ -213,6 +213,50 @@ namespace util
 		} ;
 	#endif
 
+	template< typename Type,typename TypeArgs >
+	struct appInfo
+	{
+		appInfo( TypeArgs t,const QString& s,QApplication& a ) :
+			args( std::move( t ) ),socketPath( s ),app( a )
+		{
+		}
+		using appType = Type ;
+		TypeArgs args ;
+		QString socketPath ;
+		QApplication& app ;
+		QByteArray data ;
+	} ;
+
+	template< typename AppInfo >
+	class multipleInstance
+	{
+	public:
+		multipleInstance( AppInfo info ) :
+			m_info( std::move( info ) ),
+			m_exec( [ this ](){ this->run() ; } )
+		{
+		}
+		void run()
+		{
+			m_mainApp = std::make_unique< typename AppInfo::appType >( std::move( m_info.args ) ) ;
+			m_mainApp->start( m_info.data ) ;
+		}
+		int exec()
+		{
+			return m_info.app.exec() ;
+		}
+	private:
+		AppInfo m_info ;
+		std::unique_ptr< typename AppInfo::appType > m_mainApp ;
+		util::exec m_exec ;
+	} ;
+
+	template< typename AppInfo >
+	int runMultiInstances( AppInfo info )
+	{
+		return multipleInstance< AppInfo >( std::move( info ) ).exec() ;
+	}
+
 	template< typename OIR,typename PIC >
 	struct instanceArgs
 	{
@@ -226,19 +270,12 @@ namespace util
 		return instanceArgs< OIR,PIC >{ std::move( r ),std::move( c ) } ;
 	}
 
-	template< typename MainApp,typename MainAConstructorppArgs,typename InstanceArgs >
+	template< typename AppInfo,typename InstanceArgs >
 	class oneinstance
 	{
 	public:
-		oneinstance( const QString& socketPath,
-			     QByteArray argument,
-			     QApplication& app,
-			     MainAConstructorppArgs args,
-			     InstanceArgs iargs ) :
-			m_serverPath( socketPath ),
-			m_argument( std::move( argument ) ),
-			m_qApp( app ),
-			m_args( std::move( args ) ),
+		oneinstance( AppInfo info,InstanceArgs iargs ) :
+			m_info( std::move( info ) ),
 			m_iargs( std::move( iargs ) ),
 			m_exec( [ this ](){ this->run() ; } )
 		{
@@ -248,30 +285,30 @@ namespace util
 			if( m_localServer.isListening() ){
 
 				m_localServer.close() ;
-				QFile::remove( m_serverPath ) ;
+				QFile::remove( m_info.socketPath ) ;
 			}
 		}
 		int exec()
 		{
-			return m_qApp.exec() ;
+			return m_info.app.exec() ;
 		}
 	private:
 		void run()
 		{
-			if( QFile::exists( m_serverPath ) ){
+			if( QFile::exists( m_info.socketPath ) ){
 
 				QObject::connect( &m_localSocket,&QLocalSocket::connected,[ this ](){
 
-					if( !m_argument.isEmpty() ){
+					if( !m_info.data.isEmpty() ){
 
-						m_localSocket.write( m_argument ) ;
+						m_localSocket.write( m_info.data ) ;
 						m_localSocket.waitForBytesWritten() ;
 					}
 
 					m_localSocket.close() ;
 
 					m_iargs.otherInstanceRunning() ;
-					m_qApp.quit() ;
+					m_info.app.quit() ;
 				} ) ;
 
 			#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
@@ -280,27 +317,27 @@ namespace util
 				QObject::connect( &m_localSocket,static_cast< cs >( &QLocalSocket::error ),[ this ]( QLocalSocket::LocalSocketError ){
 
 					m_iargs.otherInstanceCrashed() ;
-					QFile::remove( m_serverPath ) ;
+					QFile::remove( m_info.socketPath ) ;
 					this->start() ;
 				} ) ;
 			#else
 				QObject::connect( &m_localSocket,&QLocalSocket::errorOccurred,[ this ]( QLocalSocket::LocalSocketError ){
 
 					m_iargs.otherInstanceCrashed() ;
-					QFile::remove( m_serverPath ) ;
+					QFile::remove( m_info.socketPath ) ;
 					this->start() ;
 				} ) ;
 			#endif
-				m_localSocket.connectToServer( m_serverPath ) ;
+				m_localSocket.connectToServer( m_info.socketPath ) ;
 			}else{
 				this->start() ;
 			}
 		}
 		void start( void )
 		{
-			m_mainApp = std::make_unique< MainApp >( std::move( m_args ) ) ;
+			m_mainApp = std::make_unique< typename AppInfo::appType >( std::move( m_info.args ) ) ;
 
-			m_mainApp->start( std::move( m_argument ) ) ;
+			m_mainApp->start( std::move( m_info.data ) ) ;
 
 			QObject::connect( &m_localServer,&QLocalServer::newConnection,[ this ](){
 
@@ -313,15 +350,12 @@ namespace util
 				} ) ;
 			} ) ;
 
-			m_localServer.listen( m_serverPath ) ;
+			m_localServer.listen( m_info.socketPath ) ;
 		}
 		QLocalServer m_localServer ;
 		QLocalSocket m_localSocket ;
-		QString m_serverPath ;
-		const QByteArray& m_argument ;
-		QApplication& m_qApp ;
-		std::unique_ptr< MainApp > m_mainApp ;
-		MainAConstructorppArgs m_args ;
+		std::unique_ptr< typename AppInfo::appType > m_mainApp ;
+		AppInfo m_info ;
 		InstanceArgs m_iargs ;
 		util::exec m_exec ;
 	} ;
@@ -347,25 +381,14 @@ namespace util
 		}
 	} ;
 
-	template< typename AppType,typename AppConstructorArgs,typename Err >
-	int runOneInstance( AppType,
-			    AppConstructorArgs cargs,
-			    const QString& spath,
-			    QByteArray opts,
-			    QApplication& qapp,
-			    Err err )
+	template< typename AppInfo,typename Err >
+	int runOneInstance( AppInfo info,Err err )
 	{
-		using singleInstance = util::oneinstance< typename AppType::type,AppConstructorArgs,Err > ;
-
-		return singleInstance( spath,std::move( opts ),qapp,std::move( cargs ),std::move( err ) ).exec() ;
+		return util::oneinstance< AppInfo,Err >( std::move( info ),std::move( err ) ).exec() ;
 	}
 
-	template< typename AppType,typename AppConstructorArgs >
-	int runOneInstance( AppType appType,
-			    AppConstructorArgs cargs,
-			    const QString& spath,
-			    QByteArray opts,
-			    QApplication& qapp )
+	template< typename AppInfo >
+	int runOneInstance( AppInfo info )
 	{
 		auto err = util::make_oneinstance_args( [](){
 
@@ -374,7 +397,7 @@ namespace util
 			std::cout << "Previous instance seem to have crashed,trying to clean up before starting" << std::endl ;
 		} ) ;
 
-		return util::runOneInstance( appType,std::move( cargs ),spath,std::move( opts ),qapp,std::move( err ) ) ;
+		return util::runOneInstance( std::move( info ),std::move( err ) ) ;
 	}
 }
 

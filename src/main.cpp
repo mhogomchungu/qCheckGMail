@@ -24,15 +24,23 @@
 #include "qcheckgmail.h"
 #include "util.hpp"
 
-#include <iostream>
+#include <cstring>
 
 int main( int argc,char * argv[] )
 {
 	QApplication qGMail( argc,argv ) ;
 
-	auto appType = util::type_identity< qCheckGMail >() ;
-	auto appArgs = qCheckGMail::args{ qGMail } ;
 	auto socketPath = QDir::homePath() + "/.qCheckGMail.socket" ;
 
-	return util::runOneInstance( appType,appArgs,socketPath,QByteArray(),qGMail ) ;
+	util::appInfo< qCheckGMail,qCheckGMail::args > m( { qGMail },socketPath,qGMail ) ;
+
+	for( int it = 0 ; it < argc ; it++ ){
+
+		if( std::strcmp( argv[ it ],"-m" ) == 0 ){
+
+			return util::runMultiInstances( std::move( m ) ) ;
+		}
+	}
+
+	return util::runOneInstance( std::move( m ) ) ;
 }
