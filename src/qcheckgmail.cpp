@@ -52,6 +52,8 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 {
 	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
+
+	m_manager.setTransferTimeOut( 30000 ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -871,7 +873,7 @@ static QString _parseJSON( const QByteArray& json,const char * key )
 
 void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
 {
-	m_manager.post( -1,m_networkRequest,[ & ](){
+	m_manager.post( m_networkRequest,[ & ](){
 
 		util::urlOpts opts ;
 
@@ -882,7 +884,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 		return opts.toUtf8() ;
 
-	}(),[ UrlLabel,this,&acc,refresh_token ]( QNetworkReply& n ){
+	}(),[ UrlLabel,this,&acc,refresh_token ]( QNetworkReply& n,bool ){
 
 		auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
@@ -906,7 +908,7 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 		}
 		void operator()( const QString& authocode,gmailauthorization::AuthResult function ) override
 		{
-			m_parent->m_manager.post( -1,m_parent->m_networkRequest,[ & ](){
+			m_parent->m_manager.post( m_parent->m_networkRequest,[ & ](){
 
 				auto s = m_parent->m_settings.stringRunTimePortNumber() ;
 
@@ -920,7 +922,7 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 
 				return opts.toUtf8() ;
 
-			 }(),[ funct = std::move( function ) ]( QNetworkReply& e ){
+			 }(),[ funct = std::move( function ) ]( QNetworkReply& e,bool ){
 
 				auto m = e.readAll() ;
 
@@ -961,7 +963,14 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
-	m_manager.get( m_networkTimeOut,request,[ this ]( QNetworkReply& e ){
+	m_manager.get( request,[ this ]( QNetworkReply& e,bool timeOut ){
+
+		if( timeOut ){
+
+			this->failedToCheckForNewEmail() ;
+
+			return this->doneCheckingMail() ;
+		}
 
 		auto content = e.readAll() ;
 
@@ -999,23 +1008,12 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 			}
 		}
 
-	},[ this ](){
-
-		this->failedToCheckForNewEmail() ;
-
-		this->doneCheckingMail() ;
-
-		/*
-		 * network time out occured,retry
-		 */
-
-		this->checkMail() ;
 	} ) ;
 }
 
 void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::GmailAccountInfo ginfo )
 {
-	m_manager.post( -1,m_networkRequest,[ & ](){
+	m_manager.post( m_networkRequest,[ & ](){
 
 		util::urlOpts opts ;
 
@@ -1026,7 +1024,7 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		return opts.toUtf8() ;
 
-	}(),[ this,ginfo = std::move( ginfo ) ]( QNetworkReply& n ){
+	}(),[ this,ginfo = std::move( ginfo ) ]( QNetworkReply& n,bool ){
 
 		auto e = _parseJSON( n.readAll(),"access_token" ) ;
 
@@ -1052,7 +1050,7 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-	this->m_manager.get( -1,r,[ ginfo = std::move( ginfo ) ]( QNetworkReply& n ){
+	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( QNetworkReply& n,bool ){
 
 		auto ss = n.readAll() ;
 

@@ -31,7 +31,7 @@
 #include "gmailauthorization.h"
 #include "util.hpp"
 #include "settings.h"
-#include "../../NetworkAccessManager/network_access_manager.hpp"
+#include "network_access_manager.hpp"
 
 namespace Ui {
 class addaccount;
@@ -65,7 +65,7 @@ public:
 	public:
 		template< typename Type,typename ... Args >
 		GmailAccountInfo( Type,Args&& ... args ) :
-			m_handle( std::make_shared< typename Type::type >( std::forward< Args >( args ) ... ) )
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
 		{
 		}
 		void operator()( addaccount::labels e ) const
