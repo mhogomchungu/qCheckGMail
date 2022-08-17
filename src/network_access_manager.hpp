@@ -35,19 +35,16 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include <QEventLoop>
+#include <QMutex>
 #include <QTimer>
 
 #include <memory>
+#include <iostream>
 
 class NetworkAccessManager
 {
 public:
-	void setTransferTimeOut( int timeOut )
-	{
-		m_timeOut = timeOut ;
-	}
-	NetworkAccessManager()
+	NetworkAccessManager( int timeOut ) : m_timeOut( timeOut )
 	{
 	}
 	QNetworkAccessManager& QtNAM()
@@ -79,6 +76,9 @@ private:
 		}
 		void result( QNetworkReply * r,bool timeOut )
 		{
+			QObject::disconnect( m_networkConn ) ;
+			QObject::disconnect( m_timerConn ) ;
+			m_processed = true ;
 			m_timer.stop() ;
 			m_reply( *r,timeOut ) ;
 		}
@@ -86,34 +86,61 @@ private:
 		{
 			return &m_timer ;
 		}
+		QMutex * mutex()
+		{
+			return &m_mutex ;
+		}
+		bool notProcessed()
+		{
+			return !m_processed ;
+		}
+		void start( int timeOut,QMetaObject::Connection nc,QMetaObject::Connection tc )
+		{
+			m_networkConn = nc ;
+			m_timerConn = tc ;
+			m_timer.start( timeOut ) ;
+		}
 	private:
+		bool m_processed = false ;
+
+		QMutex m_mutex ;
 		QTimer m_timer ;
 		Reply m_reply ;
+		QMetaObject::Connection m_networkConn ;
+		QMetaObject::Connection m_timerConn ;
 	} ;
 	template< typename Reply >
-	void setupReply( QNetworkReply * s,Reply reply )
+	void setupReply( QNetworkReply * s,Reply&& reply )
 	{
 		auto hdl = std::make_shared< handle< Reply > >( std::move( reply ) ) ;
 
-		auto conn = QObject::connect( s,&QNetworkReply::finished,[ s,hdl ](){
+		auto nc = QObject::connect( s,&QNetworkReply::finished,[ s,hdl ](){
 
-			hdl->result( s,false ) ;
+			QMutexLocker locker( hdl->mutex() ) ;
 
-			s->deleteLater() ;
+			if( hdl->notProcessed() ){
+
+				hdl->result( s,false ) ;
+
+				s->deleteLater() ;
+			}
 		} ) ;
 
-		QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl,conn ](){
+		auto tc = QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl ](){
 
-			QObject::disconnect( conn ) ;
+			QMutexLocker locker( hdl->mutex() ) ;
 
-			hdl->result( s,true ) ;
+			if( hdl->notProcessed() ){
 
-			s->abort() ;
+				hdl->result( s,true ) ;
 
-			s->deleteLater() ;
+				s->abort() ;
+
+				s->deleteLater() ;
+			}
 		} ) ;
 
-		hdl->timer()->start( m_timeOut ) ;
+		hdl->start( m_timeOut,nc,tc ) ;
 	}
 	QNetworkAccessManager m_manager ;
 	int m_timeOut ;

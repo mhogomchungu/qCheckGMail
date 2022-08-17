@@ -87,7 +87,6 @@ private:
 	void pauseCheckingMail( bool ) ;
 	void configureAccounts() ;
 	void configurationoptionWindow() ;
-	void checkMail( bool = false ) ;
 	void setTimer( int ) ;
 	void reportOnAllAccounts( bool ) ;
 	void configurePassWord() ;
@@ -97,7 +96,7 @@ private:
 
 	void getAccountsInfo( QVector< accounts >&& ) ;
 
-	QString displayName( const QString& ) ;
+	QString displayName( const QString& = QString() ) ;
 
 	gmailauthorization::getAuth getAuthorization() ;
 
@@ -115,13 +114,13 @@ private:
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString&,const QString&,const QString& ) ;
 	void showPausedIcon( bool ) ;
-	void noInternet( const QString& = QString() ) ;
 	void wrongAccountNameOrPassword() ;
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
 	void walletNotOPenedError() ;
 	void checkMail( const accounts& acc,const QString& label ) ;
 	void checkMail( const accounts& acc ) ;
+	void checkMail( bool = false ) ;
 	void openMail( const accounts& acc ) ;
 	void openMail() ;
 	void changeIcon( const QString& icon ) ;
@@ -130,8 +129,8 @@ private:
 	void startTimer() ;
 	void stopTimer() ;
 	void setTimer() ;
-	void reportOnAllAccounts( const QByteArray&,bool ) ;
-	void reportOnlyFirstAccountWithMail( const QByteArray&,bool ) ;
+	enum class networkStatus{ success,needAuthentication,noInternet,timeOut,wtf } ;
+	void reportOnAllAccounts( const QByteArray&,qCheckGMail::networkStatus ) ;
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;
 	void failedToCheckForNewEmail() ;
@@ -158,6 +157,7 @@ private:
 	bool m_accountFailed ;
 	bool m_badAccessToken ;
 	bool m_alwaysShowTrayIcon ;
+	bool m_errorOccured ;
 
 	QString m_accountsStatus ;
 	QString m_newEmailIcon ;

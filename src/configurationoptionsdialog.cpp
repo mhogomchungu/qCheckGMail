@@ -106,7 +106,6 @@ void configurationoptionsdialog::ShowUI()
 
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( m_settings.autoStartEnabled() ) ;
-	m_ui->checkBoxReportOnAllAccounts->setChecked( m_settings.reportOnAllAccounts() ) ;
 	m_ui->checkBoxAudioNotify->setChecked( m_settings.audioNotify() ) ;
 	m_ui->checkBoxAlwaysShowTrayIcon->setChecked( m_settings.alwaysShowTrayIcon() ) ;
 
@@ -138,8 +137,6 @@ void configurationoptionsdialog::HideUI()
 
 	m_settings.saveLocalLanguage( m_ui->comboBoxLocalLanguage->currentText() ) ;
 
-	m_settings.saveReportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
-
 	m_settings.saveTimeToConfigFile( m_ui->lineEditUpdateCheckInterval->text() ) ;
 
 	m_settings.setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
@@ -155,7 +152,6 @@ void configurationoptionsdialog::HideUI()
 	m_actions.alwaysShowTrayIcon( m ) ;
 	m_actions.configurationWindowClosed( z * 60 * 1000 ) ;
 	m_actions.audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
-	m_actions.reportOnAllAccounts( m_ui->checkBoxReportOnAllAccounts->isChecked() ) ;
 	m_actions.enablePassWordChange( s == "internal wallet" ) ;
 
 	this->hide() ;

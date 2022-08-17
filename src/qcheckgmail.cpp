@@ -45,15 +45,13 @@ static void _debug( const QString& s )
 }
 
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
+	m_manager( 30000 ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
 	m_statusicon( m_settings )
 {
-	m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
-
-	m_manager.setTransferTimeOut( 30000 ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -67,6 +65,7 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 		if( m_visibleIconState == "NeedsAttention" ){
 
 			m_statusicon.setStatus( m_statusicon.NeedsAttention ) ;
+			m_networkRequest.setRawHeader( "Host","accounts.google.com" ) ;
 
 		}else if( m_visibleIconState == "Passive" ){
 
@@ -347,22 +346,6 @@ void qCheckGMail::addActionsToMenu()
 	m_statusicon.addQuitAction() ;
 }
 
-void qCheckGMail::noInternet( const QString& e )
-{
-	auto header = tr( "Network Problem Detected" ) ;
-	auto msg    = tr( "Could Not Connect To The Internet" ) ;
-
-	if( e.isEmpty() ){
-
-		this->showToolTip( m_errorIcon,header,msg ) ;
-	}else{
-		this->showToolTip( m_errorIcon,header,e ) ;
-	}
-
-	this->changeIcon( m_errorIcon ) ;
-	this->doneCheckingMail() ;
-}
-
 QString qCheckGMail::displayName( const QString& l )
 {
 	const auto& account     = m_accounts.at( m_currentAccount ) ;
@@ -448,7 +431,7 @@ static void _account_status( QString& status,const QString& displayName,const QS
 	}
 }
 
-static bool _error( const QByteArray& msg )
+static bool _need_authentication( const QByteArray& msg )
 {
 	return msg.contains( "\"status\": \"UNAUTHENTICATED\"" ) ;
 }
@@ -456,11 +439,11 @@ static bool _error( const QByteArray& msg )
 /*
  * This function goes through all accounts and give reports of all of their states
  */
-void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
+void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networkStatus status )
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	if( _error( msg ) || error ){
+	if( _need_authentication( msg ) || status == qCheckGMail::networkStatus::needAuthentication ){
 
 		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
@@ -469,7 +452,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 			/*
 			 * RefreshToken should never be empy
 			 */
-			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"-1" ) ;
+
+			m_errorOccured = true ;
+
+			_account_status( m_accountsStatus,this->displayName(),"Status: Internal Error" ) ;
 		}else{
 			if( m_badAccessToken ){
 
@@ -478,7 +464,10 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 				 *
 				 * Bail out to prevent an endless loop.
 				 */
-				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"-1" ) ;
+
+				m_errorOccured = true ;
+
+				_account_status( m_accountsStatus,this->displayName(),"Status: No Credentials" ) ;
 			}else{
 				/*
 				 * We will get here if:
@@ -494,16 +483,33 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 			}
 		}
 	}else{
-		const auto& mailCount = emailInfo.labelUnreadEmails ;
+		if( status == qCheckGMail::networkStatus::success ){
 
-		auto mailCount_1 = mailCount.toInt() ;
+			const auto& mailCount = emailInfo.labelUnreadEmails ;
 
-		if( mailCount_1 == 0 ){
+			auto mailCount_1 = mailCount.toInt() ;
 
-			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"0" ) ;
+			if( mailCount_1 == 0 ){
+
+				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"0" ) ;
+			}else{
+				m_mailCount += mailCount_1 ;
+				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),mailCount ) ;
+			}
 		}else{
-			m_mailCount += mailCount_1 ;
-			_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),mailCount ) ;
+			m_errorOccured = true ;
+
+			if( status == qCheckGMail::networkStatus::noInternet ){
+
+				_account_status( m_accountsStatus,this->displayName(),"Status: No Internet" ) ;
+
+			}else if( status == qCheckGMail::networkStatus::timeOut ){
+
+				_account_status( m_accountsStatus,this->displayName(),"Status: Network Timed Out" ) ;
+			}else{
+				//wtf
+				_account_status( m_accountsStatus,this->displayName(),"Status: Unknown Error" ) ;
+			}
 		}
 	}
 
@@ -562,102 +568,6 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,bool error )
 	}
 }
 
-/*
- * This function stops on the first account it finds with a new email.
- * This function will hence report only the first account it finds with new email
- *
- * This mail checking way is visually more appealing on the tray bubble when only one
- * account is set up
- */
-void qCheckGMail::reportOnlyFirstAccountWithMail( const QByteArray& msg,bool error )
-{
-	auto emailInfo = _getEmailInfo( msg ) ;
-
-	QString mailCount ;
-
-	if( _error( msg ) || error ){
-
-		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
-
-		if( acc.refreshToken().isEmpty() ){
-
-			m_accountFailed = true ;
-		}else{
-			if( m_badAccessToken ){
-
-				m_accountFailed = true ;
-			}else{
-				m_badAccessToken = true ;
-				acc.setAccessToken( QString() ) ;
-				return this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
-			}
-		}
-	}else{
-		mailCount = emailInfo.labelUnreadEmails ;
-		m_mailCount = mailCount.toInt() ;
-	}
-
-	if( m_mailCount > 0 ){
-
-		QString info ;
-
-		if( m_mailCount == 1 ){
-
-			info = tr( "1 Email Is Waiting For You" ) ;
-		}else{
-			info = tr( "%1 Emails Are Waiting For You" ).arg( mailCount ) ;
-		}
-
-		this->changeIcon( m_newEmailIcon,m_mailCount ) ;
-		this->setTrayIconToVisible( true ) ;
-		this->showToolTip( m_newEmailIcon,this->displayName( emailInfo.labelName ),info ) ;
-		this->audioNotify() ;
-		this->doneCheckingMail() ;
-	}else{
-		/*
-		 * done processing a label in an account,go to the next label if present
-		 */
-		m_currentLabel++ ;
-
-		if( m_currentLabel < m_numberOfLabels ){
-
-			/*
-			 * account has more labels and are we are at the next one and are about to go through it
-			 */
-			const auto& acc = m_accounts.at( m_currentAccount ) ;
-			this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
-		}else{
-			/*
-			 * we are done processing an account,go to the next one if available
-			 */
-			m_currentAccount++ ;
-
-			if( m_currentAccount < m_numberOfAccounts ){
-
-				/*
-				 * more accounts are configured and we are at the next one and are about to go through it
-				 */
-				this->checkMail( m_accounts.at( m_currentAccount ) ) ;
-			}else{
-				/*
-				 * there are no more accounts to go through
-				 */
-				this->showToolTip( m_noEmailIcon,tr( "Status" ),tr( "No New Email Found" ) ) ;
-
-				if( m_accountFailed ){
-
-					this->changeIcon( m_noEmailIcon,-1 ) ;
-				}else{
-					this->changeIcon( m_noEmailIcon ) ;
-				}
-
-				this->setTrayIconToVisible( false ) ;
-				this->doneCheckingMail() ;
-			}
-		}
-	}
-}
-
 void qCheckGMail::audioNotify()
 {
 	if( m_accountUpdated && m_audioNotify ){
@@ -683,6 +593,11 @@ void qCheckGMail::doneCheckingMail()
 		 * account info in the tray bubble
 		 */
 		this->checkMail() ;
+	}else{
+		if( m_errorOccured ){
+
+			this->changeIcon( m_errorIcon ) ;
+		}
 	}
 }
 
@@ -844,7 +759,7 @@ void qCheckGMail::checkMail( bool )
 			m_currentAccount  = 0 ;
 			m_accountUpdated  = false ;
 			m_accountFailed   = false ;
-
+			m_errorOccured    = false ;
 			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
 		}
 	}else{
@@ -965,13 +880,6 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
 	m_manager.get( request,[ this ]( QNetworkReply& e,bool timeOut ){
 
-		if( timeOut ){
-
-			this->failedToCheckForNewEmail() ;
-
-			return this->doneCheckingMail() ;
-		}
-
 		auto content = e.readAll() ;
 
 		if( m_enableDebug ){
@@ -986,28 +894,29 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 			}
 		}
 
-		auto _report = [ & ]( bool e ){
+		auto _report = [ & ]( qCheckGMail::networkStatus e ){
 
-			if( m_reportOnAllAccounts ){
-
-				this->reportOnAllAccounts( content,e ) ;
-			}else{
-				this->reportOnlyFirstAccountWithMail( content,e ) ;
-			}
+			this->reportOnAllAccounts( content,e ) ;
 		} ;
 
-		if( e.error() == QNetworkReply::AuthenticationRequiredError ){
+		if( timeOut ){
 
-			_report( true ) ;
+			_report( qCheckGMail::networkStatus::timeOut ) ;
+
+		}else if( e.error() == QNetworkReply::AuthenticationRequiredError ){
+
+			_report( qCheckGMail::networkStatus::needAuthentication ) ;
+
+		}else if( e.error() == QNetworkReply::HostNotFoundError ){
+
+			_report( qCheckGMail::networkStatus::noInternet ) ;
+
+		}else if( e.error() == QNetworkReply::NoError ){
+
+			_report( qCheckGMail::networkStatus::success ) ;
 		}else{
-			if( content.isEmpty() ){
-
-				this->noInternet() ;
-			}else{
-				_report( false ) ;
-			}
+			_report( qCheckGMail::networkStatus::wtf ) ;
 		}
-
 	} ) ;
 }
 
