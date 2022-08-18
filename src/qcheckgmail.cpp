@@ -371,18 +371,13 @@ struct emailInfo
 
 static emailInfo _getEmailInfo( const QByteArray& json )
 {
-	if( json.contains( "error" ) ){
+	auto m = QJsonDocument::fromJson( json ) ;
 
-		return { "","-1","" } ;
-	}else{
-		auto m = QJsonDocument::fromJson( json ) ;
+	auto a = m.object().value( "name" ).toString() ;
+	auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
+	auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
 
-		auto a = m.object().value( "name" ).toString() ;
-		auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
-		auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
-
-		return { a,b,c } ;
-	}
+	return { a,b,c } ;
 }
 
 void qCheckGMail::wrongAccountNameOrPassword()
@@ -435,7 +430,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	if( status.needAuthentication() ){
+	if( status.gmailError() ){
 
 		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
@@ -788,7 +783,7 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 		QNetworkRequest request( QUrl( UrlLabel.toUtf8().constData() ) ) ;
 
-		request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
+		request.setRawHeader( "Authorization","Bearer eeee" + e.toUtf8() ) ;
 
 		this->networkAccess( request ) ;
 	} ) ;
@@ -857,9 +852,36 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 	return { util::type_identity< meaw >(),this } ;
 }
 
-static bool _need_authentication( const QByteArray& msg )
+struct GMailError
 {
-	return msg.contains( "\"status\": \"UNAUTHENTICATED\"" ) ;
+	bool hasError ;
+	QString errorMsg ;
+} ;
+
+static GMailError _gmailError( const QByteArray& msg )
+{
+	auto obj = QJsonDocument::fromJson( msg ).object().value( "error" ) ;
+
+	if( obj.isObject() ){
+
+		auto arr = obj.toObject().value( "errors" ).toArray() ;
+
+		if( arr.size() > 0 ){
+
+			auto xbj = arr[ 0 ].toObject() ;
+
+			auto msg = xbj.value( "message" ).toString() ;
+
+			if( !msg.isEmpty() ){
+
+				return { true,"Error: " + msg } ;
+			}
+		}
+
+		return { true,"Error: Unknown GMail Error" } ;
+	}else{
+		return { false,{} } ;
+	}
 }
 
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
@@ -880,31 +902,34 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 			}
 		}
 
-		auto error = e.error() ;
-
-		using qc = qCheckGMail::networkStatus::state ;
-
 		if( timeOut ){
 
 			this->reportOnAllAccounts( content,"Error: Timeout" ) ;
-
-		}else if( _need_authentication( content ) ){
-
-			this->reportOnAllAccounts( content,qc::needAuthentication ) ;
-
-		}else if( error == QNetworkReply::HostNotFoundError ){
-
-			this->reportOnAllAccounts( content,"Error: Host Not Found" ) ;
-
-		}else if( error == QNetworkReply::NoError ){
-
-			this->reportOnAllAccounts( content,qc::success ) ;
-
-		}else if( error == QNetworkReply::TimeoutError ){
-
-			this->reportOnAllAccounts( content,"Error: TimeOut" ) ;
 		}else{
-			this->reportOnAllAccounts( content,"Error: " + e.errorString() ) ;
+			auto error = e.error() ;
+
+			auto err = _gmailError( content ) ;
+
+			using qc = qCheckGMail::networkStatus::state ;
+
+			if( err.hasError ){
+
+				this->reportOnAllAccounts( content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
+
+			}else if( error == QNetworkReply::HostNotFoundError ){
+
+				this->reportOnAllAccounts( content,"Error: Host Not Found" ) ;
+
+			}else if( error == QNetworkReply::NoError ){
+
+				this->reportOnAllAccounts( content,qc::success ) ;
+
+			}else if( error == QNetworkReply::TimeoutError ){
+
+				this->reportOnAllAccounts( content,"Error: TimeOut" ) ;
+			}else{
+				this->reportOnAllAccounts( content,"Error: " + e.errorString() ) ;
+			}
 		}
 	} ) ;
 }
