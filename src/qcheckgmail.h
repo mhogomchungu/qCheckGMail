@@ -185,7 +185,6 @@ private:
 	bool m_checkingMail ;
 	bool m_reportOnAllAccounts ;
 	bool m_enableDebug ;
-	bool m_redoMailCheck ;
 	bool m_accountUpdated ;
 	bool m_timeExpired ;
 	bool m_accountFailed ;

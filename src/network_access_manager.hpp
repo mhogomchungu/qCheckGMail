@@ -112,11 +112,11 @@ private:
 	template< typename Reply >
 	void setupReply( QNetworkReply * s,Reply&& reply )
 	{
+		m_replies.emplace_back( s ) ;
+
 		auto hdl = std::make_shared< handle< Reply > >( std::move( reply ) ) ;
 
-		auto nc = QObject::connect( s,&QNetworkReply::finished,[ s,hdl ](){
-
-			QMutexLocker locker( hdl->mutex() ) ;
+		auto nc = QObject::connect( s,&QNetworkReply::finished,[ s,hdl,this ](){
 
 			if( hdl->notProcessed() ){
 
@@ -126,9 +126,7 @@ private:
 			}
 		} ) ;
 
-		auto tc = QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl ](){
-
-			QMutexLocker locker( hdl->mutex() ) ;
+		auto tc = QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl,this ](){
 
 			if( hdl->notProcessed() ){
 
@@ -144,6 +142,7 @@ private:
 	}
 	QNetworkAccessManager m_manager ;
 	int m_timeOut ;
+	std::vector< QNetworkReply * > m_replies ;
 } ;
 
 #endif
