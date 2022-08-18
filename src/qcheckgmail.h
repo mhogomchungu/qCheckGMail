@@ -131,18 +131,30 @@ private:
 	void setTimer() ;
 	class networkStatus{
 	public:
-		networkStatus( QString s ) : m_errorString( std::move( s ) )
+		enum class state{ success,needAuthentication,error } ;
+		networkStatus( QString s ) :
+			m_errorString( std::move( s ) ),
+			m_state( qCheckGMail::networkStatus::state::error )
 		{
 		}
-		networkStatus( const char * s ) : m_errorString( s )
+		networkStatus( const char * s ) : m_errorString( s ),
+			m_state( qCheckGMail::networkStatus::state::error )
 		{
 		}
-		networkStatus()
+		networkStatus( qCheckGMail::networkStatus::state s ) : m_state( s )
 		{
+			if( m_state == qCheckGMail::networkStatus::state::needAuthentication ){
+
+				m_errorString = "Status: No Credentials" ;
+			}
 		}
 		bool success()
 		{
-			return m_errorString.isEmpty() ;
+			return m_state == qCheckGMail::networkStatus::state::success ;
+		}
+		bool needAuthentication()
+		{
+			return m_state == qCheckGMail::networkStatus::state::needAuthentication ;
 		}
 		const QString& errorString()
 		{
@@ -150,6 +162,7 @@ private:
 		}
 	private:
 		QString m_errorString ;
+		qCheckGMail::networkStatus::state m_state ;
 	} ;
 	void reportOnAllAccounts( const QByteArray&,qCheckGMail::networkStatus ) ;
 	void noAccountConfigured() ;

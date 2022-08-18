@@ -428,11 +428,6 @@ static void _account_status( QString& status,const QString& displayName,const QS
 	}
 }
 
-static bool _need_authentication( const QByteArray& msg )
-{
-	return msg.contains( "\"status\": \"UNAUTHENTICATED\"" ) ;
-}
-
 /*
  * This function goes through all accounts and give reports of all of their states
  */
@@ -440,7 +435,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	if( _need_authentication( msg ) ){
+	if( status.needAuthentication() ){
 
 		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
@@ -464,7 +459,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 
 				m_errorOccured = true ;
 
-				_account_status( m_accountsStatus,this->displayName(),"Status: No Credentials" ) ;
+				_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
 			}else{
 				/*
 				 * We will get here if:
@@ -862,6 +857,11 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 	return { util::type_identity< meaw >(),this } ;
 }
 
+static bool _need_authentication( const QByteArray& msg )
+{
+	return msg.contains( "\"status\": \"UNAUTHENTICATED\"" ) ;
+}
+
 void qCheckGMail::networkAccess( const QNetworkRequest& request )
 {
 	m_manager.get( request,[ this ]( QNetworkReply& e,bool timeOut ){
@@ -882,9 +882,15 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 		auto error = e.error() ;
 
+		using qc = qCheckGMail::networkStatus::state ;
+
 		if( timeOut ){
 
 			this->reportOnAllAccounts( content,"Error: Timeout" ) ;
+
+		}else if( _need_authentication( content ) ){
+
+			this->reportOnAllAccounts( content,qc::needAuthentication ) ;
 
 		}else if( error == QNetworkReply::HostNotFoundError ){
 
@@ -892,7 +898,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 		}else if( error == QNetworkReply::NoError ){
 
-			this->reportOnAllAccounts( content,{} ) ;
+			this->reportOnAllAccounts( content,qc::success ) ;
 
 		}else if( error == QNetworkReply::TimeoutError ){
 
