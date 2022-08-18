@@ -214,11 +214,8 @@ static void _start_detached( bool debug,QString& exe,const QString& url )
 
 		QDesktopServices::openUrl( QUrl( url ) ) ;
 	}else{
-#if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
-		auto s = exe.split( " ",QString::SkipEmptyParts ) ;
-#else
-		auto s = exe.split( " ",Qt::SkipEmptyParts ) ;
-#endif
+		auto s = util::split( exe,' ' ) ;
+
 		auto m = s.takeAt( 0 ) ;
 
 		for( auto& it : s ){
@@ -443,7 +440,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	if( _need_authentication( msg ) || status == qCheckGMail::networkStatus::needAuthentication ){
+	if( _need_authentication( msg ) ){
 
 		auto& acc = *( m_accounts.data() + m_currentAccount ) ;
 
@@ -483,7 +480,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 			}
 		}
 	}else{
-		if( status == qCheckGMail::networkStatus::success ){
+		if( status.success() ){
 
 			const auto& mailCount = emailInfo.labelUnreadEmails ;
 
@@ -498,18 +495,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 			}
 		}else{
 			m_errorOccured = true ;
-
-			if( status == qCheckGMail::networkStatus::noInternet ){
-
-				_account_status( m_accountsStatus,this->displayName(),"Status: No Internet" ) ;
-
-			}else if( status == qCheckGMail::networkStatus::timeOut ){
-
-				_account_status( m_accountsStatus,this->displayName(),"Status: Network Timed Out" ) ;
-			}else{
-				//wtf
-				_account_status( m_accountsStatus,this->displayName(),"Status: Unknown Error" ) ;
-			}
+			_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
 		}
 	}
 
@@ -894,28 +880,25 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 			}
 		}
 
-		auto _report = [ & ]( qCheckGMail::networkStatus e ){
-
-			this->reportOnAllAccounts( content,e ) ;
-		} ;
+		auto error = e.error() ;
 
 		if( timeOut ){
 
-			_report( qCheckGMail::networkStatus::timeOut ) ;
+			this->reportOnAllAccounts( content,"Error: Timeout" ) ;
 
-		}else if( e.error() == QNetworkReply::AuthenticationRequiredError ){
+		}else if( error == QNetworkReply::HostNotFoundError ){
 
-			_report( qCheckGMail::networkStatus::needAuthentication ) ;
+			this->reportOnAllAccounts( content,"Error: No internet" ) ;
 
-		}else if( e.error() == QNetworkReply::HostNotFoundError ){
+		}else if( error == QNetworkReply::NoError ){
 
-			_report( qCheckGMail::networkStatus::noInternet ) ;
+			this->reportOnAllAccounts( content,{} ) ;
 
-		}else if( e.error() == QNetworkReply::NoError ){
+		}else if( error == QNetworkReply::TimeoutError ){
 
-			_report( qCheckGMail::networkStatus::success ) ;
+			this->reportOnAllAccounts( content,"Error: TimeOut" ) ;
 		}else{
-			_report( qCheckGMail::networkStatus::wtf ) ;
+			this->reportOnAllAccounts( content,"Error: " + e.errorString() ) ;
 		}
 	} ) ;
 }

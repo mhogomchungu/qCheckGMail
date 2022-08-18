@@ -129,7 +129,28 @@ private:
 	void startTimer() ;
 	void stopTimer() ;
 	void setTimer() ;
-	enum class networkStatus{ success,needAuthentication,noInternet,timeOut,wtf } ;
+	class networkStatus{
+	public:
+		networkStatus( QString s ) : m_errorString( std::move( s ) )
+		{
+		}
+		networkStatus( const char * s ) : m_errorString( s )
+		{
+		}
+		networkStatus()
+		{
+		}
+		bool success()
+		{
+			return m_errorString.isEmpty() ;
+		}
+		const QString& errorString()
+		{
+			return m_errorString ;
+		}
+	private:
+		QString m_errorString ;
+	} ;
 	void reportOnAllAccounts( const QByteArray&,qCheckGMail::networkStatus ) ;
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;

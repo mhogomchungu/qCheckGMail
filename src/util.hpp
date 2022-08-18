@@ -33,6 +33,7 @@
 #include <QJsonDocument>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
+#include <QLockFile>
 
 #include "lxqt_wallet.h"
 
@@ -68,12 +69,12 @@ namespace util
 	struct type_identity{
 		using type = T ;
 	} ;
-	static inline QStringList split( const QString& e )
+	static inline QStringList split( const QString& e,char token = ',' )
 	{
 #if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
-		return.split( ",",QString::SkipEmptyParts ) ;
+		return.split( token,QString::SkipEmptyParts ) ;
 #else
-		return e.split( ",",Qt::SkipEmptyParts ) ;
+		return e.split( token,Qt::SkipEmptyParts ) ;
 #endif
 	}
 	template< typename Labels >
@@ -277,8 +278,10 @@ namespace util
 		oneinstance( AppInfo info,InstanceArgs iargs ) :
 			m_info( std::move( info ) ),
 			m_iargs( std::move( iargs ) ),
-			m_exec( [ this ](){ this->run() ; } )
+			m_exec( [ this ](){ this->run() ; } ),
+			m_lockFile( m_info.socketPath + ".lock" )
 		{
+			m_lockFile.lock() ;
 		}
 		~oneinstance()
 		{
@@ -308,6 +311,9 @@ namespace util
 					m_localSocket.close() ;
 
 					m_iargs.otherInstanceRunning() ;
+
+					m_lockFile.unlock() ;
+
 					m_info.app.quit() ;
 				} ) ;
 
@@ -333,7 +339,7 @@ namespace util
 				this->start() ;
 			}
 		}
-		void start( void )
+		void start()
 		{
 			m_mainApp = std::make_unique< typename AppInfo::appType >( std::move( m_info.args ) ) ;
 
@@ -351,6 +357,8 @@ namespace util
 			} ) ;
 
 			m_localServer.listen( m_info.socketPath ) ;
+
+			m_lockFile.unlock() ;
 		}
 		QLocalServer m_localServer ;
 		QLocalSocket m_localSocket ;
@@ -358,6 +366,7 @@ namespace util
 		AppInfo m_info ;
 		InstanceArgs m_iargs ;
 		util::exec m_exec ;
+		QLockFile m_lockFile ;
 	} ;
 
 	class AppTypeInterface
