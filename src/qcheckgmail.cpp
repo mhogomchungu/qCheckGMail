@@ -888,7 +888,7 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 		}else if( error == QNetworkReply::HostNotFoundError ){
 
-			this->reportOnAllAccounts( content,"Error: No internet" ) ;
+			this->reportOnAllAccounts( content,"Error: Host Not Found" ) ;
 
 		}else if( error == QNetworkReply::NoError ){
 
