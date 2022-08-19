@@ -44,6 +44,36 @@
 class NetworkAccessManager
 {
 public:
+	class reply
+	{
+	public:
+		reply( QNetworkReply * n,bool t ) : m_networkReply( n ),m_timeOut( t )
+		{
+		}
+		bool success() const
+		{
+			return m_networkReply->error() == QNetworkReply::NoError && !m_timeOut ;
+		}
+		bool timeOut() const
+		{
+			return m_timeOut ;
+		}
+		QByteArray data() const
+		{
+			return m_networkReply->readAll() ;
+		}
+		QNetworkReply::NetworkError error() const
+		{
+			return m_networkReply->error() ;
+		}
+		QString errorString() const
+		{
+			return m_networkReply->errorString() ;
+		}
+	private:
+		QNetworkReply * m_networkReply ;
+		bool m_timeOut ;
+	} ;
 	NetworkAccessManager( int timeOut ) : m_timeOut( timeOut )
 	{
 	}
@@ -80,7 +110,7 @@ private:
 			QObject::disconnect( m_timerConn ) ;
 			m_processed = true ;
 			m_timer.stop() ;
-			m_reply( *r,timeOut ) ;
+			m_reply( NetworkAccessManager::reply( r,timeOut ) ) ;
 		}
 		QTimer * timer()
 		{

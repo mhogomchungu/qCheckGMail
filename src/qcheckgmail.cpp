@@ -343,18 +343,12 @@ void qCheckGMail::addActionsToMenu()
 	m_statusicon.addQuitAction() ;
 }
 
-QString qCheckGMail::displayName( const QString& l )
+QString qCheckGMail::displayName( const QString& label )
 {
 	const auto& account     = m_accounts.at( m_currentAccount ) ;
 	const auto& accountName = account.accountName() ;
-	auto label      	= l ;
 
 	if( label == "INBOX" ){
-
-		label.clear() ;
-	}
-
-	if( label.isEmpty() ){
 
 		return accountName ;
 	}else{
@@ -364,6 +358,7 @@ QString qCheckGMail::displayName( const QString& l )
 
 struct emailInfo
 {
+	bool invalid ;
 	QString labelName ;
 	QString labelUnreadEmails ;
 	QString totalMessages ;
@@ -371,13 +366,18 @@ struct emailInfo
 
 static emailInfo _getEmailInfo( const QByteArray& json )
 {
-	auto m = QJsonDocument::fromJson( json ) ;
+	if( json.isEmpty() ){
 
-	auto a = m.object().value( "name" ).toString() ;
-	auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
-	auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
+		return { true,{},{},{} } ;
+	}else{
+		auto m = QJsonDocument::fromJson( json ) ;
 
-	return { a,b,c } ;
+		auto a = m.object().value( "name" ).toString() ;
+		auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
+		auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
+
+		return { false,a,b,c } ;
+	}
 }
 
 void qCheckGMail::wrongAccountNameOrPassword()
@@ -426,11 +426,11 @@ static void _account_status( QString& status,const QString& displayName,const QS
 /*
  * This function goes through all accounts and give reports of all of their states
  */
-void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networkStatus status )
+void qCheckGMail::reportOnAllAccounts( int counter,const QByteArray& msg,qCheckGMail::networkStatus status )
 {
 	auto emailInfo = _getEmailInfo( msg ) ;
 
-	if( msg.isEmpty() ){
+	if( emailInfo.invalid ){
 
 		m_errorOccured = true ;
 
@@ -472,7 +472,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 
 				acc.setAccessToken( QString() ) ;
 
-				return this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
+				return this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ) ) ;
 			}
 		}
 	}else{
@@ -506,7 +506,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 		 * account has more labels and we are at the next one and are about to go through it
 		 */
 		const auto& acc = m_accounts.at( m_currentAccount ) ;
-		this->checkMail( acc,acc.labelUrlAt( m_currentLabel ) ) ;
+		this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ) ) ;
 	}else{
 		/*
 		 * we are done processing an account,go to the next one if available
@@ -518,7 +518,7 @@ void qCheckGMail::reportOnAllAccounts( const QByteArray& msg,qCheckGMail::networ
 			/*
 			 * more accounts are configured and we are at the next one and are about to go through it
 			 */
-			this->checkMail( m_accounts.at( m_currentAccount ) ) ;
+			this->checkMail( counter,m_accounts.at( m_currentAccount ) ) ;
 		}else{
 			/*
 			 * done checking all labels on all accounts
@@ -696,14 +696,16 @@ void qCheckGMail::checkMail( bool )
 		m_accountUpdated  = false ;
 		m_accountFailed   = false ;
 		m_errorOccured    = false ;
-		this->checkMail( m_accounts.at( m_currentAccount ) ) ;
+		m_counter++ ;
+
+		this->checkMail( m_counter,m_accounts.at( m_currentAccount ) ) ;
 	}else{
 		_debug( tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) ) ;
 		this->getAccountsInfo() ;
 	}
 }
 
-void qCheckGMail::checkMail( const accounts& acc )
+void qCheckGMail::checkMail( int counter,const accounts& acc )
 {
 	//m_manager.QtNAM().setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
 
@@ -711,7 +713,7 @@ void qCheckGMail::checkMail( const accounts& acc )
 	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 
-	this->checkMail( acc,acc.defaultLabelUrl() ) ;
+	this->checkMail( counter,acc,acc.defaultLabelUrl() ) ;
 }
 
 static QString _parseJSON( const QByteArray& json,const char * key )
@@ -721,7 +723,10 @@ static QString _parseJSON( const QByteArray& json,const char * key )
 	return m.value( key ).toString() ;
 }
 
-void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_token,const QString& UrlLabel )
+void qCheckGMail::getAccessToken( int counter,
+				  const accounts& acc,
+				  const QString& refresh_token,
+				  const QString& UrlLabel )
 {
 	m_manager.post( m_networkRequest,[ & ](){
 
@@ -734,11 +739,11 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 		return opts.toUtf8() ;
 
-	}(),[ UrlLabel,this,&acc,refresh_token ]( QNetworkReply& n,bool timeOut ){
+	}(),[ UrlLabel,this,&acc,refresh_token,counter ]( const NetworkAccessManager::reply& reply ){
 
-		if( n.error() == QNetworkReply::NoError && !timeOut ){
+		if( reply.success() ){
 
-			auto e = _parseJSON( n.readAll(),"access_token" ) ;
+			auto e = _parseJSON( reply.data(),"access_token" ) ;
 
 			acc.setAccessToken( e ) ;
 
@@ -746,11 +751,11 @@ void qCheckGMail::getAccessToken( const accounts& acc,const QString& refresh_tok
 
 			request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
 
-			this->networkAccess( request ) ;
+			this->networkAccess( counter,request ) ;
 		}else{
 			QNetworkRequest request( QUrl( UrlLabel.toUtf8().constData() ) ) ;
 
-			this->networkAccess( request ) ;
+			this->networkAccess( counter,request ) ;
 		}
 	} ) ;
 }
@@ -779,11 +784,11 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 
 				return opts.toUtf8() ;
 
-			 }(),[ funct = std::move( function ) ]( QNetworkReply& e,bool timeOut ){
+			 }(),[ funct = std::move( function ) ]( const NetworkAccessManager::reply& reply ){
 
-				if( e.error() == QNetworkReply::NoError && !timeOut ){
+				if( reply.success() ){
 
-					auto m = e.readAll() ;
+					auto m = reply.data() ;
 
 					funct( _parseJSON( m,"refresh_token" ),m ) ;
 				}else{
@@ -852,34 +857,45 @@ static GMailError _gmailError( const QByteArray& msg )
 	}
 }
 
-void qCheckGMail::networkAccess( const QNetworkRequest& request )
+void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 {
-	m_manager.get( request,[ this ]( QNetworkReply& e,bool timeOut ){
+	m_manager.get( request,[ this,counter ]( const NetworkAccessManager::reply& reply ){
 
-		auto error = e.error() ;
+		if( counter != m_counter ){
+
+			/*
+			 * We will get here if there are more than one on going process of checking mail
+			 * and we allow only the most recent one to proceed.
+			 */
+			std::cout << "Expected counter to be\" " << m_counter << "\" but it is \"" << counter << "\"" << std::endl ;
+
+			return ;
+		}
+
+		auto error = reply.error() ;
 
 		if( error == QNetworkReply::OperationCanceledError ){
 
-			return this->reportOnAllAccounts( "","Error: Operation Cancelled" ) ;
+			return this->reportOnAllAccounts( counter,"","Error: Operation Cancelled" ) ;
 		}
 
-		auto content = e.readAll() ;
+		auto content = reply.data() ;
 
 		if( m_enableDebug ){
 
 			_debug( content + "\n" ) ;
 
-			if( e.error() != QNetworkReply::NetworkError::NoError ){
+			if( error != QNetworkReply::NetworkError::NoError ){
 
-				qDebug() << e.errorString() << "\n" ;
+				qDebug() << reply.errorString() << "\n" ;
 
-				qDebug() << e.error() << "\n\n" ;
+				qDebug() << error << "\n\n" ;
 			}
 		}
 
-		if( timeOut ){
+		if( reply.timeOut() ){
 
-			this->reportOnAllAccounts( content,"Error: Timeout" ) ;
+			this->reportOnAllAccounts( counter,content,"Error: Timeout" ) ;
 		}else{
 			auto err = _gmailError( content ) ;
 
@@ -887,21 +903,21 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request )
 
 			if( err.hasError ){
 
-				this->reportOnAllAccounts( content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
+				this->reportOnAllAccounts( counter,content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
 
 			}else if( error == QNetworkReply::HostNotFoundError ){
 
-				this->reportOnAllAccounts( content,"Error: Host Not Found" ) ;
+				this->reportOnAllAccounts( counter,content,"Error: Host Not Found" ) ;
 
 			}else if( error == QNetworkReply::NoError ){
 
-				this->reportOnAllAccounts( content,qc::success ) ;
+				this->reportOnAllAccounts( counter,content,qc::success ) ;
 
 			}else if( error == QNetworkReply::TimeoutError ){
 
-				this->reportOnAllAccounts( content,"Error: TimeOut" ) ;
+				this->reportOnAllAccounts( counter,content,"Error: TimeOut" ) ;
 			}else{
-				this->reportOnAllAccounts( content,"Error: " + e.errorString() ) ;
+				this->reportOnAllAccounts( counter,content,"Error: " + reply.errorString() ) ;
 			}
 		}
 	} ) ;
@@ -920,11 +936,16 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		return opts.toUtf8() ;
 
-	}(),[ this,ginfo = std::move( ginfo ) ]( QNetworkReply& n,bool ){
+	}(),[ this,ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply ){
 
-		auto e = _parseJSON( n.readAll(),"access_token" ) ;
+		if( reply.success() ){
 
-		this->getLabels( e,std::move( ginfo ) ) ;
+			auto e = _parseJSON( reply.data(),"access_token" ) ;
+
+			this->getLabels( e,std::move( ginfo ) ) ;
+		}else{
+			this->getLabels( {},std::move( ginfo ) ) ;
+		}
 	} ) ;
 }
 
@@ -943,14 +964,19 @@ void qCheckGMail::getGMailAccountInfo( const QByteArray& accName,addaccount::Gma
 
 void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccountInfo ginfo )
 {
+	if( accessToken.isEmpty() ){
+
+		return ginfo( {} ) ;
+	}
+
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( QNetworkReply& n,bool timeOut ){
+	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply ){
 
-		if( n.error() == QNetworkReply::NoError && !timeOut ){
+		if( reply.success() ){
 
-			auto ss = n.readAll() ;
+			auto ss = reply.data() ;
 
 			const auto arr = QJsonDocument::fromJson( ss ).object().value( "labels" ).toArray() ;
 
@@ -972,7 +998,7 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 	} ) ;
 }
 
-void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
+void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlLabel )
 {
 	const auto& accessToken = acc.accessToken() ;
 
@@ -981,13 +1007,13 @@ void qCheckGMail::checkMail( const accounts& acc,const QString& UrlLabel )
 		 * We will get here when we are running for the first time after startup
 		 * or if an access token has expired.
 		 */
-		this->getAccessToken( acc,acc.refreshToken(),UrlLabel ) ;
+		this->getAccessToken( counter,acc,acc.refreshToken(),UrlLabel ) ;
 	}else{
 		QNetworkRequest s( QUrl( UrlLabel.toUtf8().constData() ) ) ;
 
 		s.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-		this->networkAccess( s ) ;
+		this->networkAccess( counter,s ) ;
 	}
 }
 

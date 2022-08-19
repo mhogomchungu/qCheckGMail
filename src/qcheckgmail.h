@@ -102,9 +102,9 @@ private:
 
 	walletmanager::Wallet walletHandle() ;
 
-	void getAccessToken( const accounts&,const QString&,const QString& ) ;
+	void getAccessToken( int,const accounts&,const QString&,const QString& ) ;
 
-	void networkAccess( const QNetworkRequest& ) ;
+	void networkAccess( int,const QNetworkRequest& ) ;
 
 	void getGMailAccountInfo( const QString& authocode,addaccount::GmailAccountInfo returnEmail ) ;
 	void getGMailAccountInfo( const QByteArray& accName,addaccount::GmailAccountInfo returnEmail ) ;
@@ -118,8 +118,8 @@ private:
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
 	void walletNotOPenedError() ;
-	void checkMail( const accounts& acc,const QString& label ) ;
-	void checkMail( const accounts& acc ) ;
+	void checkMail( int,const accounts& acc,const QString& label ) ;
+	void checkMail( int,const accounts& acc ) ;
 	void checkMail( bool = false ) ;
 	void openMail( const accounts& acc ) ;
 	void openMail() ;
@@ -164,7 +164,7 @@ private:
 		QString m_errorString ;
 		qCheckGMail::networkStatus::state m_state ;
 	} ;
-	void reportOnAllAccounts( const QByteArray&,qCheckGMail::networkStatus ) ;
+	void reportOnAllAccounts( int,const QByteArray&,qCheckGMail::networkStatus ) ;
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;
 	void failedToCheckForNewEmail() ;
@@ -225,6 +225,8 @@ private:
 	settings m_settings ;
 
 	statusicon m_statusicon ;
+
+	int m_counter = -1 ;
 };
 
 #endif // QCHECKGMAIL_H
