@@ -29,21 +29,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-static void _debug( const char * s )
-{
-	std::cout << s << std::endl ;
-}
-
-static void _debug( const QByteArray& s )
-{
-	_debug( s.constData() ) ;
-}
-
-static void _debug( const QString& s )
-{
-	_debug( s.toLatin1() ) ;
-}
-
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_manager( 30000 ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
@@ -700,7 +685,7 @@ void qCheckGMail::checkMail( bool )
 
 		this->checkMail( m_counter,m_accounts.at( m_currentAccount ) ) ;
 	}else{
-		_debug( tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) ) ;
+		std::cout << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) << std::endl ;
 		this->getAccountsInfo() ;
 	}
 }
@@ -867,7 +852,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 			 * We will get here if there are more than one on going process of checking mail
 			 * and we allow only the most recent one to proceed.
 			 */
-			std::cout << "Expected counter to be\" " << m_counter << "\" but it is \"" << counter << "\"" << std::endl ;
+			std::cerr << "Expected counter to be\" " << m_counter << "\" but it is \"" << counter << "\"" << std::endl ;
 
 			return ;
 		}
@@ -883,13 +868,13 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 		if( m_enableDebug ){
 
-			_debug( content + "\n" ) ;
+			std::cerr << content + "\n" << std::endl ;
 
 			if( error != QNetworkReply::NetworkError::NoError ){
 
-				qDebug() << reply.errorString() << "\n" ;
+				std::cerr << reply.errorString() << std::endl ;
 
-				qDebug() << error << "\n\n" ;
+				std::cerr << error << std::endl ;
 			}
 		}
 
@@ -1252,7 +1237,7 @@ int qCheckGMail::autoStartDisabled()
 
 		qapp.installTranslator( &translator ) ;
 
-		_debug( tr( "Autostart Disabled,Exiting This One" ) ) ;
+		std::cerr << tr( "Autostart Disabled,Exiting This One" ) << std::endl ;
 	}
 
 	return 1 ;
