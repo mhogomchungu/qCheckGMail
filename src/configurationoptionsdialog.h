@@ -55,9 +55,6 @@ public:
 		virtual void enablePassWordChange( bool )
 		{
 		}
-		virtual void reportOnAllAccounts( bool )
-		{
-		}
 		virtual void audioNotify( bool )
 		{
 		}
@@ -82,10 +79,6 @@ public:
 		void enablePassWordChange( bool s )
 		{
 			m_handle->enablePassWordChange( s ) ;
-		}
-		void reportOnAllAccounts( bool s )
-		{
-			m_handle->reportOnAllAccounts( s ) ;
 		}
 		void audioNotify( bool s )
 		{

@@ -88,7 +88,6 @@ private:
 	void configureAccounts() ;
 	void configurationoptionWindow() ;
 	void setTimer( int ) ;
-	void reportOnAllAccounts( bool ) ;
 	void configurePassWord() ;
 	void audioNotify( bool ) ;
 	void alwaysShowTrayIcon( bool ) ;
@@ -183,7 +182,6 @@ private:
 	bool m_displayEmailCount ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
-	bool m_reportOnAllAccounts ;
 	bool m_enableDebug ;
 	bool m_accountUpdated ;
 	bool m_timeExpired ;
@@ -214,6 +212,8 @@ private:
 
 	statusicon::clickActions m_clickActions ;
 
+	settings m_settings ;
+
 	NetworkAccessManager m_manager ;
 
 	QNetworkRequest m_networkRequest ;
@@ -222,8 +222,6 @@ private:
 
 	QApplication& m_qApp ;
 	QStringList m_args ;
-
-	settings m_settings ;
 
 	statusicon m_statusicon ;
 

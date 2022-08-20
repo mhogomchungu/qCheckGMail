@@ -29,10 +29,9 @@ public:
 	void setProfile( const QString& ) ;
 	bool autoStartEnabled() ;
 	void enableAutoStart( bool ) ;
-	bool reportOnAllAccounts() ;
 	QString localLanguage() ;
 	QString localLanguagePath() ;
-	int getTimeFromConfigFile() ;
+	int checkForUpdatesInterval() ;
 	QString walletName( LXQt::Wallet::BackEnd ) ;
 	QString walletName() ;
 	QString applictionName() ;
@@ -61,13 +60,30 @@ public:
 	int networkTimeOut() ;
 	void setRuntimePortNumber( int ) ;
 	void saveLocalLanguage( const QString& ) ;
-	void saveTimeToConfigFile( const QString& ) ;
+	void setCheckForUpdatesInterval( const QString& ) ;
 	QString getOption( const char * ) ;
 	void setAudioNotify( bool ) ;
 	void setIconAlwaysVisible( bool ) ;
 	void saveStorageSystem( const QString& ) ;
 	void saveReportOnAllAccounts( bool b ) ;
-private:
+private:	
+	template< typename Type >
+	QVariant getSetting( const char * key,const Type& defautValue )
+	{
+		auto opt = this->getOption( key ) ;
+
+		if( !m_settings.contains( opt ) ){
+
+			m_settings.setValue( opt,defautValue ) ;
+		}
+
+		return m_settings.value( opt ) ;
+	}
+	template< typename Type >
+	void setSetting( const char * key,const Type& value )
+	{
+		m_settings.setValue( this->getOption( key ),value ) ;
+	}
 	int m_runtimePortNumber ;
 	QSettings m_settings ;
 	QString m_profile ;

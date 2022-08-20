@@ -30,7 +30,7 @@
 #define DEFAULT_KDE_WALLET     "default kde wallet"
 #define qCheckGMail_KDE_wALLET "qCheckGMail kde wallet"
 
-static QString _configPath( void )
+static QString _configPath()
 {
 	return QStandardPaths::writableLocation( QStandardPaths::GenericConfigLocation ) ;
 }
@@ -58,6 +58,16 @@ settings::settings() : m_settings( ORGANIZATION_NAME,PROGRAM_NAME )
 {
 }
 
+QStringList settings::profileEmailList()
+{
+	if( !m_profile.isEmpty() && m_settings.contains( m_profile ) ){
+
+		return util::split( m_settings.value( m_profile ).toString() ) ;
+	}else{
+		return QStringList() ;
+	}
+}
+
 void settings::setProfile( const QString& e )
 {
 	if( !m_profile.isEmpty() && m_settings.contains( m_profile ) ){
@@ -66,20 +76,6 @@ void settings::setProfile( const QString& e )
 	}
 
 	m_settings.setPath( QSettings::IniFormat,QSettings::UserScope,_configPath() ) ;
-}
-
-bool settings::autoStartEnabled()
-{
-	auto opt = this->getOption( "autostart" ) ;
-
-	if( m_settings.contains( opt ) ){
-
-		return m_settings.value( opt ).toBool() ;
-	}else{
-		m_settings.setValue( opt,true ) ;
-		m_settings.sync() ;
-		return true ;
-	}
 }
 
 void settings::setRuntimePortNumber( int s )
@@ -128,12 +124,7 @@ QString settings::applictionName()
 
 void settings::saveStorageSystem( const QString& system )
 {
-	m_settings.setValue( this->getOption( "storageSystem" ),system ) ;
-}
-
-void settings::saveReportOnAllAccounts( bool b )
-{
-	m_settings.setValue( this->getOption( "reportOnAllAccounts" ),b ) ;
+	this->setSetting( "storageSystem",system ) ;
 }
 
 QString settings::logFile()
@@ -143,325 +134,167 @@ QString settings::logFile()
 
 QString settings::storageSystem()
 {
-	return m_settings.value( this->getOption( "storageSystem" ) ).toString() ;
+	return this->getSetting( "storageSystem",[](){
+
+		using bk = LXQt::Wallet::BackEnd ;
+
+		if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
+
+			return DEFAULT_KDE_WALLET ;
+
+		}else if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
+
+			return "gnome wallet" ;
+		}else{
+			return "internal wallet" ;
+		}
+
+	}() ).toString() ;
 }
 
 util::unique_wallet_ptr settings::secureStorageSystem()
 {
 	using bk = LXQt::Wallet::BackEnd ;
 
-	auto opt = this->getOption( "storageSystem" ) ;
+	auto value = this->storageSystem() ;
 
-	if( m_settings.contains( opt ) ){
+	if( value == "gnome wallet" ){
 
-		auto value = m_settings.value( opt ).toString() ;
+		if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
 
-		if( value == "gnome wallet" ){
-
-			if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
-
-				return _get_bk( bk::libsecret ) ;
-			}else{
-				m_settings.setValue( opt,QString( "internal wallet" ) ) ;
-				return _get_bk( bk::internal ) ;
-			}
-
-		}else if( value.contains( "kde" ) ){
-
-			if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
-
-				return _get_bk( bk::kwallet ) ;
-			}else{
-				m_settings.setValue( opt,"internal wallet" ) ;
-				return _get_bk( bk::internal ) ;
-			}
+			return _get_bk( bk::libsecret ) ;
 		}else{
-			QString wallet( "internal wallet" ) ;
+			return _get_bk( bk::internal ) ;
+		}
 
-			if( value != wallet ){
+	}else if( value.contains( "kde" ) ){
 
-				m_settings.setValue( opt,wallet ) ;
-			}
+		if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
 
+			return _get_bk( bk::kwallet ) ;
+		}else{
 			return _get_bk( bk::internal ) ;
 		}
 	}else{
-		if( LXQt::Wallet::backEndIsSupported( bk::kwallet ) ){
-
-			m_settings.setValue( opt,QString( DEFAULT_KDE_WALLET ) ) ;
-			return _get_bk( bk::kwallet ) ;
-
-		}else if( LXQt::Wallet::backEndIsSupported( bk::libsecret ) ){
-
-			m_settings.setValue( opt,QString( "gnome wallet" ) ) ;
-			return _get_bk( bk::libsecret ) ;
-		}else{
-			m_settings.setValue( opt,QString( "internal wallet" ) ) ;
-			return _get_bk( bk::internal ) ;
-		}
+		return _get_bk( bk::internal ) ;
 	}
+}
+
+bool settings::autoStartEnabled()
+{
+	return this->getSetting( "autostart",true ).toBool() ;
 }
 
 bool settings::audioNotify()
 {
-	auto opt = this->getOption( "audioNotify" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,true ) ;
-	}
-
-	return m_settings.value( opt ).toBool() ;
+	return this->getSetting( "audioNotify",true ).toBool() ;
 }
 
 void settings::setIconAlwaysVisible( bool e )
 {
-	m_settings.setValue( this->getOption( "alwaysShowTrayIcon" ),e ) ;
+	this->setSetting( "alwaysShowTrayIcon",e ) ;
 }
 
 bool settings::alwaysShowTrayIcon()
 {
-	auto opt = this->getOption( "alwaysShowTrayIcon" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,false ) ;
-	}
-
-	return m_settings.value( opt ).toBool() ;
+	return this->getSetting( "alwaysShowTrayIcon",true ).toBool() ;
 }
 
 QString settings::clientID()
 {
-	auto opt = this->getOption( "clientID" ) ;
+	auto e = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
 
-	if( !m_settings.contains( opt ) ){
-
-		auto e = "90790670661-5jnrcfsocksfsh2ajnnqihhhk82798aq.apps.googleusercontent.com" ;
-		m_settings.setValue( opt,e ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "clientID",e ).toString() ;
 }
 
 QString settings::clientSecret()
 {
-	auto opt = this->getOption( "clientSecret" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"LRfPCp9m4PLK-WTo3jHMAQ4i" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "clientSecret","LRfPCp9m4PLK-WTo3jHMAQ4i" ).toString() ;
 }
 
 QString settings::audioPlayer()
 {
-	auto opt = this->getOption( "audioPlayer" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"mplayer" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "audioPlayer","mplayer" ).toString() ;
 }
 
 QString settings::noEmailIcon()
 {
-	auto opt = this->getOption( "noEmailIconColor" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"qCheckGMail-hasNoMail" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "noEmailIconColor","qCheckGMail-hasNoMail" ).toString() ;
 }
 
 QString settings::pausedIcon()
 {
-	auto opt = this->getOption( "pausedEmailIconColor" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"qCheckGMail-paused" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "pausedEmailIconColor","qCheckGMail-paused" ).toString() ;
 }
 
 QString settings::newEmailIcon()
 {
-	auto opt = this->getOption( "newEmailIconColor" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"qCheckGMail-hasMail" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "newEmailIconColor","qCheckGMail-hasMail" ).toString() ;
 }
 
 QString settings::errorIcon()
 {
-	auto opt = this->getOption( "errorIconColor" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"qCheckGMail-hasError" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "errorIconColor","qCheckGMail-hasError" ).toString() ;
 }
 
 QString settings::fontFamily()
 {
-	auto opt = this->getOption( "displayEmailCountFontFamily" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"Helvetica" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "displayEmailCountFontFamily","Helvetica" ).toString() ;
 }
 
 QString settings::fontColor()
 {
-	auto opt = this->getOption( "displayEmailCountFontColor" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"black" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "displayEmailCountFontColor","black" ).toString() ;
 }
 
 QString settings::visibleIconState()
 {
-	auto opt = this->getOption( "visibleIconState" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"NeedsAttention" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "visibleIconState","NeedsAttention" ).toString() ;
 }
 
 QString settings::defaultApplication()
 {
-	auto opt = this->getOption( "defaultApplication" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"browser" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
-}
-
-QStringList settings::profileEmailList()
-{
-	if( !m_profile.isEmpty() && m_settings.contains( m_profile ) ){
-
-		return util::split( m_settings.value( m_profile ).toString() ) ;
-	}else{
-		return QStringList() ;
-	}
+	return this->getSetting( "defaultApplication","browser" ).toString() ;
 }
 
 bool settings::usingInternalStorageSystem()
 {
-	auto opt = this->getOption( "storageSystem" ) ;
-	return m_settings.value( opt ).toString() == "internal wallet" ;
+	return this->storageSystem() == "internal wallet" ;
 }
 
 int settings::fontSize()
 {
-	auto opt = this->getOption( "displayEmailCountFontSize" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"80" ) ;
-	}
-
-	return m_settings.value( opt ).toInt() ;
+	return this->getSetting( "displayEmailCountFontSize","80" ).toInt() ;
 }
 
 int settings::portNumber()
 {
-	auto opt = this->getOption( "PortNumber" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,10000 ) ;
-	}
-
-	return m_settings.value( opt ).toInt() ;
+	return this->getSetting( "PortNumber",10000 ).toInt() ;
 }
 
 bool settings::displayEmailCount()
 {
-	auto opt = this->getOption( "displayEmailCount" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,true ) ;
-	}
-
-	return m_settings.value( opt ).toBool() ;
+	return this->getSetting( "displayEmailCount",true ).toBool() ;
 }
 
 int settings::networkTimeOut()
 {
-	auto opt = this->getOption( "networkTimeOut" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,2 ) ;
-	}
-
-	return 1000 * 60 * m_settings.value( opt ).toInt() ;
+	return 60 * 1000 * this->getSetting( "networkTimeOutInMinutes",1 ).toInt();
 }
 
 void settings::setAudioNotify( bool audioNotify )
 {
-	m_settings.setValue( this->getOption( "audioNotify" ),audioNotify ) ;
+	this->setSetting( "audioNotify",audioNotify ) ;
 }
 
 void settings::enableAutoStart( bool b )
 {
-	m_settings.setValue( this->getOption( "autostart" ),b ) ;
+	this->setSetting( "autostart",b ) ;
 }
-
-bool settings::reportOnAllAccounts()
-{
-	auto opt = this->getOption( "reportOnAllAccounts" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,true ) ;
-	}
-
-	return m_settings.value( opt ).toBool() ;
-}
-
-
 
 QString settings::localLanguage()
 {
-	auto opt = this->getOption( "language" ) ;
-
-	if( !m_settings.contains( opt ) ){
-
-		m_settings.setValue( opt,"english_US" ) ;
-	}
-
-	return m_settings.value( opt ).toString() ;
+	return this->getSetting( "language","english_US" ).toString() ;
 }
 
 QString settings::localLanguagePath()
@@ -475,32 +308,21 @@ QString settings::localLanguagePath()
 
 void settings::saveLocalLanguage( const QString& e )
 {
-	m_settings.setValue( this->getOption( "language" ),e ) ;
+	this->setSetting( "language",e ) ;
 }
 
-void settings::saveTimeToConfigFile( const QString& e )
+void settings::setCheckForUpdatesInterval( const QString& m )
 {
-	m_settings.setValue( this->getOption( "interval" ),e ) ;
-}
+	bool ok ;
+	auto time = m.toInt( &ok ) ;
 
-int settings::getTimeFromConfigFile()
-{
-	auto opt = this->getOption( "interval" ) ;
+	if( ok ){
 
-	if( m_settings.contains( opt ) ){
-
-		bool ok ;
-		auto time = m_settings.value( opt ).toInt( &ok ) ;
-
-		if( ok ){
-
-			return time * 60 * 1000 ;
-		}else{
-			return 30 * 60 * 1000 ;
-		}
-	}else{
-		m_settings.setValue( opt,"30" ) ;
-
-		return 30 * 60 * 1000 ;
+		this->setSetting( "checkForUpdatesIntervalInMinutes",time ) ;
 	}
+}
+
+int settings::checkForUpdatesInterval()
+{
+	return 60 * 1000 * this->getSetting( "checkForUpdatesIntervalInMinutes",30 ).toInt() ;
 }

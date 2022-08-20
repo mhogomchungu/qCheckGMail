@@ -30,7 +30,7 @@
 #include <QJsonArray>
 
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
-	m_manager( 15000 ),
+	m_manager( m_settings.checkForUpdatesInterval() ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
@@ -140,9 +140,8 @@ void qCheckGMail::start()
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
 	m_enableDebug	      = m_statusicon.enableDebug() ;
-	m_reportOnAllAccounts = m_settings.reportOnAllAccounts() ;
 	m_audioNotify	      = m_settings.audioNotify() ;
-	m_interval	      = m_settings.getTimeFromConfigFile() ;
+	m_interval	      = m_settings.checkForUpdatesInterval() ;
 	m_newEmailIcon	      = m_settings.newEmailIcon() ;
 	m_errorIcon	      = m_settings.errorIcon() ;
 	m_noEmailIcon	      = m_settings.noEmailIcon() ;
@@ -582,10 +581,6 @@ void qCheckGMail::configurationoptionWindow()
 		{
 			m_parent->enablePassWordChange( s ) ;
 		}
-		void reportOnAllAccounts( bool s ) override
-		{
-			m_parent->reportOnAllAccounts( s ) ;
-		}
 		void audioNotify( bool s ) override
 		{
 			m_parent->audioNotify( s ) ;
@@ -644,11 +639,6 @@ void qCheckGMail::alwaysShowTrayIcon( bool e )
 			m_statusicon.setStatus( m_statusicon.Passive ) ;
 		}
 	}
-}
-
-void qCheckGMail::reportOnAllAccounts( bool reportOnAllAccounts )
-{
-	m_reportOnAllAccounts = reportOnAllAccounts ;
 }
 
 void qCheckGMail::failedToCheckForNewEmail()
@@ -1139,7 +1129,7 @@ void qCheckGMail::setLocalLanguage( QCoreApplication& qapp,QTranslator * transla
 
 void qCheckGMail::setTimer()
 {
-	m_interval = m_settings.getTimeFromConfigFile() ;
+	m_interval = m_settings.checkForUpdatesInterval() ;
 }
 
 void qCheckGMail::setTimer( int time )

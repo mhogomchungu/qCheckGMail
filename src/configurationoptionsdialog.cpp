@@ -102,7 +102,7 @@ bool configurationoptionsdialog::eventFilter( QObject * watched,QEvent * event )
 
 void configurationoptionsdialog::ShowUI()
 {
-	auto time = m_settings.getTimeFromConfigFile() / ( 60 * 1000 ) ;
+	auto time = m_settings.checkForUpdatesInterval() / ( 60 * 1000 ) ;
 
 	m_ui->lineEditUpdateCheckInterval->setText( QString::number( time ) ) ;
 	m_ui->checkBoxAutoStartEnabled->setChecked( m_settings.autoStartEnabled() ) ;
@@ -137,7 +137,7 @@ void configurationoptionsdialog::HideUI()
 
 	m_settings.saveLocalLanguage( m_ui->comboBoxLocalLanguage->currentText() ) ;
 
-	m_settings.saveTimeToConfigFile( m_ui->lineEditUpdateCheckInterval->text() ) ;
+	m_settings.setCheckForUpdatesInterval( m_ui->lineEditUpdateCheckInterval->text() ) ;
 
 	m_settings.setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
