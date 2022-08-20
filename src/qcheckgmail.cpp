@@ -30,7 +30,7 @@
 #include <QJsonArray>
 
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
-	m_manager( 30000 ),
+	m_manager( 15000 ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
@@ -81,9 +81,9 @@ void qCheckGMail::showPausedIcon( bool paused )
 {
 	if( paused ){
 
-		m_statusicon.setOverlayIcon( m_newEmailIcon ) ;
+		m_statusicon.setIcon( m_pausedIcon ) ;
 	}else{
-		m_statusicon.setOverlayIcon( QString() ) ;
+		m_statusicon.setIcon( m_noEmailIcon ) ;
 	}
 }
 
@@ -146,6 +146,7 @@ void qCheckGMail::start()
 	m_newEmailIcon	      = m_settings.newEmailIcon() ;
 	m_errorIcon	      = m_settings.errorIcon() ;
 	m_noEmailIcon	      = m_settings.noEmailIcon() ;
+	m_pausedIcon          = m_settings.pausedIcon() ;
 	m_displayEmailCount   = m_settings.displayEmailCount() ;
 	m_networkTimeOut      = m_settings.networkTimeOut() ;
 	m_defaultApplication  = m_settings.defaultApplication() ;

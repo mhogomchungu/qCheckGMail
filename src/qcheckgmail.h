@@ -196,6 +196,7 @@ private:
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
+	QString m_pausedIcon ;
 	QString m_applicationIcon ;
 	QString m_defaultApplication ;
 	QString m_accountNameColumnWidth ;

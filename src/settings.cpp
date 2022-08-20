@@ -280,6 +280,18 @@ QString settings::noEmailIcon()
 	return m_settings.value( opt ).toString() ;
 }
 
+QString settings::pausedIcon()
+{
+	auto opt = this->getOption( "pausedEmailIconColor" ) ;
+
+	if( !m_settings.contains( opt ) ){
+
+		m_settings.setValue( opt,"qCheckGMail-paused" ) ;
+	}
+
+	return m_settings.value( opt ).toString() ;
+}
+
 QString settings::newEmailIcon()
 {
 	auto opt = this->getOption( "newEmailIconColor" ) ;

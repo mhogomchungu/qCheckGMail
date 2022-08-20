@@ -6,5 +6,6 @@
 		 <file>qCheckGMail-hasMail.svg</file>
 		 <file>qCheckGMail-hasNoMail.svg</file>
 		 <file>qCheckGMail.svg</file>
+		 <file>qCheckGMail-paused.svg</file>
 	 </qresource>
  </RCC>

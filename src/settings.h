@@ -45,6 +45,7 @@ public:
 	QString clientSecret() ;
 	QString audioPlayer() ;
 	QString noEmailIcon() ;
+	QString pausedIcon() ;
 	QString newEmailIcon() ;
 	QString errorIcon() ;
 	QString fontFamily() ;
