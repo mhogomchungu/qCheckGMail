@@ -31,20 +31,20 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 {
 	QString baseLabel = "https://gmail.googleapis.com/gmail/v1/users/me/labels/" ;
 
-	m_labelUrls.append( baseLabel + "INBOX" ) ;
+	m_labelUrls.append( { baseLabel + "INBOX","INBOX" } ) ;
 
 	if( !m_entry.accLabels.isEmpty() ){
 
-		auto m = util::idsFromJson( m_entry.accLabels ) ;
+		auto m = util::idsAndNamesFromJson( m_entry.accLabels ) ;
 
-		for( const auto& it : util::split( m ) ){
+		for( const auto& it : m ){
 
-			m_labelUrls.append( baseLabel + it ) ;
+			m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
 		}
 	}
 }
 
-const accounts::entry & accounts::data() const
+const accounts::entry& accounts::data() const
 {
 	return m_entry ;
 }
@@ -79,17 +79,6 @@ const QString& accounts::refreshToken() const
 	return m_entry.accRefreshToken ;
 }
 
-accountLabel& accounts::getAccountLabel( int i )
-{
-	if( i < m_labelUrls.size() ){
-
-		return *( m_labelUrls.data() + i ) ;
-	}else{
-		static accountLabel ShouldNotGetHere ;
-		return ShouldNotGetHere ;
-	}
-}
-
 const QString& accounts::labelUrlAt( int i ) const
 {
 	if( i < m_labelUrls.size() ){
@@ -101,20 +90,26 @@ const QString& accounts::labelUrlAt( int i ) const
 	}
 }
 
+const QString& accounts::nameUiAt( int i ) const
+{
+	if( i < m_labelUrls.size() ){
+
+		return m_labelUrls.at( i ).labelUiName() ;
+	}else{
+		static QString ShouldNotGetHere ;
+		return ShouldNotGetHere ;
+	}
+}
+
 const QString& accounts::accessToken() const
 {
 	return m_accessToken ;
 }
 
-accountLabel::accountLabel( const QString& labelUrl,int emailCount ) :
-	m_emailCount( emailCount ),m_labelUrl( labelUrl )
+accountLabel::accountLabel( const QString& labelUrl,
+			    const QString& accountLabelUi ) :
+	m_labelUrl( labelUrl ),m_labelName( accountLabelUi )
 {
-	m_labelName = labelUrl.split( "/" ).last() ;
-}
-
-int accountLabel::emailCount() const
-{
-	return m_emailCount ;
 }
 
 const QString& accountLabel::labelUrl() const
@@ -122,22 +117,7 @@ const QString& accountLabel::labelUrl() const
 	return m_labelUrl ;
 }
 
-const QString& accountLabel::labelName() const
+const QString& accountLabel::labelUiName() const
 {
 	return m_labelName ;
-}
-
-void accountLabel::setEmailCount( int count )
-{
-	m_emailCount = count ;
-}
-
-const QString& accountLabel::lastModified() const
-{
-	return m_lastModifiedTime ;
-}
-
-void accountLabel::setLastModifiedTime( const QString& time )
-{
-	m_lastModifiedTime = time ;
 }

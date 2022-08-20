@@ -72,9 +72,9 @@ void qCheckGMail::setTrayIconToVisible( bool showIcon )
 	}
 }
 
-void qCheckGMail::showToolTip( const QString& x,const QString& y,const QString& z )
+void qCheckGMail::showToolTip( const QString& iconName,const QString& title,const QString& subTitle )
 {
-	m_statusicon.setToolTip( x,y,z ) ;
+	m_statusicon.setToolTip( iconName,title,subTitle ) ;
 }
 
 void qCheckGMail::showPausedIcon( bool paused )
@@ -333,7 +333,25 @@ QString qCheckGMail::displayName( const QString& label )
 	const auto& account     = m_accounts.at( m_currentAccount ) ;
 	const auto& accountName = account.accountName() ;
 
-	if( label == "INBOX" ){
+	if( label.isEmpty() ){
+
+		const auto& m = account.nameUiAt( m_currentLabel ) ;
+
+		std::cout << "ssss: " + m << std::endl ;
+
+		if( m.isEmpty() ){
+
+			return accountName ;
+		}else{
+			if( m == "INBOX" ){
+
+				return accountName ;
+			}else{
+				return QString( "%1/%2" ).arg( accountName,m ) ;
+			}
+		}
+
+	}else if( label == "INBOX" ){
 
 		return accountName ;
 	}else{
@@ -377,34 +395,36 @@ void qCheckGMail::wrongAccountNameOrPassword()
 
 static void _account_status( QString& status,const QString& displayName,const QString& mailCount )
 {
-	QString d_name = displayName ;
+	auto _updateStatus = [ & ]( const QString& d_name ){
 
-	if( d_name.size() >= 32 ){
+		QString e = [ & ](){
+
+			if( mailCount.toInt() > 0 ){
+
+				return "<b>%1 %2</b>" ;
+			}else{
+				return "%1 %2" ;
+			}
+		}() ;
+
+		if( status == "<table>" ){
+
+			status += e.arg( d_name,mailCount ) ;
+		}else{
+			status += "<br>" + e.arg( d_name,mailCount ) ;
+		}
+	} ;
+
+	if( displayName.size() >= 32 ){
+
+		QString d_name = displayName ;
 
 		d_name.truncate( 29 ) ;
 		d_name += "..." ;
+
+		_updateStatus( d_name ) ;
 	}else{
-		//while( d_name.size() < 32 ){
-
-		//	d_name += " " ;
-		//}
-	}
-
-	QString e = [ & ](){
-
-		if( mailCount.toInt() > 0 ){
-
-			return "<b>%1 %2</b>" ;
-		}else{
-			return "%1 %2" ;
-		}
-	}() ;
-
-	if( status == "<table>" ){
-
-		status += e.arg( d_name,mailCount ) ;
-	}else{
-		status += "<br>" + e.arg( d_name,mailCount ) ;
+		_updateStatus( displayName ) ;
 	}
 }
 
@@ -433,7 +453,9 @@ void qCheckGMail::reportOnAllAccounts( int counter,const QByteArray& msg,qCheckG
 
 			m_errorOccured = true ;
 
-			_account_status( m_accountsStatus,this->displayName(),"Status: Internal Error" ) ;
+			qCheckGMail::networkStatus m( "Internal Error" ) ;
+
+			_account_status( m_accountsStatus,this->displayName(),m.errorString() ) ;
 		}else{
 			if( m_badAccessToken ){
 
@@ -674,6 +696,10 @@ void qCheckGMail::checkMail( bool )
 		m_errorOccured    = false ;
 		m_counter++ ;
 
+		this->showToolTip( m_errorIcon,
+				   "...",
+				   tr( "Checking For Email Updates" ) ) ;
+
 		this->checkMail( m_counter,m_accounts.at( m_currentAccount ) ) ;
 	}else{
 		std::cout << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) << std::endl ;
@@ -823,11 +849,11 @@ static GMailError _gmailError( const QByteArray& msg )
 
 			if( !msg.isEmpty() ){
 
-				return { true,"Error: " + msg } ;
+				return { true,msg } ;
 			}
 		}
 
-		return { true,"Error: Unknown GMail Error" } ;
+		return { true,"Unknown GMail Error" } ;
 	}else{
 		return { false,{} } ;
 	}
@@ -852,7 +878,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 		if( error == QNetworkReply::OperationCanceledError ){
 
-			return this->reportOnAllAccounts( counter,"","Error: Operation Cancelled" ) ;
+			return this->reportOnAllAccounts( counter,"","Operation Cancelled" ) ;
 		}
 
 		auto content = reply.data() ;
@@ -871,7 +897,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 		if( reply.timeOut() ){
 
-			this->reportOnAllAccounts( counter,content,"Error: Timeout" ) ;
+			this->reportOnAllAccounts( counter,content,"Network Timeout" ) ;
 		}else{
 			auto err = _gmailError( content ) ;
 
@@ -883,7 +909,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			}else if( error == QNetworkReply::HostNotFoundError ){
 
-				this->reportOnAllAccounts( counter,content,"Error: Host Not Found" ) ;
+				this->reportOnAllAccounts( counter,content,"Host Not Found" ) ;
 
 			}else if( error == QNetworkReply::NoError ){
 
@@ -891,9 +917,9 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			}else if( error == QNetworkReply::TimeoutError ){
 
-				this->reportOnAllAccounts( counter,content,"Error: TimeOut" ) ;
+				this->reportOnAllAccounts( counter,content,"Network TimeOut" ) ;
 			}else{
-				this->reportOnAllAccounts( counter,content,"Error: " + reply.errorString() ) ;
+				this->reportOnAllAccounts( counter,content,reply.errorString() ) ;
 			}
 		}
 	} ) ;

@@ -108,12 +108,38 @@ namespace util
 
 		return m.find( "names" )->toString() ;
 	}
-
 	static inline QString idsFromJson( const QString& e )
 	{
 		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
 
 		return m.find( "ids" )->toString() ;
+	}
+	struct idAndName
+	{
+		QString id ;
+		QString name ;
+	} ;
+	static inline std::vector< util::idAndName > idsAndNamesFromJson( const QString& e )
+	{
+		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
+
+		auto a = util::split( m.find( "ids" )->toString(),',' ) ;
+		auto b = util::split( m.find( "names" )->toString(),',' ) ;
+
+		if( a.size() != b.size() ){
+
+			//????
+			return {} ;
+		}else{
+			std::vector< util::idAndName > s ;
+
+			for( int i = 0 ; i < a.size() ; i++ ){
+
+				s.emplace_back( util::idAndName{ a[ i ],b[ i ] } ) ;
+			}
+
+			return s ;
+		}
 	}
 	template< typename Signal,typename Slot,typename QObj,typename SignalSource >
 	void connect( Signal s,Slot l,QObj obj,SignalSource ac )

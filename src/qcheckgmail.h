@@ -111,7 +111,7 @@ private:
 	void getLabels( const QString& accessToken,addaccount::GmailAccountInfo ) ;
 
 	void setTrayIconToVisible( bool ) ;
-	void showToolTip( const QString&,const QString&,const QString& ) ;
+	void showToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
 	void showPausedIcon( bool ) ;
 	void wrongAccountNameOrPassword() ;
 	void setUpEmailNotifications() ;
@@ -135,10 +135,12 @@ private:
 			m_errorString( std::move( s ) ),
 			m_state( qCheckGMail::networkStatus::state::networkError )
 		{
+			m_errorString.insert( 0,": " ) ;
 		}
 		networkStatus( const char * s ) : m_errorString( s ),
 			m_state( qCheckGMail::networkStatus::state::networkError )
 		{
+			m_errorString.insert( 0,": " ) ;
 		}
 		networkStatus( qCheckGMail::networkStatus::state s ) : m_state( s )
 		{
@@ -146,6 +148,7 @@ private:
 		networkStatus( qCheckGMail::networkStatus::state s,QString m ) :
 			m_errorString( std::move( m ) ),m_state( s )
 		{
+			m_errorString.insert( 0,": " ) ;
 		}
 		bool success()
 		{

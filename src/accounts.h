@@ -26,21 +26,17 @@
 class accountLabel
 {
 public:
-	accountLabel( const QString& accountLabel = QString(),int accountEmailCount = -1 ) ;
+	accountLabel()
+	{
+	}
+	accountLabel( const QString& accountLabel,
+		      const QString& accountLabelUi ) ;
 
-	const QString& labelUrl()     const  ;
-	const QString& labelName()    const  ;
-	const QString& lastModified() const  ;
-
-	int emailCount() const  ;
-
-	void setLastModifiedTime( const QString& ) ;
-	void setEmailCount( int ) ;
+	const QString& labelUrl() const  ;
+	const QString& labelUiName() const  ;
 private:
-	int m_emailCount ;
 	QString m_labelUrl ;
 	QString m_labelName ;
-	QString m_lastModifiedTime ;
 };
 
 class accounts
@@ -59,17 +55,15 @@ public:
 	const accounts::entry& data() const ;
 	const QString& refreshToken() const ;
 	const QString& accountName() const ;
-	const QString& passWord()	 const ;
 	const QString& defaultLabelUrl() const ;
 	const QString& labels() const ;
 	const QString& labelUrlAt( int ) const ;
+	const QString& nameUiAt( int ) const ;
 	const QString& accessToken() const ;
 
-	int   numberOfLabels() const ;
+	int numberOfLabels() const ;
 
 	void setAccessToken( const QString& ) const ;
-
-	accountLabel& getAccountLabel( int ) ;
 private:
 	mutable QString m_accessToken ;
 	accounts::entry m_entry ;
