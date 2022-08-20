@@ -337,18 +337,11 @@ QString qCheckGMail::displayName( const QString& label )
 
 		const auto& m = account.nameUiAt( m_currentLabel ) ;
 
-		std::cout << "ssss: " + m << std::endl ;
-
-		if( m.isEmpty() ){
+		if( m.isEmpty() || m == "INBOX" ){
 
 			return accountName ;
 		}else{
-			if( m == "INBOX" ){
-
-				return accountName ;
-			}else{
-				return QString( "%1/%2" ).arg( accountName,m ) ;
-			}
+			return QString( "%1/%2" ).arg( accountName,m ) ;
 		}
 
 	}else if( label == "INBOX" ){
