@@ -9,24 +9,24 @@
         <translation>Δημιουργία νέου λογαριασμού</translation>
     </message>
     <message>
+        <location filename="../src/addaccount.ui" line="49"/>
+        <source>Labels(Optional And Comma Separated)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/addaccount.ui" line="81"/>
         <source>Account Name</source>
         <translation>Όνομα λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="67"/>
+        <location filename="../src/addaccount.ui" line="35"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation>Μπορείτε να προσθέσετε λογαριασμούς gmail χωρίς την κατάληξη &quot;@gmail.com&quot;.
 Λογαριασμοί από hosted domain πρέπει να προστεθούν με κατάληξη &quot;ABC.XYZ&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="35"/>
-        <source>Label(s)(Optional)</source>
-        <translation>Ετικέτα(ες)(προαιρετικό)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="54"/>
+        <location filename="../src/addaccount.ui" line="68"/>
         <source>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</source>
         <translation>Μπορείτε να εισάγετε πολλαπλές ετικέτες χωρίζοντάς τες με κόμμα(,)</translation>
     </message>
@@ -129,7 +129,7 @@ ERROR: minimum time interval is 1 minute
     <name>qCheckGMail</name>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="187"/>
-        <location filename="../src/qcheckgmail.cpp" line="1026"/>
+        <location filename="../src/qcheckgmail.cpp" line="1036"/>
         <source>Status</source>
         <translation>Κατάσταση</translation>
     </message>
@@ -169,65 +169,70 @@ ERROR: minimum time interval is 1 minute
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="661"/>
+        <location filename="../src/qcheckgmail.cpp" line="667"/>
         <source>Network Problem Detected</source>
         <translation>Ανιχνεύθηκε πρόβλημα δικτύου</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="371"/>
+        <location filename="../src/qcheckgmail.cpp" line="382"/>
         <source>%1 Account Has Wrong Username/Password Combination</source>
         <translation>%1 λογαριασμός έχει λανθασμένο συνδυασμό χρήστη/κωδικού πρόσβασης</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="374"/>
-        <location filename="../src/qcheckgmail.cpp" line="1082"/>
+        <location filename="../src/qcheckgmail.cpp" line="385"/>
+        <location filename="../src/qcheckgmail.cpp" line="1092"/>
         <source>Account Related Error Was Detected</source>
         <translation>Ανιχνεύθηκε σφάλμα λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="520"/>
+        <location filename="../src/qcheckgmail.cpp" line="535"/>
         <source>Found 1 New Email</source>
         <translation>Βρέθηκε 1 νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="523"/>
+        <location filename="../src/qcheckgmail.cpp" line="538"/>
         <source>Found %1 New Emails</source>
         <translation>Βρέθηκαν %1 νέα μηνύματα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="530"/>
+        <location filename="../src/qcheckgmail.cpp" line="545"/>
         <source>No New Email Found</source>
         <translation>Δεν βρέθηκε νέο μήνυμα</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="662"/>
+        <location filename="../src/qcheckgmail.cpp" line="668"/>
         <source>Email Checking Is Taking Longer Than Expected.</source>
         <translation>Ο έλεγχος για μηνύματα διαρκεί περισσότερο από το κανονικό.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="663"/>
+        <location filename="../src/qcheckgmail.cpp" line="669"/>
         <source>Recommending Restarting qCheckGMail If The Problem Persists</source>
         <translation>Συστήνεται επανεκκίνηση το qCheckGMail αν το πρόβλημα παραμένει</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="688"/>
+        <location filename="../src/qcheckgmail.cpp" line="694"/>
+        <source>Checking For Email Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="698"/>
         <source>Dont Have Credentials,(Re)Trying To Open Wallet</source>
         <translation>Δεν έχετε προνόμια, νέα προσπάθεια για άνοιγμα του πορτοφολιού</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1083"/>
+        <location filename="../src/qcheckgmail.cpp" line="1093"/>
         <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>Δεν έχει ρυθμιστεί κανένας λογαριασμός στο πορτοφόλι</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1189"/>
-        <location filename="../src/qcheckgmail.cpp" line="1205"/>
+        <location filename="../src/qcheckgmail.cpp" line="1199"/>
+        <location filename="../src/qcheckgmail.cpp" line="1215"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Το πρόγραμμα εκτελείται ήδη, έξοδος</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1224"/>
-        <location filename="../src/qcheckgmail.cpp" line="1240"/>
+        <location filename="../src/qcheckgmail.cpp" line="1234"/>
+        <location filename="../src/qcheckgmail.cpp" line="1250"/>
         <source>Autostart Disabled,Exiting This One</source>
         <translation>Η αυτόματη εκκίνηση έχει απενεργοποιηθεί, έξοδος</translation>
     </message>

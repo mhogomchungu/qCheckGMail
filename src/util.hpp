@@ -119,7 +119,7 @@ namespace util
 			auto id   = obj.value( "id" ).toString() ;
 			auto name = obj.value( "name" ).toString() ;
 
-			s.emplace_back( util::idAndName{ id,name } ) ;
+			s.emplace_back( util::idAndName{ std::move( id ),std::move( name ) } ) ;
 		}
 
 		return s ;

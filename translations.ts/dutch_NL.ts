@@ -9,24 +9,24 @@
         <translation>Nieuw account aanmaken</translation>
     </message>
     <message>
+        <location filename="../src/addaccount.ui" line="49"/>
+        <source>Labels(Optional And Comma Separated)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/addaccount.ui" line="81"/>
         <source>Account Name</source>
         <translation>Accountnaam</translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="67"/>
+        <location filename="../src/addaccount.ui" line="35"/>
         <source>Normal gmail accounts can be added without the &quot;@gmail.com&quot; part.
 Hosted domain addresses must be added with the &quot;@ABC.XYZ&quot; part.</source>
         <translation>Normale gmail accounts kunnen zonder &quot;@gmail.com&quot; toegevoegd worden.
 Hosted domain adressen dienen met &quot;@ABC.XYZ&quot; toegevoegd te worden. </translation>
     </message>
     <message>
-        <location filename="../src/addaccount.ui" line="35"/>
-        <source>Label(s)(Optional)</source>
-        <translation>Label(s) (optioneel)</translation>
-    </message>
-    <message>
-        <location filename="../src/addaccount.ui" line="54"/>
+        <location filename="../src/addaccount.ui" line="68"/>
         <source>Multiple Labels Can Be Entered By Separating Them With A Comma(,)</source>
         <translation>Meerder labels, door komma (,) gescheiden, kunnen ingevoerd worden</translation>
     </message>
@@ -127,7 +127,7 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
     <name>qCheckGMail</name>
     <message>
         <location filename="../src/qcheckgmail.cpp" line="187"/>
-        <location filename="../src/qcheckgmail.cpp" line="1026"/>
+        <location filename="../src/qcheckgmail.cpp" line="1036"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
@@ -167,65 +167,70 @@ FOUT: minimum tijdinterval is 1 minuut</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="661"/>
+        <location filename="../src/qcheckgmail.cpp" line="667"/>
         <source>Network Problem Detected</source>
         <translation>Netwerkprobleem gedetecteerd</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="371"/>
+        <location filename="../src/qcheckgmail.cpp" line="382"/>
         <source>%1 Account Has Wrong Username/Password Combination</source>
         <translation>%1 account heeft ongeldige combinatie gebruikersnaam/wachtwoord</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="374"/>
-        <location filename="../src/qcheckgmail.cpp" line="1082"/>
+        <location filename="../src/qcheckgmail.cpp" line="385"/>
+        <location filename="../src/qcheckgmail.cpp" line="1092"/>
         <source>Account Related Error Was Detected</source>
         <translation>Probleem met het account gedetecteerd</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="520"/>
+        <location filename="../src/qcheckgmail.cpp" line="535"/>
         <source>Found 1 New Email</source>
         <translation>1 email gevonden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="523"/>
+        <location filename="../src/qcheckgmail.cpp" line="538"/>
         <source>Found %1 New Emails</source>
         <translation>%1 nieuwe emails gevonden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="530"/>
+        <location filename="../src/qcheckgmail.cpp" line="545"/>
         <source>No New Email Found</source>
         <translation>Geen nieuwe emails gevonden</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="662"/>
+        <location filename="../src/qcheckgmail.cpp" line="668"/>
         <source>Email Checking Is Taking Longer Than Expected.</source>
         <translation>Kontrole email duurt langer dan verwacht.</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="663"/>
+        <location filename="../src/qcheckgmail.cpp" line="669"/>
         <source>Recommending Restarting qCheckGMail If The Problem Persists</source>
         <translation>Herstarten van qCheckGMail wordt aanbevolen indien probleem blijft bestaan</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="688"/>
+        <location filename="../src/qcheckgmail.cpp" line="694"/>
+        <source>Checking For Email Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="698"/>
         <source>Dont Have Credentials,(Re)Trying To Open Wallet</source>
         <translation>Er is geen toestemming, (opnieuw) proberen portefeuille te openen</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1083"/>
+        <location filename="../src/qcheckgmail.cpp" line="1093"/>
         <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>Er is blijkbaar geen account in de portefeuille ingesteld</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1189"/>
-        <location filename="../src/qcheckgmail.cpp" line="1205"/>
+        <location filename="../src/qcheckgmail.cpp" line="1199"/>
+        <location filename="../src/qcheckgmail.cpp" line="1215"/>
         <source>another instance is already running,exiting this one</source>
         <translation>Een ander exemplaar is reeds actief, deze wordt afgesloten</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1224"/>
-        <location filename="../src/qcheckgmail.cpp" line="1240"/>
+        <location filename="../src/qcheckgmail.cpp" line="1234"/>
+        <location filename="../src/qcheckgmail.cpp" line="1250"/>
         <source>Autostart Disabled,Exiting This One</source>
         <translation>Automatisch starten is uitgeschakeld, deze wordt afgesloten</translation>
     </message>
