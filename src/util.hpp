@@ -30,6 +30,7 @@
 #include <QByteArray>
 #include <QObject>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
@@ -82,7 +83,7 @@ namespace util
 	{
 		auto autoaccLabelOrgList = util::split( userLabels ) ;
 
-		QStringList labelIds ;
+		QJsonArray arr ;
 
 		for( const auto& it : autoaccLabelOrgList ){
 
@@ -90,29 +91,17 @@ namespace util
 
 				if( it == xt.name ){
 
-					labelIds.append( xt.id ) ;
+					QJsonObject obj ;
+
+					obj.insert( "id",xt.id ) ;
+					obj.insert( "name",it ) ;
+
+					arr.append( obj ) ;
 				}
 			}
 		}
 
-		QJsonObject obj ;
-
-		obj.insert( "ids",labelIds.join( "," ) ) ;
-		obj.insert( "names",userLabels ) ;
-
-		return QJsonDocument( obj ).toJson( QJsonDocument::Compact ) ;
-	}
-	static inline QString namesFromJson( const QString& e )
-	{
-		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
-
-		return m.find( "names" )->toString() ;
-	}
-	static inline QString idsFromJson( const QString& e )
-	{
-		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
-
-		return m.find( "ids" )->toString() ;
+		return QJsonDocument( arr ).toJson( QJsonDocument::JsonFormat::Compact ) ;
 	}
 	struct idAndName
 	{
@@ -121,21 +110,39 @@ namespace util
 	} ;
 	static inline std::vector< util::idAndName > idsAndNamesFromJson( const QString& e )
 	{
-		auto m = QJsonDocument::fromJson( e.toUtf8() ).object() ;
+		std::vector< util::idAndName > s ;
 
-		auto a = util::split( m.find( "ids" )->toString(),',' ) ;
-		auto b = util::split( m.find( "names" )->toString(),',' ) ;
+		for( const auto& it : QJsonDocument::fromJson( e.toUtf8() ).array() ){
 
-		if( a.size() != b.size() ){
+			auto obj = it.toObject() ;
 
-			//????
+			auto id   = obj.value( "id" ).toString() ;
+			auto name = obj.value( "name" ).toString() ;
+
+			s.emplace_back( util::idAndName{ id,name } ) ;
+		}
+
+		return s ;
+	}
+	static inline QString namesFromJson( const QString& e )
+	{
+		auto m = util::idsAndNamesFromJson( e ) ;
+
+		auto it = m.begin() ;
+
+		if( it == m.end() ){
+
 			return {} ;
 		}else{
-			std::vector< util::idAndName > s ;
+			auto s = it->name ;
 
-			for( int i = 0 ; i < a.size() ; i++ ){
+			it++ ;
 
-				s.emplace_back( util::idAndName{ a[ i ],b[ i ] } ) ;
+			while( it != m.end() ){
+
+				s += "," + it->name ;
+
+				it++ ;
 			}
 
 			return s ;
