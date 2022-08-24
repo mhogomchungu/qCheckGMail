@@ -677,7 +677,7 @@ void qCheckGMail::failedToCheckForNewEmail()
 /*
  * This should be the only function that initiate email checking
  */
-void qCheckGMail::checkMail( bool )
+void qCheckGMail::checkMail()
 {
 	if( m_numberOfAccounts > 0 ){
 
@@ -698,6 +698,11 @@ void qCheckGMail::checkMail( bool )
 		std::cout << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) << std::endl ;
 		this->getAccountsInfo() ;
 	}
+}
+
+void qCheckGMail::checkMail( bool )
+{
+	this->checkMail() ;
 }
 
 void qCheckGMail::checkMail( int counter,const accounts& acc )

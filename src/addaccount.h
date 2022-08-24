@@ -152,7 +152,7 @@ public:
 
 	static addaccount& instance( QDialog * parent,
 				     settings& s,
-				     accounts::entry e,
+				     const accounts::entry& e,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions r,
 				     addaccount::GMailInfo& n )
@@ -171,7 +171,7 @@ public:
 
 	addaccount( QDialog *,
 		    settings&,
-		    accounts::entry,
+		    const accounts::entry&,
 		    gmailauthorization::getAuth&,
 		    addaccount::Actions,
 		    addaccount::GMailInfo& ) ;
@@ -193,7 +193,6 @@ private:
 	void closeEvent( QCloseEvent * ) override ;
 	Ui::addaccount * m_ui ;
 	bool m_edit ;
-	accounts::entry m_entry ;
 	QString m_key ;
 	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;

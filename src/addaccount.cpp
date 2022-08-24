@@ -87,13 +87,12 @@ addaccount::addaccount( QDialog * parent,
 
 addaccount::addaccount( QDialog * parent,
 			settings& m,
-			accounts::entry e,
+			const accounts::entry& e,
 			gmailauthorization::getAuth& k,
 			addaccount::Actions s,
 			addaccount::GMailInfo& n ) :
 	QDialog( parent ),
 	m_ui( new Ui::addaccount ),
-	m_entry( std::move( e ) ),
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
 	m_gmailAccountInfo( n ),
@@ -105,8 +104,8 @@ addaccount::addaccount( QDialog * parent,
 
 	m_edit = true ;
 
-	m_ui->lineEditName->setText( m_entry.accName ) ;
-	m_ui->lineEditLabel->setText( util::namesFromJson( m_entry.accLabels ) ) ;
+	m_ui->lineEditName->setText( e.accName ) ;
+	m_ui->lineEditLabel->setText( util::namesFromJson( e.accLabels ) ) ;
 
 	m_ui->lineEditName->setToolTip( QString() ) ;
 
@@ -166,10 +165,7 @@ void addaccount::add()
 {
 	if( m_edit ){
 
-		m_entry.accName = m_ui->lineEditName->text() ;
-		m_entry.accLabels = m_ui->lineEditLabel->text() ;
-
-		m_actions.edit( std::move( m_entry ) ) ;
+		m_actions.edit( { m_ui->lineEditName->text(),m_ui->lineEditLabel->text(),{} } ) ;
 
 		this->HideUI() ;
 	}else{

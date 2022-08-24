@@ -119,7 +119,8 @@ private:
 	void walletNotOPenedError() ;
 	void checkMail( int,const accounts& acc,const QString& label ) ;
 	void checkMail( int,const accounts& acc ) ;
-	void checkMail( bool = false ) ;
+	void checkMail() ;
+	void checkMail( bool ) ;
 	void openMail( const accounts& acc ) ;
 	void openMail() ;
 	void changeIcon( const QString& icon ) ;

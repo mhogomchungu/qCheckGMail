@@ -160,7 +160,7 @@ void walletmanager::buildGUI()
 
 void walletmanager::ShowUI()
 {
-	m_action = walletmanager::showAccountInfo ;
+	m_action = walletmanager::accountOperation::showAccountInfo ;
 	m_wallet = m_settings.secureStorageSystem() ;
 	m_wallet->setImage( QIcon( m_icon ) ) ;
 
@@ -169,7 +169,7 @@ void walletmanager::ShowUI()
 
 void walletmanager::getAccounts( void )
 {
-	m_action = walletmanager::getAccountInfo ;
+	m_action = walletmanager::accountOperation::getAccountInfo ;
 	m_wallet = m_settings.secureStorageSystem() ;
 
 	this->openWallet() ;
@@ -237,7 +237,7 @@ void walletmanager::openWallet()
 
 			switch( m_action ){
 
-			case walletmanager::showAccountInfo :
+			case walletmanager::accountOperation::showAccountInfo :
 
 				this->buildGUI() ;
 				this->disableAll() ;
@@ -254,7 +254,7 @@ void walletmanager::openWallet()
 				this->enableAll() ;
 
 				break ;
-			case walletmanager::getAccountInfo :
+			case walletmanager::accountOperation::getAccountInfo :
 
 				this->readAccountInfo() ;
 
@@ -350,26 +350,25 @@ void walletmanager::editAccount( accounts::entry&& e,addaccount::labels&& l,int 
 {
 	if( !l.entries.isEmpty() && row < m_accounts.size() ){
 
-		auto labels = e.accLabels ;
-		auto accName = e.accName ;
-
 		e.accLabels = util::labelsToJson( e.accLabels,l.entries ) ;
 
 		m_accounts[ row ] = std::move( e ) ;
 
 		const auto& s = m_accounts[ row ].data() ;
 
-		Task::run( [ this,&s,l = std::move( l ) ](){
+		Task::run( [ this,&s ](){
 
 			account::replace( m_wallet.get(),s ) ;
 
-		} ).then( [ this,row,labels,accName ](){
+		} ).then( [ this,row,&s ](){
 
-			m_table->item( row,0 )->setText( accName ) ;
-			m_table->item( row,1 )->setText( labels ) ;
+			m_table->item( row,0 )->setText( s.accName ) ;
+			m_table->item( row,1 )->setText( s.accLabels ) ;
 
 			this->enableAll() ;
 		} ) ;
+	}else{
+		this->enableAll() ;
 	}
 }
 

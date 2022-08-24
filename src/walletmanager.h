@@ -51,10 +51,10 @@ class walletmanager;
 class walletmanager : public QDialog
 {
 	Q_OBJECT
-	typedef enum{
+	enum class accountOperation {
 		getAccountInfo,
-		showAccountInfo,
-	}accountOperation ;
+		showAccountInfo
+	} ;
 public:
 	struct wallet
 	{
