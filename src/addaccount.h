@@ -120,7 +120,7 @@ public:
 		virtual void results( accounts::entry&& )
 		{
 		}
-		virtual void edit( accounts::entry )
+		virtual void edit( const QString&,const QString& )
 		{
 		}
 		virtual ~actions() ;
@@ -142,9 +142,9 @@ public:
 		{
 			m_handle->results( std::move( e ) ) ;
 		}
-		void edit( accounts::entry e )
+		void edit( const QString& accName,const QString& labels )
 		{
-			m_handle->edit( std::move( e ) ) ;
+			m_handle->edit( accName,labels ) ;
 		}
 	private:
 		std::unique_ptr< addaccount::actions > m_handle ;

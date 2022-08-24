@@ -446,9 +446,7 @@ void qCheckGMail::reportOnAllAccounts( int counter,const QByteArray& msg,qCheckG
 
 			m_errorOccured = true ;
 
-			qCheckGMail::networkStatus m( "Internal Error" ) ;
-
-			_account_status( m_accountsStatus,this->displayName(),m.errorString() ) ;
+			_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
 		}else{
 			if( m_badAccessToken ){
 

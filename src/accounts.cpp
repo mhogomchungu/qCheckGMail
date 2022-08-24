@@ -37,6 +37,11 @@ accounts::accounts( const accounts::entry& e ) : m_entry( e )
 
 		auto m = util::idsAndNamesFromJson( m_entry.accLabels ) ;
 
+		std::sort( m.begin(),m.end(),[]( const util::idAndName& l,const util::idAndName& r ){
+
+			return l.name.length() < r.name.length() ;
+		} ) ;
+
 		for( const auto& it : m ){
 
 			m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
@@ -67,6 +72,12 @@ const QString& accounts::defaultLabelUrl() const
 int accounts::numberOfLabels() const
 {
 	return m_labelUrls.size() ;
+}
+
+void accounts::updateAccountInfo( const QString& accName,const QString& labels )
+{
+	m_entry.accName = accName ;
+	m_entry.accLabels = labels ;
 }
 
 void accounts::setAccessToken( const QString& e ) const

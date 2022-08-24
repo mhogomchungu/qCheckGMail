@@ -131,7 +131,7 @@ private:
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;
 	void enableAll() ;
 	void pushButtonAdd( accounts::entry&& ) ;
-	void editAccount( accounts::entry&&,addaccount::labels&&,int row ) ;
+	void editAccount( const QString& accName,const QString& labels,addaccount::labels&&,int row ) ;
 	void editAccount( int row,addaccount::labels&& ) ;
 	void openWallet() ;
 	const accounts& addEntry( const accounts& ) ;

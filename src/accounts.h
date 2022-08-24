@@ -47,12 +47,13 @@ public:
 		QString accName ;
 		QString accLabels ;
 		QString accRefreshToken ;
-	};
+	} ;
 
 	accounts( const accounts::entry& ) ;
 	accounts() ;
 
 	const accounts::entry& data() const ;
+
 	const QString& refreshToken() const ;
 	const QString& accountName() const ;
 	const QString& defaultLabelUrl() const ;
@@ -63,6 +64,7 @@ public:
 
 	int numberOfLabels() const ;
 
+	void updateAccountInfo( const QString& accName,const QString& labels ) ;
 	void setAccessToken( const QString& ) const ;
 private:
 	mutable QString m_accessToken ;

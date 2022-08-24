@@ -165,7 +165,7 @@ void addaccount::add()
 {
 	if( m_edit ){
 
-		m_actions.edit( { m_ui->lineEditName->text(),m_ui->lineEditLabel->text(),{} } ) ;
+		m_actions.edit( m_ui->lineEditName->text(),m_ui->lineEditLabel->text() ) ;
 
 		this->HideUI() ;
 	}else{

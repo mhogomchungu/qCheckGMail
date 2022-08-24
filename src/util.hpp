@@ -101,7 +101,12 @@ namespace util
 			}
 		}
 
-		return QJsonDocument( arr ).toJson( QJsonDocument::JsonFormat::Compact ) ;
+		if( arr.isEmpty() ){
+
+			return {} ;
+		}else{
+			return QJsonDocument( arr ).toJson( QJsonDocument::JsonFormat::Compact ) ;
+		}
 	}
 	struct idAndName
 	{

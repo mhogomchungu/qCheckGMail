@@ -346,24 +346,20 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 	} ) ;
 }
 
-void walletmanager::editAccount( accounts::entry&& e,addaccount::labels&& l,int row )
+void walletmanager::editAccount( const QString& accName,const QString& labels,addaccount::labels&& l,int row )
 {
 	if( !l.entries.isEmpty() && row < m_accounts.size() ){
 
-		e.accLabels = util::labelsToJson( e.accLabels,l.entries ) ;
+		m_accounts[ row ].updateAccountInfo( accName,util::labelsToJson( labels,l.entries ) ) ;
 
-		m_accounts[ row ] = std::move( e ) ;
+		Task::run( [ this,row ](){
 
-		const auto& s = m_accounts[ row ].data() ;
+			account::replace( m_wallet.get(),m_accounts[ row ].data() ) ;
 
-		Task::run( [ this,&s ](){
+		} ).then( [ this,row,accName,labels ](){
 
-			account::replace( m_wallet.get(),s ) ;
-
-		} ).then( [ this,row,&s ](){
-
-			m_table->item( row,0 )->setText( s.accName ) ;
-			m_table->item( row,1 )->setText( s.accLabels ) ;
+			m_table->item( row,0 )->setText( accName ) ;
+			m_table->item( row,1 )->setText( labels ) ;
 
 			this->enableAll() ;
 		} ) ;
@@ -385,9 +381,9 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 		{
 			m_parent->enableAll() ;
 		}
-		void edit( accounts::entry e ) override
+		void edit( const QString& accName,const QString& labels ) override
 		{
-			m_parent->editAccount( std::move( e ),std::move( m_labels ),m_row ) ;
+			m_parent->editAccount( accName,labels,std::move( m_labels ),m_row ) ;
 		}
 	private:
 		walletmanager * m_parent ;
