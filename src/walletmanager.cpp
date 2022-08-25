@@ -350,11 +350,16 @@ void walletmanager::editAccount( const QString& accName,const QString& labels,ad
 {
 	if( !l.entries.isEmpty() && row < m_accounts.size() ){
 
+		auto currentAccName = m_accounts[ row ].accountName() ;
+
 		m_accounts[ row ].updateAccountInfo( accName,util::labelsToJson( labels,l.entries ) ) ;
 
-		Task::run( [ this,row ](){
+		Task::run( [ this,row,currentAccName ](){
 
-			account::replace( m_wallet.get(),m_accounts[ row ].data() ) ;
+			auto w = m_wallet.get() ;
+
+			account::remove( currentAccName,w ) ;
+			account::add( w,m_accounts[ row ].data() ) ;
 
 		} ).then( [ this,row,accName,labels ](){
 

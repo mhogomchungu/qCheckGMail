@@ -67,6 +67,7 @@ public:
 	void updateAccountInfo( const QString& accName,const QString& labels ) ;
 	void setAccessToken( const QString& ) const ;
 private:
+	void updateLabels() ;
 	mutable QString m_accessToken ;
 	accounts::entry m_entry ;
 	QVector< accountLabel > m_labelUrls ;

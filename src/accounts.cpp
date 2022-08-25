@@ -29,24 +29,7 @@ accounts::accounts()
 
 accounts::accounts( const accounts::entry& e ) : m_entry( e )
 {
-	QString baseLabel = "https://gmail.googleapis.com/gmail/v1/users/me/labels/" ;
-
-	m_labelUrls.append( { baseLabel + "INBOX","INBOX" } ) ;
-
-	if( !m_entry.accLabels.isEmpty() ){
-
-		auto m = util::idsAndNamesFromJson( m_entry.accLabels ) ;
-
-		std::sort( m.begin(),m.end(),[]( const util::idAndName& l,const util::idAndName& r ){
-
-			return l.name.length() < r.name.length() ;
-		} ) ;
-
-		for( const auto& it : m ){
-
-			m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
-		}
-	}
+	this->updateLabels() ;
 }
 
 const accounts::entry& accounts::data() const
@@ -78,11 +61,36 @@ void accounts::updateAccountInfo( const QString& accName,const QString& labels )
 {
 	m_entry.accName = accName ;
 	m_entry.accLabels = labels ;
+	this->updateLabels() ;
 }
 
 void accounts::setAccessToken( const QString& e ) const
 {
 	m_accessToken = e ;
+}
+
+void accounts::updateLabels()
+{
+	m_labelUrls.clear() ;
+
+	QString baseLabel = "https://gmail.googleapis.com/gmail/v1/users/me/labels/" ;
+
+	m_labelUrls.append( { baseLabel + "INBOX","INBOX" } ) ;
+
+	if( !m_entry.accLabels.isEmpty() ){
+
+		auto m = util::idsAndNamesFromJson( m_entry.accLabels ) ;
+
+		std::sort( m.begin(),m.end(),[]( const util::idAndName& l,const util::idAndName& r ){
+
+			return l.name.length() < r.name.length() ;
+		} ) ;
+
+		for( const auto& it : m ){
+
+			m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
+		}
+	}
 }
 
 const QString& accounts::refreshToken() const
