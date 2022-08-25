@@ -21,8 +21,6 @@
 #include "walletmanager.h"
 #include "ui_walletmanager.h"
 
-#include "task.hpp"
-
 #include <utility>
 
 #include <QJsonDocument>
@@ -57,7 +55,7 @@ public:
 
 	static void readAll( LXQt::Wallet::Wallet * w,QVector< accounts >& acc )
 	{
-		auto m = Task::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
+		auto m = util::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
 
 		QJsonParseError err ;
 
@@ -333,11 +331,11 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 {
 	m_accEntry = std::move( e ) ;
 
-	Task::run( [ this ](){
+	util::runInBgThread( [ this ](){
 
 		account::add( m_wallet.get(),m_accEntry ) ;
 
-	} ).then( [ this ](){
+	},[ this ](){
 
 		m_accounts.append( this->addEntry( m_accEntry ) ) ;
 
@@ -354,14 +352,14 @@ void walletmanager::editAccount( const QString& accName,const QString& labels,ad
 
 		m_accounts[ row ].updateAccountInfo( accName,util::labelsToJson( labels,l.entries ) ) ;
 
-		Task::run( [ this,row,currentAccName ](){
+		util::runInBgThread( [ this,row,currentAccName ](){
 
 			auto w = m_wallet.get() ;
 
 			account::remove( currentAccName,w ) ;
 			account::add( w,m_accounts[ row ].data() ) ;
 
-		} ).then( [ this,row,accName,labels ](){
+		},[ this,row,accName,labels ](){
 
 			m_table->item( row,0 )->setText( accName ) ;
 			m_table->item( row,1 )->setText( labels ) ;
@@ -505,11 +503,11 @@ void walletmanager::deleteAccount( bool )
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-			Task::run( [ & ](){
+			util::runInBgThread( [ & ](){
 
 				account::remove( accName,m_wallet.get() ) ;
 
-			} ).then( [ this ](){
+			},[ this ](){
 
 				m_accounts.remove( m_row ) ;
 				m_table->removeRow( m_row ) ;

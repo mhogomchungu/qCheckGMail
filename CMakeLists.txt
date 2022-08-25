@@ -77,22 +77,6 @@ endif()
 
 include_directories( ${CMAKE_BINARY_DIR} )
 
-if( MCHUNGU_TASK_FOUND )
-
-	message( STATUS "---------------------------------------------------------------------------" )
-	message( STATUS "mhogomchungu_task library will be provided by an external library" )
-	message( STATUS "---------------------------------------------------------------------------" )
-
-	include_directories( "${MCHUNGU_TASK_INCLUDEDIR}" )
-	link_directories( "${MCHUNGU_TASK_LIBDIR}" )
-else()
-	message( STATUS "---------------------------------------------------------------------------" )
-	message( STATUS "mhogomchungu_task library will be provided by an internal library" )
-	message( STATUS "---------------------------------------------------------------------------" )
-	include_directories( src/3rdParty/tasks )
-	ADD_SUBDIRECTORY( src/3rdParty/tasks )
-endif()
-
 add_definitions( -std=c++14 -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
@@ -206,7 +190,7 @@ if( KF5 )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons mhogomchungu_task )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
 else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
