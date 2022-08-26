@@ -2,7 +2,7 @@
 
 This is a Qt/C++ tray based application that monitors gmail accounts and display unread emails in each configured label.
 
-# Supported features:
+## Supported features
 
 1. Can be build as a KDE tray application(default) or a stand alone Qt tray application.
 2. Accounts credentials are stored securely either in libsecret, KWallet or in an internal storage system for those who do not want GNOME or KDE dependencies.
@@ -13,12 +13,12 @@ This is a Qt/C++ tray based application that monitors gmail accounts and display
 7. Ability to pause and un pause automatic email checking.
 8. Internationalization support(currently supports greek, spanish, french, dutch and german languages).
 
-# Screenshots
+## Screenshots
 
-![trayTooltip.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/main/images/trayTooltip.png)
+![trayTooltip.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/trayTooltip.png)
 
-![configureAccounts.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/main/images/configureAccounts.png)
+![configureAccounts.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/configureAccounts.png)
 
-![addAccount.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/main/images/addAccount.png)
+![addAccount.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/addAccount.png)
 
-![options.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/main/images/options.png)
+![options.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/options.png)
