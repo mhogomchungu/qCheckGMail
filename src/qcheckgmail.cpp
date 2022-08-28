@@ -30,7 +30,7 @@
 #include <QJsonArray>
 
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
-	m_manager( m_settings.checkForUpdatesInterval() ),
+	m_manager( m_settings.networkTimeOut() ),
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
@@ -144,6 +144,7 @@ void qCheckGMail::start()
 	m_interval	      = m_settings.checkForUpdatesInterval() ;
 	m_newEmailIcon	      = m_settings.newEmailIcon() ;
 	m_errorIcon	      = m_settings.errorIcon() ;
+	m_checkingMailIcon    = m_settings.checkingMailIcon() ;
 	m_noEmailIcon	      = m_settings.noEmailIcon() ;
 	m_pausedIcon          = m_settings.pausedIcon() ;
 	m_displayEmailCount   = m_settings.displayEmailCount() ;
@@ -687,9 +688,18 @@ void qCheckGMail::checkMail()
 		m_errorOccured    = false ;
 		m_counter++ ;
 
-		this->showToolTip( m_errorIcon,
-				   "...",
-				   tr( "Checking For Email Updates" ) ) ;
+		if( m_checkingMailIcon.isEmpty() ){
+
+			this->showToolTip( m_errorIcon,
+					   "...",
+					   tr( "Checking For Email Updates" ) ) ;
+		}else{
+			this->changeIcon( m_checkingMailIcon ) ;
+
+			this->showToolTip( m_checkingMailIcon,
+					   "...",
+					   tr( "Checking For Email Updates" ) ) ;
+		}
 
 		this->checkMail( m_counter,m_accounts.at( m_currentAccount ) ) ;
 	}else{
@@ -942,7 +952,7 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 			this->getLabels( e,std::move( ginfo ) ) ;
 		}else{
-			this->getLabels( {},std::move( ginfo ) ) ;
+			ginfo( reply.errorString() ) ;
 		}
 	} ) ;
 }
@@ -962,11 +972,6 @@ void qCheckGMail::getGMailAccountInfo( const QByteArray& accName,addaccount::Gma
 
 void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccountInfo ginfo )
 {
-	if( accessToken.isEmpty() ){
-
-		return ginfo( {} ) ;
-	}
-
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
@@ -991,7 +996,7 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 
 			ginfo( std::move( labels ) ) ;
 		}else{
-			ginfo( {} ) ;
+			ginfo( reply.errorString() ) ;
 		}
 	} ) ;
 }

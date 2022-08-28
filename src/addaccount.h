@@ -57,6 +57,9 @@ public:
 		virtual void operator()( addaccount::labels )
 		{
 		}
+		virtual void operator()( const QString& )
+		{
+		}
 		virtual ~gmailAccountInfo() ;
 	} ;
 
@@ -71,6 +74,10 @@ public:
 		void operator()( addaccount::labels e ) const
 		{
 			( *m_handle )( std::move( e ) ) ;
+		}
+		void operator()( const QString& e ) const
+		{
+			( *m_handle )( e ) ;
 		}
 	private:
 		std::shared_ptr< addaccount::gmailAccountInfo > m_handle ;

@@ -90,13 +90,13 @@
    <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="labelNetworkWarning">
      <property name="text">
-      <string>Please Wait While I Make A Network Request</string>
+      <string notr="true">Please Wait While I Make A Network Request</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
      <property name="wordWrap">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>

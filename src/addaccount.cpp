@@ -102,6 +102,8 @@ addaccount::addaccount( QDialog * parent,
 	//this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
+	m_ui->labelNetworkError->setVisible( false ) ;
+
 	m_edit = true ;
 
 	m_ui->lineEditName->setText( e.accName ) ;
@@ -140,6 +142,16 @@ void addaccount::getLabels( const QString& e )
 		void operator()( addaccount::labels s ) override
 		{
 			m_parent->m_labels = std::move( s ) ;
+			m_parent->show() ;
+		}
+		void operator()( const QString& e ) override
+		{
+			auto txt = tr( "Network Error: " ) + e ;
+
+			m_parent->m_ui->labelNetworkError->setText( txt ) ;
+
+			m_parent->m_ui->labelNetworkError->show() ;
+			m_parent->m_ui->pushButtonAdd->setEnabled( false ) ;
 			m_parent->show() ;
 		}
 	private:

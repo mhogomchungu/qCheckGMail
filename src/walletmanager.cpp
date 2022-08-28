@@ -25,6 +25,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTimer>
 
 class account
 {
@@ -127,7 +128,7 @@ void walletmanager::buildGUI()
 	m_ui = new Ui::walletmanager ;
 	m_ui->setupUi( this ) ;
 
-        m_ui->pushButtonAccountAdd->setMinimumHeight( 31 ) ;
+	m_ui->pushButtonAccountAdd->setMinimumHeight( 31 ) ;
         m_ui->pushButtonClose->setMaximumHeight( 31 ) ;
 
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
@@ -406,8 +407,6 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 
 void walletmanager::editEntryLabels()
 {
-	m_ui->labelNetworkWarning->setVisible( true ) ;
-
 	this->disableAll() ;
 	auto item = m_table->currentItem() ;
 	auto row = item->row() ;
@@ -416,19 +415,54 @@ void walletmanager::editEntryLabels()
 	class meaw : public addaccount::gmailAccountInfo
 	{
 	public:
-		meaw( walletmanager * w,int row ) : m_parent( w ),m_row( row )
+		meaw( walletmanager * w,int row,QString t ) : m_parent( w ),m_row( row ),m_txt( std::move( t ) )
 		{
+			auto label = m_parent->m_ui->labelNetworkWarning ;
+
+			label->setText( m_txt ) ;
+
+			label->setVisible( true ) ;
+
+			QObject::connect( &m_timer,&QTimer::timeout,[ this,label ](){
+
+				auto m = label->text() ;
+
+				if( m_counter % 4 == 0 ){
+
+					label->setText( m_txt ) ;
+				}else{
+					label->setText( m + " ..." ) ;
+				}
+
+				m_counter++ ;
+			} ) ;
+
+			m_timer.start( 1000 ) ;
 		}
 		void operator()( addaccount::labels l ) override
 		{
+			m_timer.stop() ;
 			m_parent->editAccount( m_row,std::move( l ) ) ;
+		}
+		void operator()( const QString& e ) override
+		{
+			m_timer.stop() ;
+
+			m_parent->m_ui->labelNetworkWarning->setText( tr( "Network Error: " ) + e ) ;
+
+			m_parent->enableAll() ;
 		}
 	private:
 		walletmanager * m_parent ;
 		int m_row ;
+		QTimer m_timer ;
+		QString m_txt ;
+		int m_counter = 1 ;
 	} ;
 
-	m_getAccountInfo( accName,{ util::type_identity< meaw >(),this,row } ) ;
+	auto txt = tr( "Getting Account's Label List" ) ;
+
+	m_getAccountInfo( accName,{ util::type_identity< meaw >(),this,row,std::move( txt ) } ) ;
 }
 
 void walletmanager::pushButtonAdd()

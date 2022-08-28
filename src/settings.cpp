@@ -237,6 +237,11 @@ QString settings::errorIcon()
 	return this->getSetting( "errorIconColor","qCheckGMail-hasError" ).toString() ;
 }
 
+QString settings::checkingMailIcon()
+{
+	return this->getSetting( "checkingMailIconColor","" ).toString() ;
+}
+
 QString settings::fontFamily()
 {
 	return this->getSetting( "displayEmailCountFontFamily","Helvetica" ).toString() ;
@@ -279,7 +284,7 @@ bool settings::displayEmailCount()
 
 int settings::networkTimeOut()
 {
-	return 60 * 1000 * this->getSetting( "networkTimeOutInMinutes",1 ).toInt();
+	return 1000 * this->getSetting( "networkTimeOutInSeconds",30 ).toInt();
 }
 
 void settings::setAudioNotify( bool audioNotify )

@@ -47,6 +47,7 @@ public:
 	QString pausedIcon() ;
 	QString newEmailIcon() ;
 	QString errorIcon() ;
+	QString checkingMailIcon() ;
 	QString fontFamily() ;
 	QString fontColor() ;
 	QString visibleIconState() ;
