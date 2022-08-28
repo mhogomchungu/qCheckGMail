@@ -45,6 +45,12 @@ addaccount::addaccount( QDialog * parent,
 	//this->setFixedSize( this->size() ) ;
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
+	this->setUpMenu() ;
+
+	m_ui->labelNetworkError->setVisible( false ) ;
+
+	m_ui->lineEditLabel->setText( "INBOX" ) ;
+
 	m_edit = false ;
 
 	connect( m_ui->pushButtonAdd,&QPushButton::clicked,this,&addaccount::add ) ;
@@ -107,7 +113,15 @@ addaccount::addaccount( QDialog * parent,
 	m_edit = true ;
 
 	m_ui->lineEditName->setText( e.accName ) ;
-	m_ui->lineEditLabel->setText( util::namesFromJson( e.accLabels ) ) ;
+
+	auto ss = util::namesFromJson( e.accLabels ) ;
+
+	if( ss.isEmpty() ){
+
+		m_ui->lineEditLabel->setText( "INBOX" ) ;
+	}else{
+		m_ui->lineEditLabel->setText( ss + ",INBOX" ) ;
+	}
 
 	m_ui->lineEditName->setToolTip( QString() ) ;
 
@@ -119,6 +133,10 @@ addaccount::addaccount( QDialog * parent,
 		m_ui->pushButtonAdd->setText( tr( "Edit" ) ) ;
 		this->setWindowTitle( tr( "Edit Account" ) ) ;
 	}
+
+	this->setUpMenu() ;
+
+	this->showLabelMenu( m_actions.labels() ) ;
 
 	this->show() ;
 }
@@ -141,25 +159,101 @@ void addaccount::getLabels( const QString& e )
 		}
 		void operator()( addaccount::labels s ) override
 		{
-			m_parent->m_labels = std::move( s ) ;
-			m_parent->show() ;
+			m_parent->showLabels( std::move( s ) ) ;
 		}
 		void operator()( const QString& e ) override
 		{
-			auto txt = tr( "Network Error: " ) + e ;
-
-			m_parent->m_ui->labelNetworkError->setText( txt ) ;
-
-			m_parent->m_ui->labelNetworkError->show() ;
-			m_parent->m_ui->pushButtonAdd->setEnabled( false ) ;
-			m_parent->show() ;
+			m_parent->showError( e ) ;
 		}
 	private:
 		addaccount * m_parent ;
 	};
 
 	m_gmailAccountInfo( e,{ util::type_identity< meaw >(),this } ) ;
+}
+
+void addaccount::showLabels( addaccount::labels&& s )
+{
+	m_actions.setLabels( std::move( s ) ) ;
+
+	this->showLabelMenu( m_actions.labels() ) ;
 	this->show() ;
+}
+
+void addaccount::showError( const QString& e )
+{
+	auto txt = tr( "Network Error: " ) + e ;
+
+	m_ui->labelNetworkError->setText( txt ) ;
+
+	m_ui->labelNetworkError->setVisible( true ) ;
+	m_ui->pushButtonAdd->setEnabled( false ) ;
+
+	this->show() ;
+}
+
+void addaccount::showLabelMenu( const addaccount::labels& e )
+{
+	auto m = util::split( m_ui->lineEditLabel->text() ) ;
+
+	auto _contains = [ & ]( const QString& e ){
+
+		for( const auto& it : m ){
+
+			if( it == e ){
+
+				return true ;
+			}
+		}
+
+		return false ;
+	} ;
+
+	for( const auto& it : e.entries ){
+
+		auto ac = m_menu.addAction( it.name ) ;
+
+		ac->setCheckable( true ) ;
+		ac->setObjectName( it.name ) ;
+
+		if( it.name == "INBOX" ){
+
+			ac->setChecked( true ) ;
+		}else{
+			ac->setChecked( _contains( it.name ) ) ;
+		}
+	}
+}
+
+void addaccount::setUpMenu()
+{
+	m_ui->lineEditLabel->setEnabled( false ) ;
+
+	connect( &m_menu,&QMenu::triggered,[ this ]( QAction * ac ){
+
+		auto s = util::split( m_ui->lineEditLabel->text() ) ;
+
+		auto m = ac->objectName() ;
+
+		if( m == "INBOX" ){
+
+			ac->setChecked( true ) ;
+		}else{
+			if( ac->isChecked() ){
+
+				if( !s.contains( m ) ){
+
+					s.append( m ) ;
+				}
+			}else{
+				s.removeAll( m ) ;
+			}
+		}
+
+		m_ui->lineEditLabel->setText( s.join( ',' ) ) ;
+	} ) ;
+
+	m_ui->pbLabelMenu->setMenu( &m_menu ) ;
 }
 
 addaccount::~addaccount()
@@ -175,9 +269,14 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
+	auto m = util::split( m_ui->lineEditLabel->text() ) ;
+	m.removeAll( "INBOX" ) ;
+
+	auto labels = m.join( "," ) ;
+
 	if( m_edit ){
 
-		m_actions.edit( m_ui->lineEditName->text(),m_ui->lineEditLabel->text() ) ;
+		m_actions.edit( m_ui->lineEditName->text(),labels ) ;
 
 		this->HideUI() ;
 	}else{
@@ -190,7 +289,7 @@ void addaccount::add()
 			msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 			msg.exec() ;
 		}else{
-			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),m_labels.entries ) ;
+			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),m_actions.labels().entries ) ;
 
 			m_actions.results( { accName,std::move( lbs ),m_key } ) ;
 

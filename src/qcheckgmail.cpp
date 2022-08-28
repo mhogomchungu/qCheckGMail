@@ -897,7 +897,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 				std::cerr << reply.errorString() << std::endl ;
 
-				std::cerr << error << std::endl ;
+				qDebug() << error ;
 			}
 		}
 
@@ -952,7 +952,12 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 			this->getLabels( e,std::move( ginfo ) ) ;
 		}else{
-			ginfo( reply.errorString() ) ;
+			if( reply.timeOut() ){
+
+				ginfo( "Network TimeOut" ) ;
+			}else{
+				ginfo( reply.errorString() ) ;
+			}
 		}
 	} ) ;
 }
@@ -996,7 +1001,12 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 
 			ginfo( std::move( labels ) ) ;
 		}else{
-			ginfo( reply.errorString() ) ;
+			if( reply.timeOut() ){
+
+				ginfo( "Network TimeOut" ) ;
+			}else{
+				ginfo( reply.errorString() ) ;
+			}
 		}
 	} ) ;
 }

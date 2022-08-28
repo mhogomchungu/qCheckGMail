@@ -389,11 +389,15 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 		{
 			m_parent->editAccount( accName,labels,std::move( m_labels ),m_row ) ;
 		}
+		const addaccount::labels& labels()
+		{
+			return m_labels ;
+		}
 	private:
 		walletmanager * m_parent ;
 		addaccount::labels m_labels ;
 		int m_row ;
-	};
+	} ;
 
 	m_ui->labelNetworkWarning->setVisible( false ) ;
 
@@ -475,6 +479,10 @@ void walletmanager::pushButtonAdd()
 		meaw( walletmanager * m ) : m_parent( m )
 		{
 		}
+		void setLabels( addaccount::labels&& l ) override
+		{
+			m_labels = std::move( l ) ;
+		}
 		void cancel() override
 		{
 			m_parent->enableAll() ;
@@ -483,9 +491,14 @@ void walletmanager::pushButtonAdd()
 		{
 			m_parent->pushButtonAdd( std::move( e ) ) ;
 		}
+		const addaccount::labels& labels()
+		{
+			return m_labels ;
+		}
 	private:
 		walletmanager * m_parent ;
-	};
+		addaccount::labels m_labels ;
+	} ;
 
 	addaccount::instance( this,m_settings,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAccountInfo ) ;
 }

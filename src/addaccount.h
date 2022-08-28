@@ -26,6 +26,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QDebug>
+#include <QMenu>
 
 #include "accounts.h"
 #include "gmailauthorization.h"
@@ -121,6 +122,9 @@ public:
 
 	struct actions
 	{
+		virtual void setLabels( addaccount::labels&& )
+		{
+		}
 		virtual void cancel()
 		{
 		}
@@ -130,6 +134,7 @@ public:
 		virtual void edit( const QString&,const QString& )
 		{
 		}
+		virtual const addaccount::labels& labels() = 0 ;
 		virtual ~actions() ;
 	} ;
 
@@ -152,6 +157,14 @@ public:
 		void edit( const QString& accName,const QString& labels )
 		{
 			m_handle->edit( accName,labels ) ;
+		}
+		const addaccount::labels& labels()
+		{
+			return m_handle->labels() ;
+		}
+		void setLabels( addaccount::labels&& s )
+		{
+			m_handle->setLabels( std::move( s ) ) ;
 		}
 	private:
 		std::unique_ptr< addaccount::actions > m_handle ;
@@ -191,12 +204,15 @@ public:
 
 	~addaccount() override ;
 private:	
+	void setUpMenu() ;
 	void add() ;
 	void cancel() ;
 	void HideUI() ;
 	void Show( const QString& ) ;
 	void getLabels( const QString& ) ;
-
+	void showLabels( addaccount::labels&& ) ;
+	void showError( const QString& ) ;
+	void showLabelMenu( const addaccount::labels& ) ;
 	void closeEvent( QCloseEvent * ) override ;
 	Ui::addaccount * m_ui ;
 	bool m_edit ;
@@ -204,8 +220,8 @@ private:
 	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;
 	addaccount::GMailInfo& m_gmailAccountInfo ;
-	addaccount::labels m_labels ;
 	settings& m_setting ;
+	QMenu m_menu ;
 };
 
 #endif // ADDACCOUNT_H
