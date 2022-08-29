@@ -114,14 +114,7 @@ addaccount::addaccount( QDialog * parent,
 
 	m_ui->lineEditName->setText( e.accName ) ;
 
-	auto ss = util::namesFromJson( e.accLabels ) ;
-
-	if( ss.isEmpty() ){
-
-		m_ui->lineEditLabel->setText( "INBOX" ) ;
-	}else{
-		m_ui->lineEditLabel->setText( ss + ",INBOX" ) ;
-	}
+	m_ui->lineEditLabel->setText( util::namesFromJson( e.accLabels ) ) ;
 
 	m_ui->lineEditName->setToolTip( QString() ) ;
 
@@ -269,14 +262,9 @@ void addaccount::closeEvent( QCloseEvent * e )
 
 void addaccount::add()
 {
-	auto m = util::split( m_ui->lineEditLabel->text() ) ;
-	m.removeAll( "INBOX" ) ;
-
-	auto labels = m.join( "," ) ;
-
 	if( m_edit ){
 
-		m_actions.edit( m_ui->lineEditName->text(),labels ) ;
+		m_actions.edit( m_ui->lineEditName->text(),m_ui->lineEditLabel->text() ) ;
 
 		this->HideUI() ;
 	}else{

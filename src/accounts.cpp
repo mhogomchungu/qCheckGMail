@@ -88,7 +88,10 @@ void accounts::updateLabels()
 
 		for( const auto& it : m ){
 
-			m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
+			if( it.name != "INBOX" ){
+
+				m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
+			}
 		}
 	}
 }
