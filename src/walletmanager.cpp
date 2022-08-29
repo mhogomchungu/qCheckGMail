@@ -80,11 +80,6 @@ public:
 				}
 			}
 		}
-
-		std::sort( acc.begin(),acc.end(),[]( const accounts& acc,const accounts& xcc ){
-
-			return acc.accountName().length() < xcc.accountName().length() ;
-		} ) ;
 	}
 private:
 	static const char * identifier()

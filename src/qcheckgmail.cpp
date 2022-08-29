@@ -1047,6 +1047,11 @@ void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 		}
 	}
 
+	std::sort( m_accounts.begin(),m_accounts.end(),[]( const accounts& lhs,const accounts& rhs ){
+
+		return lhs.accountName().length() < rhs.accountName().length() ;
+	} ) ;
+
 	m_numberOfAccounts = m_accounts.size() ;
 
 	if( m_numberOfAccounts > 0 ){

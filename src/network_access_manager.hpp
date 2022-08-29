@@ -101,28 +101,28 @@ private:
 	class handle
 	{
 	public:
-		handle( Reply&& r ) : m_reply( std::move( r ) )
+		handle( Reply&& r,QMutex& m ) : m_reply( std::move( r ) ),m_mutex( m )
 		{
 		}
 		void result( QNetworkReply * r,bool timeOut )
 		{
 			QObject::disconnect( m_networkConn ) ;
 			QObject::disconnect( m_timerConn ) ;
-			m_processed = true ;
 			m_timer.stop() ;
 			m_reply( NetworkAccessManager::reply( r,timeOut ) ) ;
 		}
-		QTimer * timer()
+		bool firstSeen()
 		{
-			return &m_timer ;
-		}
-		QMutex * mutex()
-		{
-			return &m_mutex ;
-		}
-		bool notProcessed()
-		{
-			return !m_processed ;
+			QMutexLocker m( &m_mutex ) ;
+
+			auto s = m_firstSeen ;
+
+			if( m_firstSeen ){
+
+				m_firstSeen = false ;
+			}
+
+			return s ;
 		}
 		void start( int timeOut,QMetaObject::Connection nc,QMetaObject::Connection tc )
 		{
@@ -130,12 +130,15 @@ private:
 			m_timerConn = tc ;
 			m_timer.start( timeOut ) ;
 		}
+		QTimer * timer()
+		{
+			return &m_timer ;
+		}
 	private:
-		bool m_processed = false ;
-
-		QMutex m_mutex ;
+		bool m_firstSeen = true ;
 		QTimer m_timer ;
 		Reply m_reply ;
+		QMutex& m_mutex ;
 		QMetaObject::Connection m_networkConn ;
 		QMetaObject::Connection m_timerConn ;
 	} ;
@@ -144,11 +147,11 @@ private:
 	{
 		m_replies.emplace_back( s ) ;
 
-		auto hdl = std::make_shared< handle< Reply > >( std::move( reply ) ) ;
+		auto hdl = std::make_shared< handle< Reply > >( std::move( reply ),m_mutex ) ;
 
 		auto nc = QObject::connect( s,&QNetworkReply::finished,[ s,hdl,this ](){
 
-			if( hdl->notProcessed() ){
+			if( hdl->firstSeen() ){
 
 				hdl->result( s,false ) ;
 
@@ -158,7 +161,7 @@ private:
 
 		auto tc = QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl,this ](){
 
-			if( hdl->notProcessed() ){
+			if( hdl->firstSeen() ){
 
 				hdl->result( s,true ) ;
 
@@ -173,6 +176,7 @@ private:
 	QNetworkAccessManager m_manager ;
 	int m_timeOut ;
 	std::vector< QNetworkReply * > m_replies ;
+	QMutex m_mutex ;
 } ;
 
 #endif
