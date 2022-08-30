@@ -77,7 +77,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Labels(Optional And Comma Separated)</string>
+         <string>Labels</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
