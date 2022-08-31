@@ -75,7 +75,7 @@ namespace util
 	static inline QStringList split( const QString& e,char token = ',' )
 	{
 #if QT_VERSION < QT_VERSION_CHECK( 5,15,0 )
-		return.split( token,QString::SkipEmptyParts ) ;
+		return e.split( token,QString::SkipEmptyParts ) ;
 #else
 		return e.split( token,Qt::SkipEmptyParts ) ;
 #endif

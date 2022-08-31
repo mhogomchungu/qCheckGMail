@@ -11,8 +11,6 @@ if( "${DATA_INSTALL_DIR}" STREQUAL "" )
 	set( DATA_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/" )
 endif()
 
-add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
-
 INCLUDE(CMakeDependentOption)
 INCLUDE(FindPkgConfig)
 
@@ -28,8 +26,6 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 INCLUDE(GNUInstallDirs)
 
 set( QT5 "true" )
-
-pkg_check_modules( MCHUNGU_TASK mhogomchungu_task )
 
 if( INTERNAL_LXQT_WALLET )
 
@@ -77,7 +73,14 @@ endif()
 
 include_directories( ${CMAKE_BINARY_DIR} )
 
-add_definitions( -std=c++14 -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
+add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
+
+if( ${CMAKE_VERSION} VERSION_LESS "3.1.0" )
+    message("Warning your cmake version is too old(<3.1.0) and code my not compile")
+    add_definitions(-std=c++14)
+endif()
+
+add_definitions( -Wextra -Wall -pedantic -I${PROJECT_BINARY_DIR})
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -132,6 +135,11 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
 )
 
+find_package( Qt5Widgets REQUIRED )
+find_package( Qt5Core REQUIRED )
+find_package( Qt5Network REQUIRED )
+find_package( Qt5DBus REQUIRED)
+
 set( UI_FILES 	src/gmailauthorization.ui
 		src/gmailauthorization.ui
 		src/walletmanager.ui
@@ -139,11 +147,20 @@ set( UI_FILES 	src/gmailauthorization.ui
 		src/configurationoptionsdialog.ui
 )
 
+if (${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+set( MOC_FILES	src/statusicon.h
+                src/walletmanager.h
+		src/addaccount.h
+		src/qcheckgmail.h
+		src/configurationoptionsdialog.h
+		src/util.hpp )
+else()
 set( MOC_FILES	src/statusicon.h
                 src/walletmanager.h
 		src/addaccount.h
 		src/qcheckgmail.h
 		src/configurationoptionsdialog.h )
+endif()
 
 set( CPP_FILES	src/gmailauthorization.cpp
 		src/main.cpp
@@ -157,11 +174,6 @@ set( CPP_FILES	src/gmailauthorization.cpp
 )
 
 set( RESOUCES 	icons/icon.qrc )
-
-find_package( Qt5Widgets REQUIRED )
-find_package( Qt5Core REQUIRED )
-find_package( Qt5Network REQUIRED )
-find_package( Qt5DBus REQUIRED)
 
 #find_package( ECM REQUIRED NO_MODULE )
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} )
@@ -190,7 +202,7 @@ if( KF5 )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network KF5::Notifications KF5::CoreAddons )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES} KF5::Notifications KF5::CoreAddons )
 else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
@@ -204,7 +216,7 @@ else()
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} -lQt5Network mhogomchungu_task )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES})
 endif()
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )
