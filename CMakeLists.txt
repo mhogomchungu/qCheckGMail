@@ -243,14 +243,14 @@ Comment=
 Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
-Icon=qCheckGMail
+Icon=qCheckGMail.svg
 Name[en_US]=qCheckGMail
 Name=qCheckGMail
 NoDisplay=false
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=Network;X-MandrivaLinux-Internet;\n")
+Categories=Network;Email;\n")
 
 # desktop file section
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop"
