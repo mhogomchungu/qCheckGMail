@@ -24,4 +24,9 @@ This is a Qt/C++ tray based application that monitors gmail accounts and display
 ![options.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/options.png)
 
 ## Privacy-policy
-The link to the project's Privacy policy is [here](https://github.com/mhogomchungu/qCheckGMail/wiki/Privacy-Policy).
+
+1. This application access GMail accounts with least amount of privileges and the best it can do is get a list of unread and total
+emails from each label of an account and that is all it does.
+
+2. This application simply asks how many unread emails are in a configured label and display them. This app does not even know
+the email address of the account it is accessing.
