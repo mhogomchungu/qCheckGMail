@@ -22,3 +22,6 @@ This is a Qt/C++ tray based application that monitors gmail accounts and display
 ![addAccount.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/addAccount.png)
 
 ![options.png](https://raw.githubusercontent.com/mhogomchungu/qCheckGMail/master/images/options.png)
+
+## Privacy-policy
+The link to the project's Privacy policy is [here](https://github.com/mhogomchungu/qCheckGMail/wiki/Privacy-Policy).
