@@ -23,11 +23,25 @@
 
 #include "qcheckgmail.h"
 #include "util.hpp"
+#include "version.h"
 
 #include <cstring>
+#include <iostream>
 
 int main( int argc,char * argv[] )
 {
+	for( int m = 0 ; m < argc ; m++ ){
+
+		if( strcmp( argv[ m ],"--version" ) == 0 ){
+
+			std::cout << VERSION << "\n" ;
+			std::cout << COPYRIGHT << "\n" ;
+			std::cout << LICENCE << std::endl ;
+
+			return 0 ;
+		}
+	}
+
 	QApplication qGMail( argc,argv ) ;
 
 	auto socketPath = QDir::homePath() + "/.qCheckGMail.socket" ;

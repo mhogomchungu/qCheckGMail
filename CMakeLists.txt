@@ -25,6 +25,17 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 INCLUDE(GNUInstallDirs)
 
+set( PGR_VERSION "Version:\t2.0.0" )
+set( COPYRIGHT_YEARS "Copyright:\t2013-2022" )
+set( LICENSE "License:\tGPLv2+" )
+
+file(WRITE ${PROJECT_BINARY_DIR}/version.h
+"
+#define VERSION \"${PGR_VERSION}\"
+#define COPYRIGHT \"${COPYRIGHT_YEARS}\"
+#define LICENCE \"${LICENSE}\"
+")
+
 set( QT5 "true" )
 
 if( INTERNAL_LXQT_WALLET )
