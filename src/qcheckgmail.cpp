@@ -367,24 +367,14 @@ static emailInfo _getEmailInfo( const QByteArray& json )
 
 		return { true,{},{},{} } ;
 	}else{
-		auto m = QJsonDocument::fromJson( json ) ;
+		auto m = QJsonDocument::fromJson( json ).object() ;
 
-		auto a = m.object().value( "name" ).toString() ;
-		auto b = QString::number( m.object().value( "messagesUnread" ).toInt() ) ;
-		auto c = QString::number( m.object().value( "messagesTotal" ).toInt() ) ;
+		auto a = m.value( "name" ).toString() ;
+		auto b = QString::number( m.value( "messagesUnread" ).toInt() ) ;
+		auto c = QString::number( m.value( "messagesTotal" ).toInt() ) ;
 
 		return { false,a,b,c } ;
 	}
-}
-
-void qCheckGMail::wrongAccountNameOrPassword()
-{
-	auto x = m_accounts.at( m_currentAccount ).accountName() ;
-	auto e = tr( "%1 Account Has Wrong Username/Password Combination" ).arg( x ) ;
-
-	this->changeIcon( m_errorIcon ) ;
-	this->showToolTip( m_errorIcon,tr( "Account Related Error Was Detected" ),e ) ;
-	this->doneCheckingMail() ;
 }
 
 static void _account_status( QString& status,const QString& displayName,const QString& mailCount )
@@ -944,7 +934,7 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		return opts.toUtf8() ;
 
-	}(),[ this,ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply ){
+	}(),[ this,ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply )mutable{
 
 		if( reply.success() ){
 

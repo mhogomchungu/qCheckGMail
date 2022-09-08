@@ -113,7 +113,6 @@ private:
 	void setTrayIconToVisible( bool ) ;
 	void showToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
 	void showPausedIcon( bool ) ;
-	void wrongAccountNameOrPassword() ;
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
 	void walletNotOPenedError() ;

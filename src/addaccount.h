@@ -81,7 +81,7 @@ public:
 			( *m_handle )( e ) ;
 		}
 	private:
-		std::shared_ptr< addaccount::gmailAccountInfo > m_handle ;
+		std::unique_ptr< addaccount::gmailAccountInfo > m_handle ;
 	} ;
 
 	struct gMailInfo
