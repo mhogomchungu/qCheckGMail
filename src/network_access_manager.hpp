@@ -47,12 +47,12 @@ public:
 	class reply
 	{
 	public:
-		reply( QNetworkReply * n,bool t ) : m_networkReply( n ),m_timeOut( t )
+		reply( QNetworkReply& n,bool t ) : m_networkReply( n ),m_timeOut( t )
 		{
 		}
 		bool success() const
 		{
-			return m_networkReply->error() == QNetworkReply::NoError && !m_timeOut ;
+			return m_networkReply.error() == QNetworkReply::NoError && !m_timeOut ;
 		}
 		bool timeOut() const
 		{
@@ -60,18 +60,22 @@ public:
 		}
 		QByteArray data() const
 		{
-			return m_networkReply->readAll() ;
+			return m_networkReply.readAll() ;
 		}
 		QNetworkReply::NetworkError error() const
 		{
-			return m_networkReply->error() ;
+			return m_networkReply.error() ;
 		}
 		QString errorString() const
 		{
-			return m_networkReply->errorString() ;
+			return m_networkReply.errorString() ;
+		}
+		QNetworkReply& networkReply() const
+		{
+			return m_networkReply ;
 		}
 	private:
-		QNetworkReply * m_networkReply ;
+		QNetworkReply& m_networkReply ;
 		bool m_timeOut ;
 	} ;
 	NetworkAccessManager( int timeOut ) : m_timeOut( timeOut )
@@ -104,7 +108,7 @@ private:
 		handle( Reply&& r,QMutex& m ) : m_reply( std::move( r ) ),m_mutex( m )
 		{
 		}
-		void result( QNetworkReply * r,bool timeOut )
+		void result( QNetworkReply& r,bool timeOut )
 		{
 			QObject::disconnect( m_networkConn ) ;
 			QObject::disconnect( m_timerConn ) ;
@@ -124,10 +128,10 @@ private:
 
 			return s ;
 		}
-		void start( int timeOut,QMetaObject::Connection nc,QMetaObject::Connection tc )
+		void start( int timeOut,QMetaObject::Connection&& nc,QMetaObject::Connection&& tc )
 		{
-			m_networkConn = nc ;
-			m_timerConn = tc ;
+			m_networkConn = std::move( nc ) ;
+			m_timerConn = std::move( tc ) ;
 			m_timer.start( timeOut ) ;
 		}
 		QTimer * timer()
@@ -145,37 +149,31 @@ private:
 	template< typename Reply >
 	void setupReply( QNetworkReply * s,Reply&& reply )
 	{
-		m_replies.emplace_back( s ) ;
-
 		auto hdl = std::make_shared< handle< Reply > >( std::move( reply ),m_mutex ) ;
 
-		auto nc = QObject::connect( s,&QNetworkReply::finished,[ s,hdl,this ](){
+		hdl->start( m_timeOut,QObject::connect( s,&QNetworkReply::finished,[ s,hdl,this ](){
 
 			if( hdl->firstSeen() ){
 
-				hdl->result( s,false ) ;
+				hdl->result( *s,false ) ;
 
 				s->deleteLater() ;
 			}
-		} ) ;
 
-		auto tc = QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl,this ](){
+		} ),QObject::connect( hdl->timer(),&QTimer::timeout,[ s,hdl,this ](){
 
 			if( hdl->firstSeen() ){
 
-				hdl->result( s,true ) ;
+				hdl->result( *s,true ) ;
 
 				s->abort() ;
 
 				s->deleteLater() ;
 			}
-		} ) ;
-
-		hdl->start( m_timeOut,nc,tc ) ;
+		} ) ) ;
 	}
 	QNetworkAccessManager m_manager ;
 	int m_timeOut ;
-	std::vector< QNetworkReply * > m_replies ;
 	QMutex m_mutex ;
 } ;
 

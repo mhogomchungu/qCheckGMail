@@ -169,7 +169,6 @@ private:
 	void reportOnAllAccounts( int,const QByteArray&,qCheckGMail::networkStatus ) ;
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;
-	void failedToCheckForNewEmail() ;
 	void audioNotify() ;
 	void addActionsToMenu() ;
 

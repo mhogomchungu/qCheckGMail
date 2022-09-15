@@ -90,7 +90,7 @@ void accounts::updateLabels()
 
 			if( it.name != "INBOX" ){
 
-				m_labelUrls.append( accountLabel( baseLabel + it.id,it.name ) ) ;
+				m_labelUrls.append( { baseLabel + it.id,it.name } ) ;
 			}
 		}
 	}

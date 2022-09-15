@@ -645,24 +645,6 @@ void qCheckGMail::alwaysShowTrayIcon( bool e )
 	}
 }
 
-void qCheckGMail::failedToCheckForNewEmail()
-{
-	/*
-	 * We will get here if an attempt to check for email update is made while another attempt is already in progress.
-	 * Mail checking usually takes a few seconds and hence the most likely reason to get here is if the network is down
-	 * and the already in progress attempt is stuck somewhere in QNetworkAccessManager object.
-	 */
-
-	auto x = tr( "Network Problem Detected" ) ;
-	auto msg_1 = tr( "Email Checking Is Taking Longer Than Expected." ) ;
-	auto msg_2 = tr( "Recommending Restarting qCheckGMail If The Problem Persists" ) ;
-	auto z = QString( "<table><tr><td>%1</td></tr><tr><td>%2</td></tr></table>" ).arg( msg_1,msg_2 ) ;
-
-	this->changeIcon( m_errorIcon ) ;
-	this->showToolTip( m_errorIcon,x,z ) ;
-	this->setTrayIconToVisible( true ) ;
-}
-
 /*
  * This should be the only function that initiate email checking
  */
