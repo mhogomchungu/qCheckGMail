@@ -34,7 +34,7 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
-	m_statusicon( m_settings )
+	m_statusicon( m_settings,this->clickActions() )
 {
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
 }
@@ -115,7 +115,7 @@ void qCheckGMail::start( const QByteArray& )
 	}
 }
 
-void qCheckGMail::event( const QByteArray& )
+void qCheckGMail::hasEvent( const QByteArray& )
 {
 }
 
@@ -162,18 +162,6 @@ void qCheckGMail::start()
 	m_numberOfLabels    = 0 ;
 
 	m_checkingMail      = false ;
-
-	m_clickActions.onLeftClick = [ & ](){
-
-		if( m_accounts.size() > 0 ){
-
-			this->openMail( m_accounts.first() ) ;
-		}else{
-			this->openMail() ;
-		}
-	} ;
-
-	m_statusicon.setIconClickedActions( m_clickActions ) ;
 
 	this->changeIcon( m_errorIcon ) ;
 
@@ -256,11 +244,6 @@ void qCheckGMail::openMail()
 	_start_detached( m_enableDebug,m_defaultApplication,"https://mail.google.com/" ) ;
 }
 
-void qCheckGMail::iconClicked()
-{
-	m_clickActions.onLeftClick() ;
-}
-
 void qCheckGMail::addActionsToMenu()
 {
 	auto cm = static_cast< void( qCheckGMail::* )( bool ) >( &qCheckGMail::checkMail ) ;
@@ -327,6 +310,31 @@ void qCheckGMail::addActionsToMenu()
 	} ) ;
 
 	m_statusicon.addQuitAction() ;
+}
+
+statusicon::clickActions qCheckGMail::clickActions()
+{
+	class meaw : public statusicon::clickActionsInterface
+	{
+	public:
+		meaw( qCheckGMail * q ) : m_parent( q )
+		{
+		}
+		void onLeftClick() const override
+		{
+			m_parent->openMail() ;
+		}
+		void onRightClick() const override
+		{
+		}
+		void onMiddleClick() const override
+		{
+		}
+	private:
+		qCheckGMail * m_parent ;
+	} ;
+
+	return { util::type_identity< meaw >(),this } ;
 }
 
 QString qCheckGMail::displayName( const QString& label )

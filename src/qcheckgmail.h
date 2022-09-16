@@ -68,7 +68,7 @@ public:
 
 	void earlyExit() ;
 
-	void event( const QByteArray& ) ;
+	void hasEvent( const QByteArray& ) ;
 
 	static int instanceAlreadyRunning() ;
 	static int autoStartDisabled() ;
@@ -79,8 +79,6 @@ public:
 
 	QWidget * widget() ;
 	QString defaultApplication() ;
-
-	void iconClicked() ;
 private:
 	void start() ;
 	void configurationWindowClosed( int ) ;
@@ -172,6 +170,8 @@ private:
 	void audioNotify() ;
 	void addActionsToMenu() ;
 
+	statusicon::clickActions clickActions() ;
+
 	int m_interval ;
 	int m_numberOfLabels ;
 	int m_currentLabel ;
@@ -212,8 +212,6 @@ private:
 	QTimer m_timer ;
 
 	QMenu * m_menu ;
-
-	statusicon::clickActions m_clickActions ;
 
 	settings m_settings ;
 

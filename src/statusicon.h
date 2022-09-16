@@ -50,11 +50,43 @@ class statusicon : public QObject
 #endif
 	Q_OBJECT
 public:
-	typedef struct{
-		std::function< void() > onLeftClick   = [](){} ;
-		std::function< void() > onRightClick  = [](){} ;
-		std::function< void() > onMiddleClick = [](){} ;
-	}clickActions;
+	struct clickActionsInterface
+	{
+		virtual void onLeftClick() const
+		{
+		}
+		virtual void onRightClick() const
+		{
+		}
+		virtual void onMiddleClick() const
+		{
+		}
+		virtual ~clickActionsInterface() ;
+	};
+
+	class clickActions
+	{
+	public:
+		template< typename Type,typename ... Args >
+		clickActions( Type,Args&& ... args ) :
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
+		{
+		}
+		void onLeftClick() const
+		{
+			m_handle->onLeftClick() ;
+		}
+		void onRightClick() const
+		{
+			m_handle->onRightClick() ;
+		}
+		void onMiddleClick() const
+		{
+			m_handle->onMiddleClick() ;
+		}
+	private:
+		std::unique_ptr< statusicon::clickActionsInterface > m_handle ;
+	} ;
 
 	enum ItemCategory {
 		ApplicationStatus = 1,
@@ -68,7 +100,7 @@ public:
 		Active = 2,
 		NeedsAttention = 3
 	};
-	statusicon( settings& ) ;
+	statusicon( settings&,statusicon::clickActions ) ;
 	~statusicon() override ;
 	static bool enableDebug() ;
 	void newEmailNotify() ;
@@ -79,8 +111,8 @@ public:
 	void setOverlayIcon( const QString& name ) ;
 	void setStatus( const statusicon::ItemStatus status ) ;
 	void setToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
-	void setIconClickedActions( const statusicon::clickActions& ) ;
 	QAction * getAction( const QString& title = QString() ) ;
+	const statusicon::clickActions& getClickActions() ;
 	QMenu * getMenu( const QString& ) ;
 	QMenu * getOGMenu() ;
 	statusicon::ItemStatus getStatus() ;
@@ -99,9 +131,9 @@ private:
 #endif
 	statusicon::ItemStatus m_status ;
 	QString m_defaultApplication ;
-	statusicon::clickActions m_clickActions ;
 	QSystemTrayIcon m_trayIcon ;
 	settings& m_settings ;
+	statusicon::clickActions m_clickActions ;
 };
 
 #endif // STATUSICON_H

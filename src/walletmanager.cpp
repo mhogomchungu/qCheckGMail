@@ -384,7 +384,7 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 		{
 			m_parent->editAccount( accName,labels,std::move( m_labels ),m_row ) ;
 		}
-		const addaccount::labels& labels()
+		const addaccount::labels& labels() override
 		{
 			return m_labels ;
 		}
@@ -486,7 +486,7 @@ void walletmanager::pushButtonAdd()
 		{
 			m_parent->pushButtonAdd( std::move( e ) ) ;
 		}
-		const addaccount::labels& labels()
+		const addaccount::labels& labels() override
 		{
 			return m_labels ;
 		}

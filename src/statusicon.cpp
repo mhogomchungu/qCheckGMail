@@ -61,14 +61,12 @@ static QPixmap _icon( const QIcon& icon,int count,settings& s )
 	return pixmap ;
 }
 
-void statusicon::setIconClickedActions( const statusicon::clickActions& actions )
-{
-	m_clickActions = actions ;
-}
-
 #if KF5
 
-statusicon::statusicon( settings& s ) : m_menu( new QMenu() ),m_settings( s )
+statusicon::statusicon( settings& s,statusicon::clickActions ac ) :
+	m_menu( new QMenu() ),
+	m_settings( s ),
+	m_clickActions( std::move( ac ) )
 {
 	m_menu->clear() ;
 
@@ -139,6 +137,11 @@ QAction * statusicon::getAction( const QString& title )
 	return ac ;
 }
 
+const statusicon::clickActions& statusicon::getClickActions()
+{
+	return m_clickActions ;
+}
+
 QMenu * statusicon::getMenu( const QString& title )
 {
 	return m_menu->addMenu( title ) ;
@@ -206,7 +209,9 @@ QList< QAction * > statusicon::getMenuActions()
 
 #else
 
-statusicon::statusicon( settings& s ) : m_settings( s )
+statusicon::statusicon( settings& s,statusicon::clickActions ac ) :
+	m_settings( s ),
+	m_clickActions( std::move( ac ) )
 {
 	connect( &m_trayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ),
 		this,SLOT( trayIconClicked(QSystemTrayIcon::ActivationReason ) ) ) ;
@@ -216,6 +221,11 @@ statusicon::statusicon( settings& s ) : m_settings( s )
 
 statusicon::~statusicon()
 {
+}
+
+const statusicon::clickActions& statusicon::getClickActions()
+{
+	return m_clickActions ;
 }
 
 statusicon::ItemStatus statusicon::getStatus()
@@ -360,4 +370,6 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 
 #endif
 
-
+statusicon::clickActionsInterface::~clickActionsInterface()
+{
+}

@@ -86,6 +86,10 @@ include_directories( ${CMAKE_BINARY_DIR} )
 
 add_definitions( -Wno-unused-result -D_DEFAULT_SOURCE )
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_definitions(-Qunused-arguments)
+endif()
+
 if( ${CMAKE_VERSION} VERSION_LESS "3.1.0" )
     message("Warning your cmake version is too old(<3.1.0) and code my not compile")
     add_definitions(-std=c++14)

@@ -509,7 +509,7 @@ namespace util
 
 				QObject::connect( s,&QLocalSocket::readyRead,[ this,s ]{
 
-					m_mainApp->event( s->readAll() ) ;
+					m_mainApp->hasEvent( s->readAll() ) ;
 					s->deleteLater() ;
 				} ) ;
 			} ) ;
@@ -537,7 +537,7 @@ namespace util
 		AppTypeInterface( const AppTypeInterface::args& )
 		{
 		}
-		void event( QByteArray )
+		void hasEvent( QByteArray )
 		{
 			//This method is called with data from another instance that failed
 			//to start because this instance prevented it from starting

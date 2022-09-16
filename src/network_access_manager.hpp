@@ -257,14 +257,14 @@ private:
 	template< typename Handle >
 	void setupReply( Handle& hdl )
 	{
-		hdl->start( m_timeOut,QObject::connect( hdl->networkReply(),&QNetworkReply::finished,[ hdl,this ](){
+		hdl->start( m_timeOut,QObject::connect( hdl->networkReply(),&QNetworkReply::finished,[ hdl ](){
 
 			if( hdl->firstSeen() ){
 
 				hdl->result( false ) ;
 			}
 
-		} ),QObject::connect( hdl->timer(),&QTimer::timeout,[ hdl,this ](){
+		} ),QObject::connect( hdl->timer(),&QTimer::timeout,[ hdl ](){
 
 			if( hdl->firstSeen() ){
 
