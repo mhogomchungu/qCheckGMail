@@ -32,7 +32,7 @@
 #include "gmailauthorization.h"
 #include "util.hpp"
 #include "settings.h"
-#include "network_access_manager.hpp"
+#include "utils/network_access_manager.hpp"
 
 namespace Ui {
 class addaccount;

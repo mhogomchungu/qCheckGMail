@@ -27,6 +27,8 @@
 #include <QJsonObject>
 #include <QTimer>
 
+#include "utils/threads.hpp"
+
 class account
 {
 public:
@@ -56,7 +58,7 @@ public:
 
 	static void readAll( LXQt::Wallet::Wallet * w,QVector< accounts >& acc )
 	{
-		auto m = util::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
+		auto m = utils::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
 
 		QJsonParseError err ;
 
@@ -327,7 +329,7 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 {
 	m_accEntry = std::move( e ) ;
 
-	util::runInBgThread( [ this ](){
+	utils::runInBgThread( [ this ](){
 
 		account::add( m_wallet.get(),m_accEntry ) ;
 
@@ -348,7 +350,7 @@ void walletmanager::editAccount( const QString& accName,const QString& labels,ad
 
 		m_accounts[ row ].updateAccountInfo( accName,util::labelsToJson( labels,l.entries ) ) ;
 
-		util::runInBgThread( [ this,row,currentAccName ](){
+		utils::runInBgThread( [ this,row,currentAccName ](){
 
 			auto w = m_wallet.get() ;
 
@@ -545,7 +547,7 @@ void walletmanager::deleteAccount( bool )
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-			util::runInBgThread( [ & ](){
+			utils::runInBgThread( [ & ](){
 
 				account::remove( accName,m_wallet.get() ) ;
 
