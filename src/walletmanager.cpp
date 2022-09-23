@@ -58,7 +58,7 @@ public:
 
 	static void readAll( LXQt::Wallet::Wallet * w,QVector< accounts >& acc )
 	{
-		auto m = utils::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
+		auto m = utils::qthread::await( [ & ](){ return w->readAllKeyValues() ; } ) ;
 
 		QJsonParseError err ;
 
@@ -329,7 +329,7 @@ void walletmanager::pushButtonAdd( accounts::entry&& e )
 {
 	m_accEntry = std::move( e ) ;
 
-	utils::runInBgThread( [ this ](){
+	utils::qthread::run( [ this ](){
 
 		account::add( m_wallet.get(),m_accEntry ) ;
 
@@ -350,7 +350,7 @@ void walletmanager::editAccount( const QString& accName,const QString& labels,ad
 
 		m_accounts[ row ].updateAccountInfo( accName,util::labelsToJson( labels,l.entries ) ) ;
 
-		utils::runInBgThread( [ this,row,currentAccName ](){
+		utils::qthread::run( [ this,row,currentAccName ](){
 
 			auto w = m_wallet.get() ;
 
@@ -547,7 +547,7 @@ void walletmanager::deleteAccount( bool )
 
 		if( m_row < m_accounts.size() && m_row < m_table->rowCount() ){
 
-			utils::runInBgThread( [ & ](){
+			utils::qthread::run( [ & ](){
 
 				account::remove( accName,m_wallet.get() ) ;
 

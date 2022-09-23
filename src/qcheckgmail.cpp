@@ -727,7 +727,7 @@ void qCheckGMail::getAccessToken( int counter,
 
 		return opts.toUtf8() ;
 
-	}(),[ UrlLabel,this,&acc,refresh_token,counter ]( const NetworkAccessManager::reply& reply ){
+	}(),[ UrlLabel,this,&acc,refresh_token,counter ]( const utils::network::reply& reply ){
 
 		if( reply.success() ){
 
@@ -772,7 +772,7 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 
 				return opts.toUtf8() ;
 
-			 }(),[ funct = std::move( function ) ]( const NetworkAccessManager::reply& reply ){
+			 }(),[ funct = std::move( function ) ]( const utils::network::reply& reply ){
 
 				if( reply.success() ){
 
@@ -847,7 +847,7 @@ static GMailError _gmailError( const QByteArray& msg )
 
 void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 {
-	m_manager.get( request,[ this,counter ]( const NetworkAccessManager::reply& reply ){
+	m_manager.get( request,[ this,counter ]( const utils::network::reply& reply ){
 
 		if( counter != m_counter ){
 
@@ -924,7 +924,7 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		return opts.toUtf8() ;
 
-	}(),[ this,ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply )mutable{
+	}(),[ this,ginfo = std::move( ginfo ) ]( const utils::network::reply& reply )mutable{
 
 		if( reply.success() ){
 
@@ -960,7 +960,7 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( const NetworkAccessManager::reply& reply ){
+	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( const utils::network::reply& reply ){
 
 		if( reply.success() ){
 

@@ -47,15 +47,15 @@ int main( int argc,char * argv[] )
 
 	auto socketPath = QDir::homePath() + "/.qCheckGMail.socket" ;
 
-	utils::appInfo< qCheckGMail,qCheckGMail::args > m( { qGMail },socketPath,qGMail ) ;
+	utils::app::appInfo< qCheckGMail,qCheckGMail::args > m( { qGMail },socketPath,qGMail ) ;
 
 	for( int it = 0 ; it < argc ; it++ ){
 
 		if( std::strcmp( argv[ it ],"-m" ) == 0 ){
 
-			return utils::runMultiInstances( std::move( m ) ) ;
+			return utils::app::runMultiInstances( std::move( m ) ) ;
 		}
 	}
 
-	return utils::runOneInstance( std::move( m ) ) ;
+	return utils::app::runOneInstance( std::move( m ) ) ;
 }

@@ -215,7 +215,7 @@ private:
 
 	settings m_settings ;
 
-	NetworkAccessManager m_manager ;
+	utils::network::manager m_manager ;
 
 	QNetworkRequest m_networkRequest ;
 
