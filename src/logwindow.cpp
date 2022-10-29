@@ -22,6 +22,8 @@
 
 #include "settings.h"
 
+#include <QDateTime>
+
 logWindow::logWindow( settings& s ) :
 	QWidget( nullptr ),
 	m_ui( new Ui::logWindow ),
@@ -51,23 +53,26 @@ void logWindow::update( logWindow::TYPE type,const QString& msg )
 {
 	if( this->isVisible() ){
 
-		auto title = [ & ](){
+		const auto bars = "*************************************************************************" ;
+
+		auto title = [ & ]()->QString{
 
 			if( type == logWindow::TYPE::REQUEST ){
 
-				return "\n*********** NETWORK REQUEST *********************\n" ;
+				return "\n%1\nNETWORK REQUEST At %2\n\n" ;
 
 			}else if( type == logWindow::TYPE::RESPONCE ){
 
-				return "\n*********** NETWORK RESPONCE *********************\n" ;
+				return "\n%1\nNETWORK RESPONCE At %2\n\n" ;
 
 			}else if( type == logWindow::TYPE::INFO ){
 
-				return "\n*********** INFO *********************\n" ;
+				return "\n%1\nINFO At %2\n\n" ;
 			}else{
-				return "\n*********** ERROR *********************\n" ;
+				return "\n%1\nERROR At %2\n\n" ;
 			}
-		}() ;
+
+		}().arg( bars,QDateTime::currentDateTime().toString() ) ;
 
 		auto m = m_ui->plainTextEdit->toPlainText() ;
 

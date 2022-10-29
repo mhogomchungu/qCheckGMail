@@ -791,7 +791,7 @@ void qCheckGMail::getAccessToken( int counter,
 
 			request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
 
-			m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
+			m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN\n" ) ;
 
 			this->networkAccess( counter,request ) ;
 		}else{
@@ -1053,7 +1053,7 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-	m_logWindow.update( logWindow::TYPE::REQUEST,"GET\nhttps://gmail.googleapis.com/gmail/v1/users/me/labels\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
+	m_logWindow.update( logWindow::TYPE::REQUEST,"GET\nhttps://gmail.googleapis.com/gmail/v1/users/me/labels\nAuthorization:Bearer $ACCESS_TOKEN\n" ) ;
 
 	this->m_manager.get( r,[ this,ginfo = std::move( ginfo ) ]( const utils::network::reply& reply ){
 
@@ -1109,7 +1109,7 @@ void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlL
 
 		s.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-		m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
+		m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN\n" ) ;
 
 		this->networkAccess( counter,s ) ;
 	}
