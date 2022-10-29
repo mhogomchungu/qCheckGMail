@@ -35,7 +35,7 @@ class logWindow : public QWidget
 {
 	Q_OBJECT
 public:
-	logWindow( settings& ) ;
+	logWindow( settings&,bool ) ;
 	~logWindow() override ;
 	enum class TYPE{ REQUEST,RESPONCE,INFO,ERROR } ;
 	void update( logWindow::TYPE,const QString& e ) ;
@@ -46,6 +46,7 @@ private:
 	void closeEvent( QCloseEvent * ) override ;
 	Ui::logWindow * m_ui ;
 	settings& m_settings ;
+	bool m_alwaysAddLogs ;
 };
 
 #endif // LOGWINDOW_H

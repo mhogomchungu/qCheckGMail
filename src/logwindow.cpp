@@ -24,10 +24,11 @@
 
 #include <QDateTime>
 
-logWindow::logWindow( settings& s ) :
+logWindow::logWindow( settings& s,bool e ) :
 	QWidget( nullptr ),
 	m_ui( new Ui::logWindow ),
-	m_settings( s )
+	m_settings( s ),
+	m_alwaysAddLogs( e )
 {
 	m_ui->setupUi( this ) ;
 
@@ -51,7 +52,7 @@ logWindow::~logWindow()
 
 void logWindow::update( logWindow::TYPE type,const QString& msg )
 {
-	if( this->isVisible() ){
+	if( this->isVisible() || m_alwaysAddLogs ){
 
 		const auto bars = "*************************************************************************" ;
 

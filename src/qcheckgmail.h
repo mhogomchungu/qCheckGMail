@@ -187,7 +187,6 @@ private:
 	bool m_displayEmailCount ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
-	bool m_enableDebug ;
 	bool m_accountUpdated ;
 	bool m_timeExpired ;
 	bool m_accountFailed ;
@@ -226,10 +225,10 @@ private:
 
 	QVector< accounts > m_accounts ;
 
-	logWindow m_logWindow ;
-
 	QApplication& m_qApp ;
 	QStringList m_args ;
+
+	logWindow m_logWindow ;
 
 	statusicon m_statusicon ;
 

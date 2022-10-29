@@ -32,9 +32,9 @@
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_manager( m_settings.networkTimeOut() ),
 	m_networkRequest( QUrl( m_auth ) ),
-	m_logWindow( m_settings ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
+	m_logWindow( m_settings,m_args.contains( "-d" ) ),
 	m_statusicon( m_settings,this->clickActions() )
 {
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
@@ -140,7 +140,6 @@ void qCheckGMail::start()
 	m_statusicon.setCategory( m_statusicon.ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
-	m_enableDebug	      = m_statusicon.enableDebug() ;
 	m_audioNotify	      = m_settings.audioNotify() ;
 	m_interval	      = m_settings.checkForUpdatesInterval() ;
 	m_newEmailIcon	      = m_settings.newEmailIcon() ;
@@ -178,7 +177,7 @@ void qCheckGMail::start()
 	this->getAccountsInfo() ;
 }
 
-static void _start_detached( bool debug,QString& exe,const QString& url )
+static void _start_detached( logWindow& logger,QString& exe,const QString& url )
 {
 	if( exe.isEmpty() ){
 
@@ -189,31 +188,13 @@ static void _start_detached( bool debug,QString& exe,const QString& url )
 
 		QDesktopServices::openUrl( QUrl( url ) ) ;
 	}else{
-		auto s = util::split( exe,' ' ) ;
+		exe.replace( "%{url}",url ) ;
+
+		auto s = util::splitPreserveQuotes( exe ) ;
 
 		auto m = s.takeAt( 0 ) ;
 
-		for( auto& it : s ){
-
-			if( it == "%{url}" ){
-
-				it = url ;
-
-				break ;
-			}
-		}
-
-		if( debug ){
-
-			std::cout << "\"" + m.toStdString() + "\"" ;
-
-			for( const auto& it : s ){
-
-				std::cout << " \"" + it.toStdString() + "\"" ;
-			}
-
-			std::cout << std::endl ;
-		}
+		logger.update( logWindow::TYPE::INFO,"Running Command\n" + exe + " " + s.join( " " ) ) ;
 
 		QProcess::startDetached( m,s ) ;
 	}
@@ -234,15 +215,15 @@ void qCheckGMail::openMail( const accounts& acc )
 			url.truncate( url.size() - int( ( sizeof( "/feed/atom/" ) - 1 ) ) ) ;
 		}
 
-		_start_detached( m_enableDebug,m_defaultApplication,url ) ;
+		_start_detached( m_logWindow,m_defaultApplication,url ) ;
 	}else{
-		_start_detached( m_enableDebug,m_defaultApplication,"https://mail.google.com/" ) ;
+		_start_detached( m_logWindow,m_defaultApplication,"https://mail.google.com/" ) ;
 	}
 }
 
 void qCheckGMail::openMail()
 {
-	_start_detached( m_enableDebug,m_defaultApplication,"https://mail.google.com/" ) ;
+	_start_detached( m_logWindow,m_defaultApplication,"https://mail.google.com/" ) ;
 }
 
 void qCheckGMail::addActionsToMenu()
