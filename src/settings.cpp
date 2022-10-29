@@ -68,6 +68,23 @@ QStringList settings::profileEmailList()
 	}
 }
 
+void settings::setWindowDimensions( const QString& window,const QString& dimenstion )
+{
+	m_settings.setValue( "WindowDimensions_" + window,dimenstion ) ;
+}
+
+QString settings::windowsDimensions( const QString& window )
+{
+	auto m = "WindowDimensions_" + window ;
+
+	if( !m_settings.contains( m ) ){
+
+		m_settings.setValue( m,QString() ) ;
+	}
+
+	return m_settings.value( m ).toString() ;
+}
+
 void settings::setProfile( const QString& e )
 {
 	if( !m_profile.isEmpty() && m_settings.contains( m_profile ) ){

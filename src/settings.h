@@ -54,6 +54,8 @@ public:
 	QString defaultApplication() ;
 	QString stringRunTimePortNumber() ;
 	QStringList profileEmailList() ;
+	void setWindowDimensions( const QString& window,const QString& dimenstion ) ;
+	QString windowsDimensions( const QString& window ) ;
 	bool usingInternalStorageSystem() ;
 	int fontSize() ;
 	int portNumber() ;

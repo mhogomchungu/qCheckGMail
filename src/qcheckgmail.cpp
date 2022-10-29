@@ -31,7 +31,8 @@
 
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_manager( m_settings.networkTimeOut() ),
-	m_networkRequest( QUrl( "https://accounts.google.com/o/oauth2/token" ) ),
+	m_networkRequest( QUrl( m_auth ) ),
+	m_logWindow( m_settings ),
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
 	m_statusicon( m_settings,this->clickActions() )
@@ -248,6 +249,15 @@ void qCheckGMail::addActionsToMenu()
 {
 	auto cm = static_cast< void( qCheckGMail::* )( bool ) >( &qCheckGMail::checkMail ) ;
 
+	util::connect( &QAction::triggered,&qCheckGMail::showLogWindow,this,[ this ](){
+
+	       auto ac = m_statusicon.getAction( tr( "Show Log Window" ) ) ;
+
+	       ac->setObjectName( "ShowLogWindow" ) ;
+
+	       return ac ;
+	}() ) ;
+
 	util::connect( &QAction::triggered,cm,this,[ this ](){
 
 	       return m_statusicon.getAction( tr( "Check Mail Now" ) ) ;
@@ -310,6 +320,16 @@ void qCheckGMail::addActionsToMenu()
 	} ) ;
 
 	m_statusicon.addQuitAction() ;
+}
+
+void qCheckGMail::showLogWindow()
+{
+	m_logWindow.Show() ;
+}
+
+void qCheckGMail::logPOST( const util::urlOpts& e )
+{
+	m_logWindow.update( logWindow::TYPE::REQUEST,"POST\n" + m_auth + "\n" + e.toUtf8() + "\n" ) ;
 }
 
 statusicon::clickActions qCheckGMail::clickActions()
@@ -704,6 +724,23 @@ void qCheckGMail::checkMail( int counter,const accounts& acc )
 	this->checkMail( counter,acc,acc.defaultLabelUrl() ) ;
 }
 
+static QByteArray _hideSecret( const QByteArray& json )
+{
+	auto m = QJsonDocument::fromJson( json ).object() ;
+
+	if( m.contains( "access_token" ) ){
+
+		m.insert( "access_token","$ACCESS_TOKEN" ) ;
+	}
+
+	if( m.contains( "refresh_token" ) ){
+
+		m.insert( "access_token","$REFRESH_TOKEN" ) ;
+	}
+
+	return QJsonDocument( m ).toJson( QJsonDocument::JsonFormat::Indented ) ;
+}
+
 static QString _parseJSON( const QByteArray& json,const char * key )
 {
 	auto m = QJsonDocument::fromJson( json ).object() ;
@@ -725,19 +762,36 @@ void qCheckGMail::getAccessToken( int counter,
 		opts.add( "refresh_token",refresh_token ) ;
 		opts.add( "grant_type","refresh_token" ) ;
 
+		util::urlOpts opts1 ;
+
+		opts1.add( "client_id","$CLIENT_ID" ) ;
+		opts1.add( "client_secret","$CLIENT_SECRET" ) ;
+		opts1.add( "refresh_token","$REFRESH_TOKEN" ) ;
+		opts1.add( "grant_type","refresh_token" ) ;
+
+		this->logPOST( opts1 ) ;
+
 		return opts.toUtf8() ;
 
 	}(),[ UrlLabel,this,&acc,refresh_token,counter ]( const utils::network::reply& reply ){
 
 		if( reply.success() ){
 
-			auto e = _parseJSON( reply.data(),"access_token" ) ;
+			auto data = reply.data() ;
+
+			m_logWindow.update( logWindow::TYPE::RESPONCE,_hideSecret( data ) ) ;
+
+			auto e = _parseJSON( data,"access_token" ) ;
 
 			acc.setAccessToken( e ) ;
 
-			QNetworkRequest request( QUrl( UrlLabel.toUtf8().constData() ) ) ;
+			auto url = UrlLabel.toUtf8() ;
+
+			QNetworkRequest request( QUrl( url.constData() ) ) ;
 
 			request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
+
+			m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
 
 			this->networkAccess( counter,request ) ;
 		}else{
@@ -770,16 +824,30 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 				opts.add( "grant_type","authorization_code" ) ;
 				opts.add( "redirect_uri","http://127.0.0.1:" + s ) ;
 
+				util::urlOpts opts1 ;
+
+				opts1.add( "client_id","$CLIENT_ID" ) ;
+				opts1.add( "client_secret","$CLIENT_SECRET" ) ;
+				opts1.add( "code","$AUTHOCODE" ) ;
+				opts1.add( "grant_type","authorization_code" ) ;
+				opts1.add( "redirect_uri","http://127.0.0.1:" + s ) ;
+
+				m_parent->logPOST( opts1 ) ;
+
 				return opts.toUtf8() ;
 
-			 }(),[ funct = std::move( function ) ]( const utils::network::reply& reply ){
+			 }(),[ this,funct = std::move( function ) ]( const utils::network::reply& reply ){
 
 				if( reply.success() ){
 
 					auto m = reply.data() ;
 
+					m_parent->m_logWindow.update( logWindow::TYPE::RESPONCE,_hideSecret( m ) ) ;
+
 					funct( _parseJSON( m,"refresh_token" ),m ) ;
 				}else{
+					m_parent->m_logWindow.update( logWindow::TYPE::RESPONCE,"qCheckGMail: Failed To Get A Responce" ) ;
+
 					funct( {},{} ) ;
 				}
 			 } ) ;
@@ -855,7 +923,13 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 			 * We will get here if there are more than one on going process of checking mail
 			 * and we allow only the most recent one to proceed.
 			 */
-			std::cerr << "Expected counter to be\" " << m_counter << "\" but it is \"" << counter << "\"" << std::endl ;
+
+			auto n1 = QString::number( m_counter ) ;
+			auto n2 = QString::number( m_counter ) ;
+
+			auto m = "Expected counter to be\" " + n1 + "\" but it is \"" + n2 + "\"" ;
+
+			m_logWindow.update( logWindow::TYPE::INFO,m ) ;
 
 			return ;
 		}
@@ -864,24 +938,21 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 		if( error == QNetworkReply::OperationCanceledError ){
 
+			m_logWindow.update( logWindow::TYPE::ERROR,"Operation Cancelled" ) ;
+
 			return this->reportOnAllAccounts( counter,"","Operation Cancelled" ) ;
+		}
+
+		if( error != QNetworkReply::NetworkError::NoError ){
+
+			m_logWindow.update( logWindow::TYPE::ERROR,reply.errorString() ) ;
 		}
 
 		auto content = reply.data() ;
 
-		if( m_enableDebug ){
-
-			std::cerr << content + "\n" << std::endl ;
-
-			if( error != QNetworkReply::NetworkError::NoError ){
-
-				std::cerr << reply.errorString() << std::endl ;
-
-				qDebug() << error ;
-			}
-		}
-
 		if( reply.timeOut() ){
+
+			m_logWindow.update( logWindow::TYPE::ERROR,"Network Timeout" ) ;
 
 			this->reportOnAllAccounts( counter,content,"Network Timeout" ) ;
 		}else{
@@ -891,6 +962,8 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			if( err.hasError ){
 
+				m_logWindow.update( logWindow::TYPE::ERROR,err.errorMsg ) ;
+
 				this->reportOnAllAccounts( counter,content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
 
 			}else if( error == QNetworkReply::HostNotFoundError ){
@@ -898,6 +971,8 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 				this->reportOnAllAccounts( counter,content,"Host Not Found" ) ;
 
 			}else if( error == QNetworkReply::NoError ){
+
+				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
 
 				this->reportOnAllAccounts( counter,content,qc::success ) ;
 
@@ -922,21 +997,39 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 		opts.add( "refresh_token",authocode ) ;
 		opts.add( "grant_type","refresh_token" ) ;
 
+		util::urlOpts opts1 ;
+
+		opts1.add( "client_id","$CLIENT_ID" ) ;
+		opts1.add( "client_secret","$CLIENT_SECRET" ) ;
+		opts1.add( "code","$AUTHOCODE" ) ;
+		opts1.add( "refresh_token","$AUTHOCODE" ) ;
+		opts1.add( "grant_type","refresh_token" ) ;
+
+		this->logPOST( opts1 ) ;
+
 		return opts.toUtf8() ;
 
 	}(),[ this,ginfo = std::move( ginfo ) ]( const utils::network::reply& reply )mutable{
 
 		if( reply.success() ){
 
-			auto e = _parseJSON( reply.data(),"access_token" ) ;
+			auto data = reply.data() ;
+
+			m_logWindow.update( logWindow::TYPE::RESPONCE,_hideSecret( data ) ) ;
+
+			auto e = _parseJSON( data,"access_token" ) ;
 
 			this->getLabels( e,std::move( ginfo ) ) ;
 		}else{
 			if( reply.timeOut() ){
 
 				ginfo( "Network TimeOut" ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,"Network TimeOut" ) ;
 			}else{
-				ginfo( reply.errorString() ) ;
+				auto err = reply.errorString() ;
+
+				ginfo( err ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
 			}
 		}
 	} ) ;
@@ -960,11 +1053,15 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 	QNetworkRequest r( QUrl( "https://gmail.googleapis.com/gmail/v1/users/me/labels" ) ) ;
 	r.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
 
-	this->m_manager.get( r,[ ginfo = std::move( ginfo ) ]( const utils::network::reply& reply ){
+	m_logWindow.update( logWindow::TYPE::REQUEST,"GET\nhttps://gmail.googleapis.com/gmail/v1/users/me/labels\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
+
+	this->m_manager.get( r,[ this,ginfo = std::move( ginfo ) ]( const utils::network::reply& reply ){
 
 		if( reply.success() ){
 
 			auto ss = reply.data() ;
+
+			m_logWindow.update( logWindow::TYPE::RESPONCE,ss ) ;
 
 			const auto arr = QJsonDocument::fromJson( ss ).object().value( "labels" ).toArray() ;
 
@@ -984,8 +1081,12 @@ void qCheckGMail::getLabels( const QString& accessToken,addaccount::GmailAccount
 			if( reply.timeOut() ){
 
 				ginfo( "Network TimeOut" ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,"Network TimeOut" ) ;
 			}else{
-				ginfo( reply.errorString() ) ;
+				auto err = reply.errorString() ;
+
+				ginfo( err ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
 			}
 		}
 	} ) ;
@@ -1002,9 +1103,13 @@ void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlL
 		 */
 		this->getAccessToken( counter,acc,acc.refreshToken(),UrlLabel ) ;
 	}else{
-		QNetworkRequest s( QUrl( UrlLabel.toUtf8().constData() ) ) ;
+		auto url = UrlLabel.toUtf8() ;
+
+		QNetworkRequest s( QUrl( url.constData() ) ) ;
 
 		s.setRawHeader( "Authorization","Bearer " + accessToken.toUtf8() ) ;
+
+		m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN" ) ;
 
 		this->networkAccess( counter,s ) ;
 	}

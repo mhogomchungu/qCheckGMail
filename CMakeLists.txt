@@ -155,37 +155,45 @@ find_package( Qt5Core REQUIRED )
 find_package( Qt5Network REQUIRED )
 find_package( Qt5DBus REQUIRED)
 
-set( UI_FILES 	src/gmailauthorization.ui
-		src/gmailauthorization.ui
-		src/walletmanager.ui
-		src/addaccount.ui
-		src/configurationoptionsdialog.ui
+set( UI_FILES
+	src/gmailauthorization.ui
+	src/gmailauthorization.ui
+	src/walletmanager.ui
+	src/addaccount.ui
+	src/logwindow.ui
+	src/configurationoptionsdialog.ui
 )
 
 if (${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-set( MOC_FILES	src/statusicon.h
-                src/walletmanager.h
+	set( MOC_FILES
+		src/statusicon.h
+		src/walletmanager.h
 		src/addaccount.h
 		src/qcheckgmail.h
 		src/configurationoptionsdialog.h
+		src/logwindow.h
 		src/util.hpp )
 else()
-set( MOC_FILES	src/statusicon.h
-                src/walletmanager.h
+	set( MOC_FILES
+		src/statusicon.h
+		src/walletmanager.h
 		src/addaccount.h
 		src/qcheckgmail.h
+		src/logwindow.h
 		src/configurationoptionsdialog.h )
 endif()
 
-set( CPP_FILES	src/gmailauthorization.cpp
-		src/main.cpp
-		src/settings.cpp
-		src/qcheckgmail.cpp
-		src/accounts.cpp
-		src/statusicon.cpp
-                src/walletmanager.cpp
-		src/addaccount.cpp
-		src/configurationoptionsdialog.cpp
+set( CPP_FILES
+	src/gmailauthorization.cpp
+	src/main.cpp
+	src/settings.cpp
+	src/qcheckgmail.cpp
+	src/accounts.cpp
+	src/statusicon.cpp
+	src/logwindow.cpp
+	src/walletmanager.cpp
+	src/addaccount.cpp
+	src/configurationoptionsdialog.cpp
 )
 
 set( RESOUCES 	icons/icon.qrc )

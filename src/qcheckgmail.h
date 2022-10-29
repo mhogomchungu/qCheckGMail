@@ -49,6 +49,7 @@
 #include "utils/network_access_manager.hpp"
 #include "gmailauthorization.h"
 #include "settings.h"
+#include "logwindow.h"
 
 #include <functional>
 #include <utility>
@@ -169,6 +170,8 @@ private:
 	void doneCheckingMail() ;
 	void audioNotify() ;
 	void addActionsToMenu() ;
+	void showLogWindow() ;
+	void logPOST( const util::urlOpts& ) ;
 
 	statusicon::clickActions clickActions() ;
 
@@ -217,9 +220,13 @@ private:
 
 	utils::network::manager m_manager ;
 
+	const QString m_auth = "https://accounts.google.com/o/oauth2/token" ;
+
 	QNetworkRequest m_networkRequest ;
 
 	QVector< accounts > m_accounts ;
+
+	logWindow m_logWindow ;
 
 	QApplication& m_qApp ;
 	QStringList m_args ;
