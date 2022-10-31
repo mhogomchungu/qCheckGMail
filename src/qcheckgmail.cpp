@@ -916,6 +916,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 		}
 
 		auto error = reply.error() ;
+		auto content = reply.data() ;
 
 		if( error == QNetworkReply::OperationCanceledError ){
 
@@ -923,13 +924,6 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			return this->reportOnAllAccounts( counter,"","Operation Cancelled" ) ;
 		}
-
-		if( error != QNetworkReply::NetworkError::NoError ){
-
-			m_logWindow.update( logWindow::TYPE::ERROR,reply.errorString() ) ;
-		}
-
-		auto content = reply.data() ;
 
 		if( reply.timeOut() ){
 
@@ -943,11 +937,13 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			if( err.hasError ){
 
-				m_logWindow.update( logWindow::TYPE::ERROR,err.errorMsg ) ;
+				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
 
 				this->reportOnAllAccounts( counter,content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
 
 			}else if( error == QNetworkReply::HostNotFoundError ){
+
+				m_logWindow.update( logWindow::TYPE::ERROR,"Host Not Found" ) ;
 
 				this->reportOnAllAccounts( counter,content,"Host Not Found" ) ;
 
@@ -959,9 +955,15 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			}else if( error == QNetworkReply::TimeoutError ){
 
+				m_logWindow.update( logWindow::TYPE::ERROR,"Network TimeOut" ) ;
+
 				this->reportOnAllAccounts( counter,content,"Network TimeOut" ) ;
 			}else{
-				this->reportOnAllAccounts( counter,content,reply.errorString() ) ;
+				auto err = reply.errorString() ;
+
+				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
+
+				this->reportOnAllAccounts( counter,content,err ) ;
 			}
 		}
 	} ) ;
