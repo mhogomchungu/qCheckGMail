@@ -70,7 +70,7 @@ void logWindow::update( logWindow::TYPE type,const QString& msg )
 
 				return "\n%1\nINFO At %2\n\n" ;
 			}else{
-				return "\n%1\nERROR At %2\n\n" ;
+				return "\n%1\nNETWORK ERROR At %2\n\n" ;
 			}
 
 		}().arg( bars,QDateTime::currentDateTime().toString() ) ;

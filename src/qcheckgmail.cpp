@@ -747,8 +747,13 @@ void qCheckGMail::getAccessToken( int counter,
 
 		opts1.add( "client_id","$CLIENT_ID" ) ;
 		opts1.add( "client_secret","$CLIENT_SECRET" ) ;
-		opts1.add( "refresh_token","$REFRESH_TOKEN" ) ;
-		opts1.add( "grant_type","refresh_token" ) ;
+
+		if( refresh_token.isEmpty() ){
+
+			opts1.add( "refresh_token","$EMPTY_REFRESH_TOKEN" ) ;
+		}else{
+			opts1.add( "refresh_token","$REFRESH_TOKEN" ) ;
+		}
 
 		this->logPOST( opts1 ) ;
 
@@ -809,7 +814,14 @@ gmailauthorization::getAuth qCheckGMail::getAuthorization()
 
 				opts1.add( "client_id","$CLIENT_ID" ) ;
 				opts1.add( "client_secret","$CLIENT_SECRET" ) ;
-				opts1.add( "code","$AUTHOCODE" ) ;
+
+				if( authocode.isEmpty() ){
+
+					opts1.add( "code","$EMPTY_AUTHOCODE" ) ;
+				}else{
+					opts1.add( "code","$AUTHOCODE" ) ;
+				}
+
 				opts1.add( "grant_type","authorization_code" ) ;
 				opts1.add( "redirect_uri","http://127.0.0.1:" + s ) ;
 
@@ -888,7 +900,7 @@ static GMailError _gmailError( const QByteArray& msg )
 			}
 		}
 
-		return { true,"Unknown GMail Error" } ;
+		return { true,QObject::tr( "Unknown GMail Error" ) } ;
 	}else{
 		return { false,{} } ;
 	}
@@ -910,60 +922,57 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			auto m = "Expected counter to be\" " + n1 + "\" but it is \"" + n2 + "\"" ;
 
-			m_logWindow.update( logWindow::TYPE::INFO,m ) ;
-
-			return ;
-		}
-
-		auto error = reply.error() ;
-		auto content = reply.data() ;
-
-		if( error == QNetworkReply::OperationCanceledError ){
-
-			m_logWindow.update( logWindow::TYPE::ERROR,"Operation Cancelled" ) ;
-
-			return this->reportOnAllAccounts( counter,"","Operation Cancelled" ) ;
+			return m_logWindow.update( logWindow::TYPE::INFO,m ) ;
 		}
 
 		if( reply.timeOut() ){
 
 			m_logWindow.update( logWindow::TYPE::ERROR,"Network Timeout" ) ;
 
-			this->reportOnAllAccounts( counter,content,"Network Timeout" ) ;
+			this->reportOnAllAccounts( counter,{},tr( "Network Timeout" ) ) ;
 		}else{
-			auto err = _gmailError( content ) ;
+			auto error = reply.error() ;
 
-			using qc = qCheckGMail::networkStatus::state ;
+			if( error == QNetworkReply::NoError ){
 
-			if( err.hasError ){
-
-				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
-
-				this->reportOnAllAccounts( counter,content,{ qc::gmailError,std::move( err.errorMsg ) } ) ;
-
-			}else if( error == QNetworkReply::HostNotFoundError ){
-
-				m_logWindow.update( logWindow::TYPE::ERROR,"Host Not Found" ) ;
-
-				this->reportOnAllAccounts( counter,content,"Host Not Found" ) ;
-
-			}else if( error == QNetworkReply::NoError ){
+				auto content = reply.data() ;
 
 				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
 
-				this->reportOnAllAccounts( counter,content,qc::success ) ;
+				auto err = _gmailError( content ) ;
 
-			}else if( error == QNetworkReply::TimeoutError ){
+				using qc = qCheckGMail::networkStatus::state ;
 
-				m_logWindow.update( logWindow::TYPE::ERROR,"Network TimeOut" ) ;
+				if( err.hasError ){
 
-				this->reportOnAllAccounts( counter,content,"Network TimeOut" ) ;
+					this->reportOnAllAccounts( counter,{},{ qc::gmailError,std::move( err.errorMsg ) } ) ;
+				}else{
+					this->reportOnAllAccounts( counter,content,qc::success ) ;
+				}
 			}else{
-				auto err = reply.errorString() ;
+				auto err = [ & ]()->std::pair< QString,QString >{
 
-				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
+					if( error == QNetworkReply::OperationCanceledError ){
 
-				this->reportOnAllAccounts( counter,content,err ) ;
+						return { tr( "Operation Cancelled" ),"Operation Cancelled" } ;
+
+					}else if( error == QNetworkReply::HostNotFoundError ){
+
+						return { tr( "Host Not Found" ),"Host Not Found" } ;
+
+					}else if( error == QNetworkReply::TimeoutError ){
+
+						return { tr( "Network TimeOut" ),"Network TimeOut" } ;
+					}else{
+						auto err = reply.errorString() ;
+
+						return { err,err } ;
+					}
+				}() ;
+
+				m_logWindow.update( logWindow::TYPE::ERROR,err.second ) ;
+
+				this->reportOnAllAccounts( counter,{},err.first ) ;
 			}
 		}
 	} ) ;
@@ -984,7 +993,14 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 
 		opts1.add( "client_id","$CLIENT_ID" ) ;
 		opts1.add( "client_secret","$CLIENT_SECRET" ) ;
-		opts1.add( "code","$AUTHOCODE" ) ;
+
+		if( authocode.isEmpty() ){
+
+			opts1.add( "code","$EMPTY_AUTHOCODE" ) ;
+		}else{
+			opts1.add( "code","$AUTHOCODE" ) ;
+		}
+
 		opts1.add( "refresh_token","$AUTHOCODE" ) ;
 		opts1.add( "grant_type","refresh_token" ) ;
 
