@@ -800,11 +800,11 @@ void qCheckGMail::getAccessToken( int counter,
 
 					auto m = "qCheckGMail: Empty Responce Received Unexectedly" ;
 
-					m_logWindow.update( logWindow::TYPE::RESPONCE,m ) ;
+					m_logWindow.update( logWindow::TYPE::RESPONCE,m,true ) ;
 				}else{
 					auto m = "qCheckGMail: Below JSON Data Was Expected To Contain \"access_token\"  Key But It Does Not\n" ;
 
-					m_logWindow.update( logWindow::TYPE::RESPONCE,m + _hideSecret( data ) ) ;
+					m_logWindow.update( logWindow::TYPE::RESPONCE,m + _hideSecret( data ),true ) ;
 				}
 
 				this->reportOnAllAccounts( counter,{},tr( "Unexpected Data Received" ) ) ;
@@ -980,7 +980,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 		}else{
 			auto error = reply.error() ;
 
-			if( error == QNetworkReply::NoError ){
+			if( error == QNetworkReply::NoError || error == QNetworkReply::AuthenticationRequiredError ){
 
 				auto content = reply.data() ;
 
@@ -999,18 +999,11 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 					this->reportOnAllAccounts( counter,content,qc::success ) ;
 				}
 			}else{
-				if( error == QNetworkReply::AuthenticationRequiredError ){
+				auto err = this->errorMessage( reply ) ;
 
-					m_logWindow.update( logWindow::TYPE::ERROR,reply.data(),true ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 
-					this->reportOnAllAccounts( counter,{},tr( "Authentication Required" ) ) ;
-				}else{
-					auto err = this->errorMessage( reply ) ;
-
-					m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
-
-					this->reportOnAllAccounts( counter,{},err.translated ) ;
-				}
+				this->reportOnAllAccounts( counter,{},err.translated ) ;
 			}
 		}
 	} ) ;
