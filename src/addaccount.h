@@ -33,6 +33,7 @@
 #include "util.hpp"
 #include "settings.h"
 #include "utils/network_access_manager.hpp"
+#include "logwindow.h"
 
 namespace Ui {
 class addaccount;
@@ -172,24 +173,27 @@ public:
 
 	static addaccount& instance( QDialog * parent,
 				     settings& s,
+				     logWindow& l,
 				     const accounts::entry& e,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions r,
 				     addaccount::GMailInfo& n )
 	{
-		return *( new addaccount( parent,s,e,k,std::move( r ),n ) ) ;
+		return *( new addaccount( parent,l,s,e,k,std::move( r ),n ) ) ;
 	}
 
 	static addaccount& instance( QDialog * parent,
 				     settings& s,
+				     logWindow& l,
 				     gmailauthorization::getAuth& k,
 				     addaccount::Actions e,
 				     addaccount::GMailInfo& n )
 	{
-		return *( new addaccount( parent,s,k,std::move( e ),n ) ) ;
+		return *( new addaccount( parent,l,s,k,std::move( e ),n ) ) ;
 	}
 
 	addaccount( QDialog *,
+		    logWindow&,
 		    settings&,
 		    const accounts::entry&,
 		    gmailauthorization::getAuth&,
@@ -197,6 +201,7 @@ public:
 		    addaccount::GMailInfo& ) ;
 
 	addaccount( QDialog *,
+		    logWindow&,
 		    settings&,
 		    gmailauthorization::getAuth&,
 		    addaccount::Actions,
@@ -220,6 +225,7 @@ private:
 	gmailauthorization::getAuth& m_getAuthorization ;
 	addaccount::Actions m_actions ;
 	addaccount::GMailInfo& m_gmailAccountInfo ;
+	logWindow& m_logWindow ;
 	settings& m_setting ;
 	QMenu m_menu ;
 };

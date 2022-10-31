@@ -90,18 +90,19 @@ private:
 	}
 } ;
 
-walletmanager::walletmanager( const QString& icon,settings& s ) :
-	m_icon( QString( ":/%1" ).arg( icon ) ),m_settings( s )
+walletmanager::walletmanager( const QString& icon,settings& s,logWindow& l ) :
+	m_icon( QString( ":/%1" ).arg( icon ) ),m_settings( s ),m_logWindow( l )
 {
 }
 
-walletmanager::walletmanager( walletmanager::Wallet f,settings& s ) :
-	m_walletData( std::move( f ) ),m_settings( s )
+walletmanager::walletmanager( walletmanager::Wallet f,settings& s,logWindow& l ) :
+	m_walletData( std::move( f ) ),m_settings( s ),m_logWindow( l )
 {
 }
 
 walletmanager::walletmanager( const QString& icon,
 			      settings& s,
+			      logWindow& l,
 			      walletmanager::Wallet e,
 			      gmailauthorization::getAuth k,
 			      addaccount::GMailInfo a ) :
@@ -109,7 +110,8 @@ walletmanager::walletmanager( const QString& icon,
 	m_walletData( std::move( e ) ),
 	m_getAuthorization( std::move( k ) ),
 	m_getAccountInfo( std::move( a ) ),
-	m_settings( s )
+	m_settings( s ),
+	m_logWindow( l )
 {
 }
 
@@ -400,6 +402,7 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 
 	addaccount::instance( this,
 			      m_settings,
+			      m_logWindow,
 			      m_accounts[ row ].data(),
 			      m_getAuthorization,
 			      { util::type_identity< meaw >(),this,std::move( l ),row },
@@ -497,7 +500,11 @@ void walletmanager::pushButtonAdd()
 		addaccount::labels m_labels ;
 	} ;
 
-	addaccount::instance( this,m_settings,m_getAuthorization,{ util::type_identity< meaw >(),this },m_getAccountInfo ) ;
+	addaccount::instance( this,
+			      m_settings,
+			      m_logWindow,
+			      m_getAuthorization,{ util::type_identity< meaw >(),this },
+			      m_getAccountInfo ) ;
 }
 
 void walletmanager::tableItemClicked( QTableWidgetItem * item )

@@ -313,6 +313,28 @@ void qCheckGMail::logPOST( const util::urlOpts& e )
 	m_logWindow.update( logWindow::TYPE::REQUEST,"POST\n" + m_auth + "\n" + e.toUtf8() + "\n" ) ;
 }
 
+qCheckGMail::errMessage qCheckGMail::errorMessage( const utils::network::reply& reply )
+{
+	auto error = reply.error() ;
+
+	if( error == QNetworkReply::OperationCanceledError ){
+
+		return { tr( "Operation Cancelled" ),"Operation Cancelled" } ;
+
+	}else if( error == QNetworkReply::HostNotFoundError ){
+
+		return { tr( "Host Not Found" ),"Host Not Found" } ;
+
+	}else if( error == QNetworkReply::TimeoutError ){
+
+		return { tr( "Network TimeOut" ),"Network TimeOut" } ;
+	}else{
+		auto err = reply.errorString() ;
+
+		return { err,err } ;
+	}
+}
+
 statusicon::clickActions qCheckGMail::clickActions()
 {
 	class meaw : public statusicon::clickActionsInterface
@@ -684,7 +706,10 @@ void qCheckGMail::checkMail()
 
 		this->checkMail( m_counter,m_accounts.at( m_currentAccount ) ) ;
 	}else{
-		std::cout << tr( "Dont Have Credentials,(Re)Trying To Open Wallet" ) << std::endl ;
+		auto m = "Dont Have Credentials,(Re)Trying To Open Wallet" ;
+
+		m_logWindow.update( logWindow::TYPE::INFO,m,true ) ;
+
 		this->getAccountsInfo() ;
 	}
 }
@@ -769,21 +794,43 @@ void qCheckGMail::getAccessToken( int counter,
 
 			auto e = _parseJSON( data,"access_token" ) ;
 
-			acc.setAccessToken( e ) ;
+			if( e.isEmpty() ){
 
-			auto url = UrlLabel.toUtf8() ;
+				if( data.isEmpty() ){
 
-			QNetworkRequest request( QUrl( url.constData() ) ) ;
+					auto m = "qCheckGMail: Empty Responce Received Unexectedly" ;
 
-			request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
+					m_logWindow.update( logWindow::TYPE::RESPONCE,m ) ;
+				}else{
+					auto m = "qCheckGMail: Below JSON Data Was Expected To Contain \"access_token\"  Key But It Does Not\n" ;
 
-			m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN\n" ) ;
+					m_logWindow.update( logWindow::TYPE::RESPONCE,m + _hideSecret( data ) ) ;
+				}
 
-			this->networkAccess( counter,request ) ;
+				this->reportOnAllAccounts( counter,{},tr( "Unexpected Data Received" ) ) ;
+			}else{
+				acc.setAccessToken( e ) ;
+
+				auto url = UrlLabel.toUtf8() ;
+
+				QNetworkRequest request( QUrl( url.constData() ) ) ;
+
+				request.setRawHeader( "Authorization","Bearer " + e.toUtf8() ) ;
+
+				m_logWindow.update( logWindow::TYPE::REQUEST,"GET\n" + url + "\nAuthorization:Bearer $ACCESS_TOKEN\n" ) ;
+
+				this->networkAccess( counter,request ) ;
+			}
 		}else{
-			QNetworkRequest request( QUrl( UrlLabel.toUtf8().constData() ) ) ;
+			if( reply.timeOut() ){
 
-			this->networkAccess( counter,request ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,"Network Timeout" ) ;
+				this->reportOnAllAccounts( counter,{},tr( "Network Timeout" ) ) ;
+			}else{
+				auto err = this->errorMessage( reply ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+				this->reportOnAllAccounts( counter,{},err.translated ) ;
+			}
 		}
 	} ) ;
 }
@@ -937,42 +984,33 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 				auto content = reply.data() ;
 
-				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
-
 				auto err = _gmailError( content ) ;
 
 				using qc = qCheckGMail::networkStatus::state ;
 
 				if( err.hasError ){
 
+					m_logWindow.update( logWindow::TYPE::RESPONCE,content,true ) ;
+
 					this->reportOnAllAccounts( counter,{},{ qc::gmailError,std::move( err.errorMsg ) } ) ;
 				}else{
+					m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
+
 					this->reportOnAllAccounts( counter,content,qc::success ) ;
 				}
 			}else{
-				auto err = [ & ]()->std::pair< QString,QString >{
+				if( error == QNetworkReply::AuthenticationRequiredError ){
 
-					if( error == QNetworkReply::OperationCanceledError ){
+					m_logWindow.update( logWindow::TYPE::ERROR,reply.data(),true ) ;
 
-						return { tr( "Operation Cancelled" ),"Operation Cancelled" } ;
+					this->reportOnAllAccounts( counter,{},tr( "Authentication Required" ) ) ;
+				}else{
+					auto err = this->errorMessage( reply ) ;
 
-					}else if( error == QNetworkReply::HostNotFoundError ){
+					m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 
-						return { tr( "Host Not Found" ),"Host Not Found" } ;
-
-					}else if( error == QNetworkReply::TimeoutError ){
-
-						return { tr( "Network TimeOut" ),"Network TimeOut" } ;
-					}else{
-						auto err = reply.errorString() ;
-
-						return { err,err } ;
-					}
-				}() ;
-
-				m_logWindow.update( logWindow::TYPE::ERROR,err.second ) ;
-
-				this->reportOnAllAccounts( counter,{},err.first ) ;
+					this->reportOnAllAccounts( counter,{},err.translated ) ;
+				}
 			}
 		}
 	} ) ;
@@ -1026,8 +1064,7 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,addaccount::Gmai
 				m_logWindow.update( logWindow::TYPE::ERROR,"Network TimeOut" ) ;
 			}else{
 				auto err = reply.errorString() ;
-
-				ginfo( err ) ;
+				ginfo( err ) ;				
 				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
 			}
 		}
@@ -1177,6 +1214,7 @@ void qCheckGMail::configureAccounts()
 
 	walletmanager::instance( m_applicationIcon,
 				 m_settings,
+				 m_logWindow,
 				 this->walletHandle(),
 				 this->getAuthorization(),
 				 { util::type_identity< meaw >(),this } ).ShowUI() ;
@@ -1184,12 +1222,12 @@ void qCheckGMail::configureAccounts()
 
 void qCheckGMail::configurePassWord()
 {
-	walletmanager::instance( m_applicationIcon,m_settings ).changeWalletPassword() ;
+	walletmanager::instance( m_applicationIcon,m_settings,m_logWindow ).changeWalletPassword() ;
 }
 
 void qCheckGMail::getAccountsInfo()
 {
-	walletmanager::instance( this->walletHandle(),m_settings ).getAccounts() ;
+	walletmanager::instance( this->walletHandle(),m_settings,m_logWindow ).getAccounts() ;
 }
 
 void qCheckGMail::noAccountConfigured()

@@ -38,7 +38,7 @@ public:
 	logWindow( settings&,bool ) ;
 	~logWindow() override ;
 	enum class TYPE{ REQUEST,RESPONCE,INFO,ERROR } ;
-	void update( logWindow::TYPE,const QString& e ) ;
+	void update( logWindow::TYPE,const QString& e,bool = false ) ;
 	void Hide() ;
 	void Show() ;
 	void retranslateUi() ;

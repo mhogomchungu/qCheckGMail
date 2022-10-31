@@ -50,9 +50,9 @@ logWindow::~logWindow()
 	delete m_ui ;
 }
 
-void logWindow::update( logWindow::TYPE type,const QString& msg )
+void logWindow::update( logWindow::TYPE type,const QString& msg,bool force )
 {
-	if( this->isVisible() || m_alwaysAddLogs ){
+	if( this->isVisible() || m_alwaysAddLogs || force ){
 
 		const auto bars = "*************************************************************************" ;
 

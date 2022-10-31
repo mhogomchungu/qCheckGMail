@@ -90,30 +90,32 @@ public:
 		std::unique_ptr< walletmanager::wallet > m_handle ;
 	} ;
 
-	static walletmanager& instance( const QString& icon,settings& s )
+	static walletmanager& instance( const QString& icon,settings& s,logWindow& l )
         {
-		return *( new walletmanager( icon,s ) ) ;
+		return *( new walletmanager( icon,s,l ) ) ;
         }
 
-	static walletmanager& instance( walletmanager::Wallet f,settings& s )
+	static walletmanager& instance( walletmanager::Wallet f,settings& s,logWindow& l )
 	{
-		return *( new walletmanager( std::move( f ),s ) ) ;
+		return *( new walletmanager( std::move( f ),s,l ) ) ;
 	}
 
         static walletmanager& instance( const QString& icon,
 					settings& s,
+					logWindow& l,
 					walletmanager::Wallet e,
 					gmailauthorization::getAuth k,
 					addaccount::GMailInfo n )
         {
-		return *( new walletmanager( icon,s,std::move( e ),std::move( k ),std::move( n ) ) ) ;
+		return *( new walletmanager( icon,s,l,std::move( e ),std::move( k ),std::move( n ) ) ) ;
         }
 
-	walletmanager( const QString& icon,settings& ) ;
-	walletmanager( walletmanager::Wallet,settings& ) ;
+	walletmanager( const QString& icon,settings&,logWindow& ) ;
+	walletmanager( walletmanager::Wallet,settings&,logWindow& ) ;
 
         walletmanager( const QString& icon,
 		       settings&,
+		       logWindow&,
 		       walletmanager::Wallet,
 		       gmailauthorization::getAuth,
 		       addaccount::GMailInfo ) ;
@@ -165,6 +167,7 @@ private:
 	addaccount::GMailInfo m_getAccountInfo ;
 
 	settings& m_settings ;
+	logWindow& m_logWindow ;
 };
 
 #endif // CONFIGURATIONDIALOG_H

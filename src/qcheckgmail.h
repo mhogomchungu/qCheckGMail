@@ -173,6 +173,14 @@ private:
 	void showLogWindow() ;
 	void logPOST( const util::urlOpts& ) ;
 
+	struct errMessage
+	{
+		QString translated ;
+		QString unTranslated ;
+	} ;
+
+	errMessage errorMessage( const utils::network::reply& ) ;
+
 	statusicon::clickActions clickActions() ;
 
 	int m_interval ;

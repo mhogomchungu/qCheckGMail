@@ -29,6 +29,7 @@
 #include <QJsonObject>
 
 addaccount::addaccount( QDialog * parent,
+			logWindow& l,
 			settings& e,
 			gmailauthorization::getAuth& k,
 			addaccount::Actions s,
@@ -38,6 +39,7 @@ addaccount::addaccount( QDialog * parent,
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
 	m_gmailAccountInfo( n ),
+	m_logWindow( l ),
 	m_setting( e )
 {
 	m_ui->setupUi( this ) ;
@@ -75,8 +77,9 @@ addaccount::addaccount( QDialog * parent,
 
 				m_parent->HideUI() ;
 
-				std::cout << "ERROR: Failed To Generate Token\n" ;
-				std::cout << s.constData() << std::endl ;
+				auto m = "Failed To Generate Token\n" + s ;
+
+				m_parent->m_logWindow.update( logWindow::TYPE::INFO,m,true ) ;
 			}else{
 				m_parent->getLabels( e ) ;
 			}
@@ -92,6 +95,7 @@ addaccount::addaccount( QDialog * parent,
 }
 
 addaccount::addaccount( QDialog * parent,
+			logWindow& l,
 			settings& m,
 			const accounts::entry& e,
 			gmailauthorization::getAuth& k,
@@ -102,6 +106,7 @@ addaccount::addaccount( QDialog * parent,
 	m_getAuthorization( k ),
 	m_actions( std::move( s ) ),
 	m_gmailAccountInfo( n ),
+	m_logWindow( l ),
 	m_setting( m )
 {
 	m_ui->setupUi( this );
