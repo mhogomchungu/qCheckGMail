@@ -133,14 +133,25 @@ void walletmanager::buildGUI()
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 	this->setWindowIcon( QIcon( m_icon ) ) ;
 
-	auto cm = static_cast< void( walletmanager::* )() >( &walletmanager::pushButtonAdd ) ;
-	auto dm = static_cast< void( walletmanager::* )( QTableWidgetItem *,QTableWidgetItem * ) >( &walletmanager::tableItemChanged ) ;
+	connect( m_ui->pushButtonAccountAdd,
+		 &QPushButton::clicked,
+		 this,
+		 &walletmanager::pushButtonToAdd ) ;
 
-	connect( m_ui->pushButtonAccountAdd,&QPushButton::clicked,this,cm ) ;
-	connect( m_ui->pushButtonClose,&QPushButton::clicked,this,&walletmanager::pushButtonClose ) ;
+	connect( m_ui->pushButtonClose,
+		 &QPushButton::clicked,
+		 this,
+		 &walletmanager::pushButtonClose ) ;
 
-	connect( m_ui->tableWidget,&QTableWidget::itemClicked,this,&walletmanager::tableItemClicked ) ;
-	connect( m_ui->tableWidget,&QTableWidget::currentItemChanged,this,dm ) ;
+	connect( m_ui->tableWidget,
+		 &QTableWidget::itemClicked,
+		 this,
+		 &walletmanager::tableItemClicked ) ;
+
+	connect( m_ui->tableWidget,
+		 &QTableWidget::currentItemChanged,
+		 this,
+		 &walletmanager::tableItemChanged ) ;
 
 	m_ui->tableWidget->setColumnWidth( 0,300 ) ;
 	m_ui->tableWidget->horizontalHeader()->setStretchLastSection( true ) ;
@@ -469,14 +480,14 @@ void walletmanager::editEntryLabels()
 	m_getAccountInfo( accName,{ util::type_identity< meaw >(),this,row,std::move( txt ) } ) ;
 }
 
-void walletmanager::pushButtonAdd()
+void walletmanager::pushButtonToAdd()
 {
 	this->disableAll() ;
 
 	class meaw : public addaccount::actions
 	{
 	public:
-		meaw( walletmanager * m ) : m_parent( m )
+		meaw( walletmanager& m ) : m_parent( m )
 		{
 		}
 		void setLabels( addaccount::labels&& l ) override
@@ -485,25 +496,25 @@ void walletmanager::pushButtonAdd()
 		}
 		void cancel() override
 		{
-			m_parent->enableAll() ;
+			m_parent.enableAll() ;
 		}
 		void results( accounts::entry&& e ) override
 		{
-			m_parent->pushButtonAdd( std::move( e ) ) ;
+			m_parent.pushButtonAdd( std::move( e ) ) ;
 		}
 		const addaccount::labels& labels() override
 		{
 			return m_labels ;
 		}
 	private:
-		walletmanager * m_parent ;
+		walletmanager& m_parent ;
 		addaccount::labels m_labels ;
 	} ;
 
 	addaccount::instance( this,
 			      m_settings,
 			      m_logWindow,
-			      m_getAuthorization,{ util::type_identity< meaw >(),this },
+			      m_getAuthorization,{ util::type_identity< meaw >(),*this },
 			      m_getAccountInfo ) ;
 }
 

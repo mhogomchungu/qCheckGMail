@@ -282,7 +282,8 @@ void addaccount::add()
 			msg.setText( tr( "ERROR: One Or More Required Field Is Empty" ) ) ;
 			msg.exec() ;
 		}else{
-			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),m_actions.labels().entries ) ;
+			auto lbs = util::labelsToJson( this->m_ui->lineEditLabel->text(),
+						       m_actions.labels().entries ) ;
 
 			m_actions.results( { accName,std::move( lbs ),m_key } ) ;
 

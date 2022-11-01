@@ -28,7 +28,9 @@
 #define DEFAULT_KDE_WALLET     "default kde wallet"
 #define qCheckGMail_KDE_wALLET "qCheckGMail kde wallet"
 
-configurationoptionsdialog::configurationoptionsdialog( QObject *,settings& s,configurationoptionsdialog::Actions ac ) :
+configurationoptionsdialog::configurationoptionsdialog( QObject *,
+							settings& s,
+							configurationoptionsdialog::Actions ac ) :
 	m_ui( new Ui::configurationoptionsdialog ),
 	m_actions( std::move( ac ) ),
 	m_settings( s )
@@ -40,7 +42,10 @@ configurationoptionsdialog::configurationoptionsdialog( QObject *,settings& s,co
 
 	this->setWindowFlags( Qt::Window | Qt::Dialog ) ;
 
-	connect( m_ui->pushButtonClose,&QPushButton::clicked,this,&configurationoptionsdialog::pushButtonClose ) ;
+	connect( m_ui->pushButtonClose,
+		 &QPushButton::clicked,
+		 this,
+		 &configurationoptionsdialog::pushButtonClose ) ;
 
 	if( LXQt::Wallet::backEndIsSupported( LXQt::Wallet::BackEnd::internal ) ){
 

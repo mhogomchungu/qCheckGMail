@@ -127,7 +127,7 @@ public:
 private:
 	void deleteAccount( bool = false ) ;
 	void editEntryLabels() ;
-	void pushButtonAdd() ;
+	void pushButtonToAdd() ;
 	void pushButtonClose() ;
 	void tableItemClicked( QTableWidgetItem * ) ;
 	void tableItemChanged( QTableWidgetItem *,QTableWidgetItem * ) ;

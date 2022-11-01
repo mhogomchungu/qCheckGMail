@@ -97,6 +97,8 @@ private:
 	QString displayName( const QString& = QString() ) ;
 
 	gmailauthorization::getAuth getAuthorization() ;
+	void getAuthorization( const QString&,
+			       gmailauthorization::AuthResult function ) ;
 
 	walletmanager::Wallet walletHandle() ;
 
@@ -104,13 +106,15 @@ private:
 
 	void networkAccess( int,const QNetworkRequest& ) ;
 
-	void getGMailAccountInfo( const QString& authocode,addaccount::GmailAccountInfo returnEmail ) ;
-	void getGMailAccountInfo( const QByteArray& accName,addaccount::GmailAccountInfo returnEmail ) ;
+	void getGMailAccountInfo( const QString&,addaccount::GmailAccountInfo ) ;
+	void getGMailAccountInfo( const QByteArray&,addaccount::GmailAccountInfo ) ;
 
 	void getLabels( const QString& accessToken,addaccount::GmailAccountInfo ) ;
 
 	void setTrayIconToVisible( bool ) ;
-	void showToolTip( const QString& iconName,const QString& title,const QString& subTitle ) ;
+	void showToolTip( const QString& iconName,
+			  const QString& title,
+			  const QString& subTitle ) ;
 	void showPausedIcon( bool ) ;
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
@@ -127,35 +131,44 @@ private:
 	void startTimer() ;
 	void stopTimer() ;
 	void setTimer() ;
-	class networkStatus{
+	class result{
 	public:
-		enum class state{ success,gmailError,networkError } ;
-		networkStatus( QString s ) :
+		enum class state{ success,gmailError,otherError } ;
+		enum class errorCode{ unauthenticated,unknown } ;
+
+		result( QString s ) :
 			m_errorString( std::move( s ) ),
-			m_state( qCheckGMail::networkStatus::state::networkError )
+			m_state( qCheckGMail::result::state::otherError )
 		{
 			m_errorString.insert( 0,": " ) ;
 		}
-		networkStatus( const char * s ) : m_errorString( s ),
-			m_state( qCheckGMail::networkStatus::state::networkError )
+		result( const char * s ) : m_errorString( s ),
+			m_state( qCheckGMail::result::state::otherError )
 		{
 			m_errorString.insert( 0,": " ) ;
 		}
-		networkStatus( qCheckGMail::networkStatus::state s ) : m_state( s )
+		result( qCheckGMail::result::state s ) : m_state( s )
 		{
 		}
-		networkStatus( qCheckGMail::networkStatus::state s,QString m ) :
-			m_errorString( std::move( m ) ),m_state( s )
+		result( qCheckGMail::result::state s,
+			qCheckGMail::result::errorCode e,
+			QString m ) :
+			m_errorString( std::move( m ) ),m_state( s ),m_errorCode( e )
 		{
 			m_errorString.insert( 0,": " ) ;
 		}
 		bool success()
 		{
-			return m_state == qCheckGMail::networkStatus::state::success ;
+			return m_state == qCheckGMail::result::state::success ;
 		}
 		bool gmailError()
 		{
-			return m_state == qCheckGMail::networkStatus::state::gmailError ;
+			return m_state == qCheckGMail::result::state::gmailError ;
+		}
+		bool gmailErrorOfUnauthenticated()
+		{
+			using err = qCheckGMail::result::errorCode ;
+			return m_errorCode == err::unauthenticated ;
 		}
 		const QString& errorString()
 		{
@@ -163,9 +176,10 @@ private:
 		}
 	private:
 		QString m_errorString ;
-		qCheckGMail::networkStatus::state m_state ;
+		qCheckGMail::result::state m_state ;
+		qCheckGMail::result::errorCode m_errorCode ;
 	} ;
-	void reportOnAllAccounts( int,const QByteArray&,qCheckGMail::networkStatus ) ;
+	void updateUi( int,const QByteArray&,qCheckGMail::result ) ;
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;
 	void audioNotify() ;
@@ -173,15 +187,26 @@ private:
 	void showLogWindow() ;
 	void logPOST( const util::urlOpts& ) ;
 
+	struct GMailError
+	{
+		qCheckGMail::result::errorCode code ;
+		QString errorMsg ;
+	} ;
+
+	qCheckGMail::GMailError gmailError( const QByteArray& msg ) ;
+
 	struct errMessage
 	{
 		QString translated ;
 		QString unTranslated ;
 	} ;
 
-	errMessage errorMessage( const utils::network::reply& ) ;
+	qCheckGMail::errMessage errorMessage( const utils::network::reply& ) ;
+	qCheckGMail::errMessage networkTimeOut() ;
 
 	statusicon::clickActions clickActions() ;
+
+	settings m_settings ;
 
 	int m_interval ;
 	int m_numberOfLabels ;
@@ -220,10 +245,6 @@ private:
 	QMutex m_mutex ;
 
 	QTimer m_timer ;
-
-	QMenu * m_menu ;
-
-	settings m_settings ;
 
 	utils::network::manager m_manager ;
 

@@ -116,11 +116,15 @@ gmailauthorization::gmailauthorization( QDialog * parent,
 
 		if( portNumber >= 60000 ){
 
-			m_ui->textEdit->setText( "Error: Failed To Accure Port Number For A Localhost Address" ) ;
+			auto m = "Error: Failed To Accure Port Number For A Localhost Address" ;
+
+			m_ui->textEdit->setText( m ) ;
 			break ;
 		}
 
-		auto s = m_server.listen( QHostAddress( "http://127.0.0.1" ),static_cast< unsigned short >( portNumber ) ) ;
+		auto p = static_cast< unsigned short >( portNumber ) ;
+
+		auto s = m_server.listen( QHostAddress( "http://127.0.0.1" ),p ) ;
 
 		if( s ){
 

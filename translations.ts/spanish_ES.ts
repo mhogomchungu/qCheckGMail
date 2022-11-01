@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="950"/>
+        <location filename="../src/qcheckgmail.cpp" line="947"/>
         <source>Unknown GMail Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -110,7 +110,7 @@
         <translation>&amp;cerrar</translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="126"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="131"/>
         <source>
 
 ERROR: illegal characters detected in the the update interval field
@@ -123,7 +123,7 @@ ERROR: caracteres no válidos detectados en el campo de intervalo de actualizaci
 </translation>
     </message>
     <message>
-        <location filename="../src/configurationoptionsdialog.cpp" line="133"/>
+        <location filename="../src/configurationoptionsdialog.cpp" line="138"/>
         <source>
 
 ERROR: minimum time interval is 1 minute
@@ -139,122 +139,116 @@ ERROR: el intervalo de tiempo mínimo es 1 minuto
 <context>
     <name>qCheckGMail</name>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="176"/>
-        <location filename="../src/qcheckgmail.cpp" line="1180"/>
+        <location filename="../src/qcheckgmail.cpp" line="179"/>
+        <location filename="../src/qcheckgmail.cpp" line="1205"/>
         <source>Status</source>
         <translation>estado</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="176"/>
+        <location filename="../src/qcheckgmail.cpp" line="179"/>
         <source>Opening Wallet</source>
         <translation>abriendo cartera</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="235"/>
+        <location filename="../src/qcheckgmail.cpp" line="262"/>
         <source>Show Log Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="244"/>
+        <location filename="../src/qcheckgmail.cpp" line="224"/>
         <source>Check Mail Now</source>
         <translation>comprobar correo ahora</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="249"/>
+        <location filename="../src/qcheckgmail.cpp" line="229"/>
         <source>Pause Checking Mail</source>
         <translation>pausar comprobación de correo</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="260"/>
+        <location filename="../src/qcheckgmail.cpp" line="242"/>
         <source>Configure Accounts</source>
         <translation>configurar cuentas</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="265"/>
+        <location filename="../src/qcheckgmail.cpp" line="247"/>
         <source>Configure Password</source>
         <translation>configurar contraseña</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="275"/>
+        <location filename="../src/qcheckgmail.cpp" line="257"/>
         <source>Configure Options</source>
         <translation>configurar opciones</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="278"/>
-        <source>Open Mail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="322"/>
+        <location filename="../src/qcheckgmail.cpp" line="286"/>
         <source>Operation Cancelled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="326"/>
+        <location filename="../src/qcheckgmail.cpp" line="290"/>
         <source>Host Not Found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="330"/>
+        <location filename="../src/qcheckgmail.cpp" line="294"/>
         <source>Network TimeOut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="810"/>
+        <location filename="../src/qcheckgmail.cpp" line="790"/>
         <source>Unexpected Data Received</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="828"/>
-        <location filename="../src/qcheckgmail.cpp" line="979"/>
-        <source>Network Timeout</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="1006"/>
-        <source>Authentication Required</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/qcheckgmail.cpp" line="1237"/>
+        <location filename="../src/qcheckgmail.cpp" line="1278"/>
         <source>Account Related Error Was Detected</source>
         <translation>se ha detectado algún error relacionado con la cuenta</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="555"/>
+        <location filename="../src/qcheckgmail.cpp" line="526"/>
         <source>Found 1 New Email</source>
         <translation>se ha encontrado 1 correo nuevo</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="558"/>
+        <location filename="../src/qcheckgmail.cpp" line="530"/>
         <source>Found %1 New Emails</source>
         <translation>encontrados %1 correos nuevos</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="565"/>
+        <location filename="../src/qcheckgmail.cpp" line="541"/>
         <source>No New Email Found</source>
         <translation>no se ha encontrado ningún correo nuevo</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="698"/>
-        <location filename="../src/qcheckgmail.cpp" line="704"/>
+        <location filename="../src/qcheckgmail.cpp" line="675"/>
+        <location filename="../src/qcheckgmail.cpp" line="681"/>
         <source>Checking For Email Updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1238"/>
+        <location filename="../src/qcheckgmail.cpp" line="1154"/>
+        <source>Missing Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="1219"/>
+        <source>%1 Seconds Network TimeOut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qcheckgmail.cpp" line="1279"/>
         <source>No Account Appear To Be Configured In The Wallet</source>
         <translation>parece no haber ninguna cuenta configurada en la cartera</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1344"/>
-        <location filename="../src/qcheckgmail.cpp" line="1360"/>
+        <location filename="../src/qcheckgmail.cpp" line="1385"/>
+        <location filename="../src/qcheckgmail.cpp" line="1401"/>
         <source>another instance is already running,exiting this one</source>
         <translation>ya está ejecutándose otra cartera, saliendo de ésta</translation>
     </message>
     <message>
-        <location filename="../src/qcheckgmail.cpp" line="1379"/>
-        <location filename="../src/qcheckgmail.cpp" line="1395"/>
+        <location filename="../src/qcheckgmail.cpp" line="1420"/>
+        <location filename="../src/qcheckgmail.cpp" line="1436"/>
         <source>Autostart Disabled,Exiting This One</source>
         <translation>inicio automático desactivado, saliendo</translation>
     </message>
@@ -301,37 +295,37 @@ ERROR: el intervalo de tiempo mínimo es 1 minuto
         <translation>&amp;cerrar</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="455"/>
+        <location filename="../src/walletmanager.cpp" line="466"/>
         <source>Network Error: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="467"/>
+        <location filename="../src/walletmanager.cpp" line="478"/>
         <source>Getting Account&apos;s Label List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="519"/>
+        <location filename="../src/walletmanager.cpp" line="530"/>
         <source>Delete Entry</source>
         <translation>borrar entrada</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="528"/>
+        <location filename="../src/walletmanager.cpp" line="539"/>
         <source>Edit Entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="544"/>
+        <location filename="../src/walletmanager.cpp" line="555"/>
         <source>Are You Sure You Want To Delete &quot;%1&quot; Account?</source>
         <translation>¿Está seguro de que quiere borrar la cuenta &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="545"/>
+        <location filename="../src/walletmanager.cpp" line="556"/>
         <source>&amp;Yes</source>
         <translation>&amp;yes</translation>
     </message>
     <message>
-        <location filename="../src/walletmanager.cpp" line="546"/>
+        <location filename="../src/walletmanager.cpp" line="557"/>
         <source>&amp;No</source>
         <translation>&amp;no</translation>
     </message>
