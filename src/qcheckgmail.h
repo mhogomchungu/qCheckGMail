@@ -106,8 +106,8 @@ private:
 
 	void networkAccess( int,const QNetworkRequest& ) ;
 
-	void getGMailAccountInfo( const QString&,addaccount::GmailAccountInfo ) ;
-	void getGMailAccountInfo( const QByteArray&,addaccount::GmailAccountInfo ) ;
+	void getGMailAccountInfoWithoutToken( const QString&,addaccount::GmailAccountInfo ) ;
+	void getGMailAccountInfoWithToken( const QString&,addaccount::GmailAccountInfo ) ;
 
 	void getLabels( const QString& accessToken,addaccount::GmailAccountInfo ) ;
 

@@ -64,34 +64,34 @@ addaccount::addaccount( QDialog * parent,
 	class accs : public gmailauthorization::actions
 	{
 	public:
-		accs( addaccount * acc ) : m_parent( acc )
+		accs( addaccount& acc ) : m_parent( acc )
 		{
 		}
 		void cancel() override
 		{
-			m_parent->cancel() ;
+			m_parent.cancel() ;
 		}
 		void getToken( const QString& e,const QByteArray& s ) override
 		{
 			if( e.isEmpty() ){
 
-				m_parent->HideUI() ;
+				m_parent.HideUI() ;
 
 				auto m = "Failed To Generate Token\n" + s ;
 
-				m_parent->m_logWindow.update( logWindow::TYPE::INFO,m,true ) ;
+				m_parent.m_logWindow.update( logWindow::TYPE::INFO,m,true ) ;
 			}else{
-				m_parent->getLabels( e ) ;
+				m_parent.getLabels( e ) ;
 			}
 		}
 	private:
-		addaccount * m_parent ;
+		addaccount& m_parent ;
 	};
 
 	gmailauthorization::instance( this,
 				      m_setting,
 				      m_getAuthorization,
-				      { util::type_identity< accs >(),this } ) ;
+				      { util::type_identity< accs >(),*this } ) ;
 }
 
 addaccount::addaccount( QDialog * parent,
@@ -152,22 +152,22 @@ void addaccount::getLabels( const QString& e )
 	class meaw : public addaccount::gmailAccountInfo
 	{
 	public:
-		meaw( addaccount * acc ) : m_parent( acc )
+		meaw( addaccount& acc ) : m_parent( acc )
 		{
 		}
 		void operator()( addaccount::labels s ) override
 		{
-			m_parent->showLabels( std::move( s ) ) ;
+			m_parent.showLabels( std::move( s ) ) ;
 		}
 		void operator()( const QString& e ) override
 		{
-			m_parent->showError( e ) ;
+			m_parent.showError( e ) ;
 		}
 	private:
-		addaccount * m_parent ;
+		addaccount& m_parent ;
 	};
 
-	m_gmailAccountInfo( e,{ util::type_identity< meaw >(),this } ) ;
+	m_gmailAccountInfo.withoutToken( e,{ util::type_identity< meaw >(),*this } ) ;
 }
 
 void addaccount::showLabels( addaccount::labels&& s )

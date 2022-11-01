@@ -304,7 +304,7 @@ statusicon::clickActions qCheckGMail::clickActions()
 	class meaw : public statusicon::clickActionsInterface
 	{
 	public:
-		meaw( qCheckGMail& q ) : m_parent( q )
+		meaw( qCheckGMail& e ) : m_parent( e )
 		{
 		}
 		void onLeftClick() const override
@@ -582,7 +582,7 @@ void qCheckGMail::configurationoptionWindow()
 	class meaw : public configurationoptionsdialog::actions
 	{
 	public:
-		meaw( qCheckGMail& g ) : m_parent( g )
+		meaw( qCheckGMail& e ) : m_parent( e )
 		{
 		}
 		void configurationWindowClosed( int s ) override
@@ -1014,8 +1014,8 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 	} ) ;
 }
 
-void qCheckGMail::getGMailAccountInfo( const QString& authocode,
-				       addaccount::GmailAccountInfo ginfo )
+void qCheckGMail::getGMailAccountInfoWithoutToken( const QString& authocode,
+						   addaccount::GmailAccountInfo ginfo )
 {
 	m_manager.post( m_networkRequest,[ & ](){
 
@@ -1071,8 +1071,8 @@ void qCheckGMail::getGMailAccountInfo( const QString& authocode,
 	} ) ;
 }
 
-void qCheckGMail::getGMailAccountInfo( const QByteArray& accName,
-				       addaccount::GmailAccountInfo ginfo )
+void qCheckGMail::getGMailAccountInfoWithToken( const QString& accName,
+						addaccount::GmailAccountInfo ginfo )
 {
 	for( const auto& it : m_accounts ){
 
@@ -1235,15 +1235,15 @@ void qCheckGMail::configureAccounts()
 		meaw( qCheckGMail& m ) : m_parent( m )
 		{
 		}
-		void operator()( const QString& authocode,
+		void withoutToken( const QString& authocode,
 				 addaccount::GmailAccountInfo returnEmail ) override
 		{
-			m_parent.getGMailAccountInfo( authocode,std::move( returnEmail ) ) ;
+			m_parent.getGMailAccountInfoWithoutToken( authocode,std::move( returnEmail ) ) ;
 		}
-		void operator()( const QByteArray& accountName,
+		void withToken( const QString& accountName,
 				 addaccount::GmailAccountInfo returnEmail ) override
 		{
-			m_parent.getGMailAccountInfo( accountName,std::move( returnEmail ) ) ;
+			m_parent.getGMailAccountInfoWithToken( accountName,std::move( returnEmail ) ) ;
 		}
 	private:
 		qCheckGMail& m_parent ;

@@ -425,7 +425,7 @@ void walletmanager::editEntryLabels()
 	this->disableAll() ;
 	auto item = m_table->currentItem() ;
 	auto row = item->row() ;
-	auto accName = m_table->item( row,0 )->text().toUtf8() ;
+	auto accName = m_table->item( row,0 )->text() ;
 
 	class meaw : public addaccount::gmailAccountInfo
 	{
@@ -477,7 +477,7 @@ void walletmanager::editEntryLabels()
 
 	auto txt = tr( "Getting Account's Label List" ) ;
 
-	m_getAccountInfo( accName,{ util::type_identity< meaw >(),this,row,std::move( txt ) } ) ;
+	m_getAccountInfo.withToken( accName,{ util::type_identity< meaw >(),this,row,std::move( txt ) } ) ;
 }
 
 void walletmanager::pushButtonToAdd()

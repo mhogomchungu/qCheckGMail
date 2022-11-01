@@ -87,13 +87,11 @@ public:
 
 	struct gMailInfo
 	{
-		virtual void operator()( const QString& authoCode,addaccount::GmailAccountInfo )
+		virtual void withoutToken( const QString&,addaccount::GmailAccountInfo )
 		{
-			Q_UNUSED( authoCode )
 		}
-		virtual void operator()( const QByteArray& accountName,addaccount::GmailAccountInfo )
+		virtual void withToken( const QString&,addaccount::GmailAccountInfo )
 		{
-			Q_UNUSED( accountName )
 		}
 		virtual ~gMailInfo() ;
 	} ;
@@ -109,13 +107,13 @@ public:
 			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
 		{
 		}
-		void operator()( const QString& authocode,addaccount::GmailAccountInfo result )
+		void withoutToken( const QString& authocode,addaccount::GmailAccountInfo result )
 		{
-			( *m_handle )( authocode,std::move( result ) ) ;
+			m_handle->withoutToken( authocode,std::move( result ) ) ;
 		}
-		virtual void operator()( const QByteArray& accountName,addaccount::GmailAccountInfo result )
+		virtual void withToken( const QString& accountName,addaccount::GmailAccountInfo result )
 		{
-			( *m_handle )( accountName,std::move( result ) ) ;
+			m_handle->withToken( accountName,std::move( result ) ) ;
 		}
 	private:
 		std::unique_ptr< addaccount::gMailInfo > m_handle ;
