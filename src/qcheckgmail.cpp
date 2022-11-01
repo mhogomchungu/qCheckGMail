@@ -386,7 +386,6 @@ QString qCheckGMail::displayName( const QString& label )
 
 struct emailInfo
 {
-	bool invalid ;
 	QString labelName ;
 	QString labelUnreadEmails ;
 	QString totalMessages ;
@@ -394,18 +393,13 @@ struct emailInfo
 
 static emailInfo _getEmailInfo( const QByteArray& json )
 {
-	if( json.isEmpty() ){
+	auto m = QJsonDocument::fromJson( json ).object() ;
 
-		return { true,{},{},{} } ;
-	}else{
-		auto m = QJsonDocument::fromJson( json ).object() ;
+	auto a = m.value( "name" ).toString() ;
+	auto b = QString::number( m.value( "messagesUnread" ).toInt() ) ;
+	auto c = QString::number( m.value( "messagesTotal" ).toInt() ) ;
 
-		auto a = m.value( "name" ).toString() ;
-		auto b = QString::number( m.value( "messagesUnread" ).toInt() ) ;
-		auto c = QString::number( m.value( "messagesTotal" ).toInt() ) ;
-
-		return { false,a,b,c } ;
-	}
+	return { a,b,c } ;
 }
 
 static void _account_status( QString& status,const QString& displayName,const QString& mailCount )
@@ -448,13 +442,27 @@ static void _account_status( QString& status,const QString& displayName,const QS
  */
 void qCheckGMail::reportOnAllAccounts( int counter,const QByteArray& msg,qCheckGMail::networkStatus status )
 {
-	auto emailInfo = _getEmailInfo( msg ) ;
+	if( status.success() ){
 
-	if( emailInfo.invalid ){
+		if( msg.isEmpty() ){
 
-		m_errorOccured = true ;
+			m_errorOccured = true ;
+			_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
+		}else{
+			auto emailInfo = _getEmailInfo( msg ) ;
 
-		_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
+			const auto& mailCount = emailInfo.labelUnreadEmails ;
+
+			auto mailCount_1 = mailCount.toInt() ;
+
+			if( mailCount_1 == 0 ){
+
+				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"0" ) ;
+			}else{
+				m_mailCount += mailCount_1 ;
+				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),mailCount ) ;
+			}
+		}
 
 	}else if( status.gmailError() ){
 
@@ -496,23 +504,8 @@ void qCheckGMail::reportOnAllAccounts( int counter,const QByteArray& msg,qCheckG
 			}
 		}
 	}else{
-		if( status.success() ){
-
-			const auto& mailCount = emailInfo.labelUnreadEmails ;
-
-			auto mailCount_1 = mailCount.toInt() ;
-
-			if( mailCount_1 == 0 ){
-
-				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),"0" ) ;
-			}else{
-				m_mailCount += mailCount_1 ;
-				_account_status( m_accountsStatus,this->displayName( emailInfo.labelName ),mailCount ) ;
-			}
-		}else{
-			m_errorOccured = true ;
-			_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
-		}
+		m_errorOccured = true ;
+		_account_status( m_accountsStatus,this->displayName(),status.errorString() ) ;
 	}
 
 	/*
@@ -924,16 +917,19 @@ walletmanager::Wallet qCheckGMail::walletHandle()
 struct GMailError
 {
 	bool hasError ;
+	int code ;
 	QString errorMsg ;
 } ;
 
 static GMailError _gmailError( const QByteArray& msg )
 {
-	auto obj = QJsonDocument::fromJson( msg ).object().value( "error" ) ;
+	auto obj = QJsonDocument::fromJson( msg ).object().value( "error" ).toObject() ;
 
-	if( obj.isObject() ){
+	if( !obj.isEmpty() ){
 
-		auto arr = obj.toObject().value( "errors" ).toArray() ;
+		int code = obj.value( "code" ).toInt() ;
+
+		auto arr = obj.value( "errors" ).toArray() ;
 
 		if( arr.size() > 0 ){
 
@@ -943,13 +939,13 @@ static GMailError _gmailError( const QByteArray& msg )
 
 			if( !msg.isEmpty() ){
 
-				return { true,msg } ;
+				return { true,code,msg } ;
 			}
 		}
 
-		return { true,QObject::tr( "Unknown GMail Error" ) } ;
+		return { true,code,QObject::tr( "Unknown GMail Error" ) } ;
 	}else{
-		return { false,{} } ;
+		return { false,-1,{} } ;
 	}
 }
 
@@ -980,7 +976,17 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 		}else{
 			auto error = reply.error() ;
 
-			if( error == QNetworkReply::NoError || error == QNetworkReply::AuthenticationRequiredError ){
+			if( error == QNetworkReply::NoError ){
+
+				auto content = reply.data() ;
+
+				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
+
+				using qc = qCheckGMail::networkStatus::state ;
+
+				this->reportOnAllAccounts( counter,content,qc::success ) ;
+
+			}else if( error == QNetworkReply::AuthenticationRequiredError ){
 
 				auto content = reply.data() ;
 
@@ -994,9 +1000,11 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 					this->reportOnAllAccounts( counter,{},{ qc::gmailError,std::move( err.errorMsg ) } ) ;
 				}else{
-					m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
+					auto err = this->errorMessage( reply ) ;
 
-					this->reportOnAllAccounts( counter,content,qc::success ) ;
+					m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
+
+					this->reportOnAllAccounts( counter,{},err.translated ) ;
 				}
 			}else{
 				auto err = this->errorMessage( reply ) ;

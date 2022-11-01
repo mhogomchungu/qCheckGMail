@@ -94,7 +94,6 @@ void logWindow::Hide()
 	m_settings.setWindowDimensions( "LogWindow",x + "-" + y + "-" + w + "-" + h ) ;
 
 	this->hide() ;
-	m_ui->plainTextEdit->clear() ;
 }
 
 void logWindow::Show()
