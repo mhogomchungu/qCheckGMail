@@ -1214,7 +1214,7 @@ void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 
 qCheckGMail::errMessage qCheckGMail::networkTimeOut()
 {
-	auto e = QString::number( m_networkTimeOut ) ;
+	auto e = QString::number( m_networkTimeOut / 1000 ) ;
 
 	auto a = tr( "%1 Seconds Network TimeOut" ).arg( e ) ;
 	auto b = QString( "%1 Seconds Network TimeOut" ).arg( e ) ;
