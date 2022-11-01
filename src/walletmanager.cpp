@@ -387,24 +387,24 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 	class meaw : public addaccount::actions
 	{
 	public:
-		meaw( walletmanager * m,addaccount::labels&& l,int row ) :
+		meaw( walletmanager& m,addaccount::labels&& l,int row ) :
 			m_parent( m ),m_labels( std::move( l ) ),m_row( row )
 		{
 		}
 		void cancel() override
 		{
-			m_parent->enableAll() ;
+			m_parent.enableAll() ;
 		}
 		void edit( const QString& accName,const QString& labels ) override
 		{
-			m_parent->editAccount( accName,labels,std::move( m_labels ),m_row ) ;
+			m_parent.editAccount( accName,labels,std::move( m_labels ),m_row ) ;
 		}
 		const addaccount::labels& labels() override
 		{
 			return m_labels ;
 		}
 	private:
-		walletmanager * m_parent ;
+		walletmanager& m_parent ;
 		addaccount::labels m_labels ;
 		int m_row ;
 	} ;
@@ -416,7 +416,7 @@ void walletmanager::editAccount( int row,addaccount::labels&& l )
 			      m_logWindow,
 			      m_accounts[ row ].data(),
 			      m_getAuthorization,
-			      { util::type_identity< meaw >(),this,std::move( l ),row },
+			      { util::type_identity< meaw >(),*this,std::move( l ),row },
 			      m_getAccountInfo ) ;
 }
 
@@ -430,9 +430,9 @@ void walletmanager::editEntryLabels()
 	class meaw : public addaccount::gmailAccountInfo
 	{
 	public:
-		meaw( walletmanager * w,int row,QString t ) : m_parent( w ),m_row( row ),m_txt( std::move( t ) )
+		meaw( walletmanager& w,int row,QString t ) : m_parent( w ),m_row( row ),m_txt( std::move( t ) )
 		{
-			auto label = m_parent->m_ui->labelNetworkWarning ;
+			auto label = m_parent.m_ui->labelNetworkWarning ;
 
 			label->setText( m_txt ) ;
 
@@ -457,18 +457,18 @@ void walletmanager::editEntryLabels()
 		void operator()( addaccount::labels l ) override
 		{
 			m_timer.stop() ;
-			m_parent->editAccount( m_row,std::move( l ) ) ;
+			m_parent.editAccount( m_row,std::move( l ) ) ;
 		}
 		void operator()( const QString& e ) override
 		{
 			m_timer.stop() ;
 
-			m_parent->m_ui->labelNetworkWarning->setText( tr( "Network Error: " ) + e ) ;
+			m_parent.m_ui->labelNetworkWarning->setText( tr( "Network Error: " ) + e ) ;
 
-			m_parent->enableAll() ;
+			m_parent.enableAll() ;
 		}
 	private:
-		walletmanager * m_parent ;
+		walletmanager& m_parent ;
 		int m_row ;
 		QTimer m_timer ;
 		QString m_txt ;
@@ -477,7 +477,7 @@ void walletmanager::editEntryLabels()
 
 	auto txt = tr( "Getting Account's Label List" ) ;
 
-	m_getAccountInfo.withToken( accName,{ util::type_identity< meaw >(),this,row,std::move( txt ) } ) ;
+	m_getAccountInfo.withToken( accName,{ util::type_identity< meaw >(),*this,row,std::move( txt ) } ) ;
 }
 
 void walletmanager::pushButtonToAdd()
