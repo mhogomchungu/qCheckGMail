@@ -36,6 +36,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QtNetwork/QNetworkRequest>
+#include <QtDBus>
 
 #include <functional>
 #include <memory>
@@ -80,6 +81,8 @@ public:
 
 	QWidget * widget() ;
 	QString defaultApplication() ;
+private slots:
+	void handleSignal( quint32,quint32 ) ;
 private:
 	void start() ;
 	void configurationWindowClosed( int ) ;
@@ -183,6 +186,7 @@ private:
 	void noAccountConfigured() ;
 	void doneCheckingMail() ;
 	void audioNotify() ;
+	void visualNotify() ;
 	void addActionsToMenu() ;
 	void showLogWindow() ;
 	void logPOST( const util::urlOpts& ) ;
@@ -215,17 +219,20 @@ private:
 	int m_currentAccount ;
 	int m_mailCount ;
 	int m_networkTimeOut ;
+	int m_notificationTimeOut ;
+
+	quint32 m_dbusId = 0 ;
 
 	bool m_audioNotify ;
 	bool m_displayEmailCount ;
 	bool m_newMailFound ;
 	bool m_checkingMail ;
-	bool m_accountUpdated ;
 	bool m_timeExpired ;
 	bool m_accountFailed ;
 	bool m_badAccessToken ;
 	bool m_alwaysShowTrayIcon ;
 	bool m_errorOccured ;
+	bool m_visualNotify ;
 
 	QString m_accountsStatus ;
 	QString m_newEmailIcon ;
@@ -262,6 +269,10 @@ private:
 	statusicon m_statusicon ;
 
 	int m_counter = -1 ;
+
+	QDBusConnection m_dbusConnection ;
+
+	QDBusInterface m_dbusInterface ;
 };
 
 #endif // QCHECKGMAIL_H

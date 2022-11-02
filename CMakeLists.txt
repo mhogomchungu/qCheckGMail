@@ -104,6 +104,10 @@ file( WRITE "${PROJECT_BINARY_DIR}/audio_file_path.h"
 "\n#define AUDIO_NOTIFY_FILE \"${DATA_INSTALL_DIR}/qCheckGMail/audio/new-email-sound.ogg\"\n"
 )
 
+file( WRITE "${PROJECT_BINARY_DIR}/icon_file_path.h"
+"\n#define ICON_FILE_PATH \"${DATA_INSTALL_DIR}/icons/qCheckGMail-hasMail.svg\"\n"
+)
+
 file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc"
 "[Global]
 IconName=qCheckGMail
@@ -202,7 +206,9 @@ set( RESOUCES 	icons/icon.qrc )
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} )
 
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
+
 include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
+include_directories( ${Qt5DBus_INCLUDE_DIRS} )
 
 add_definitions( ${Qt5Widgets_DEFINITIONS} )
 
@@ -239,7 +245,7 @@ else()
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES})
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES} ${Qt5DBus_LIBRARIES})
 endif()
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )

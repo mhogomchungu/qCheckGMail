@@ -207,6 +207,11 @@ bool settings::audioNotify()
 	return this->getSetting( "audioNotify",true ).toBool() ;
 }
 
+bool settings::visualNotify()
+{
+	return this->getSetting( "visualNotify",true ).toBool() ;
+}
+
 void settings::setIconAlwaysVisible( bool e )
 {
 	this->setSetting( "alwaysShowTrayIcon",e ) ;
@@ -215,6 +220,16 @@ void settings::setIconAlwaysVisible( bool e )
 bool settings::alwaysShowTrayIcon()
 {
 	return this->getSetting( "alwaysShowTrayIcon",true ).toBool() ;
+}
+
+int settings::notificationTimeOut()
+{
+	return this->getSetting( "NotificationTimeOut",5000 ).toInt() ;
+}
+
+void settings::setNotificationTimeOut( int e )
+{
+	this->setSetting( "NotificationTimeOut",e ) ;
 }
 
 QString settings::clientID()
@@ -307,6 +322,11 @@ int settings::networkTimeOut()
 void settings::setAudioNotify( bool audioNotify )
 {
 	this->setSetting( "audioNotify",audioNotify ) ;
+}
+
+void settings::setVisualNotify( bool visualNotify )
+{
+	this->setSetting( "visualNotify",visualNotify ) ;
 }
 
 void settings::enableAutoStart( bool b )

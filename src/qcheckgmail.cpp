@@ -19,6 +19,7 @@
 
 #include "qcheckgmail.h"
 #include "util.hpp"
+#include "icon_file_path.h"
 
 #include <string.h>
 #include <utility>
@@ -29,6 +30,10 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+static auto a = "org.freedesktop.Notifications" ;
+static auto b = "/org/freedesktop/Notifications" ;
+static auto c = "org.freedesktop.Notifications" ;
+
 qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_networkTimeOut( m_settings.networkTimeOut() ),
 	m_manager( m_networkTimeOut ),
@@ -36,9 +41,13 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_qApp( args.app ),
 	m_args( m_qApp.arguments() ),
 	m_logWindow( m_settings,m_args.contains( "-d" ) ),
-	m_statusicon( m_settings,this->clickActions() )
+	m_statusicon( m_settings,this->clickActions() ),
+	m_dbusConnection( QDBusConnection::sessionBus() ),
+	m_dbusInterface( a,b,c,m_dbusConnection )
 {
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
+	m_dbusConnection.connect( a,b,c,"NotificationClosed",
+				  this,SLOT( handleSignal( quint32,quint32 ) ) ) ;
 }
 
 qCheckGMail::~qCheckGMail()
@@ -142,6 +151,8 @@ void qCheckGMail::start()
 	m_statusicon.setCategory( m_statusicon.ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
+	m_notificationTimeOut = m_settings.notificationTimeOut() ;
+	m_visualNotify        = m_settings.visualNotify() ;
 	m_audioNotify	      = m_settings.audioNotify() ;
 	m_interval	      = m_settings.checkForUpdatesInterval() ;
 	m_newEmailIcon	      = m_settings.newEmailIcon() ;
@@ -533,7 +544,17 @@ void qCheckGMail::updateUi( int counter,
 							   m_accountsStatus ) ;
 				}
 
-				this->audioNotify() ;
+
+
+				if( m_audioNotify ){
+
+					this->audioNotify() ;
+				}
+
+				if( m_visualNotify ){
+
+					this->visualNotify() ;
+				}
 			}else{
 				this->changeIcon( m_noEmailIcon ) ;
 				this->setTrayIconToVisible( false ) ;
@@ -549,9 +570,38 @@ void qCheckGMail::updateUi( int counter,
 
 void qCheckGMail::audioNotify()
 {
-	if( m_accountUpdated && m_audioNotify ){
+	m_statusicon.newEmailNotify() ;
+}
 
-		m_statusicon.newEmailNotify() ;
+void qCheckGMail::visualNotify()
+{
+	QStringList l ;
+	QVariantMap mm ;
+
+	mm.insert( "image-path",ICON_FILE_PATH ) ;
+	mm.insert( "category","email.arrived" ) ;
+	mm.insert( "desktop-entry","qCheckGMail" ) ;
+	mm.insert( "suppress-sound",true ) ;
+	mm.insert( "urgency",1 ) ;
+
+	auto x = QString::number( m_mailCount ) ;
+	auto m = tr( "Found %1 New Emails" ).arg( x ) ;
+
+	auto result = m_dbusInterface.call( "Notify",
+					    "qCheckGMail",
+					    m_dbusId,
+					    "",
+					    m,
+					    m_accountsStatus,
+					    l,
+					    mm,
+					    static_cast< qint32 >( m_notificationTimeOut ) ) ;
+
+	auto s = result.arguments() ;
+
+	if( s.size() > 0 ){
+
+		m_dbusId = s.at( 0 ).toUInt() ;
 	}
 }
 
@@ -663,7 +713,6 @@ void qCheckGMail::checkMail()
 		m_accountsStatus  = "<table>" ;
 		m_mailCount       = 0 ;
 		m_currentAccount  = 0 ;
-		m_accountUpdated  = false ;
 		m_accountFailed   = false ;
 		m_errorOccured    = false ;
 		m_counter++ ;
@@ -1225,6 +1274,16 @@ qCheckGMail::errMessage qCheckGMail::networkTimeOut()
 QString qCheckGMail::defaultApplication()
 {
 	return m_defaultApplication ;
+}
+
+void qCheckGMail::handleSignal( quint32 id,quint32 reason )
+{
+	Q_UNUSED( reason )
+
+	if( id == m_dbusId ){
+
+		m_dbusId = 0 ;
+	}
 }
 
 void qCheckGMail::configureAccounts()

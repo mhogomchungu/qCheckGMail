@@ -22,6 +22,13 @@
 #include <QProcess>
 #include <iostream>
 
+static QIcon _getIcon( settings&,const QString& name )
+{
+	return QIcon( ":/" + name ) ;
+
+	//return QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+}
+
 static QPixmap _icon( const QIcon& icon,int count,settings& s )
 {
 	QPixmap pixmap = icon.pixmap( QSize( 152,152 ),QIcon::Normal,QIcon::On ) ;
@@ -83,7 +90,7 @@ statusicon::~statusicon()
 
 void statusicon::setAttentionIcon( const QString& name )
 {
-	KStatusNotifierItem::setAttentionIconByPixmap( QIcon( ":/" + name ) ) ;
+	KStatusNotifierItem::setAttentionIconByPixmap( _getIcon( m_settings,name ) ) ;
 }
 
 void statusicon::setCategory( const statusicon::ItemCategory category )
@@ -93,14 +100,14 @@ void statusicon::setCategory( const statusicon::ItemCategory category )
 
 void statusicon::setIcon( const QString& name )
 {
-	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	auto icon = _getIcon( m_settings,name ) ;
 	KStatusNotifierItem::setIconByPixmap( icon ) ;
 	statusicon::setAttentionIcon( name ) ;
 }
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	auto icon = _getIcon( m_settings,name ) ;
 	QPixmap pixmap = _icon( icon,count,m_settings ) ;
 	KStatusNotifierItem::setIconByPixmap( pixmap ) ;
 	KStatusNotifierItem::setAttentionIconByPixmap( pixmap ) ;
@@ -240,7 +247,8 @@ QList< QAction * > statusicon::getMenuActions()
 
 void statusicon::setAttentionIcon( const QString& name )
 {
-	m_trayIcon.setIcon( QIcon( ":/" + name ) ) ;
+	auto icon = _getIcon( m_settings,name ) ;
+	m_trayIcon.setIcon( icon ) ;
 }
 
 void statusicon::setCategory( const statusicon::ItemCategory category )
@@ -255,14 +263,13 @@ void statusicon::quit()
 
 void statusicon::setIcon( const QString& name )
 {
-	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
-
+	auto icon = _getIcon( m_settings,name ) ;
 	m_trayIcon.setIcon( icon ) ;
 }
 
 void statusicon::setIcon( const QString& name,int count )
 {
-	auto icon = QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	auto icon = _getIcon( m_settings,name ) ;
 	QPixmap pixmap = _icon( icon,count,m_settings ) ;
 	m_trayIcon.setIcon( pixmap ) ;
 }

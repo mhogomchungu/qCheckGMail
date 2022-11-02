@@ -39,7 +39,9 @@ public:
 	QString storageSystem() ;
 	util::unique_wallet_ptr secureStorageSystem() ;
 	bool audioNotify() ;
+	bool visualNotify() ;
 	bool alwaysShowTrayIcon() ;
+	int notificationTimeOut() ;
 	QString clientID() ;
 	QString clientSecret() ;
 	QString audioPlayer() ;
@@ -64,8 +66,10 @@ public:
 	void setRuntimePortNumber( int ) ;
 	void saveLocalLanguage( const QString& ) ;
 	void setCheckForUpdatesInterval( const QString& ) ;
+	void setNotificationTimeOut( int ) ;
 	QString getOption( const char * ) ;
 	void setAudioNotify( bool ) ;
+	void setVisualNotify( bool ) ;
 	void setIconAlwaysVisible( bool ) ;
 	void saveStorageSystem( const QString& ) ;
 	void saveReportOnAllAccounts( bool b ) ;

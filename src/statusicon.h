@@ -119,6 +119,10 @@ public:
 	void addAction( QAction * ) ;
 	QList< QAction * > getMenuActions() ;
 	void addQuitAction() ;
+	QSystemTrayIcon& trayIcon()
+	{
+		return m_trayIcon ;
+	}
 private slots:
 	void quit() ;
 	void activateRequested( bool,const QPoint& ) ;
