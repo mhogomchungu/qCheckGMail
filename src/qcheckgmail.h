@@ -92,6 +92,7 @@ private:
 	void setTimer( int ) ;
 	void configurePassWord() ;
 	void audioNotify( bool ) ;
+	void visuallyNotify( bool ) ;
 	void alwaysShowTrayIcon( bool ) ;
 	void enablePassWordChange( bool ) ;
 

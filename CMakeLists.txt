@@ -108,18 +108,6 @@ file( WRITE "${PROJECT_BINARY_DIR}/icon_file_path.h"
 "\n#define ICON_FILE_PATH \"${DATA_INSTALL_DIR}/icons/qCheckGMail-hasMail.svg\"\n"
 )
 
-file( WRITE "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc"
-"[Global]
-IconName=qCheckGMail
-Comment=qCheckGMail,a gmail account checker
-Name=qCheckGMail
-
-[Event/qCheckGMail-NewMail]
-Name=found new mail
-Sound=${DATA_INSTALL_DIR}/qCheckGMail/audio/new-email-sound.ogg
-Action=Sound"
-)
-
 install( FILES audio/new-email-sound.ogg     DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio" )
 
 install( FILES icons/qCheckGMail.svg           DESTINATION ${DATA_INSTALL_DIR}/icons )
@@ -146,9 +134,6 @@ install( FILES src/3rdParty/lxqt_wallet/translations.qm/greek_GR.qm    DESTINATI
 install( FILES src/3rdParty/lxqt_wallet/translations.qm/dutch_NL.qm    DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 install( FILES src/3rdParty/lxqt_wallet/translations.qm/french_FR.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
 install( FILES src/3rdParty/lxqt_wallet/translations.qm/spanish_ES.qm   DESTINATION share/qCheckGMail/lxqt_wallet/translations.qm/ )
-
-install( FILES "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc" DESTINATION "${DATA_INSTALL_DIR}/apps/qCheckGMail/" )
-install( FILES "${PROJECT_BINARY_DIR}/qCheckGMail.notifyrc" DESTINATION "${DATA_INSTALL_DIR}/knotifications5/" )
 
 file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""

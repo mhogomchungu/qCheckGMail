@@ -49,33 +49,6 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
 	m_dbusConnection.connect( a,b,c,"NotificationClosed",
 				  this,SLOT( handleSignal( quint32,quint32 ) ) ) ;
-
-	class foo{
-
-	public:
-		void sss()
-		{
-			qDebug() << QThread::currentThreadId() ;
-		}
-
-		int qqq()
-		{
-			qDebug() << QThread::currentThreadId() ;
-
-			return 5 ;
-		}
-		void www( int )
-		{
-			qDebug() << QThread::currentThreadId() ;
-
-		}
-	};
-
-	auto m = new foo() ;
-
-	utils::qthread::run( m,&foo::sss,&foo::sss ) ;
-	utils::qthread::run( m,&foo::qqq,&foo::www ) ;
-
 }
 
 qCheckGMail::~qCheckGMail()
@@ -596,7 +569,7 @@ void qCheckGMail::updateUi( int counter,
 
 void qCheckGMail::audioNotify()
 {
-	m_statusicon.newEmailNotify() ;
+	QProcess::startDetached( m_settings.audioPlayer(),{ AUDIO_NOTIFY_FILE } ) ;
 }
 
 void qCheckGMail::visualNotify()
@@ -678,6 +651,10 @@ void qCheckGMail::configurationoptionWindow()
 		{
 			m_parent.audioNotify( s ) ;
 		}
+		void visualNotify( bool s ) override
+		{
+			m_parent.visuallyNotify( s ) ;
+		}
 		void alwaysShowTrayIcon( bool s ) override
 		{
 			m_parent.alwaysShowTrayIcon( s ) ;
@@ -717,6 +694,11 @@ void qCheckGMail::configurationWindowClosed( int r )
 void qCheckGMail::audioNotify( bool audioNotify )
 {
 	m_audioNotify = audioNotify ;
+}
+
+void qCheckGMail::visuallyNotify( bool visualNotify )
+{
+	m_visualNotify = visualNotify ;
 }
 
 void qCheckGMail::alwaysShowTrayIcon( bool e )

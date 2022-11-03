@@ -113,6 +113,7 @@ void configurationoptionsdialog::ShowUI()
 	m_ui->checkBoxAutoStartEnabled->setChecked( m_settings.autoStartEnabled() ) ;
 	m_ui->checkBoxAudioNotify->setChecked( m_settings.audioNotify() ) ;
 	m_ui->checkBoxAlwaysShowTrayIcon->setChecked( m_settings.alwaysShowTrayIcon() ) ;
+	m_ui->checkBoxVisualNotify->setChecked( m_settings.visualNotify() ) ;
 
 	this->setSupportedLanguages() ;
 	this->show() ;
@@ -146,6 +147,8 @@ void configurationoptionsdialog::HideUI()
 
 	m_settings.setAudioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 
+	m_settings.setVisualNotify( m_ui->checkBoxVisualNotify->isChecked() ) ;
+
 	auto s = m_ui->comboBoxBackEndSystem->currentText() ;
 
 	m_settings.saveStorageSystem( s ) ;
@@ -158,6 +161,7 @@ void configurationoptionsdialog::HideUI()
 	m_actions.configurationWindowClosed( z * 60 * 1000 ) ;
 	m_actions.audioNotify( m_ui->checkBoxAudioNotify->isChecked() ) ;
 	m_actions.enablePassWordChange( s == "internal wallet" ) ;
+	m_actions.visualNotify( m_ui->checkBoxVisualNotify->isChecked() ) ;
 
 	this->hide() ;
 

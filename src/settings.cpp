@@ -251,27 +251,27 @@ QString settings::audioPlayer()
 
 QString settings::noEmailIcon()
 {
-	return this->getSetting( "noEmailIconColor","qCheckGMail-hasNoMail" ).toString() ;
+	return this->getSetting( "noEmailIconName","qCheckGMail-hasNoMail" ).toString() ;
 }
 
 QString settings::pausedIcon()
 {
-	return this->getSetting( "pausedEmailIconColor","qCheckGMail-paused" ).toString() ;
+	return this->getSetting( "pausedEmailIconName","qCheckGMail-paused" ).toString() ;
 }
 
 QString settings::newEmailIcon()
 {
-	return this->getSetting( "newEmailIconColor","qCheckGMail-hasMail" ).toString() ;
+	return this->getSetting( "newEmailIconName","qCheckGMail-hasMail" ).toString() ;
 }
 
 QString settings::errorIcon()
 {
-	return this->getSetting( "errorIconColor","qCheckGMail-hasError" ).toString() ;
+	return this->getSetting( "errorIconName","qCheckGMail-hasError" ).toString() ;
 }
 
 QString settings::checkingMailIcon()
 {
-	return this->getSetting( "checkingMailIconColor","" ).toString() ;
+	return this->getSetting( "checkingMailIconName","qCheckGMail-paused" ).toString() ;
 }
 
 QString settings::fontFamily()

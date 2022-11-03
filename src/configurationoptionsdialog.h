@@ -58,6 +58,9 @@ public:
 		virtual void audioNotify( bool )
 		{
 		}
+		virtual void visualNotify( bool )
+		{
+		}
 		virtual void alwaysShowTrayIcon( bool )
 		{
 		}
@@ -83,6 +86,10 @@ public:
 		void audioNotify( bool s )
 		{
 			m_handle->audioNotify( s ) ;
+		}
+		void visualNotify( bool s )
+		{
+			m_handle->visualNotify( s ) ;
 		}
 		void alwaysShowTrayIcon( bool s )
 		{
