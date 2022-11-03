@@ -569,7 +569,16 @@ void qCheckGMail::updateUi( int counter,
 
 void qCheckGMail::audioNotify()
 {
-	QProcess::startDetached( m_settings.audioPlayer(),{ AUDIO_NOTIFY_FILE } ) ;
+	auto m = util::splitPreserveQuotes( m_settings.audioPlayer() ) ;
+
+	if( m.size() > 0 ){
+
+		auto exe = m.takeFirst() ;
+
+		m.append( AUDIO_NOTIFY_FILE ) ;
+
+		QProcess::startDetached( exe,m ) ;
+	}
 }
 
 void qCheckGMail::visualNotify()
