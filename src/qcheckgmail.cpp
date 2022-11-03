@@ -20,6 +20,7 @@
 #include "qcheckgmail.h"
 #include "util.hpp"
 #include "icon_file_path.h"
+#include "utils/threads.hpp"
 
 #include <string.h>
 #include <utility>
@@ -553,7 +554,10 @@ void qCheckGMail::updateUi( int counter,
 
 				if( m_visualNotify ){
 
-					this->visualNotify() ;
+					utils::qthread::run( [ this ](){
+
+						this->visualNotify() ;
+					} ) ;
 				}
 			}else{
 				this->changeIcon( m_noEmailIcon ) ;
@@ -587,21 +591,26 @@ void qCheckGMail::visualNotify()
 	auto x = QString::number( m_mailCount ) ;
 	auto m = tr( "Found %1 New Emails" ).arg( x ) ;
 
-	auto result = m_dbusInterface.call( "Notify",
-					    "qCheckGMail",
-					    m_dbusId,
-					    "",
-					    m,
-					    m_accountsStatus,
-					    l,
-					    mm,
-					    static_cast< qint32 >( m_notificationTimeOut ) ) ;
+	auto e = m_accountsStatus ;
+
+	e.replace( "<table>","" ) ;
+	e.replace( "</table>","" ) ;
+	e.replace( "<b>","" ) ;
+	e.replace( "</b>","" ) ;
+	e.replace( "<br>","\n" ) ;
+
+	auto a = static_cast< qint32 >( m_notificationTimeOut ) ;
+	auto aa = "qCheckGMail" ;
+
+	auto result = m_dbusInterface.call( "Notify",aa,m_dbusId,"",m,e,l,mm,a ) ;
 
 	auto s = result.arguments() ;
 
 	if( s.size() > 0 ){
 
 		m_dbusId = s.at( 0 ).toUInt() ;
+	}else{
+		m_dbusId = 0 ;
 	}
 }
 

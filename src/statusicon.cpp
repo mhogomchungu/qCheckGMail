@@ -24,9 +24,7 @@
 
 static QIcon _getIcon( settings&,const QString& name )
 {
-	return QIcon( ":/" + name ) ;
-
-	//return QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
+	return QIcon::fromTheme( name,QIcon( ":/" + name ) ) ;
 }
 
 static QPixmap _icon( const QIcon& icon,int count,settings& s )
