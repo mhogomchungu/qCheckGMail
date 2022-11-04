@@ -47,8 +47,30 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 	m_dbusInterface( a,b,c,m_dbusConnection )
 {
 	m_networkRequest.setRawHeader( "Content-Type","application/x-www-form-urlencoded" ) ;
+
 	m_dbusConnection.connect( a,b,c,"NotificationClosed",
-				  this,SLOT( handleSignal( quint32,quint32 ) ) ) ;
+				  this,SLOT( notificationClosed( quint32,quint32 ) ) ) ;
+
+	m_dbusConnection.connect( a,b,c,"ActionInvoked",
+				  this,SLOT( actionInvoked( quint32,QString ) ) ) ;
+
+	auto m = m_dbusInterface.call( "GetCapabilities" ).arguments() ;
+
+	if( m.size() > 0 ){
+
+		auto s = m.first().toStringList() ;
+
+		if( s.size() > 0 ){
+
+			auto e = "Pop Notification Has Following Capabilities:\n" ;
+
+			m_logWindow.update( logWindow::TYPE::INFO,e + s.join( ", " ),true ) ;
+		}else{
+			auto e = "Pop Notification Has No Capabilities" ;
+
+			m_logWindow.update( logWindow::TYPE::INFO,e,true ) ;
+		}
+	}
 }
 
 qCheckGMail::~qCheckGMail()
@@ -192,39 +214,31 @@ void qCheckGMail::start()
 	this->getAccountsInfo() ;
 }
 
-static void _start_detached( logWindow& logger,QString& exe,const QString& url )
-{
-	if( exe.isEmpty() ){
-
-		return ;
-	}
-
-	if( exe == "browser" ){
-
-		QDesktopServices::openUrl( QUrl( url ) ) ;
-	}else{
-		exe.replace( "%{url}",url ) ;
-
-		auto s = util::splitPreserveQuotes( exe ) ;
-
-		auto m = s.takeAt( 0 ) ;
-
-		auto e = "Running Command\n" + exe + " " + s.join( " " ) ;
-
-		logger.update( logWindow::TYPE::INFO,e ) ;
-
-		QProcess::startDetached( m,s ) ;
-	}
-}
-
-void qCheckGMail::openMail( const accounts& )
-{
-	_start_detached( m_logWindow,m_defaultApplication,"https://mail.google.com/" ) ;
-}
-
 void qCheckGMail::openMail()
 {
-	_start_detached( m_logWindow,m_defaultApplication,"https://mail.google.com/" ) ;
+	if( !m_defaultApplication.isEmpty() ){
+
+		auto url = "https://mail.google.com/" ;
+
+		if( m_defaultApplication == "browser" ){
+
+			QDesktopServices::openUrl( QUrl( url ) ) ;
+		}else{
+			auto e = m_defaultApplication ;
+
+			e.replace( "%{url}",url ) ;
+
+			auto s = util::splitPreserveQuotes( e ) ;
+
+			auto m = s.takeAt( 0 ) ;
+
+			e = "Running Command\n" + e + " " + s.join( " " ) ;
+
+			m_logWindow.update( logWindow::TYPE::INFO,e ) ;
+
+			QProcess::startDetached( m,s ) ;
+		}
+	}
 }
 
 void qCheckGMail::addActionsToMenu()
@@ -606,6 +620,9 @@ void qCheckGMail::visualNotify()
 	auto a = static_cast< qint32 >( m_notificationTimeOut ) ;
 	auto aa = "qCheckGMail" ;
 
+	l.append( "defaultInbox" ) ;
+	l.append( tr( "Open Default Inbox" ) ) ;
+
 	auto result = m_dbusInterface.call( "Notify",aa,m_dbusId,"",m,e,l,mm,a ) ;
 
 	auto s = result.arguments() ;
@@ -614,6 +631,27 @@ void qCheckGMail::visualNotify()
 
 		m_dbusId = s.at( 0 ).toUInt() ;
 	}else{
+		m_dbusId = 0 ;
+	}
+}
+
+void qCheckGMail::actionInvoked( quint32 u,QString s )
+{
+	if( u == m_dbusId ){
+
+		if( s == "defaultInbox" ){
+
+			this->openMail() ;
+		}
+	}
+}
+
+void qCheckGMail::notificationClosed( quint32 id,quint32 reason )
+{
+	Q_UNUSED( reason )
+
+	if( id == m_dbusId ){
+
 		m_dbusId = 0 ;
 	}
 }
@@ -1296,16 +1334,6 @@ qCheckGMail::errMessage qCheckGMail::networkTimeOut()
 QString qCheckGMail::defaultApplication()
 {
 	return m_defaultApplication ;
-}
-
-void qCheckGMail::handleSignal( quint32 id,quint32 reason )
-{
-	Q_UNUSED( reason )
-
-	if( id == m_dbusId ){
-
-		m_dbusId = 0 ;
-	}
 }
 
 void qCheckGMail::configureAccounts()

@@ -82,7 +82,8 @@ public:
 	QWidget * widget() ;
 	QString defaultApplication() ;
 private slots:
-	void handleSignal( quint32,quint32 ) ;
+	void notificationClosed( quint32,quint32 ) ;
+	void actionInvoked( quint32,QString ) ;
 private:
 	void start() ;
 	void configurationWindowClosed( int ) ;
@@ -127,7 +128,6 @@ private:
 	void checkMail( int,const accounts& acc ) ;
 	void checkMail() ;
 	void checkMail( bool ) ;
-	void openMail( const accounts& acc ) ;
 	void openMail() ;
 	void changeIcon( const QString& icon ) ;
 	void changeIcon( const QString& icon,int ) ;
