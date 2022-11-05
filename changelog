@@ -76,7 +76,7 @@ version 2.0.0(September 1st, 2022)
 -- Install application icons to make  it possible to change them.
 -- Known issue, this release requires readding accounts.This is necessary because of gmail's incompatible changes with their new API.
 
-version 2.1.0(Unreleased)
+version 2.1.0(November 5th, 2022)
 -- Show a pop up notification when there are new emails.
 -- Add a GUI option to show/hide a pop up notification.
 -- Fix a bug that caused tray icon to not show up.

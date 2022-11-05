@@ -25,7 +25,7 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 
 INCLUDE(GNUInstallDirs)
 
-set( PGR_VERSION "Version:\t2.0.0" )
+set( PGR_VERSION "Version:\t2.1.0" )
 set( COPYRIGHT_YEARS "Copyright:\t2013-2022" )
 set( LICENSE "License:\tGPLv2+" )
 
@@ -257,7 +257,7 @@ Comment=
 Exec=${CMAKE_INSTALL_PREFIX}/bin/qCheckGMail
 GenericName[en_US]=a gmail new mail checker
 GenericName=a gmail new mail checker
-Icon=qCheckGMail.svg
+Icon=qCheckGMail
 Name[en_US]=qCheckGMail
 Name=qCheckGMail
 NoDisplay=false
