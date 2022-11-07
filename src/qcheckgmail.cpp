@@ -625,7 +625,7 @@ void qCheckGMail::visualNotify()
 	auto a = static_cast< qint32 >( m_notificationTimeOut ) ;
 	auto aa = "qCheckGMail" ;
 
-	l.append( "defaultInbox" ) ;
+	l.append( "default" ) ;
 	l.append( tr( "Open Default Inbox" ) ) ;
 
 	auto result = m_dbusInterface.call( "Notify",aa,m_dbusId,"",m,e,l,mm,a ) ;
@@ -644,7 +644,7 @@ void qCheckGMail::actionInvoked( quint32 u,QString s )
 {
 	if( u == m_dbusId ){
 
-		if( s == "defaultInbox" ){
+		if( s == "default" ){
 
 			this->openMail() ;
 		}
