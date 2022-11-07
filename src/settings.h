@@ -42,6 +42,7 @@ public:
 	bool visualNotify() ;
 	bool alwaysShowTrayIcon() ;
 	int notificationTimeOut() ;
+	int waitTimeBeforeRetrying() ;
 	QString clientID() ;
 	QString clientSecret() ;
 	QString audioPlayer() ;

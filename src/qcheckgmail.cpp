@@ -21,6 +21,7 @@
 #include "util.hpp"
 #include "icon_file_path.h"
 #include "utils/threads.hpp"
+#include "utils/qtimer.hpp"
 
 #include <string.h>
 #include <utility>
@@ -30,6 +31,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QTimer>
 
 static auto a = "org.freedesktop.Notifications" ;
 static auto b = "/org/freedesktop/Notifications" ;
@@ -174,6 +176,7 @@ void qCheckGMail::start()
 	m_statusicon.setCategory( m_statusicon.ApplicationStatus ) ;
 	QCoreApplication::setApplicationName( "qCheckGMail" ) ;
 
+	m_retryWaitTime       = m_settings.waitTimeBeforeRetrying() ;
 	m_notificationTimeOut = m_settings.notificationTimeOut() ;
 	m_visualNotify        = m_settings.visualNotify() ;
 	m_audioNotify	      = m_settings.audioNotify() ;
@@ -307,21 +310,23 @@ qCheckGMail::errMessage qCheckGMail::errorMessage( const utils::network::reply& 
 {
 	auto error = reply.error() ;
 
+	auto code = "Error " + QString::number( static_cast< int >( error ) ) + ": " ;
+
 	if( error == QNetworkReply::OperationCanceledError ){
 
-		return { tr( "Operation Cancelled" ),"Operation Cancelled" } ;
+		return { tr( "Operation Cancelled" ),code + "Operation Cancelled" } ;
 
 	}else if( error == QNetworkReply::HostNotFoundError ){
 
-		return { tr( "Host Not Found" ),"Host Not Found" } ;
+		return { tr( "Host Not Found" ),code + "Host Not Found" } ;
 
 	}else if( error == QNetworkReply::TimeoutError ){
 
-		return { tr( "Network TimeOut" ),"Network TimeOut" } ;
+		return { tr( "Network TimeOut" ),code + "Network TimeOut" } ;
 	}else{
 		auto err = reply.errorString() ;
 
-		return { err,err } ;
+		return { err,code + err } ;
 	}
 }
 
@@ -488,11 +493,11 @@ void qCheckGMail::updateUi( int counter,
 			}else{
 				m_badAccessToken = true ;
 
-				auto& acc = *( m_accounts.data() + m_currentAccount ) ;
+				auto& acc = m_accounts[ m_currentAccount ] ;
 
 				acc.setAccessToken( QString() ) ;
 
-				this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ) ) ;
+				this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ),false ) ;
 
 				return ;
 			}
@@ -521,7 +526,7 @@ void qCheckGMail::updateUi( int counter,
 		 * about to go through it
 		 */
 		const auto& acc = m_accounts.at( m_currentAccount ) ;
-		this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ) ) ;
+		this->checkMail( counter,acc,acc.labelUrlAt( m_currentLabel ),false ) ;
 	}else{
 		/*
 		 * we are done processing an account,go to the next one if available
@@ -813,7 +818,7 @@ void qCheckGMail::checkMail( int counter,const accounts& acc )
 	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
 
-	this->checkMail( counter,acc,acc.defaultLabelUrl() ) ;
+	this->checkMail( counter,acc,acc.defaultLabelUrl(),false ) ;
 }
 
 static QByteArray _hideSecret( const QByteArray& json )
@@ -910,17 +915,17 @@ void qCheckGMail::getAccessToken( int counter,
 
 				m_logWindow.update( logWindow::TYPE::REQUEST,m ) ;
 
-				this->networkAccess( counter,request ) ;
+				this->networkAccess( { counter,false,request,acc,UrlLabel } ) ;
 			}
 		}else{
 			if( reply.timeOut() ){
 
 				auto err = this->networkTimeOut() ;
-				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 				this->updateUi( counter,{},err.translated ) ;
 			}else{
 				auto err = this->errorMessage( reply ) ;
-				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 				this->updateUi( counter,{},err.translated ) ;
 			}
 		}
@@ -1056,11 +1061,11 @@ qCheckGMail::GMailError qCheckGMail::gmailError( const QByteArray& msg )
 	return { code,QObject::tr( "Unknown GMail Error" ) } ;
 }
 
-void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
+void qCheckGMail::networkAccess( const networkAccessContext& ctx )
 {
-	m_manager.get( request,[ this,counter ]( const utils::network::reply& reply ){
+	m_manager.get( ctx.request,[ this,ctx = ctx ]( const utils::network::reply& reply ){
 
-		if( counter != m_counter ){
+		if( ctx.counter != m_counter ){
 
 			/*
 			 * We will get here if there are more than one
@@ -1069,7 +1074,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 			 */
 
 			auto n1 = QString::number( m_counter ) ;
-			auto n2 = QString::number( counter ) ;
+			auto n2 = QString::number( ctx.counter ) ;
 
 			QString mm = "Expected counter to be \"%1\" but it is \"%2\"" ;
 
@@ -1079,9 +1084,9 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 			auto err = this->networkTimeOut() ;
 
-			m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+			m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 
-			this->updateUi( counter,{},err.translated ) ;
+			this->updateUi( ctx.counter,{},err.translated ) ;
 		}else{
 			auto error = reply.error() ;
 
@@ -1093,7 +1098,7 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 
 				using qc = qCheckGMail::result::state ;
 
-				this->updateUi( counter,content,qc::success ) ;
+				this->updateUi( ctx.counter,content,qc::success ) ;
 
 			}else if( error == QNetworkReply::AuthenticationRequiredError ){
 
@@ -1107,17 +1112,43 @@ void qCheckGMail::networkAccess( int counter,const QNetworkRequest& request )
 						    content,
 						    true ) ;
 
-				this->updateUi( counter,{},{ qc::gmailError,
+				this->updateUi( ctx.counter,{},{ qc::gmailError,
 							     err.code,
 							     std::move( err.errorMsg ) } ) ;
 			}else{
+				if( error == QNetworkReply::TemporaryNetworkFailureError ||
+				    error == QNetworkReply::NetworkSessionFailedError ){
+
+					if( !ctx.retrying ){
+
+						auto err = this->errorMessage( reply ) ;
+
+						m_logWindow.update( logWindow::TYPE::ERROR,
+								    err.unTranslated,
+								    true ) ;
+
+						auto m = QString::number( m_retryWaitTime / 1000 ) ;
+
+						auto e = QString( "Waiting %1 Seconds Before Retrying" ).arg( m ) ;
+
+						m_logWindow.update( logWindow::TYPE::INFO,e,true ) ;
+
+						utils::qtimer::run( m_retryWaitTime,[ this,ctx = ctx ](){
+
+							this->checkMail( ctx.counter,ctx.acc,ctx.label,true ) ;
+						} ) ;
+
+						return ;
+					}
+				}
+
 				auto err = this->errorMessage( reply ) ;
 
 				m_logWindow.update( logWindow::TYPE::ERROR,
 						    err.unTranslated,
 						    true ) ;
 
-				this->updateUi( counter,{},err.translated ) ;
+				this->updateUi( ctx.counter,{},err.translated ) ;
 			}
 		}
 	} ) ;
@@ -1170,11 +1201,11 @@ void qCheckGMail::getGMailAccountInfoWithoutToken( const QString& authocode,
 
 				auto err = this->networkTimeOut() ;
 				ginfo( err.translated ) ;
-				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 			}else{
 				auto err = reply.errorString() ;
 				ginfo( err ) ;				
-				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err,true ) ;
 			}
 		}
 	} ) ;
@@ -1238,17 +1269,17 @@ void qCheckGMail::getLabels( const QString& accessToken,
 
 				auto err = this->networkTimeOut() ;
 				ginfo( err.translated ) ;
-				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 			}else{
 				auto err = reply.errorString() ;
 				ginfo( err ) ;
-				m_logWindow.update( logWindow::TYPE::ERROR,err ) ;
+				m_logWindow.update( logWindow::TYPE::ERROR,err,true ) ;
 			}
 		}
 	} ) ;
 }
 
-void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlLabel )
+void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlLabel,bool retrying )
 {
 	const auto& accessToken = acc.accessToken() ;
 
@@ -1279,7 +1310,7 @@ void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlL
 
 		m_logWindow.update( logWindow::TYPE::REQUEST,m ) ;
 
-		this->networkAccess( counter,s ) ;
+		this->networkAccess( { counter,retrying,s,acc,UrlLabel } ) ;
 	}
 }
 

@@ -109,7 +109,16 @@ private:
 
 	void getAccessToken( int,const accounts&,const QString&,const QString& ) ;
 
-	void networkAccess( int,const QNetworkRequest& ) ;
+	struct networkAccessContext
+	{
+		int counter ;
+		bool retrying ;
+		const QNetworkRequest& request ;
+		const accounts& acc ;
+		const QString& label ;
+	} ;
+
+	void networkAccess( const networkAccessContext& ) ;
 
 	void getGMailAccountInfoWithoutToken( const QString&,addaccount::GmailAccountInfo ) ;
 	void getGMailAccountInfoWithToken( const QString&,addaccount::GmailAccountInfo ) ;
@@ -124,7 +133,7 @@ private:
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
 	void walletNotOPenedError() ;
-	void checkMail( int,const accounts& acc,const QString& label ) ;
+	void checkMail( int,const accounts& acc,const QString& label,bool retrying ) ;
 	void checkMail( int,const accounts& acc ) ;
 	void checkMail() ;
 	void checkMail( bool ) ;
@@ -234,6 +243,7 @@ private:
 	bool m_alwaysShowTrayIcon ;
 	bool m_errorOccured ;
 	bool m_visualNotify ;
+	bool m_retryWaitTime ;
 
 	QString m_accountsStatus ;
 	QString m_newEmailIcon ;

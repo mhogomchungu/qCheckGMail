@@ -227,6 +227,11 @@ int settings::notificationTimeOut()
 	return this->getSetting( "NotificationTimeOut",5000 ).toInt() ;
 }
 
+int settings::waitTimeBeforeRetrying()
+{
+	return this->getSetting( "WaitTimeBeforeRetrying",2000 ).toInt() ;
+}
+
 void settings::setNotificationTimeOut( int e )
 {
 	this->setSetting( "NotificationTimeOut",e ) ;
