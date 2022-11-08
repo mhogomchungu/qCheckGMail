@@ -729,11 +729,8 @@ void qCheckGMail::visualNotify()
 	auto a = static_cast< qint32 >( m_notificationTimeOut ) ;
 	auto aa = "qCheckGMail" ;
 
-	if( !m_notificationSupportshyperlinks ){
-
-		l.append( "default" ) ;
-		l.append( tr( "Open Default Inbox" ) ) ;
-	}
+	l.append( "default" ) ;
+	l.append( tr( "Open Default Inbox" ) ) ;
 
 	auto result = m_dbusInterface.call( "Notify",aa,m_dbusId,"",m,e,l,mm,a ) ;
 
