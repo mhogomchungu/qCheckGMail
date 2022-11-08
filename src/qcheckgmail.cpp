@@ -219,9 +219,12 @@ void qCheckGMail::start()
 
 void qCheckGMail::openMail()
 {
-	if( !m_defaultApplication.isEmpty() ){
+	this->openInbox( "https://mail.google.com/mail/u/0/#inbox" ) ;
+}
 
-		auto url = "https://mail.google.com/" ;
+void qCheckGMail::openInbox( const QString& url )
+{
+	if( !m_defaultApplication.isEmpty() ){
 
 		if( m_defaultApplication == "browser" ){
 
@@ -290,6 +293,41 @@ void qCheckGMail::addActionsToMenu()
 
 		return m_statusicon.getAction( tr( "Show Log Window" ) ) ;
 	}() ) ;
+
+	m_menu = m_statusicon.getMenu( tr( "Open Mail" ) ) ;
+
+	connect( m_menu,&QMenu::triggered,[ this ]( QAction * ac ){
+
+		for( const auto& it : m_accounts ){
+
+			if( it.accountName() == ac->objectName() ){
+
+				auto m = ac->objectName() ;
+
+				auto u = "https://mail.google.com/mail/u/?authuser=" ;
+
+				if( m.endsWith( "@gmail.com" ) ){
+
+					this->openInbox( u + m ) ;
+				}else{
+					this->openInbox( u + m + "@gmail.com" ) ;
+				}
+
+				break ;
+			}
+		}
+	} ) ;
+
+	connect( m_statusicon.getOGMenu(),&QMenu::aboutToShow,[ this ](){
+
+		m_menu->clear() ;
+
+		for( const auto& it : m_accounts ){
+
+			auto ac = m_menu->addAction( it.accountName() ) ;
+			ac->setObjectName( it.accountName() ) ;
+		}
+	} ) ;
 
 	m_statusicon.addQuitAction() ;
 }

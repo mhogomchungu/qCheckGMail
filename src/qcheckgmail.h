@@ -138,6 +138,7 @@ private:
 	void checkMail() ;
 	void checkMail( bool ) ;
 	void openMail() ;
+	void openInbox( const QString& ) ;
 	void changeIcon( const QString& icon ) ;
 	void changeIcon( const QString& icon,int ) ;
 	void getAccountsInfo() ;
@@ -257,6 +258,8 @@ private:
 	QString m_clientID ;
 	QString m_clientSecret ;
 	QString m_visibleIconState ;
+
+	QMenu * m_menu ;
 
 	QStringList m_profileEmailList ;
 
