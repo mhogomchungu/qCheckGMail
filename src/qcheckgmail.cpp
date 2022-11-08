@@ -348,6 +348,9 @@ statusicon::clickActions qCheckGMail::clickActions()
 		void onMiddleClick() const override
 		{
 		}
+		void onDoubleClick() const override
+		{
+		}
 	private:
 		qCheckGMail& m_parent ;
 	} ;

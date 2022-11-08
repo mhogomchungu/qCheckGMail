@@ -61,6 +61,9 @@ public:
 		virtual void onMiddleClick() const
 		{
 		}
+		virtual void onDoubleClick() const
+		{
+		}
 		virtual ~clickActionsInterface() ;
 	};
 
@@ -79,6 +82,10 @@ public:
 		void onRightClick() const
 		{
 			m_handle->onRightClick() ;
+		}
+		void onDoubleClick() const
+		{
+			m_handle->onDoubleClick() ;
 		}
 		void onMiddleClick() const
 		{

@@ -230,6 +230,7 @@ private:
 	int m_mailCount ;
 	int m_networkTimeOut ;
 	int m_notificationTimeOut ;
+	int m_retryWaitTime ;
 
 	quint32 m_dbusId = 0 ;
 
@@ -243,7 +244,6 @@ private:
 	bool m_alwaysShowTrayIcon ;
 	bool m_errorOccured ;
 	bool m_visualNotify ;
-	bool m_retryWaitTime ;
 
 	QString m_accountsStatus ;
 	QString m_newEmailIcon ;

@@ -368,7 +368,11 @@ void statusicon::trayIconClicked( QSystemTrayIcon::ActivationReason reason )
 	}else if( reason == QSystemTrayIcon::MiddleClick ){
 
 		m_clickActions.onMiddleClick() ;
-	}else{
+
+	}else if( reason == QSystemTrayIcon::DoubleClick ){
+
+		m_clickActions.onDoubleClick() ;
+	else{
 		m_clickActions.onRightClick() ;
 	}
 }
