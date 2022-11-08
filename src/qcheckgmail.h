@@ -117,7 +117,19 @@ private:
 		const accounts& acc ;
 		const QString& label ;
 	} ;
-
+	struct accountsStatus
+	{
+		accountsStatus( const QString& t ) : txt( t )
+		{
+		}
+		accountsStatus( bool e,const QString& t,const QString& a ) :
+			success( e ),txt( t ),accName( a )
+		{
+		}
+		bool success = false ;
+		QString txt ;
+		QString accName ;
+	} ;
 	void networkAccess( const networkAccessContext& ) ;
 
 	void getGMailAccountInfoWithoutToken( const QString&,addaccount::GmailAccountInfo ) ;
@@ -129,6 +141,9 @@ private:
 	void showToolTip( const QString& iconName,
 			  const QString& title,
 			  const QString& subTitle ) ;
+	void showToolTip( const QString& iconName,
+			  const QString& title,
+			  std::vector< qCheckGMail::accountsStatus >& subTitle ) ;
 	void showPausedIcon( bool ) ;
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;
@@ -245,8 +260,8 @@ private:
 	bool m_alwaysShowTrayIcon ;
 	bool m_errorOccured ;
 	bool m_visualNotify ;
+	bool m_notificationSupportshyperlinks ;
 
-	QString m_accountsStatus ;
 	QString m_newEmailIcon ;
 	QString m_errorIcon ;
 	QString m_noEmailIcon ;
@@ -258,6 +273,8 @@ private:
 	QString m_clientID ;
 	QString m_clientSecret ;
 	QString m_visibleIconState ;
+
+	std::vector< qCheckGMail::accountsStatus > m_accountsStatus ;
 
 	QMenu * m_menu ;
 

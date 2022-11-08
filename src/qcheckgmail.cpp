@@ -62,6 +62,8 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 
 		auto s = m.first().toStringList() ;
 
+		m_notificationSupportshyperlinks = s.contains( "body-hyperlinks" ) ;
+
 		if( s.size() > 0 ){
 
 			auto e = "Pop Notification Has Following Capabilities:\n" ;
@@ -112,6 +114,45 @@ void qCheckGMail::showToolTip( const QString& iconName,
 			       const QString& subTitle )
 {
 	m_statusicon.setToolTip( iconName,title,subTitle ) ;
+}
+
+void qCheckGMail::showToolTip( const QString& iconName,
+			       const QString& title,
+			       std::vector< qCheckGMail::accountsStatus >& subTitle )
+{
+	if( subTitle.size() > 0 ){
+
+		QString m = "<table>" ;
+
+		auto iter = subTitle.begin() ;
+
+		const auto& e = *iter ;
+
+		if( e.txt.endsWith( " 0" ) ){
+
+			m += e.txt ;
+		}else{
+			m += "<b>" + e.txt + "</b>" ;
+		}
+
+		iter++ ;
+
+		for( ; iter != subTitle.end() ; iter++ ){
+
+			const auto& e = *iter ;
+
+			if( e.txt.endsWith( " 0" ) ){
+
+				m += "<br>" + e.txt ;
+			}else{
+				m += "<br><b>" + e.txt + "</b>" ;
+			}
+		}
+
+		m += "</table>" ;
+
+		m_statusicon.setToolTip( iconName,title,m ) ;
+	}
 }
 
 void qCheckGMail::showPausedIcon( bool paused )
@@ -438,43 +479,6 @@ static emailInfo _getEmailInfo( const QByteArray& json )
 	return { a,b,c } ;
 }
 
-static void _account_status( QString& status,
-			     const QString& displayName,
-			     const QString& mailCount )
-{
-	auto _updateStatus = [ & ]( const QString& d_name ){
-
-		QString e = [ & ](){
-
-			if( mailCount.toInt() > 0 ){
-
-				return "<b>%1 %2</b>" ;
-			}else{
-				return "%1 %2" ;
-			}
-		}() ;
-
-		if( status == "<table>" ){
-
-			status += e.arg( d_name,mailCount ) ;
-		}else{
-			status += "<br>" + e.arg( d_name,mailCount ) ;
-		}
-	} ;
-
-	if( displayName.size() >= 32 ){
-
-		QString d_name = displayName ;
-
-		d_name.truncate( 29 ) ;
-		d_name += "..." ;
-
-		_updateStatus( d_name ) ;
-	}else{
-		_updateStatus( displayName ) ;
-	}
-}
-
 /*
  * This function goes through all accounts and give reports of all of their states
  */
@@ -482,6 +486,26 @@ void qCheckGMail::updateUi( int counter,
 			    const QByteArray& msg,
 			    qCheckGMail::result result )
 {
+	const auto& acc = m_accounts[ m_currentAccount ] ;
+
+	auto _account_status = []( std::vector< qCheckGMail::accountsStatus >& status,
+				   const QString& displayName,
+				   const QString& mailCount,
+				   const QString& accName,
+				   bool success ){
+		if( displayName.size() >= 32 ){
+
+			QString d_name = displayName ;
+
+			d_name.truncate( 29 ) ;
+			d_name += "..." ;
+
+			status.emplace_back( success,d_name + " " + mailCount,accName ) ;
+		}else{
+			status.emplace_back( success,displayName + " " + mailCount,accName ) ;
+		}
+	} ;
+
 	if( result.success() ){
 
 		if( msg.isEmpty() ){
@@ -494,7 +518,9 @@ void qCheckGMail::updateUi( int counter,
 			m_errorOccured = true ;
 			_account_status( m_accountsStatus,
 					 this->displayName(),
-					 result.errorString() ) ;
+					 result.errorString(),
+					 acc.accountName(),
+					 false ) ;
 		}else{
 			auto emailInfo = _getEmailInfo( msg ) ;
 
@@ -506,12 +532,16 @@ void qCheckGMail::updateUi( int counter,
 
 				_account_status( m_accountsStatus,
 						 this->displayName( emailInfo.labelName ),
-						 "0" ) ;
+						 "0",
+						 acc.accountName(),
+						 true ) ;
 			}else{
 				m_mailCount += mailCount_1 ;
 				_account_status( m_accountsStatus,
 						 this->displayName( emailInfo.labelName ),
-						 mailCount ) ;
+						 mailCount,
+						 acc.accountName(),
+						 true ) ;
 			}
 		}
 
@@ -530,7 +560,9 @@ void qCheckGMail::updateUi( int counter,
 				m_errorOccured = true ;
 				_account_status( m_accountsStatus,
 						 this->displayName(),
-						 result.errorString() ) ;
+						 result.errorString(),
+						 acc.accountName(),
+						 false ) ;
 			}else{
 				m_badAccessToken = true ;
 
@@ -546,13 +578,17 @@ void qCheckGMail::updateUi( int counter,
 			m_errorOccured = true ;
 			_account_status( m_accountsStatus,
 					 this->displayName(),
-					 result.errorString() ) ;
+					 result.errorString(),
+					 acc.accountName(),
+					 false ) ;
 		}
 	}else{
 		m_errorOccured = true ;
 		_account_status( m_accountsStatus,
 				 this->displayName(),
-				 result.errorString() ) ;
+				 result.errorString(),
+				 acc.accountName(),
+				 false ) ;
 	}
 
 	/*
@@ -584,8 +620,7 @@ void qCheckGMail::updateUi( int counter,
 		}else{
 			/*
 			 * done checking all labels on all accounts
-			 */
-			m_accountsStatus += "</table>" ;
+			 */ ;
 
 			if( m_mailCount > 0 ){
 
@@ -643,6 +678,11 @@ void qCheckGMail::audioNotify()
 
 void qCheckGMail::visualNotify()
 {
+	if( m_accountsStatus.empty() ){
+
+		return ;
+	}
+
 	QStringList l ;
 	QVariantMap mm ;
 
@@ -655,19 +695,45 @@ void qCheckGMail::visualNotify()
 	auto x = QString::number( m_mailCount ) ;
 	auto m = tr( "Found %1 New Emails" ).arg( x ) ;
 
-	auto e = m_accountsStatus ;
+	QString e ;
 
-	e.replace( "<table>","" ) ;
-	e.replace( "</table>","" ) ;
-	e.replace( "<b>","" ) ;
-	e.replace( "</b>","" ) ;
-	e.replace( "<br>","\n" ) ;
+	if( m_notificationSupportshyperlinks ){
+
+		for( const auto& m : m_accountsStatus ){
+
+			if( m.success && !m.txt.endsWith( " 0" ) ){
+
+				auto s = m.accName ;
+
+				if( !s.endsWith( "@gmail.com" ) ){
+
+					 s += "@gmail.com" ;
+				}
+
+				auto mm = "\n<a href=\"https://mail.google.com/mail/u/?authuser=" ;
+
+				e += mm + s + "\">" + m.txt + "</a>" ;
+			}else{
+				e += "\n" + m.txt ;
+			}
+		}
+	}else{
+		for( const auto& m : m_accountsStatus ){
+
+			e += "\n" + m.txt ;
+		}
+	}
+
+	e = e.mid( 1 ) ;
 
 	auto a = static_cast< qint32 >( m_notificationTimeOut ) ;
 	auto aa = "qCheckGMail" ;
 
-	l.append( "default" ) ;
-	l.append( tr( "Open Default Inbox" ) ) ;
+	if( !m_notificationSupportshyperlinks ){
+
+		l.append( "default" ) ;
+		l.append( tr( "Open Default Inbox" ) ) ;
+	}
 
 	auto result = m_dbusInterface.call( "Notify",aa,m_dbusId,"",m,e,l,mm,a ) ;
 
@@ -681,11 +747,11 @@ void qCheckGMail::visualNotify()
 	}
 }
 
-void qCheckGMail::actionInvoked( quint32 u,QString s )
+void qCheckGMail::actionInvoked( quint32 u,QString )
 {
-	if( u == m_dbusId ){
+	if( !m_notificationSupportshyperlinks ){
 
-		if( s == "default" ){
+		if( u == m_dbusId ){
 
 			this->openMail() ;
 		}
@@ -816,7 +882,8 @@ void qCheckGMail::checkMail()
 {
 	if( m_numberOfAccounts > 0 ){
 
-		m_accountsStatus  = "<table>" ;
+		m_accountsStatus.clear() ;
+
 		m_mailCount       = 0 ;
 		m_currentAccount  = 0 ;
 		m_accountFailed   = false ;
@@ -1383,7 +1450,7 @@ void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 
 	if( m_numberOfAccounts > 0 ){
 
-		this->showToolTip( m_errorIcon,tr( "Status" ),QString() ) ;
+		this->showToolTip( m_errorIcon,tr( "Status" ),{} ) ;
 		this->checkMail() ;
 	}else{
 		/*
