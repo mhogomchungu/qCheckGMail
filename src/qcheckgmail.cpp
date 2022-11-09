@@ -127,7 +127,7 @@ void qCheckGMail::showToolTip( const QString& iconName,
 {
 	if( subTitle.size() > 0 ){
 
-		QString m ;
+		QString m = "<table>" ;
 
 		auto iter = subTitle.begin() ;
 
@@ -148,11 +148,13 @@ void qCheckGMail::showToolTip( const QString& iconName,
 
 			if( e.success ){
 
-				m += "\n<b>" + e.txt + "</b>" ;
+				m += "<br><b>" + e.txt + "</b>" ;
 			}else{
-				m += "\n" + e.txt ;
+				m += "<br>" + e.txt ;
 			}
 		}
+
+		m += "</table>" ;
 
 		m_statusicon.setToolTip( iconName,title,m ) ;
 	}
