@@ -143,7 +143,7 @@ private:
 			  const QString& subTitle ) ;
 	void showToolTip( const QString& iconName,
 			  const QString& title,
-			  std::vector< qCheckGMail::accountsStatus >& subTitle ) ;
+			  const std::vector< qCheckGMail::accountsStatus >& subTitle ) ;
 	void showPausedIcon( bool ) ;
 	void setUpEmailNotifications() ;
 	void setLocalLanguage() ;

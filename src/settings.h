@@ -40,6 +40,7 @@ public:
 	util::unique_wallet_ptr secureStorageSystem() ;
 	bool audioNotify() ;
 	bool visualNotify() ;
+	bool showHyperlinks() ;
 	bool alwaysShowTrayIcon() ;
 	int notificationTimeOut() ;
 	int waitTimeBeforeRetrying() ;

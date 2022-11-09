@@ -62,7 +62,12 @@ qCheckGMail::qCheckGMail( const qCheckGMail::args& args ) :
 
 		auto s = m.first().toStringList() ;
 
-		m_notificationSupportshyperlinks = s.contains( "body-hyperlinks" ) ;
+		if( m_settings.showHyperlinks() ){
+
+			m_notificationSupportshyperlinks = s.contains( "body-hyperlinks" ) ;
+		}else{
+			m_notificationSupportshyperlinks = false ;
+		}
 
 		if( s.size() > 0 ){
 
@@ -118,21 +123,21 @@ void qCheckGMail::showToolTip( const QString& iconName,
 
 void qCheckGMail::showToolTip( const QString& iconName,
 			       const QString& title,
-			       std::vector< qCheckGMail::accountsStatus >& subTitle )
+			       const std::vector< qCheckGMail::accountsStatus >& subTitle )
 {
 	if( subTitle.size() > 0 ){
 
-		QString m = "<table>" ;
+		QString m ;
 
 		auto iter = subTitle.begin() ;
 
 		const auto& e = *iter ;
 
-		if( e.txt.endsWith( " 0" ) ){
+		if( e.success ){
 
-			m += e.txt ;
-		}else{
 			m += "<b>" + e.txt + "</b>" ;
+		}else{
+			m += e.txt ;
 		}
 
 		iter++ ;
@@ -141,15 +146,13 @@ void qCheckGMail::showToolTip( const QString& iconName,
 
 			const auto& e = *iter ;
 
-			if( e.txt.endsWith( " 0" ) ){
+			if( e.success ){
 
-				m += "<br>" + e.txt ;
+				m += "\n<b>" + e.txt + "</b>" ;
 			}else{
-				m += "<br><b>" + e.txt + "</b>" ;
+				m += "\n" + e.txt ;
 			}
 		}
-
-		m += "</table>" ;
 
 		m_statusicon.setToolTip( iconName,title,m ) ;
 	}
@@ -534,7 +537,7 @@ void qCheckGMail::updateUi( int counter,
 						 this->displayName( emailInfo.labelName ),
 						 "0",
 						 acc.accountName(),
-						 true ) ;
+						 false ) ;
 			}else{
 				m_mailCount += mailCount_1 ;
 				_account_status( m_accountsStatus,
@@ -701,7 +704,7 @@ void qCheckGMail::visualNotify()
 
 		for( const auto& m : m_accountsStatus ){
 
-			if( m.success && !m.txt.endsWith( " 0" ) ){
+			if( m.success ){
 
 				auto s = m.accName ;
 
@@ -917,8 +920,6 @@ void qCheckGMail::checkMail( bool )
 
 void qCheckGMail::checkMail( int counter,const accounts& acc )
 {
-	//m_manager.QtNAM().setNetworkAccessible( QNetworkAccessManager::Accessible ) ;
-
 	m_badAccessToken = false ;
 	m_currentLabel   = 0 ;
 	m_numberOfLabels = acc.numberOfLabels() ;
@@ -1447,7 +1448,7 @@ void qCheckGMail::getAccountsInfo( QVector< accounts >&& acc )
 
 	if( m_numberOfAccounts > 0 ){
 
-		this->showToolTip( m_errorIcon,tr( "Status" ),{} ) ;
+		this->showToolTip( m_errorIcon,tr( "Status" ),QString() ) ;
 		this->checkMail() ;
 	}else{
 		/*

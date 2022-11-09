@@ -212,6 +212,11 @@ bool settings::visualNotify()
 	return this->getSetting( "visualNotify",true ).toBool() ;
 }
 
+bool settings::showHyperlinks()
+{
+	return this->getSetting( "ShowHyperLinks",true ).toBool() ;
+}
+
 void settings::setIconAlwaysVisible( bool e )
 {
 	this->setSetting( "alwaysShowTrayIcon",e ) ;
