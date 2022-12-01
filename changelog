@@ -81,3 +81,8 @@ version 2.1.0(November 5th, 2022)
 -- Add a GUI option to show/hide a pop up notification.
 -- Fix a bug that caused tray icon to not show up.
 -- Add a log window to easily monitor network requrests and responses.
+
+
+version 2.2.0(December 1st, 2022)
+-- Use hyperlink in notification window if they are supported.
+-- Retry network request when certain network errors occur.
