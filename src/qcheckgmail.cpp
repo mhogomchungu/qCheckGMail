@@ -1023,7 +1023,7 @@ void qCheckGMail::getAccessToken( int counter,
 
 				m_logWindow.update( logWindow::TYPE::REQUEST,m ) ;
 
-				this->networkAccess( { counter,false,request,acc,UrlLabel } ) ;
+				this->networkAccess( request,{ counter,false,acc,UrlLabel } ) ;
 			}
 		}else{
 			if( reply.timeOut() ){
@@ -1169,9 +1169,9 @@ qCheckGMail::GMailError qCheckGMail::gmailError( const QByteArray& msg )
 	return { code,QObject::tr( "Unknown GMail Error" ) } ;
 }
 
-void qCheckGMail::networkAccess( const networkAccessContext& ctx )
+void qCheckGMail::networkAccess( const QNetworkRequest& request,networkAccessContext ctx )
 {
-	m_manager.get( ctx.request,[ this,ctx = ctx ]( const utils::network::reply& reply ){
+	m_manager.get( request,[ this,ctx = std::move( ctx ) ]( const utils::network::reply& reply ){
 
 		if( ctx.counter != m_counter ){
 
@@ -1418,7 +1418,7 @@ void qCheckGMail::checkMail( int counter,const accounts& acc,const QString& UrlL
 
 		m_logWindow.update( logWindow::TYPE::REQUEST,m ) ;
 
-		this->networkAccess( { counter,retrying,s,acc,UrlLabel } ) ;
+		this->networkAccess( s,{ counter,retrying,acc,UrlLabel } ) ;
 	}
 }
 

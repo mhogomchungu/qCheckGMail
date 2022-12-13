@@ -113,7 +113,6 @@ private:
 	{
 		int counter ;
 		bool retrying ;
-		const QNetworkRequest& request ;
 		const accounts& acc ;
 		const QString& label ;
 	} ;
@@ -130,7 +129,7 @@ private:
 		QString txt ;
 		QString accName ;
 	} ;
-	void networkAccess( const networkAccessContext& ) ;
+	void networkAccess( const QNetworkRequest&,networkAccessContext ) ;
 
 	void getGMailAccountInfoWithoutToken( const QString&,addaccount::GmailAccountInfo ) ;
 	void getGMailAccountInfoWithToken( const QString&,addaccount::GmailAccountInfo ) ;
