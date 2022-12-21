@@ -33,6 +33,7 @@
 #include "util.hpp"
 #include "settings.h"
 #include "utils/network_access_manager.hpp"
+#include "utils/miscellaneous.hpp"
 #include "logwindow.h"
 
 namespace Ui {
@@ -82,7 +83,7 @@ public:
 			( *m_handle )( e ) ;
 		}
 	private:
-		std::unique_ptr< addaccount::gmailAccountInfo > m_handle ;
+		utils::misc::unique_ptr< addaccount::gmailAccountInfo > m_handle ;
 	} ;
 
 	struct gMailInfo
@@ -116,7 +117,7 @@ public:
 			m_handle->withToken( accountName,std::move( result ) ) ;
 		}
 	private:
-		std::unique_ptr< addaccount::gMailInfo > m_handle ;
+		utils::misc::unique_ptr< addaccount::gMailInfo > m_handle ;
 	} ;
 
 	struct actions
@@ -166,7 +167,7 @@ public:
 			m_handle->setLabels( std::move( s ) ) ;
 		}
 	private:
-		std::unique_ptr< addaccount::actions > m_handle ;
+		utils::misc::unique_ptr< addaccount::actions > m_handle ;
 	} ;
 
 	static addaccount& instance( QDialog * parent,

@@ -30,6 +30,8 @@
 
 #include "settings.h"
 
+#include "utils/miscellaneous.hpp"
+
 namespace Ui {
 class gmailauthorization;
 }
@@ -50,7 +52,7 @@ public:
 	public:
 		template< typename Type,typename ... Args >
 		AuthResult( Type,Args&& ... args ) :
-			m_handle( std::make_shared< typename Type::type >( std::forward< Args >( args ) ... ) )
+			m_handle( std::make_unique< typename Type::type >( std::forward< Args >( args ) ... ) )
 		{
 		}
 		void operator()( const QString& e,const QByteArray& s ) const
@@ -58,7 +60,7 @@ public:
 			( *m_handle )( e,s ) ;
 		}
 	private:
-		std::shared_ptr< gmailauthorization::authResult > m_handle ;
+		utils::misc::unique_ptr< gmailauthorization::authResult > m_handle ;
 	} ;
 
 	struct authActions
