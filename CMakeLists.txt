@@ -1,7 +1,9 @@
-
-cmake_minimum_required(VERSION 3.0.0)
-
-set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS ON)
+if(${CMAKE_VERSION} VERSION_GREATER "3.31.0" OR ${CMAKE_VERSION} VERSION_EQUAL "3.31.0")
+    cmake_minimum_required(VERSION 3.31.0)
+    cmake_policy(SET CMP0177 OLD)
+else()
+    cmake_minimum_required(VERSION 3.5.0)
+endif()
 
 project(qCheckGMail)
 
@@ -26,7 +28,7 @@ COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
 INCLUDE(GNUInstallDirs)
 
 set( PGR_VERSION "Version:\t2.2.0" )
-set( COPYRIGHT_YEARS "Copyright:\t2013-2022" )
+set( COPYRIGHT_YEARS "Copyright:\t2013-2026" )
 set( LICENSE "License:\tGPLv2+" )
 
 file(WRITE ${PROJECT_BINARY_DIR}/version.h
@@ -35,8 +37,6 @@ file(WRITE ${PROJECT_BINARY_DIR}/version.h
 #define COPYRIGHT \"${COPYRIGHT_YEARS}\"
 #define LICENCE \"${LICENSE}\"
 ")
-
-set( QT5 "true" )
 
 if( INTERNAL_LXQT_WALLET )
 
@@ -65,7 +65,7 @@ else()
 			link_directories( ${LXQT_WALLET_LIBDIR} )
 
 			message( STATUS "---------------------------------------------------------------------------" )
-			message( STATUS "lxqt wallet support will be provided by an external libary" )
+			message( STATUS "lxqt wallet support will be provided by an external library" )
 			message( STATUS "---------------------------------------------------------------------------" )
 		else()
 			message( STATUS "---------------------------------------------------------------------------" )
@@ -139,10 +139,11 @@ file( WRITE "${PROJECT_BINARY_DIR}/language_path.h"
 "\n#define LANGUAGE_FILE_PATH \"${DATA_INSTALL_DIR}/qCheckGMail/\""
 )
 
-find_package( Qt5Widgets REQUIRED )
-find_package( Qt5Core REQUIRED )
-find_package( Qt5Network REQUIRED )
-find_package( Qt5DBus REQUIRED)
+find_package( Qt6Widgets REQUIRED )
+find_package( Qt6Core REQUIRED )
+find_package( Qt6Network REQUIRED )
+find_package( Qt6DBus REQUIRED)
+
 
 set( UI_FILES
 	src/gmailauthorization.ui
@@ -153,24 +154,13 @@ set( UI_FILES
 	src/configurationoptionsdialog.ui
 )
 
-if (${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-	set( MOC_FILES
-		src/statusicon.h
-		src/walletmanager.h
-		src/addaccount.h
-		src/qcheckgmail.h
-		src/configurationoptionsdialog.h
-		src/logwindow.h
-		src/util.hpp )
-else()
-	set( MOC_FILES
+set( MOC_FILES
 		src/statusicon.h
 		src/walletmanager.h
 		src/addaccount.h
 		src/qcheckgmail.h
 		src/logwindow.h
 		src/configurationoptionsdialog.h )
-endif()
 
 set( CPP_FILES
 	src/gmailauthorization.cpp
@@ -192,45 +182,52 @@ set( RESOUCES 	icons/icon.qrc )
 
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories( ${Qt5Widgets_INCLUDE_DIRS} )
-include_directories( ${Qt5DBus_INCLUDE_DIRS} )
+include_directories( ${Qt6Widgets_INCLUDE_DIRS} )
+include_directories( ${Qt6DBus_INCLUDE_DIRS} )
+include_directories( ${Qt6Network_INCLUDE_DIRS} )
 
-add_definitions( ${Qt5Widgets_DEFINITIONS} )
+add_definitions( ${Qt6Widgets_DEFINITIONS} )
 
-if( KF5 )
+set( KF6 "true" )
+
+set( CMAKE_AUTOMOC ON )
+set( CMAKE_AUTORCC ON )
+set( CMAKE_AUTOUIC ON )
+
+if( KF6 )
 	cmake_policy( SET CMP0012 NEW )
-	find_package( KF5Config REQUIRED )
-	find_package( KF5Notifications REQUIRED )
-	find_package( KF5CoreAddons )
-	find_package( KF5I18n NO_MODULE )
+	find_package( KF6Config REQUIRED )
+	find_package( KF6Notifications REQUIRED )
+	find_package( KF6CoreAddons )
+	find_package( KF6I18n NO_MODULE )
 
 	message( STATUS "\n------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support found,will build KStatusNotifierItem based tray icon application" )
 	message( STATUS "---------------------------------------------------------------------------------------" )
 
-	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF5 1\n" )
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF6 1\n" )
 
-	QT5_WRAP_CPP( MOC ${MOC_FILES} )
-	QT5_WRAP_UI( UI ${UI_FILES} )
-	QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
+	SET( MOC ${MOC_FILES} )
+	SET( UI ${UI_FILES} )
+	SET( TRAY_RC_SRCS ${RESOUCES} )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES} KF5::Notifications KF5::CoreAddons )
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES} ${Qt6Network_LIBRARIES} KF6::Notifications KF6::CoreAddons )
 else()
 	message( STATUS "\n-------------------------------------------------------------------------------------------" )
 	message( STATUS "kde support NOT found,will build QSystemTrayIcon based tray icon application" )
 	message( STATUS "----------------------------------------------------------------------------------------" )
 
-	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF5 0\n" )
+	file( WRITE "${PROJECT_BINARY_DIR}/tray_application_type.h" "\n#define KF6 0\n" )
 
-	QT5_WRAP_CPP( MOC ${MOC_FILES} )
-	QT5_WRAP_UI( UI ${UI_FILES} )
-	QT5_ADD_RESOURCES( TRAY_RC_SRCS ${RESOUCES} )
+	SET( MOC ${MOC_FILES} )
+	SET( UI ${UI_FILES} )
+	SET( TRAY_RC_SRCS ${RESOUCES} )
 
 	add_executable( qCheckGMail ${CPP_FILES} ${MOC} ${UI} ${TRAY_RC_SRCS} )
 
-	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Network_LIBRARIES} ${Qt5DBus_LIBRARIES})
+	TARGET_LINK_LIBRARIES( qCheckGMail lxqt-wallet ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES} ${Qt6Network_LIBRARIES} ${Qt6DBus_LIBRARIES})
 endif()
 
 set_target_properties( qCheckGMail PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64 -Wextra -Wall -s -fPIE -pthread  -pedantic " )

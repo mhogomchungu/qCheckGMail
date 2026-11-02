@@ -1188,6 +1188,16 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request,networkAccessCon
 
 			m_logWindow.update( logWindow::TYPE::INFO,mm.arg( n1,n2 ) ) ;
 
+		}else if( reply.success() ){
+
+			auto content = reply.data() ;
+
+			m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
+
+			using qc = qCheckGMail::result::state ;
+
+			this->updateUi( ctx.counter,content,qc::success ) ;
+
 		}else if( reply.timeOut() ){
 
 			auto err = this->networkTimeOut() ;
@@ -1195,69 +1205,45 @@ void qCheckGMail::networkAccess( const QNetworkRequest& request,networkAccessCon
 			m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 
 			this->updateUi( ctx.counter,{},err.translated ) ;
+
+		}else if( reply.retry() && !ctx.retrying ){
+
+			auto err = this->errorMessage( reply ) ;
+
+			m_logWindow.update( logWindow::TYPE::ERROR,
+					    err.unTranslated,
+					    true ) ;
+
+			auto m = QString::number( m_retryWaitTime / 1000 ) ;
+
+			auto e = QString( "Waiting %1 Seconds Before Retrying" ).arg( m ) ;
+
+			m_logWindow.update( logWindow::TYPE::INFO,e,true ) ;
+
+			utils::qtimer::run( m_retryWaitTime,[ this,ctx = ctx ](){
+
+				this->checkMail( ctx.counter,ctx.acc,ctx.label,true ) ;
+			} ) ;
+
+		}else if( reply.error() == QNetworkReply::AuthenticationRequiredError ){
+
+			auto content = reply.data() ;
+
+			auto err = this->gmailError( content ) ;
+
+			using qc = qCheckGMail::result::state ;
+
+			m_logWindow.update( logWindow::TYPE::RESPONCE,content,true ) ;
+
+			qCheckGMail::result result( qc::gmailError,err.code,std::move( err.errorMsg ) ) ;
+
+			this->updateUi( ctx.counter,{},std::move( result ) ) ;
 		}else{
-			auto error = reply.error() ;
+			auto err = this->errorMessage( reply ) ;
 
-			if( error == QNetworkReply::NoError ){
+			m_logWindow.update( logWindow::TYPE::ERROR,err.unTranslated,true ) ;
 
-				auto content = reply.data() ;
-
-				m_logWindow.update( logWindow::TYPE::RESPONCE,content ) ;
-
-				using qc = qCheckGMail::result::state ;
-
-				this->updateUi( ctx.counter,content,qc::success ) ;
-
-			}else if( error == QNetworkReply::AuthenticationRequiredError ){
-
-				auto content = reply.data() ;
-
-				auto err = this->gmailError( content ) ;
-
-				using qc = qCheckGMail::result::state ;
-
-				m_logWindow.update( logWindow::TYPE::RESPONCE,
-						    content,
-						    true ) ;
-
-				this->updateUi( ctx.counter,{},{ qc::gmailError,
-							     err.code,
-							     std::move( err.errorMsg ) } ) ;
-			}else{
-				if( error == QNetworkReply::TemporaryNetworkFailureError ||
-				    error == QNetworkReply::NetworkSessionFailedError ){
-
-					if( !ctx.retrying ){
-
-						auto err = this->errorMessage( reply ) ;
-
-						m_logWindow.update( logWindow::TYPE::ERROR,
-								    err.unTranslated,
-								    true ) ;
-
-						auto m = QString::number( m_retryWaitTime / 1000 ) ;
-
-						auto e = QString( "Waiting %1 Seconds Before Retrying" ).arg( m ) ;
-
-						m_logWindow.update( logWindow::TYPE::INFO,e,true ) ;
-
-						utils::qtimer::run( m_retryWaitTime,[ this,ctx = ctx ](){
-
-							this->checkMail( ctx.counter,ctx.acc,ctx.label,true ) ;
-						} ) ;
-
-						return ;
-					}
-				}
-
-				auto err = this->errorMessage( reply ) ;
-
-				m_logWindow.update( logWindow::TYPE::ERROR,
-						    err.unTranslated,
-						    true ) ;
-
-				this->updateUi( ctx.counter,{},err.translated ) ;
-			}
+			this->updateUi( ctx.counter,{},err.translated ) ;
 		}
 	} ) ;
 }
