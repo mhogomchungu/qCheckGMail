@@ -110,7 +110,7 @@ file( WRITE "${PROJECT_BINARY_DIR}/icon_file_path.h"
 
 install( FILES audio/new-email-sound.ogg     DESTINATION "${DATA_INSTALL_DIR}/qCheckGMail/audio" )
 
-install( FILES icons/qCheckGMail.svg           DESTINATION ${DATA_INSTALL_DIR}/icons )
+install( FILES icons/qCheckGMail.svg           DESTINATION ${DATA_INSTALL_DIR}/icons/hicolor/scalable/apps )
 install( FILES icons/qCheckGMail-hasNoMail.svg DESTINATION ${DATA_INSTALL_DIR}/icons )
 install( FILES icons/qCheckGMail-hasError.svg  DESTINATION ${DATA_INSTALL_DIR}/icons )
 install( FILES icons/qCheckGMail-hasMail.svg   DESTINATION ${DATA_INSTALL_DIR}/icons )
@@ -240,7 +240,7 @@ install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail.desktop DESTINATION share/appli
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
-install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION /etc/xdg/autostart/
+install( FILES ${PROJECT_BINARY_DIR}/qCheckGMail-autostart.desktop DESTINATION etc/xdg/autostart/
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
